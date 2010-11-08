@@ -1,0 +1,15 @@
+= OVERVIEW =
+
+There are several sources for the ArduCopter project.
+
+*The first one is the official ArduCopter Wiki:*
+
+http://code.google.com/p/arducopter/wiki/ArduCopter_Quad
+
+You'll find all basic info there.
+
+*Second one is Kinderkram's ArduPirates Build log:*
+
+http://www.rcgroups.com/forums/showthread.php?t=1286011
+
+Meet an international community of copter enthusiasts there!
