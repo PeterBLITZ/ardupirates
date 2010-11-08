@@ -72,6 +72,7 @@
 //                                          B = Back motor,
 //                                          F = Front motor.  
 #define FLIGHT_MODE_X
+//#define FLIGHT_MODE_+
 
 #ifdef IsMAG
 // DIYDrones Magnetometer
@@ -795,7 +796,7 @@ void loop(){
     {
       gled_speed = 1200;
       Attitude_control_v3();
-      if (BMP_mode == 1)   // mst - was on AP_mode: probabely altitude bug we have searched for
+      if (BMP_mode == 1)
         BMP_Altitude_control(BMP_target_altitude);
      }
     else
