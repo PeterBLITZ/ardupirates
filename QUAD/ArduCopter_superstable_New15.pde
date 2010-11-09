@@ -550,7 +550,7 @@ void loop(){
   {
     Magneto_counter++;
     BMP_counter++;
-    BMP_buffercounter++;
+//    BMP_buffercounter++;
     GPS_counter++;
     timer_old = timer;
     timer=millis();
@@ -575,7 +575,7 @@ void loop(){
       {
         BMP_counter = 0;
         APM_BMP085.Read();
-        BMP_Altitude = BMP_filter(AMP_BMP085.Press, BMP_Altitude);  // New slope filter engaged
+        BMP_Altitude = BMP_filter(APM_BMP085.Press, BMP_Altitude);  // New slope filter engaged
 
 // Former translation from pressure&temperature into cm        
 //***********************************************************************************
