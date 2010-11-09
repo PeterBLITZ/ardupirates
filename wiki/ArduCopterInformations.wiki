@@ -1,5 +1,5 @@
 #labels Featured
-= OVERVIEW =
+== DOWNLOAD & INFO PAGES ==
 
 There are several sources for the !ArduCopter project.
 
