@@ -335,6 +335,26 @@ int channel_filter(int ch, int ch_old)
   return((ch + ch_old) >> 1);   // Small filtering
 } 
 
+// BMP slope filter for readings... (limit max differences between readings)
+float BMP_filter(float BMP_reading, float BMP_reading_old)
+{
+  float diff_BMP_reading_old;
+
+  if (BMP_reading_old == 0)      // BMP_reading_old not initialized
+    return(BMP_reading);
+    diff_BMP_reading_old = BMP_reading - BMP_reading_old;      // Difference with old reading
+  if (diff_BMP_reading_old < 0)
+  {
+    if (diff_BMP_reading_old <- 5)
+      return(BMP_reading_old - 5);        // We limit the max difference between readings
+  }
+  else
+  {
+    if (diff_BMP_reading_old > 5)    
+      return(BMP_reading_old + 5);
+  }
+  return((BMP_reading + BMP_reading_old ) / 2);   // Small filtering
+} 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */
 /* ************************************************************ */
@@ -513,8 +533,13 @@ void setup()
 void loop(){
 
   int aux;
-  int i;
   float aux_float;
+  
+/*  //BMP varaibles
+  int runs;
+  int BMP_alt_buffer[10];
+  int BMP_buffercounter;
+  int BMP_alt_tmp;  */
 
   //Log variables
   int log_roll;
@@ -525,6 +550,7 @@ void loop(){
   {
     Magneto_counter++;
     BMP_counter++;
+    BMP_buffercounter++;
     GPS_counter++;
     timer_old = timer;
     timer=millis();
@@ -549,9 +575,30 @@ void loop(){
       {
         BMP_counter = 0;
         APM_BMP085.Read();
-        tempPresAlt = float(APM_BMP085.Press)/101325.0;
-        tempPresAlt = pow(tempPresAlt, 0.190295);
-        BMP_Altitude = (1.0 - tempPresAlt) * 4433000;      // Altitude in cm
+        BMP_Altitude = BMP_filter(AMP_BMP085.Press, BMP_Altitude);  // New slope filter engaged
+
+// Former translation from pressure&temperature into cm        
+//***********************************************************************************
+//        tempPresAlt = float(APM_BMP085.Press)/101325.0;
+//        tempPresAlt = pow(tempPresAlt, 0.190295);
+//        BMP_Altitude = (1.0 - tempPresAlt) * 4433000;      // Altitude in cm
+//***********************************************************************************
+
+// Idea with median of 10 values (to be checked...)
+/*************************************************************************************
+        runs = 10;
+        if (BMP_buffercounter < runs)  //reading x runs values and making median
+        {
+          BMP_alt_buffer[BMP_buffercounter] = APM_BMP085.Press;
+          BMP_alt_tmp = BMP_alt_buffer[BMP_buffercounter] + BMP_alt_tmp;
+        }
+        else
+        {
+          BMP_Altitude = BMP_alt_tmp / runs;  //calculating median of x runs
+          BMP_buffercounter = 0;
+          BMP_alt_tmp = 0;
+        }   
+*************************************************************************************/
       }
 #endif
 
@@ -574,7 +621,6 @@ void loop(){
       // Stick position defines the desired angle in roll, pitch and yaw
       ch_roll = channel_filter(APM_RC.InputCh(0) * ch_roll_slope + ch_roll_offset, ch_roll);
       ch_pitch = channel_filter(APM_RC.InputCh(1) * ch_pitch_slope + ch_pitch_offset, ch_pitch);
-      //ch_throttle = channel_filter(APM_RC.InputCh(2) * ch_throttle_slope + ch_throttle_offset, ch_throttle);
       ch_throttle = channel_filter(APM_RC.InputCh(2), ch_throttle); // Transmiter calibration not used on throttle
       ch_yaw = channel_filter(APM_RC.InputCh(3) * ch_yaw_slope + ch_yaw_offset, ch_yaw);
       ch_aux = APM_RC.InputCh(4);
@@ -584,7 +630,6 @@ void loop(){
       command_throttle = (ch_throttle-throttle_mid) / 12; 
       command_rx_roll = (ch_roll-roll_mid) / 12.0;
       command_rx_pitch = (ch_pitch-pitch_mid) / 12.0;
-//      amount_rx_yaw = (ch_yaw - yaw_mid) / 12;
 
 #ifdef UseBMP  
         // New Altitude Hold using BMP Pressure sensor.  If Trottle stick moves more then 10%, switch Altitude Hold off    
