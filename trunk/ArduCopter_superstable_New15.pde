@@ -723,11 +723,6 @@ void loop(){
       }
       heading_hold_mode = 1;
       target_position = 0;
-      BMP_altitude_I = 0;
-      BMP_altitude_D = 0;
-      BMP_err_altitude_old = 0;
-      BMP_err_altitude = 0;
-      BMP_command_altitude = 0;
     }
     else if (AP_mode == 0)  //Acrobatic Mode
     {
