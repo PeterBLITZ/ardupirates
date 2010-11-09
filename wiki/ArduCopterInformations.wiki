@@ -13,3 +13,9 @@ You'll find all basic info there.
 http://www.rcgroups.com/forums/showthread.php?t=1286011
 
 Meet an international community of copter enthusiasts there!
+
+*Download Page for the Arduino Software:*
+
+http://arduino.cc/en/Main/Software
+
+For several OS
