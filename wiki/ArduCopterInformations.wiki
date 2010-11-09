@@ -18,4 +18,8 @@ Meet an international community of copter enthusiasts there!
 
 http://arduino.cc/en/Main/Software
 
-For several OS
+For several OS like Windows, Linux...
+
+*Download Page for Tortoise SVN:*
+
+http://tortoisesvn.net
