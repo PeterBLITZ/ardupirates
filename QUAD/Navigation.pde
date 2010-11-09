@@ -61,14 +61,17 @@ void Position_control(long lat_dest, long lon_dest)
 
 /* ************************************************************ */
 // Altitude control...Based on BMP Sensor 
-
+// Hein's Version 
 void BMP_Altitude_control(float BMP_target_alt)
 {
   BMP_err_altitude_old = BMP_err_altitude;
   BMP_err_altitude = BMP_target_alt - BMP_Altitude;  
   BMP_altitude_D = (float)(BMP_err_altitude - BMP_err_altitude_old) / G_Dt;
   BMP_altitude_I += (float)BMP_err_altitude * G_Dt;
-  BMP_altitude_I = constrain(BMP_altitude_I, -100, 100);
-  BMP_command_altitude = KP_ALTITUDE * BMP_err_altitude + KD_ALTITUDE * BMP_altitude_D + KI_ALTITUDE * BMP_altitude_I;
-  BMP_command_altitude = constrain(BMP_command_altitude, -100, 100); // Limit max command
+  BMP_altitude_I = constrain(BMP_altitude_I, -50, 50);
+  BMP_command_altitude = (KP_ALTITUDE * BMP_err_altitude) + (KD_ALTITUDE * BMP_altitude_D) + (KI_ALTITUDE * BMP_altitude_I);
+  BMP_command_altitude = constrain(BMP_command_altitude, -50, 50); // Limit max command
+  BMP_command_altitude = -1 * BMP_command_altitude;
+  if (BMP_command_altitude < -30)    // Limit the copter from fall to fast out of the sky.  
+    BMP_command_altitude = -30;      //Somehow the constrain -30,50 cause the heading hold to drift.
 }
