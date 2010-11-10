@@ -52,7 +52,7 @@
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
 #define CONFIGURATOR        // Do se use Configurator or normal text output over serial link?
-//#define IsTEL             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
+//#define IsXBEE             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
 //#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
 //#define UseAirspeed       // Do we have an airspeed sensor?
 #define BATTERY_EVENT       // Do we have battery contro wired up? 
