@@ -55,7 +55,7 @@
 //#define IsTEL             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
 //#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
 //#define UseAirspeed       // Do we have an airspeed sensor?
-//#define BATTERY_EVENT 1   // Do we have battery contro wired up? (boolean) 0 = don't read battery, 1 = read battery voltage
+#define BATTERY_EVENT       // Do we have battery contro wired up? 
 
 /**********************************************/
 
@@ -372,6 +372,11 @@ void setup()
   pinMode(RELE_pin,OUTPUT);   // Rele output
   digitalWrite(RELE_pin,LOW);
   
+#ifdef BATTERY_EVENT
+  pinMode(RELAY_PIN, OUTPUT); // Battery Alarm output
+  digitalWrite(47, LOW);      // Silence Alarm
+#endif
+
   APM_RC.Init();             // APM Radio initialization
   // RC channels Initialization (Quad motors)  
   APM_RC.OutputCh(0,MIN_THROTTLE);  // Motors stoped
@@ -555,6 +560,11 @@ void loop(){
     timer_old = timer;
     timer=millis();
     G_Dt = (timer-timer_old)*0.001;      // Real time of loop run 
+
+#ifdef BATTERY_EVENT
+    //Battery Moniter
+    read_battery();
+#endif
 
     // IMU DCM Algorithm
     Read_adc_raw();

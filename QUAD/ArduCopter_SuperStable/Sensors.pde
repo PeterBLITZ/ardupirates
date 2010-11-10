@@ -51,14 +51,26 @@ void read_airspeed(void) {
 }
 #endif
 
-#if BATTERY_EVENT == 1
+
+#ifdef BATTERY_EVENT
 void read_battery(void)
 {
-  battery_voltage = BATTERY_VOLTAGE(analogRead(BATTERY_PIN)) * .1 + battery_voltage * .9;
-  if(battery_voltage < LOW_VOLTAGE)
-    low_battery_event();
+  battery_voltage = BATTERY_VOLTAGE(analogRead(BATTERY_PIN));
+  
+  //Check to see if voltage is below low voltage threshold, but has battery connected
+  if((battery_voltage < LOW_VOLTAGE) && (battery_voltage > 3))
+  {
+    //Sound alarm
+    digitalWrite(47, HIGH);
+  }
+  else
+  {
+    //Silence
+    digitalWrite(47, LOW);
+  }
 }
 #endif
+
 
 #ifdef UseAirspeed
 void zero_airspeed(void)

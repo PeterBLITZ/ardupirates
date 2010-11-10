@@ -135,17 +135,5 @@ void comma() {
   SerPri(',');
 }
 
-#if BATTERY_EVENT == 1
-void low_battery_event(void)
-{
-//	send_message(SEVERITY_HIGH,"Low Battery!");
-//	set_mode(RTL);
-//	throttle_cruise = THROTTLE_CRUISE;
-}
-#endif
-
-
-
-
 
 
