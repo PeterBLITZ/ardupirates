@@ -104,6 +104,7 @@ float yaw = 0;
 unsigned int Magneto_counter = 0;
 unsigned int BMP_counter = 0;
 unsigned int GPS_counter = 0;
+unsigned int cameracounteron = 0;
 
 float DCM_Matrix[3][3]= {
   { 1,0,0 },
@@ -193,17 +194,17 @@ float BMP_Altitude;
 #endif
 
 
-//Low Battery Alarm
-#define BATTERY_VOLTAGE(x) (x * (INPUT_VOLTAGE / 1024.0)) * ((10000 + VOLT_DIV_OHMS) / VOLT_DIV_OHMS)
-#define BATTERY_PIN      0	// ADC Channel of voltage divider
-#define RELAY_PIN        47
-#define LOW_VOLTAGE      12.8   // Pack voltage at which to trigger alarm (Set to about 1 volt above ESC low voltage cutoff)
-#define INPUT_VOLTAGE    5.0	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery level readings. (you need a multimeter to measure and set this of course)
-#define VOLT_DIV_OHMS    3690   // Value of resistor used on voltage divider
-float 	battery_voltage = LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold
+#define BATTERY_VOLTAGE(x) (x*(INPUT_VOLTAGE/1024.0))*VOLT_DIV_RATIO
 
-//Airspeed
-#define AIRSPEED_PIN     1      // Unused?
+#define AIRSPEED_PIN 1		// Need to correct value
+#define BATTERY_PIN 1		// Need to correct value
+#define RELAY_PIN 47
+#define LOW_VOLTAGE	11.4    // Pack voltage at which to trigger alarm
+#define INPUT_VOLTAGE 5.2	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery level readings. (you need a multimeter to measure and set this of course)
+#define VOLT_DIV_RATIO 1.0	//  Voltage divider ratio set with thru-hole resistor (see manual)
+
+float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold for filter
+
 
 // Sonar variables
 int Sonar_value=0;
