@@ -51,11 +51,12 @@
 #define IsNEWMTEK           // Do we have MTEK with new firmware?
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
-#define CONFIGURATOR        // Do se use Configurator or normal text output over serial link?
-//#define IsXBEE             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
+#define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
+//#define IsCAMERATRIGGER     // Do we want to use a servo to trigger a camera regularely
+//#define IsTEL             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
 //#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
 //#define UseAirspeed       // Do we have an airspeed sensor?
-#define BATTERY_EVENT       // Do we have battery contro wired up? 
+//#define BATTERY_EVENT 1   // Do we have battery contro wired up? (boolean) 0 = don't read battery, 1 = read battery voltage
 
 /**********************************************/
 
@@ -372,11 +373,6 @@ void setup()
   pinMode(RELE_pin,OUTPUT);   // Rele output
   digitalWrite(RELE_pin,LOW);
   
-#ifdef BATTERY_EVENT
-  pinMode(RELAY_PIN, OUTPUT); // Battery Alarm output
-  digitalWrite(47, LOW);      // Silence Alarm
-#endif
-
   APM_RC.Init();             // APM Radio initialization
   // RC channels Initialization (Quad motors)  
   APM_RC.OutputCh(0,MIN_THROTTLE);  // Motors stoped
@@ -555,16 +551,13 @@ void loop(){
   {
     Magneto_counter++;
     BMP_counter++;
+    cameracounteron++;
+
 //    BMP_buffercounter++;
     GPS_counter++;
     timer_old = timer;
     timer=millis();
     G_Dt = (timer-timer_old)*0.001;      // Real time of loop run 
-
-#ifdef BATTERY_EVENT
-    //Battery Moniter
-    read_battery();
-#endif
 
     // IMU DCM Algorithm
     Read_adc_raw();
@@ -611,6 +604,18 @@ void loop(){
 *************************************************************************************/
       }
 #endif
+
+#ifdef IsCAMERATRIGGER
+      if (cameracounteron < 1000)   //interval in seconds between triggering the camera (1000 = 5 seconds)
+        APM_RC.OutputCh(4, 2000);    //output for the servo - zero position
+      else
+        APM_RC.OutputCh(4, 200);     //output for the servo - push
+      if (cameracounteron > 1200)   //pushduration of the trigger (interval time + pushduration -> +200 = 1 second)    
+      {
+        cameracounteron = 0;
+      }
+#endif
+
 
     Matrix_update(); 
     Normalize();
