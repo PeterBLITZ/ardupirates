@@ -1,0 +1,16 @@
+#summary Battery Alarm Howto
+
+= Battery Alarm Howto =
+
+Am I the only one who has done an "emergency" landing when the batteries went flat? No, I didn't think so! Here I will show you how to add a low battery alarm to your ArduPirate copter.
+
+
+== Parts you will need ==
+
+  # [http://www.jaycar.com.au/productView.asp?ID=AB3456 http://www.jaycar.com.au/products_uploaded/product_96.jpg] Very loud piezo buzzer capable of running from either 5v or your battery pack.
+  # A 1/4w resistor,
+
+
+
+
+to be continued...
