@@ -1,4 +1,6 @@
+#summary Download & Info Pages.
 #labels Featured
+
 == DOWNLOAD & INFO PAGES ==
 
 There are several sources for the !ArduCopter project.
