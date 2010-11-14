@@ -70,7 +70,7 @@
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
-//#define IsTEL             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
+//#define IsXBEE             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
 //#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
 //#define UseAirspeed       // Do we have an airspeed sensor?
 //#define BATTERY_EVENT     // Do we have battery alarm wired up?
