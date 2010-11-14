@@ -1,4 +1,4 @@
-#summary Aaaron's Ublox Tutorial.
+#summary Aaron's Ublox Tutorial.
 
 = Introduction =
 
