@@ -21,8 +21,8 @@
 /*   APM_Compass : HMC5843 compass library [optional]                     */
 /*   GPS_UBLOX or GPS_NMEA or GPS_MTK : GPS library    [optional]         */
 /* ********************************************************************** */
-/*
-**** Switch Functions *****
+
+/**** Switch Functions *****
  AUX OFF && GEAR OFF = Acro Mode (AP_mode = 0)
  AUX ON  && GEAR OFF = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 2)
  AUX ON  && GEAR ON  = Position Hold Mode (AP_mode = 1)
@@ -45,21 +45,38 @@
 
 /* ********************************************************************** */
 
-// Comment out with // modules that you are not using
 
+
+/* *****************************************************************************
+                  ArduPirate Configuration Setup
+   ***************************************************************************** */
+
+//GPS Config
 #define IsGPS               // Do we have a GPS connected?
-#define IsNEWMTEK           // Do we have MTEK with new firmware?
+
+//#define MTK_GPS           // MediaTEK DIY Drones GPS. 
+//#define IsNEWMTEK         // Do we have MTEK with new firmware?
+//#include <GPS_MTK.h>      
+
+//#define UBLOX_GPS         // uBlox GPS
+//#include <GPS_UBLOX.h>   
+
+#include <GPS_NMEA.h>       // General NMEA GPS
+#define NMEA_GPS            
+
+
+
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
-//#define IsCAMERATRIGGER     // Do we want to use a servo to trigger a camera regularely
+//#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
 //#define IsTEL             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
 //#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
 //#define UseAirspeed       // Do we have an airspeed sensor?
-//#define BATTERY_EVENT 1   // Do we have battery contro wired up? (boolean) 0 = don't read battery, 1 = read battery voltage
+//#define BATTERY_EVENT     // Do we have battery alarm wired up?
+
 
 /**********************************************/
-
 // Frame build configuration
 // THIS FLIGHT MODE X CODE - APM FRONT BETWEEN FRONT AND RIGHT MOTOR.
 // NOT LIKE THE ALPHA RELEASE !!!.
@@ -75,21 +92,12 @@
 #define FLIGHT_MODE_X
 //#define FLIGHT_MODE_+
 
-#ifdef IsMAG
-// DIYDrones Magnetometer
-//#define MAGORIENTATION  APM_COMPASS_COMPONENTS_UP_PINS_FORWARD     // This is default solution for ArduCopter
-//#define MAGORIENTATION  APM_COMPASS_COMPONENTS_UP_PINS_BACK        // Alternative orientation for ArduCopter
-#define MAGORIENTATION  APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD     // If you have soldered Magneto to IMU shield in WIki pictures shows
-// or 
-// Sparkfun Magnetometer
-//#define MAGORIENTATION  APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD // Sparkfun Magnetometer orientation.
-//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK
-//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
+/**********************************************/
+//  Magnetometer Setup
 
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
-//#define MAGOFFSET -77,56,-61  // Hein's calibration settings.
-#define MAGOFFSET -81.00,-35.00,30.50  // You have to determine your own.
+#define MAGOFFSET -81.00,-35.00,30.50
 
 // MAGCALIBRATION is the correction angle in degrees (can be + or -). You need to do this for making sure
 // that your Magnetometer is truly showing 0 degress when your AeroQuad is looking to the North.
@@ -98,7 +106,54 @@
 // Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
 #define MAGCALIBRATION -13.6
 
-#endif
+// orientations for DIYDrones magnetometer
+#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_BACK_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_BACK
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_BACK
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_BACK_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_LEFT
+
+// orientations for Sparkfun magnetometer
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_LEFT
+
+//Low Battery Alarm
+#define LOW_VOLTAGE      12.5   // Pack voltage at which to trigger alarm (Set to about 1 volt above ESC low voltage cutoff)
+#define VOLT_DIV_OHMS    3690   // Value of resistor (in ohms) used on voltage divider
+
+
+/******************************************************** */
+/* END CONFIGURATION                                      */
+/******************************************************** */
+
+
+
+
 
 // Quick and easy hack to change FTDI Serial output to Telemetry port. Just activate #define IsXBEE some lines earlier
 #ifndef IsXBEE
@@ -130,10 +185,9 @@
 #include <APM_RC.h>
 #include <DataFlash.h>
 #include <APM_Compass.h>
-#include <GPS_MTK.h>      // MediaTEK DIY Drones GPS. 
-//#include <GPS_UBLOX.h>  // uBlox GPS
-//#include <GPS_NMEA.h>   // General NMEA GPS
-#include <EEPROM.h>       // EEPROM storage for user configurable values
+
+
+#include <EEPROM.h>         // EEPROM storage for user configurable values
 #include "ArduCopter.h"
 #include "UserConfig.h"
 
@@ -441,6 +495,11 @@ void setup()
     SerPri("Serial ready on port: ");    // Printout greeting to selecter serial port
     SerPriln(SerPor);                    // Printout serial port name
 #endif
+
+#ifdef BATTERY_EVENT
+  pinMode(LOW_BATTERY_OUT, OUTPUT);   // Battery Alarm output
+  digitalWrite(LOW_BATTERY_OUT, LOW); // Silence Alarm
+#endif
   
   // Check if we enable the DataFlash log Read Mode (switch)
   // If we press switch 1 at startup we read the Dataflash eeprom
@@ -562,6 +621,10 @@ void loop(){
     // IMU DCM Algorithm
     Read_adc_raw();
     
+#ifdef BATTERY_EVENT
+    read_battery();
+#endif
+
 #ifdef IsMAG
       if (MAGNETOMETER == 1) {
         if (Magneto_counter > 20)  // Read compass data at 10Hz... (20 loop runs)
