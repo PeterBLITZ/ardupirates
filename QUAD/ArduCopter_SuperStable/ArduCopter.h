@@ -193,18 +193,19 @@ float tempPresAlt;
 float BMP_Altitude;
 #endif
 
+#define RELAY_PIN        47
 
-#define BATTERY_VOLTAGE(x) (x*(INPUT_VOLTAGE/1024.0))*VOLT_DIV_RATIO
+//Low Battery Alarm
+#define BATTERY_VOLTAGE(x) (x * (INPUT_VOLTAGE / 1024.0)) * ((10000 + VOLT_DIV_OHMS) / VOLT_DIV_OHMS)
 
-#define AIRSPEED_PIN 1		// Need to correct value
-#define BATTERY_PIN 1		// Need to correct value
-#define RELAY_PIN 47
-#define LOW_VOLTAGE	11.4    // Pack voltage at which to trigger alarm
-#define INPUT_VOLTAGE 5.2	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery level readings. (you need a multimeter to measure and set this of course)
-#define VOLT_DIV_RATIO 1.0	//  Voltage divider ratio set with thru-hole resistor (see manual)
+#define BATTERY_ADC      0	// ADC Channel of voltage divider
+#define LOW_BATTERY_OUT  49     // Digital output pin for alarm    
+#define INPUT_VOLTAGE    5.0	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery level readings. (you need a multimeter to measure and set this of course)
 
-float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold for filter
+float 	battery_voltage = LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold
 
+//Airspeed
+#define AIRSPEED_PIN     1      // Unused?
 
 // Sonar variables
 int Sonar_value=0;
