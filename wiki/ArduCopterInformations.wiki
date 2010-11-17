@@ -39,6 +39,9 @@ http://tortoisesvn.net
 
 http://www.rcgroups.com/forums/showthread.php?t=1317685
 
+*Tutorial for the UBlox GPS:*
+
+http://www.rcgroups.com/forums/showthread.php?t=1339624
 
 *Where to buy frames?*
 
