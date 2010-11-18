@@ -38,9 +38,9 @@ To flash the new firmware go to Tools=>Firmware update. Make sure the firmware i
 http://i529.photobucket.com/albums/dd340/95ESINT/GPS/ucenter.jpg
 
 
-To configure GPS module to use with your !ArduPirates Multicopter code, use my config file SS!_New15_UbloxConfig that is located in the link below. Point the "Flash Destination File" to the location you unzipped it to. Once done click Ok.
+To configure GPS module to use with your !ArduPirates Multicopter code, use my config file !SS_New15_UbloxConfig that is located in the link below. Point the "Flash Destination File" to the location you unzipped it to. Once done click Ok.
 
-To configure a module to use with !ArduPirates Multicopter, Go to Tools=>GPS configuration, and select my file, SS!_New15_UbloxConfig. 
+To configure a module to use with !ArduPirates Multicopter, Go to Tools=>GPS configuration, and select my file, !SS_New15_UbloxConfig. 
 
 Check the "Store configuration" box and click on "File >>> GPS".
 
