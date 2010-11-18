@@ -27,7 +27,7 @@
  AUX2 OFF && GEAR OFF = Acro Mode (AP_mode = 0)
  AUX2 ON  && GEAR OFF = Stable Mode (AP_mode = 2)
  AUX2 ON  && GEAR ON  = Stable & Fixed Altitude Hold (AP_mode = 1)
- AUX2 OFF && GEAR ON  = Postion & Fixed Altitude Hold (AP_mode = 3)
+ AUX2 OFF && GEAR ON  = Position & Fixed Altitude Hold (AP_mode = 3)
  
  **** LED Feedback ****
  Bootup Sequence:
@@ -170,7 +170,7 @@
 #include "UserConfig.h"
 
 /* Software version */
-#define VER 1.9    // Current software version (only numeric values)
+#define VER 2.0    // Current software version (only numeric values)
 
 
 /* ***************************************************************************** */
@@ -609,11 +609,12 @@ void loop(){
 
 #ifdef IsSonar
 //    sonar_adc += APM_ADC.Ch(7);   // Sonar is connected to pitot input in shield (ADC channel 7)
-    sonar_adc += analogRead(4);   // Sonar is connected to pitot input in shield (ADC channel 7)
-    if (sonar_adc == 0)
-      Use_BMP_Altitude = 1;
-    else if (sonar_adc > 1023)
-      Use_BMP_Altitude = 1;
+    sonar_read = analogRead(4);   // Sonar is connected to pilot input on shield (Analogue channel 4)
+    sonar_adc += sonar_read;  
+    if (sonar_read == 0)
+      Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
+    else if (sonar_read > 1022)
+      Use_BMP_Altitude = 1; 
     else
       Use_BMP_Altitude = 0;
 #endif
@@ -664,7 +665,7 @@ void loop(){
 
       #define STICK_TO_ANGLE_FACTOR 12.0
    
-      command_throttle = (ch_throttle - Initial_Throttle) / STICK_TO_ANGLE_FACTOR; 
+//      command_throttle = (ch_throttle - Hover_Throttle_Position) / STICK_TO_ANGLE_FACTOR; 
       command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
       command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 
@@ -686,7 +687,7 @@ void loop(){
       } 
 #endif
 */
-
+/*
      // Tuning P of PID using only 3 position channel switch (Flight Mode).
      if (ch_aux1 >= 1800) 
      {
@@ -768,7 +769,7 @@ void loop(){
                 Minus = 0;
              }
      }
-
+*/
       if (abs(ch_yaw-yaw_mid)<12)   // Take into account a bit of "dead zone" on yaw
         aux_float = 0.0;
       else
@@ -784,7 +785,7 @@ void loop(){
 //     AUX2 OFF && GEAR OFF = Acro Mode (AP_mode = 0)
 //     AUX2 ON  && GEAR OFF = Stable Mode (AP_mode = 2)
 //     AUX2 ON  && GEAR ON  = Stable & Fixed Altitude Hold (AP_mode = 1)
-//     AUX2 OFF && GEAR ON  = Postion & Fixed Altitude Hold (AP_mode = 3)
+//     AUX2 OFF && GEAR ON  = Position & Fixed Altitude Hold (AP_mode = 3)
       
       if (ch_aux2 < 1250 && ch_gear > 1800)
       {
@@ -793,7 +794,7 @@ void loop(){
       }
       else if (ch_gear < 1250 && ch_aux2 > 1800)
       {
-        AP_mode = 3;           // Postion & Fixed Altitude Hold (GPS position control & Altitude control)
+        AP_mode = 3;           // Position & Fixed Altitude Hold (GPS position control & Altitude control)
         digitalWrite(LED_Yellow,HIGH); // Yellow LED On
       }
       else if (ch_gear < 1250 && ch_aux2 < 1250)
@@ -810,7 +811,7 @@ void loop(){
     }  // END new radio data
 
 
-  if (AP_mode==3)  // Position & Altitude Hold Mode
+  if (AP_mode==3)  // Position & Fixed Altitude Hold Mode
     {
       heading_hold_mode = 1;
       if (target_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
@@ -943,7 +944,7 @@ void loop(){
       else
         digitalWrite(LED_Red,LOW);
 
-      if (AP_mode == 1 || AP_mode ==3)
+      if (AP_mode == 3)
       {
         if ((target_position == 1) && (GPS.Fix))
         {
@@ -965,7 +966,7 @@ void loop(){
       }
     }
     
-    if (AP_mode ==3 || AP_mode == 1)  // Position Control (Altitude control + Obstacle avoidance)
+    if (AP_mode == 3 || AP_mode == 1)  // Position Control (Altitude control + Obstacle avoidance)
     {
 #ifdef IsSonar
       if (Sonar_new_data == 1 && Use_BMP_Altitude == 0)  // Do altitude control on each new sonar data
@@ -1008,13 +1009,13 @@ void loop(){
     }
 
 #ifdef IsSonar
-    if (AP_mode ==3 || AP_mode == 1)
+    if (AP_mode == 3 || AP_mode == 1)
     {
       ch_throttle = ch_throttle_altitude_hold;
     } 
 #endif
 #ifdef UseBMP
-    if (AP_mode ==3 || AP_mode == 1)
+    if (AP_mode == 3 || AP_mode == 1)
       ch_throttle = ch_throttle_altitude_hold;
 #endif
 
