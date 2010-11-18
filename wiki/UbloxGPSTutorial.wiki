@@ -4,7 +4,7 @@ This page will help you setup your Ublox to work with your !ArduPirates !MultiCo
 = Please follow this page and the detailed information step by step =
 
 
-This tutorial is to show fellow Pirates how to use the Ublox GPS with your Arducopter. If you don't have the Ublox unit yet, get it [https://www.aeroquadstore.com/ProductDetails.asp?ProductCode=GPS%2D09436 here] you will most likely have to do this setup anyways. I will try to make this as user friendly so even the most non-tech savvy person can do this. Ready?
+This tutorial is to show fellow Pirates how to use the Ublox GPS with your Arducopter. If you don't have the Ublox unit yet, get it [https://www.aeroquadstore.com/ProductDetails.asp?ProductCode=GPS%2D09436 here] or [http://www.sparkfun.com/products/9436 here]. You will most likely have to do this setup no matter where you purchase your Ublox. I will try to make this as user friendly so even the most non-tech savvy person can do this. Ready?
 
 I have enclosed all of the files needed for this tutorial.
 
