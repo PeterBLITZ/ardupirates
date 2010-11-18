@@ -8,9 +8,9 @@ This tutorial is to show fellow Pirates how to use the Ublox GPS with your Arduc
 
 I have enclosed all of the files needed for this tutorial.
 
-First get the u-center GPS evaluation software here http://www.u-blox.com/en/evaluation-tools-a-software/u-center/u-center.html . Unzip, Install.
+First get the u-center GPS evaluation software here [http://www.u-blox.com/en/evaluation-tools-a-software/u-center/u-center.html GPS u-center] . Unzip, Install.
 
-Now you will have to connect your GPS to your computer directly. There are many ways out there but I have found my way the EASIEST by far!! NO SOLDERING! If you are reading this, most likely you have the GPS already so you will also need this http://store.diydrones.com/FTDI_GPS_Adapter_cable_15_cm_p/ca-0001-09.htm GPS adapter cable, and this http://www.sparkfun.com/products/9716 Sparkfun USB/FTDI breakout board.
+Now you will have to connect your GPS to your computer directly. There are many ways out there but I have found my way the EASIEST by far!! NO SOLDERING! If you are reading this, most likely you have the GPS already so you will also need this [http://store.diydrones.com/FTDI_GPS_Adapter_cable_15_cm_p/ca-0001-09.htm GPS adapter cable], and this [http://www.sparkfun.com/products/9716 Sparkfun USB/FTDI breakout board].
 
 Connect: USB cable from computer (USB to Mini USB)=>USB/FTDI breakout board=>GPS adapter cable=>GPS
 
@@ -38,9 +38,9 @@ To flash the new firmware go to Tools=>Firmware update. Make sure the firmware i
 http://i529.photobucket.com/albums/dd340/95ESINT/GPS/ucenter.jpg
 
 
-To configure GPS module to use with your !ArduPirates !Multicopter code, use my config file (!SS_New15_Ublox Config) that is included in the zip package below. Point the "Flash Destination File" to the location you unzipped it to. Once done click Ok.
+To configure GPS module to use with your !ArduPirates !Multicopter code, use my config file **SS_New15_Ublox Config** that is included in the zip package below. Point the "Flash Destination File" to the location you unzipped it to. Once done click Ok.
 
-To configure a module to use with !ArduPirates !Multicopter, Go to Tools=>GPS configuration, and select my file, !SS_New15_Ublox Config. 
+To configure a module to use with !ArduPirates !Multicopter, Go to Tools=>GPS configuration, and select my file, **SS_New15_Ublox Config**. 
 
 Check the "Store configuration" box and click on "File >>> GPS".
 
