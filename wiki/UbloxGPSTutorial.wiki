@@ -8,7 +8,7 @@ This tutorial is to show fellow Pirates how to use the Ublox GPS with your Arduc
 
 I have enclosed all of the files needed for this tutorial.
 
-First get the u-center GPS evaluation software here [http://www.u-blox.com/en/evaluation-tools-a-software/u-center/u-center.html GPS u-center] . Unzip, Install.
+First get the u-center GPS evaluation software here [http://code.google.com/p/ardupirates/downloads/list GPS u-center] . Unzip, Install.
 
 Now you will have to connect your GPS to your computer directly. There are many ways out there but I have found my way the EASIEST by far!! NO SOLDERING! If you are reading this, most likely you have the GPS already so you will also need this [http://store.diydrones.com/FTDI_GPS_Adapter_cable_15_cm_p/ca-0001-09.htm GPS adapter cable], and this [http://www.sparkfun.com/products/9716 Sparkfun USB/FTDI breakout board].
 
