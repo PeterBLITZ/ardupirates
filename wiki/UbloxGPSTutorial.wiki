@@ -89,5 +89,5 @@ http://i529.photobucket.com/albums/dd340/95ESINT/GPS/u-centermessagesview.jpg
 
 ***You are done!! Now plug the GPS to your !ArduPirates !Multicopter with your SS code and fly like a PIRATE!***
 
-You can download the ArduPirates Code including the Ublox GPS code from here:
+You can download the !ArduPirates Code including the Ublox GPS code from here:
 [http://code.google.com/p/ardupirates/wiki/UbloxGPSTutorial UbloxGPSTutorial]
