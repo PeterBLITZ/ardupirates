@@ -1,4 +1,4 @@
-This page will help you setup your Ublox to work with your !ArduPirates.
+This page will help you setup your Ublox to work with your !ArduPirates MultiCopter.
 
 = Please follow this page and the detailed information step by step =
 
