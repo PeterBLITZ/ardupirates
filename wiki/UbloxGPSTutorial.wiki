@@ -52,7 +52,7 @@ Go to Message view (View->messages view):
 
 http://i529.photobucket.com/albums/dd340/95ESINT/GPS/u-centermessagesview.jpg
 
-***MAKE SURE TO HIT SEND IN THE LOWER LEFT CORNER AFTER EACH CHANGE!!***
+***MAKE SURE TO CLICK SEND IN THE LOWER LEFT CORNER AFTER EACH CHANGE!!***
 
 1. Right Click on the NMEA Text on top of the tree and choose disable child messages
 ***SEND***
@@ -87,7 +87,7 @@ http://i529.photobucket.com/albums/dd340/95ESINT/GPS/u-centermessagesview.jpg
 
 
 
-***You are done!! Now plug the GPS to your !ArduPirates !Multicopter with your SS code and fly like a PIRATE!***
+***You are done!! Now plug the GPS to your !ArduPirates Multicopter with your SS code and fly like a PIRATE!***
 
 You can download the !ArduPirates Code including the Ublox GPS code from here:
 [http://code.google.com/p/ardupirates/downloads/list Main Download Page]
