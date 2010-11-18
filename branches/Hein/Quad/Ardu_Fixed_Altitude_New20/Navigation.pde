@@ -78,7 +78,8 @@ int Altitude_control_Sonar(int Sonar_altitude, int target_sonar_altitude)
   altitude_I += (float)err_altitude*0.05;
   altitude_I = constrain(altitude_I,-1000,1000);
   command_altitude = KP_SONAR_ALTITUDE*err_altitude + KD_SONAR_ALTITUDE*altitude_D + KI_SONAR_ALTITUDE*altitude_I;
-  return (Initial_Throttle + constrain(command_altitude,-ALTITUDE_CONTROL_SONAR_OUTPUT_MIN,ALTITUDE_CONTROL_SONAR_OUTPUT_MAX));
+  command_altitude = Initial_Throttle + constrain(command_altitude,-ALTITUDE_CONTROL_SONAR_OUTPUT_MIN,ALTITUDE_CONTROL_SONAR_OUTPUT_MAX);
+  return command_altitude;
 }
 
 /* Altitude control... (based on sonar) */
