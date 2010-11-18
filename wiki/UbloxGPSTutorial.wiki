@@ -86,4 +86,4 @@ http://i529.photobucket.com/albums/dd340/95ESINT/GPS/u-centermessagesview.jpg
 
 
 
-***You are done!! Now plug the GPS to your PirateKopter with your SS code and fly like a PIRATE!***
+***You are done!! Now plug the GPS to your !ArduPirates !Multicopter with your SS code and fly like a PIRATE!***
