@@ -41,7 +41,7 @@ http://www.rcgroups.com/forums/showthread.php?t=1317685
 
 *Tutorial for the UBlox GPS:*
 
-http://www.rcgroups.com/forums/showthread.php?t=1339624
+http://code.google.com/p/ardupirates/wiki/UbloxGPSTutorial#whb
 
 *Where to buy frames?*
 
