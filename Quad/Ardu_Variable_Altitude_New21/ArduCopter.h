@@ -181,7 +181,7 @@ float command_throttle;
 //Altitude control
 //int Initial_Throttle;
 int target_sonar_altitude;
-int target_baro_altitude;
+long target_baro_altitude;
 int err_altitude;
 int err_altitude_old;
 float command_altitude = 0;
