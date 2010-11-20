@@ -8,7 +8,7 @@
 /* Authors : Arducopter development team                                  */
 /*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
-/*           Sandro Benigno, Chris Anderson, Hein                         */
+/*           Sandro Benigno, Chris Anderson, Hein, Phil.                        */
 /* Date : 08-08-2010                                                      */
 /* Version : 1.7 beta                                                     */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
