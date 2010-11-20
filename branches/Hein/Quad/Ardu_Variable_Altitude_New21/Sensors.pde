@@ -19,6 +19,7 @@
  */
 
 #ifdef UseBMP
+/*
 void read_airpressure(void){
   double x;
 
@@ -34,7 +35,7 @@ void read_airpressure(void){
   press_alt = (int)(x / 10) + ground_alt;		// Pressure altitude in centimeters
   //  Need to add comments for theory.....
 }
-
+*/
 void read_baro(void)
 {
   float tempPresAlt;

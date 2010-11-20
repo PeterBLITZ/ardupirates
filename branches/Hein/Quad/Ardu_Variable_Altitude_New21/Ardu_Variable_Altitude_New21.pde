@@ -52,7 +52,7 @@
 #define IsGPS    // Do we have a GPS connected
 #define IsNEWMTEK// Do we have MTEK with new firmware
 #define IsMAG    // Do we have a Magnetometer connected, if have remember to activate it from Configurator
-#define IsXBEE    // Do we have a telemetry connected, eg. XBee connected on Telemetry port
+//#define IsXBEE    // Do we have a telemetry connected, eg. XBee connected on Telemetry port
 //#define IsAM     // Do we have motormount LED's. AM = Atraction Mode
 //#define IsSonar  // Do we have Sonar installed
 //#define IsIR_RF  // Do we have IR Range Finders
@@ -170,7 +170,7 @@
 #include "UserConfig.h"
 
 /* Software version */
-#define VER 1.9    // Current software version (only numeric values)
+#define VER 2.1    // Current software version (only numeric values)
 
 
 /* ***************************************************************************** */
@@ -678,7 +678,7 @@ void loop(){
         if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200) 
         {
           Throttle_Altitude_Change_mode = 1; //Throttle Applied in Altitude hold is switched on.  Changing Altitude. 
-          target_alt_position == 0;
+          target_alt_position = 0;
         } 
         else 
         {
@@ -716,16 +716,16 @@ void loop(){
 //                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
 //                STABLE_MODE_KP_RATE_YAW += 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
-                STABLE_MODE_KP_RATE_ROLL += 0.1;
-                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
-                STABLE_MODE_KP_RATE_PITCH += 0.1;
-                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+//                STABLE_MODE_KP_RATE_ROLL += 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
+//                STABLE_MODE_KP_RATE_PITCH += 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
 //                Kp_RateRoll += 0.1;
 //                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
 //                Kp_RatePitch += 0.1;
 //                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
-//                KP_ALTITUDE += 0.2;
-//                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+                KP_ALTITUDE += 0.1;
+                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
 //                KI_ALTITUDE += 0.3;
 //                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
 //                Magoffset1 += 1;
@@ -749,16 +749,16 @@ void loop(){
 //                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
 //                STABLE_MODE_KP_RATE_YAW -= 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
-                STABLE_MODE_KP_RATE_ROLL -= 0.1;
-                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
-                STABLE_MODE_KP_RATE_PITCH -= 0.1;
-                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+//                STABLE_MODE_KP_RATE_ROLL -= 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
+//                STABLE_MODE_KP_RATE_PITCH -= 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
 //                Kp_RateRoll -= 0.1;
 //                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
 //                Kp_RatePitch -= 0.1;
 //                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
-//                KP_ALTITUDE -= 0.2;
-//                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+                KP_ALTITUDE -= 0.1;
+                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
 //                KI_ALTITUDE -= 0.3;
 //                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
 //                Magoffset1 -= 1;
@@ -970,20 +970,20 @@ void loop(){
     if ((AP_mode == 3 || AP_mode == 1) && Throttle_Altitude_Change_mode == 0)  // Position Control (Altitude control + Obstacle avoidance)
     {
 #ifdef IsSonar
-      if (Sonar_new_data)  // Do altitude control on each new sonar data
+      if (Sonar_new_data == 1 && Use_BMP_Altitude == 0)  // Do altitude control on each new sonar data
       { 
         command_altitude = Altitude_control_Sonar(Sonar_value,target_sonar_altitude);
         Sonar_new_data=0;
       }
 #endif
 #ifdef UseBMP
-      if (Baro_new_data)
+      if (Baro_new_data == 1 && Use_BMP_Altitude == 1)
       {
         command_altitude = Altitude_control_baro_v2(press_alt,target_baro_altitude);
         Baro_new_data=0;
       }
 #endif
- #ifdef IsIR_RF
+#ifdef IsIR_RF
       if (RF_new_data)  // Range Finder Obstacle avoidance (Position control)  
       {
         RF_Obstacle_avoidance(RF_Sensor1,RF_Sensor2,RF_Sensor3,RF_Sensor4);  // Call Range Finder position control routine
@@ -1020,10 +1020,10 @@ void loop(){
         if (Arming_counter > ARM_DELAY){
           if(ch_throttle > 800) 
           {
-            motorArmed = 1;
-            minThrottle = MIN_THROTTLE+60;  // A minimun value for mantain a bit of throttle
-//            motorArmed = 0;
-//            minThrottle = MIN_THROTTLE;
+//            motorArmed = 1;
+//            minThrottle = MIN_THROTTLE+60;  // A minimun value for mantain a bit of throttle
+            motorArmed = 0;
+            minThrottle = MIN_THROTTLE;
 
           }
         }
