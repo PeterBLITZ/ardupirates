@@ -317,28 +317,40 @@ void sendSerialTelemetry() {
     if (AP_mode == 0) 
       SerPriln("Acrobatic");
     else if (AP_mode == 1)
-      SerPriln("Position Hold");
+      SerPriln("Stable & Altitude Hold");
     else if (AP_mode == 2)
-      SerPriln("Stable Mode");
+      SerPriln("Stable Mode only");
     else if (AP_mode == 3)
       SerPriln("Position & Altitude Hold");
-//    SerPri("Target Altitude = ");
-//    SerPriln(BMP_target_altitude);
-//    SerPri("Current Altitude = ");
-//    SerPriln(BMP_Altitude);
-//    SerPri("throttle_command = ");
-//    SerPriln(ch_throttle);
+    SerPri("Current Sonar Altitude = ");
+    SerPriln(Sonar_value);
+    SerPri("Target Sonar Altitude = ");
+    SerPriln(target_sonar_altitude);
+    SerPri("Current Baro Altitude = ");
+    SerPriln(press_alt);
+    SerPri("Target Baro Altitude = ");
+    SerPriln(target_baro_altitude);
+    SerPri("Throttle Altitude Change Mode = ");
+//    if (Throttle_Altitude_Change_mode == 0) 
+//      SerPriln("Off");
+//    else if (Throttle_Altitude_Change_mode == 1)  
+//      SerPriln("On");
+    SerPri("USE BMP Altitude mode = ");
+    if (Use_BMP_Altitude == 0) 
+      SerPriln("Off");
+    else if (Use_BMP_Altitude == 1)
+      SerPriln("On");
 //    SerPri("Yaw mid = ");
 //    SerPriln(yaw_mid);
 //    SerPri("BMP_altitude command = ");
 //    SerPriln(BMP_command_altitude);
 //    SerPri("Amount RX Yaw = ");
 //    SerPriln(amount_rx_yaw);
-    SerPri("Current Compass Heading = ");
-    current_heading_hold = APM_Compass.Heading;
-    if (current_heading_hold < 0)
-      current_heading_hold += ToRad(360);
-    SerPriln(ToDeg(current_heading_hold), 3);
+//    SerPri("Current Compass Heading = ");
+//    current_heading_hold = APM_Compass.Heading;
+//    if (current_heading_hold < 0)
+//      current_heading_hold += ToRad(360);
+//    SerPriln(ToDeg(current_heading_hold), 3);
 //    SerPri("Error Course = ");
 //    SerPriln(ToDeg(errorCourse), 3);
     SerPri("Heading Hold Mode = ");
@@ -347,18 +359,18 @@ void sendSerialTelemetry() {
     else 
       SerPriln("On");
     
-    SerPri("KP ALTITUDE = ");
-    SerPriln(KP_ALTITUDE, 3);
-    SerPri("EEPROM KP ALTITUDE = ");
-    SerPriln(readEEPROM(KP_ALTITUDE_ADR), 3);
-    SerPri("KI ALTITUDE = ");
-    SerPriln(KI_ALTITUDE, 3);
-    SerPri("EEPROM KI ALTITUDE = ");
-    SerPriln(readEEPROM(KI_ALTITUDE_ADR), 3);
-    SerPri("KD ALTITUDE = ");
-    SerPriln(KD_ALTITUDE, 3);
-    SerPri("EEPROM KD ALTITUDE = ");
-    SerPriln(readEEPROM(KD_ALTITUDE_ADR), 3);
+//    SerPri("KP ALTITUDE = ");
+//    SerPriln(KP_ALTITUDE, 3);
+//    SerPri("EEPROM KP ALTITUDE = ");
+//    SerPriln(readEEPROM(KP_ALTITUDE_ADR), 3);
+//    SerPri("KI ALTITUDE = ");
+//    SerPriln(KI_ALTITUDE, 3);
+//    SerPri("EEPROM KI ALTITUDE = ");
+//    SerPriln(readEEPROM(KI_ALTITUDE_ADR), 3);
+//    SerPri("KD ALTITUDE = ");
+//    SerPriln(KD_ALTITUDE, 3);
+//    SerPri("EEPROM KD ALTITUDE = ");
+//    SerPriln(readEEPROM(KD_ALTITUDE_ADR), 3);
 //    SerPri("KP ROLL ACRO MODE = ");
 //    SerPriln(Kp_RateRoll, 3);
 //    SerPri("EEPROM KP ROLL ACRO MODE = ");
