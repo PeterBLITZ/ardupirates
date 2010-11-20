@@ -8,7 +8,7 @@
 /* Authors : Arducopter development team                                  */
 /*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
-/*           Sandro Benigno, Chris Anderson, Hein                         */
+/*           Sandro Benigno, Chris Anderson, Hein, Phil.                        */
 /* Date : 08-08-2010                                                      */
 /* Version : 1.7 beta                                                     */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
@@ -1020,10 +1020,10 @@ void loop(){
         if (Arming_counter > ARM_DELAY){
           if(ch_throttle > 800) 
           {
-//            motorArmed = 1;
-//            minThrottle = MIN_THROTTLE+60;  // A minimun value for mantain a bit of throttle
-            motorArmed = 0;
-            minThrottle = MIN_THROTTLE;
+            motorArmed = 1;
+            minThrottle = MIN_THROTTLE+60;  // A minimun value for mantain a bit of throttle
+//            motorArmed = 0;
+//            minThrottle = MIN_THROTTLE;
 
           }
         }
