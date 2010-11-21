@@ -1,9 +1,0 @@
-# sidebar
-
-ArduCopterInformations
-
-UbloxGPSTutorial
-
-BatteryAlarmHowto
-
-PIDSettings
