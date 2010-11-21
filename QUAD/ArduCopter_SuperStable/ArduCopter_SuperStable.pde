@@ -43,7 +43,7 @@
  Green LED blink slow = Motors armed, Stable mode
  Green LED blink rapid = Motors armed, Acro mode 
 
-/* ********************************************************************** */
+ ********************************************************************** */
 
 
 
@@ -70,10 +70,12 @@
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
-//#define IsXBEE             // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
+//#define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
 //#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
 //#define UseAirspeed       // Do we have an airspeed sensor?
 //#define BATTERY_EVENT     // Do we have battery alarm wired up?
+//#define MOTORMOUNT_LEDS   // Do we have motormount LEDs attched to AN4 and AN5 (NOT the same as IsAM)? See bottom of the file for details
+//#define RELAY_LED_LIGHTS  // Do we have LED lights attached through the relay? Turned on and off with Rx Ch7 (FIXME: should be configurable)
 
 
 /**********************************************/
@@ -216,7 +218,7 @@ void Attitude_control_v3()
   float stable_roll,stable_pitch,stable_yaw;
   
   // ROLL CONTROL    
-  if (AP_mode==2)        // Normal Mode => Stabilization mode
+  if (AP_mode==F_MODE_SUPER_STABLE)        // Normal Mode => Stabilization mode
     err_roll = command_rx_roll - ToDeg(roll);
   else
     err_roll = (command_rx_roll + command_gps_roll) - ToDeg(roll);  // Position control  
@@ -235,7 +237,7 @@ void Attitude_control_v3()
   control_roll = constrain(control_roll,-MAX_CONTROL_OUTPUT,MAX_CONTROL_OUTPUT);
 
   // PITCH CONTROL
-  if (AP_mode==2)        // Normal mode => Stabilization mode
+  if (AP_mode==F_MODE_SUPER_STABLE)        // Normal mode => Stabilization mode
     err_pitch = command_rx_pitch - ToDeg(pitch);
   else                   // GPS Position hold
     err_pitch = (command_rx_pitch + command_gps_pitch) - ToDeg(pitch);  // Position Control
@@ -426,6 +428,17 @@ void setup()
 
   pinMode(RELE_pin,OUTPUT);   // Rele output
   digitalWrite(RELE_pin,LOW);
+
+#ifdef MOTORMOUNT_LEDS
+  pinMode( MM_LED1, OUTPUT );   // Motormount LEDs
+  digitalWrite( MM_LED1, LOW );
+  mm_led1_speed  = -1;          // Lights off
+  mm_led1_status = LOW;
+  pinMode( MM_LED2, OUTPUT );
+  digitalWrite( MM_LED2, LOW );
+  mm_led2_speed  = -1;          // Lights off
+  mm_led2_status = LOW;
+#endif
   
   APM_RC.Init();             // APM Radio initialization
   // RC channels Initialization (Quad motors)  
@@ -711,7 +724,7 @@ void loop(){
 
 #ifdef UseBMP  
         // New Altitude Hold using BMP Pressure sensor.  If Trottle stick moves more then 10%, switch Altitude Hold off    
-        if (AP_mode == 2 || AP_mode == 3) 
+        if (AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_ABS_HOLD) 
         {
           if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200)
           {
@@ -749,27 +762,35 @@ void loop(){
       
       if (ch_aux2 < 1250 && ch_aux > 1800)
       {
-        AP_mode = 2;          // Stable mode & Altitude hold mode (Stabilization assist mode)
-        digitalWrite(LED_Yellow,LOW); // Yellow LED off
+        AP_mode = F_MODE_SUPER_STABLE;  // Stable mode & Altitude hold mode (Stabilization assist mode)
+        digitalWrite(LED_Yellow,LOW);   // Yellow LED off
       }
       else if (ch_aux < 1250 && ch_aux2 > 1800)
       {
-        AP_mode = 3;           // Position & Altitude hold mode (GPS position control & Altitude control)
-        digitalWrite(LED_Yellow,HIGH); // Yellow LED On
+        AP_mode = F_MODE_ABS_HOLD;      // Position & Altitude hold mode (GPS position control & Altitude control)
+        digitalWrite(LED_Yellow,HIGH);  // Yellow LED On
       }
       else if (ch_aux < 1250 && ch_aux2 < 1250)
       {
-        AP_mode = 1;           // Position hold mode (GPS position control)
-        digitalWrite(LED_Yellow,HIGH); // Yellow LED On
+        AP_mode = F_MODE_POS_HOLD;      // Position hold mode (GPS position control)
+        digitalWrite(LED_Yellow,HIGH);  // Yellow LED On
       }
       else 
       {
-        AP_mode = 0;          // Acrobatic mode
+        AP_mode = F_MODE_ACROBATIC;     // Acrobatic mode
         digitalWrite(LED_Yellow,LOW); // Yellow LED off
       }     // End reading Quad Mode from Channel 5 & 6
+
+#ifdef RELAY_LED_LIGHTS
+      if( ch_mode > 1500 ) {  // FIXME, Rx channel and value should be configurable
+        digitalWrite( RELE_pin, HIGH );
+      } else {
+        digitalWrite( RELE_pin, LOW );
+      }
+#endif
     }  // End reading new radio frame
 	  
-   if (AP_mode==3)  // Position & Altitude Hold Mode
+   if (AP_mode==F_MODE_ABS_HOLD)  // Position & Altitude Hold Mode
     {
       heading_hold_mode = 1;
       if (target_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
@@ -802,7 +823,7 @@ void loop(){
         command_gps_pitch = 0;
       }        
     }
-    else if (AP_mode==1)  // Position Control (just GPS without altitude)
+    else if (AP_mode==F_MODE_POS_HOLD)  // Position Control (just GPS without altitude)
     {
       heading_hold_mode = 1;
       target_alt_position = 0;
@@ -829,7 +850,7 @@ void loop(){
       BMP_err_altitude = 0;
       BMP_command_altitude = 0;
     }
-    else if (AP_mode==2)  // SuperStable Mode (Altitude Hold and Heading Hold) (if no stick movement)
+    else if (AP_mode==F_MODE_SUPER_STABLE)  // SuperStable Mode (Altitude Hold and Heading Hold) (if no stick movement)
     {
       if (target_alt_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
       {
@@ -847,7 +868,7 @@ void loop(){
       heading_hold_mode = 1;
       target_position = 0;
     }
-    else if (AP_mode == 0)  //Acrobatic Mode
+    else if (AP_mode == F_MODE_ACROBATIC)  //Acrobatic Mode
     {
       BMP_altitude_I = 0;
       BMP_altitude_D = 0;
@@ -888,7 +909,7 @@ void loop(){
       else
         digitalWrite(LED_Red,LOW);
 
-      if (AP_mode == 1 || AP_mode ==3)
+      if (AP_mode == F_MODE_POS_HOLD || AP_mode ==F_MODE_ABS_HOLD)
       {
         if ((target_position == 1) && (GPS.Fix))
         {
@@ -910,7 +931,7 @@ void loop(){
       }
     }
 
-    if (AP_mode == 1 || AP_mode == 2 || AP_mode == 3) 
+    if (AP_mode == F_MODE_POS_HOLD || AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_ABS_HOLD) 
     {
       gled_speed = 1200;
       Attitude_control_v3();
@@ -1055,9 +1076,98 @@ void loop(){
       gled_status = HIGH;
     } 
   }
+
+#ifdef MOTORMOUNT_LEDS
+  // Motormount LEDs (NOT Attraction mode)
+  // We use 2 LEDs - one for indicating Acro/Stable mode (MM_LED1)
+  // and onw for indicating Position Hold mode (MM_LED2)
+  //
+  // MM_LED1
+  // Off         -> motors disarmed
+  // Rapid blink -> motors armed, Acro mode
+  // Slow blink  -> motors armed, Stable mode, no Altitude Hold
+  // On          -> motors armed, Superstable mode
+  //
+  // MM_LED2
+  // Off         -> No GPS or no GPS fix
+  // Rapid blink -> GPS fix, Position Hold inactive
+  // Slow blink  -> GPS fix, Position Hold active, no Altitude Hold
+  // On          -> GPS fix, Position Hold & Altitude Hold
+  //
+  // First, figure out how should we blink ;)
+  if( !motorArmed ) {
+    mm_led1_speed = -1;         // Off
+  } else {
+    switch( AP_mode ) {
+      case F_MODE_ACROBATIC:
+        mm_led1_speed = 400;    // Rapid blink
+        break;
+      case F_MODE_POS_HOLD:
+        mm_led1_speed = 1200;   // Slow blink
+        break;
+      case F_MODE_SUPER_STABLE:
+      case F_MODE_ABS_HOLD:
+        mm_led1_speed = 0;      // On
+        break;
+      default:  // should not really happen
+        mm_led1_speed = -1;     // Off
+    }
+  }
+  mm_led2_speed = -1;           // Off
+#ifdef IsGPS
+  if( GPS.Fix ) {
+    switch( AP_mode ) {
+      case F_MODE_ACROBATIC:
+      case F_MODE_SUPER_STABLE:
+        mm_led2_speed = 400;    // Rapid blink
+        break;
+      case F_MODE_POS_HOLD:
+        mm_led2_speed = 1200;   // Slow blink
+        break;
+      case F_MODE_ABS_HOLD:
+        mm_led2_speed = 0;      // On
+        break;
+      default:  // should not really happen
+        mm_led2_speed = -1;     // Off
+    }
+  }
+#endif
+  if( mm_led1_speed < 0 ) {
+    digitalWrite( MM_LED1, LOW );
+    mm_led1_status = LOW;
+  } else if( mm_led1_speed == 0 ) {
+    digitalWrite( MM_LED1, HIGH );
+    mm_led1_status = HIGH;
+  } else if(millis() - mm_led1_timer > mm_led1_speed) {
+    mm_led1_timer = millis();
+    if(mm_led1_status == HIGH) { 
+      digitalWrite(MM_LED1, LOW);
+      mm_led1_status = LOW;
+    } else {
+      digitalWrite(MM_LED1, HIGH);
+      mm_led1_status = HIGH;
+    } 
+  }
+  if( mm_led2_speed < 0 ) {
+    digitalWrite( MM_LED2, LOW );
+    mm_led2_status = LOW;
+  } else if( mm_led2_speed == 0 ) {
+    digitalWrite( MM_LED2, HIGH );
+    mm_led2_status = HIGH;
+  } else if(millis() - mm_led2_timer > mm_led2_speed) {
+    mm_led2_timer = millis();
+    if(mm_led2_status == HIGH) { 
+      digitalWrite(MM_LED2, LOW);
+      mm_led2_status = LOW;
+    } else {
+      digitalWrite(MM_LED2, HIGH);
+      mm_led2_status = HIGH;
+    } 
+  }
+#endif
+
 } // End of void loop()
 
 // END of Arducopter.pde
-
 
 

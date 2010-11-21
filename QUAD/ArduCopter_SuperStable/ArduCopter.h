@@ -264,3 +264,24 @@ long tlmTimer = 0;
 // Arming/Disarming
 uint8_t Arming_counter=0;
 uint8_t Disarming_counter=0;
+
+
+// Flying modes (lyagukh@gmail.com, 20101121)
+
+#define F_MODE_ACROBATIC    0
+#define F_MODE_POS_HOLD     1
+#define F_MODE_SUPER_STABLE 2
+#define F_MODE_ABS_HOLD     3
+
+// Pins used for motormount LEDs (lyagukh@gmail.com, 20101121)
+
+#define  MM_LED1 58  // AN4
+#define  MM_LED2 59  // AN5
+
+long mm_led1_timer;  // time (in milliseconds) of the last blink
+int  mm_led1_speed;  // milliseconds between blinks
+byte mm_led1_status; // current status - LOW or HIGH
+
+long mm_led2_timer;  // time (in milliseconds) of the last blink
+int  mm_led2_speed;  // milliseconds between blinks
+byte mm_led2_status; // current status - LOW or HIGH
