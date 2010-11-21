@@ -340,6 +340,12 @@ void sendSerialTelemetry() {
       SerPriln("Off");
     else if (Use_BMP_Altitude == 1)
       SerPriln("On");
+    SerPri("Current Sonar Reading = ");
+    SerPriln(sonar_read);
+    SerPri("Altitude Command = ");
+    SerPriln(command_altitude);
+    SerPri("Total Throttle Command = ");
+    SerPriln(ch_throttle + command_altitude);
 //    SerPri("Yaw mid = ");
 //    SerPriln(yaw_mid);
 //    SerPri("BMP_altitude command = ");

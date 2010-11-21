@@ -47,6 +47,15 @@ int SENSOR_SIGN[]={
   
 /* APM Hardware definitions, END */
 
+/* Arducopter definitions */
+/* ADC pins used for external sensors */
+#define SonarPin 7
+#define IR_Front_Left 4
+#define IR_Front_Right 5
+#define IR_Back_Right 2
+#define IR_Back_Left 3
+
+
 /* General definitions */
 
 #define TRUE 1
@@ -187,7 +196,7 @@ int err_altitude_old;
 float command_altitude = 0;
 float altitude_I;
 float altitude_D;
-int ch_throttle_altitude_hold;
+//int ch_throttle_altitude_hold;
 
 
 //Pressure Sensor variables
