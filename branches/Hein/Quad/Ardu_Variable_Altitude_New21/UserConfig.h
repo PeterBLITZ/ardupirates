@@ -149,10 +149,10 @@ float ch_aux2_offset = 0;
 void defaultUserConfig() {
   KP_QUAD_ROLL = 4.0;
   KI_QUAD_ROLL = 0.15;
-  STABLE_MODE_KP_RATE_ROLL = 1.2;
+  STABLE_MODE_KP_RATE_ROLL = 1.3;
   KP_QUAD_PITCH = 4.0;
   KI_QUAD_PITCH = 0.15;
-  STABLE_MODE_KP_RATE_PITCH = 1.2;
+  STABLE_MODE_KP_RATE_PITCH = 1.3;
   KP_QUAD_YAW = 3.0;
   KI_QUAD_YAW = 0.15;
   STABLE_MODE_KP_RATE_YAW = 2.4;
@@ -164,9 +164,9 @@ void defaultUserConfig() {
   KI_GPS_PITCH = 0.001;
   KD_GPS_PITCH = 0.0;
   GPS_MAX_ANGLE = 10;
-  KP_ALTITUDE = 3;
-  KI_ALTITUDE = 0;
-  KD_ALTITUDE = 0.0;
+  KP_ALTITUDE = 0.7;
+  KI_ALTITUDE = 0.1;
+  KD_ALTITUDE = 0.7;
   acc_offset_x = 2014;
   acc_offset_y = 2051;
   acc_offset_z = 2022;

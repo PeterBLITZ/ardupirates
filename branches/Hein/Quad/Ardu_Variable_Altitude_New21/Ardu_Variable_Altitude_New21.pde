@@ -52,9 +52,9 @@
 #define IsGPS    // Do we have a GPS connected
 #define IsNEWMTEK// Do we have MTEK with new firmware
 #define IsMAG    // Do we have a Magnetometer connected, if have remember to activate it from Configurator
-//#define IsXBEE    // Do we have a telemetry connected, eg. XBee connected on Telemetry port
-//#define IsAM     // Do we have motormount LED's. AM = Atraction Mode
-//#define IsSonar  // Do we have Sonar installed
+#define IsXBEE    // Do we have a telemetry connected, eg. XBee connected on Telemetry port
+//#define IsAM     // Do we have motormount LED's. AM = Attraction Mode
+//#define IsSonar  // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
 //#define IsIR_RF  // Do we have IR Range Finders
 
 #define CONFIGURATOR  // Do se use Configurator or normal text output over serial link
@@ -608,12 +608,13 @@ void loop(){
 //    Log_Write_Attitude(log_roll,log_pitch,log_yaw);  
 
 #ifdef IsSonar
-//    sonar_adc += APM_ADC.Ch(7);   // Sonar is connected to pitot input in shield (ADC channel 7)
-    sonar_read = analogRead(4);   // Sonar is connected to pilot input on shield (Analogue channel 4)
+    sonar_read = analogRead(7);   // Sonar is connected to Expansion Ports input on shield Analogue Input 7(AN-7)
+                                  //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
     sonar_adc += sonar_read;  
     if (sonar_read == 0)
       Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
-    else if (sonar_read > 1022)
+//    else if (sonar_read > 700)
+    else if (sonar_read > 500)
       Use_BMP_Altitude = 1; 
     else
       Use_BMP_Altitude = 0;
@@ -770,6 +771,7 @@ void loop(){
              }
      }
 */
+
       if (abs(ch_yaw-yaw_mid)<12)   // Take into account a bit of "dead zone" on yaw
         aux_float = 0.0;
       else
@@ -979,7 +981,8 @@ void loop(){
 #ifdef UseBMP
       if (Baro_new_data == 1 && Use_BMP_Altitude == 1)
       {
-        command_altitude = Altitude_control_baro_v2(press_alt,target_baro_altitude);
+//        command_altitude = Altitude_control_baro_v2(press_alt,target_baro_altitude);
+        command_altitude = Altitude_control_baro(press_alt,target_baro_altitude);
         Baro_new_data=0;
       }
 #endif
@@ -993,7 +996,7 @@ void loop(){
         //Serial.print(command_RF_pitch);
       }
 #endif
-   }
+    }
     else
       command_altitude = 0;
       
