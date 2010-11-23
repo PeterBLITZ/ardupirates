@@ -1,17 +1,17 @@
-=Build your own Pirate's Cofin=
+=Build your own Pirate's Coffin=
 
-Welcome to the "*How To Build Your Own Cofin*" (for Quad transportation purposes!)
+Welcome to the "*How To Build Your Own Coffin*" (for Quad transportation purposes!)
 
 http://www.danisaez.com/ardupirates/cofin/aptb24.jpg
 http://www.danisaez.com/ardupirates/cofin/aptb23.jpg
 
-As I like to go to the flying field on my motorbike, to take the AP Quad with me I need to make a new APC (Ardu Pirate Cofin), the idea is to carry the Quad in a very safe way, in a <b>BACKPACK COFIN</b>!.
+As I like to go to the flying field on my motorbike, to take the AP Quad with me I need to make a new APC (Ardu Pirate Coffin), the idea is to carry the Quad in a very safe way, in a <b>BACKPACK COFFIN</b>!.
 
-I know you can design your Quad to have folding arms thus reducing it's size, but what I wanted to have is a Cofin that enables me to "take it out of the box and fly", no waisting time unfolding arms, mounting props, or whatever you did to reduce transportation size.
+I know you can design your Quad to have folding arms thus reducing it's size, but what I wanted to have is a Coffin that enables me to "take it out of the box and fly", no waisting time unfolding arms, mounting props, or whatever you did to reduce transportation size.
 
-As there will be lots of spare room in the cofin, it will take the transmitter, batteries, props, and  maybe even the charger!. 
+As there will be lots of spare room in the coffin, it will take the transmitter, batteries, props, and  maybe even the charger!. 
 
-This cofin is designed to fit my Quad wich is pretty much built to standars:
+This coffin is designed to fit my Quad wich is pretty much built to standars:
 # Distance between motors 38cm
 # Center housing is a CD box
 
@@ -42,7 +42,7 @@ http://www.danisaez.com/ardupirates/cofin/musket.jpg
 
 All these components are only orientative, as you may not find the exact match at your location, feel free to use similar materials. 
 
-The inside of the cofin will be filled with the 3 layers of 50mm foam, and 2 20mm,  cutting the necessary shapes in it to fit the Quad and the radio transmitter (and other items to come).
+The inside of the coffin will be filled with the 3 layers of 50mm foam, and 2 20mm,  cutting the necessary shapes in it to fit the Quad and the radio transmitter (and other items to come).
 http://www.danisaez.com/ardupirates/cofin/layers0.jpg   http://www.danisaez.com/ardupirates/cofin/layers.jpg  http://www.danisaez.com/ardupirates/cofin/aptb00.jpg
 
 ==Building==
@@ -116,7 +116,7 @@ http://www.danisaez.com/ardupirates/cofin/aptb22.jpg
 
 http://www.danisaez.com/ardupirates/cofin/aptb23.jpg  http://www.danisaez.com/ardupirates/cofin/aptb25.jpg
 
-#Add some logo or design to your liking to the cover cardboard and apply clear tape to it; and use 4 strips of velcro to fix the cofin cover and you're done.
+#Add some logo or design to your liking to the cover cardboard and apply clear tape to it; and use 4 strips of velcro to fix the coffin cover and you're done.
 
 http://www.danisaez.com/ardupirates/cofin/aptb24.jpg
   
