@@ -322,7 +322,7 @@ void sendSerialTelemetry() {
       SerPriln("Stable Mode only");
     else if (AP_mode == 3)
       SerPriln("Position & Altitude Hold");
-    SerPri("Current Sonar Altitude = ");
+    SerPri("Current Sonar Valude = ");
     SerPriln(Sonar_value);
     SerPri("Target Sonar Altitude = ");
     SerPriln(target_sonar_altitude);
@@ -340,12 +340,14 @@ void sendSerialTelemetry() {
       SerPriln("Off");
     else if (Use_BMP_Altitude == 1)
       SerPriln("On");
-    SerPri("Current Sonar Reading = ");
+    SerPri("Current Sonar raw Reading = ");
     SerPriln(sonar_read);
-    SerPri("Altitude Command = ");
-    SerPriln(command_altitude);
-    SerPri("Total Throttle Command = ");
-    SerPriln(ch_throttle + command_altitude);
+    SerPri("STABLE MODE KP RATE = ");
+    SerPriln(STABLE_MODE_KP_RATE, 3);
+//    SerPri("Altitude Command = ");
+//    SerPriln(command_altitude);
+//    SerPri("Total Throttle Command = ");
+//    SerPriln(ch_throttle + command_altitude);
 //    SerPri("Yaw mid = ");
 //    SerPriln(yaw_mid);
 //    SerPri("BMP_altitude command = ");

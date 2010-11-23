@@ -8,7 +8,7 @@
 /* Authors : Arducopter development team                                  */
 /*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
-/*           Sandro Benigno, Chris Anderson, Hein, Phil.                        */
+/*           Sandro Benigno, Chris Anderson, Hein, Phil.                  */
 /* Date : 08-08-2010                                                      */
 /* Version : 1.7 beta                                                     */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
@@ -610,14 +610,7 @@ void loop(){
 #ifdef IsSonar
     sonar_read = analogRead(7);   // Sonar is connected to Expansion Ports input on shield Analogue Input 7(AN-7)
                                   //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
-    sonar_adc += sonar_read;  
-    if (sonar_read == 0)
-      Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
-//    else if (sonar_read > 700)
-    else if (sonar_read > 500)
-      Use_BMP_Altitude = 1; 
-    else
-      Use_BMP_Altitude = 0;
+    sonar_adc += sonar_read;      // For testing purposes I am monitoring sonar_read value.
 #endif
     
 #ifdef IsIR_RF
@@ -688,7 +681,7 @@ void loop(){
       } 
 #endif
 
-/*
+
      // Tuning P of PID using only 3 position channel switch (Flight Mode).
      if (ch_aux1 >= 1800) 
      {
@@ -715,6 +708,8 @@ void loop(){
 //                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
 //                KI_QUAD_YAW += 0.01;
 //                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
+                STABLE_MODE_KP_RATE += 0.05;
+                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);
 //                STABLE_MODE_KP_RATE_YAW += 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
 //                STABLE_MODE_KP_RATE_ROLL += 0.1;
@@ -725,8 +720,8 @@ void loop(){
 //                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
 //                Kp_RatePitch += 0.1;
 //                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
-                KP_ALTITUDE += 0.1;
-                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+//                KP_ALTITUDE += 0.1;
+//                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
 //                KI_ALTITUDE += 0.3;
 //                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
 //                Magoffset1 += 1;
@@ -748,6 +743,8 @@ void loop(){
 //                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
 //                KI_QUAD_YAW -= 0.01;
 //                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
+                STABLE_MODE_KP_RATE -= 0.05;
+                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);
 //                STABLE_MODE_KP_RATE_YAW -= 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
 //                STABLE_MODE_KP_RATE_ROLL -= 0.1;
@@ -758,8 +755,8 @@ void loop(){
 //                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
 //                Kp_RatePitch -= 0.1;
 //                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
-                KP_ALTITUDE -= 0.1;
-                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+//                KP_ALTITUDE -= 0.1;
+//                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
 //                KI_ALTITUDE -= 0.3;
 //                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
 //                Magoffset1 -= 1;
@@ -770,7 +767,6 @@ void loop(){
                 Minus = 0;
              }
      }
-*/
 
       if (abs(ch_yaw-yaw_mid)<12)   // Take into account a bit of "dead zone" on yaw
         aux_float = 0.0;
@@ -836,36 +832,41 @@ void loop(){
       if (target_alt_position == 0)   // If this is the first time we switch to Altitude control, actual position is our target position
       {
         target_sonar_altitude = Sonar_value;
+        if (target_sonar_altitude == 0)
+          Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
+        else if (target_sonar_altitude > 150)
+          Use_BMP_Altitude = 1; 
+        else
+          Use_BMP_Altitude = 0;
         target_baro_altitude = press_alt;
-//        Initial_Throttle = ch_throttle;
-//        ch_throttle_altitude_hold = ch_throttle;
         command_RF_roll=0;
         command_RF_pitch=0;
         // Reset I terms
         altitude_I = 0;
         target_alt_position=1;
         command_altitude = 0;
-//        BMP_mode = 1; //Altitude hold is switched on. 
       }        
     }
     else if (AP_mode==1)  // Stable & Altitude Hold
     {
-      heading_hold_mode = 1;
       heading_hold_mode = 1;
       target_position = 0;
       if (target_alt_position == 0)   // If this is the first time we switch to Altitude control, actual position is our target position
       {
         target_alt_position = 1;
         target_sonar_altitude = Sonar_value;
+        if (target_sonar_altitude == 0)
+          Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
+        else if (target_sonar_altitude > 150)
+          Use_BMP_Altitude = 1; 
+        else
+          Use_BMP_Altitude = 0;
         target_baro_altitude = press_alt;
-//        Initial_Throttle = ch_throttle;
-//        ch_throttle_altitude_hold = ch_throttle;
         command_RF_roll=0;
         command_RF_pitch=0;
         // Reset I terms
         altitude_I = 0;
         command_altitude = 0;
-//        BMP_mode = 1; //Altitude hold is switched on. 
       }        
       gps_err_roll = 0;
       gps_err_pitch = 0;
@@ -900,7 +901,6 @@ void loop(){
       command_gps_roll = 0;
       command_gps_pitch = 0;
       command_altitude = 0;
-//      BMP_mode = 0; //Altitude hold is switched off. 
     }
     else if (AP_mode == 0)  //Acrobatic Mode
     {
@@ -922,7 +922,6 @@ void loop(){
       heading_hold_mode = 0;
       target_position = 0;
       target_alt_position = 0;
-//      BMP_mode = 0; //Altitude hold is switched off. 
     }
 
     //Read GPS
