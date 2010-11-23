@@ -65,11 +65,11 @@ int Altitude_control_Sonar(int Sonar_altitude, int target_sonar_altitude)
 {
 //  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 60
   #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 40
-  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 80
+  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 120
 
-  float KP_SONAR_ALTITUDE = KP_ALTITUDE; //0.7//0.8 //0.9 //1.0//1.05
-  float KI_SONAR_ALTITUDE = KI_ALTITUDE; //0.1//0.3
-  float KD_SONAR_ALTITUDE = KD_ALTITUDE; //0.7//0.7 //0.7 //0.75 //0.8
+  float KP_SONAR_ALTITUDE = (KP_ALTITUDE * STABLE_MODE_KP_RATE); //0.7//0.8 //0.9 //1.0//1.05
+  float KI_SONAR_ALTITUDE = (KI_ALTITUDE * STABLE_MODE_KP_RATE); //0.1//0.3
+  float KD_SONAR_ALTITUDE = (KD_ALTITUDE * STABLE_MODE_KP_RATE); //0.7//0.7 //0.7 //0.75 //0.8
   
   int control_altitude;
    
@@ -77,7 +77,7 @@ int Altitude_control_Sonar(int Sonar_altitude, int target_sonar_altitude)
   err_altitude = target_sonar_altitude - Sonar_altitude;  
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;
   altitude_I += (float)err_altitude*0.05;
-  altitude_I = constrain(altitude_I,-100,100); //-1000,1000
+  altitude_I = constrain(altitude_I,-150,150); //-1000,1000
   control_altitude = KP_SONAR_ALTITUDE*err_altitude + KD_SONAR_ALTITUDE*altitude_D + KI_SONAR_ALTITUDE*altitude_I;
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_SONAR_OUTPUT_MIN,ALTITUDE_CONTROL_SONAR_OUTPUT_MAX);
   return control_altitude;
@@ -89,7 +89,7 @@ int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, flo
 {
 //  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 60
   #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 40
-  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 80
+  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 120
   #define KP_ACCZ_DAMP 0.2
 
   float KP_SONAR_ALTITUDE = KP_ALTITUDE; //0.8 //0.9 //1.0//1.05
@@ -103,7 +103,7 @@ int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, flo
   err_altitude = target_sonar_altitude - Sonar_altitude;  
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;
   altitude_I += (float)err_altitude*0.05;
-  altitude_I = constrain(altitude_I,-100,100); //-1000,1000 
+  altitude_I = constrain(altitude_I,-150,150); //-1000,1000 
   control_altitude = KP_SONAR_ALTITUDE*err_altitude + KD_SONAR_ALTITUDE*altitude_D + KI_SONAR_ALTITUDE*altitude_I;
   damp_factor = constrain(1-(err_altitude/40),0,1);
   control_altitude -= KP_ACCZ_DAMP*damp_factor*az_f;
@@ -117,7 +117,7 @@ int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, flo
 int Altitude_control_baro(int altitude, int target_altitude)
 { 
   #define ALTITUDE_CONTROL_BARO_OUTPUT_MIN 40
-  #define ALTITUDE_CONTROL_BARO_OUTPUT_MAX 80
+  #define ALTITUDE_CONTROL_BARO_OUTPUT_MAX 120
   
 //  #define KP_BARO_ALTITUDE 0.6  //0.65
 //  #define KD_BARO_ALTITUDE 0.0  //0.05
@@ -133,7 +133,7 @@ int Altitude_control_baro(int altitude, int target_altitude)
   err_altitude = target_altitude - altitude;  
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;  // 20Hz
   altitude_I += (float)err_altitude*0.05;
-  altitude_I = constrain(altitude_I,-100,100);
+  altitude_I = constrain(altitude_I,-150,150);
   control_altitude = KP_BARO_ALTITUDE*err_altitude + KD_BARO_ALTITUDE*altitude_D + KI_BARO_ALTITUDE*altitude_I;
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_BARO_OUTPUT_MIN,ALTITUDE_CONTROL_BARO_OUTPUT_MAX);
   return control_altitude;
@@ -144,7 +144,7 @@ int Altitude_control_baro(int altitude, int target_altitude)
 int Altitude_control_baro_v2(int altitude, int target_altitude)
 { 
   #define ALTITUDE_CONTROL_BARO_OUTPUT_MIN 40
-  #define ALTITUDE_CONTROL_BARO_OUTPUT_MAX 80
+  #define ALTITUDE_CONTROL_BARO_OUTPUT_MAX 120
   
 //  #define KP_BARO_ALTITUDE 0.6  //0.65
 //  #define KD_BARO_ALTITUDE 0.0  //0.05
@@ -162,7 +162,7 @@ int Altitude_control_baro_v2(int altitude, int target_altitude)
   err_altitude = target_altitude - altitude;  
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;  // 20Hz
   altitude_I += (float)err_altitude*0.05;
-  altitude_I = constrain(altitude_I,-100,100);
+  altitude_I = constrain(altitude_I,-150,150);
   control_altitude = KP_BARO_ALTITUDE*err_altitude + KD_BARO_ALTITUDE*altitude_D + KI_BARO_ALTITUDE*altitude_I;
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_BARO_OUTPUT_MIN,ALTITUDE_CONTROL_BARO_OUTPUT_MAX);
   
