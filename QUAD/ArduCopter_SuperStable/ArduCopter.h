@@ -282,9 +282,7 @@ long tlmTimer = 0;
 uint8_t Arming_counter=0;
 uint8_t Disarming_counter=0;
 
-
 // Flying modes (lyagukh@gmail.com, 20101121)
-
 #define F_MODE_ACROBATIC    0
 #define F_MODE_STABLE       2
 #define F_MODE_SUPER_STABLE 1

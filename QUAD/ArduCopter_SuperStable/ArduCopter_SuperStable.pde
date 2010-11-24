@@ -1,5 +1,5 @@
 /* ********************************************************************** */
-/*                    ArduCopter Quadcopter code                          */
+/*               ArduCopter & ArduPirates Quadcopter code                 */
 /*                                                                        */
 /* Quadcopter code from AeroQuad project and ArduIMU quadcopter project   */
 /* IMU DCM code from Diydrones.com                                        */
@@ -8,8 +8,9 @@
 /* Authors : Arducopter development team                                  */
 /*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
-/*           Sandro Benigno, Chris Anderson , Hein, Philipp Maloney,      */
-/*           Igor.                                                        */
+/*           Sandro Benigno, Chris Anderson.                              */  
+/* Authors : ArduPirates deveopment team                                  */
+/*           Philipp Maloney, Hein, Igor.                                 */
 /* Date : 12-7-2010                                                       */
 /* Version : 1.6                                                          */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
@@ -902,7 +903,7 @@ void loop(){
       gps_roll_I = 0;
       gps_pitch_I = 0;
     }
-     else if (AP_mode==F_MODE_STABLE)  // Stable Mode (Heading Hold only)
+    else if (AP_mode==F_MODE_STABLE)  // Stable Mode (Heading Hold only)
     {
       target_position = 0;
       heading_hold_mode = 1;
