@@ -1,5 +1,5 @@
 /* ********************************************************************** */
-/*                    ArduCopter Quadcopter code                          */
+/*               ArduCopter & ArduPirates Quadcopter code                 */
 /*                                                                        */
 /* Quadcopter code from AeroQuad project and ArduIMU quadcopter project   */
 /* IMU DCM code from Diydrones.com                                        */
@@ -8,7 +8,9 @@
 /* Authors : Arducopter development team                                  */
 /*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
-/*           Sandro Benigno, Chris Anderson, Hein, Phil.                  */
+/*           Sandro Benigno, Chris Anderson.                              */  
+/* Authors : ArduPirates deveopment team                                  */
+/*           Philipp Maloney, Hein, Igor.                                 */
 /* Date : 08-08-2010                                                      */
 /* Version : 1.7 beta                                                     */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
@@ -25,8 +27,8 @@
 /*
 **** Switch Functions *****
  AUX2 OFF && GEAR OFF = Acro Mode (AP_mode = 0)
- AUX2 ON  && GEAR OFF = Stable Mode (AP_mode = 2)
- AUX2 ON  && GEAR ON  = Stable & Altitude Hold (AP_mode = 1)
+ AUX2 ON  && GEAR OFF = Stable Mode (Heading Hold only) (AP_mode = 2)
+ AUX2 ON  && GEAR ON  = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 1)
  AUX2 OFF && GEAR ON  = Position & Altitude Hold (AP_mode = 3)
  
  **** LED Feedback ****
@@ -54,7 +56,7 @@
 #define IsMAG    // Do we have a Magnetometer connected, if have remember to activate it from Configurator
 #define IsXBEE    // Do we have a telemetry connected, eg. XBee connected on Telemetry port
 //#define IsAM     // Do we have motormount LED's. AM = Attraction Mode
-//#define IsSonar  // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+#define IsSonar  // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
 //#define IsIR_RF  // Do we have IR Range Finders
 
 #define CONFIGURATOR  // Do se use Configurator or normal text output over serial link
@@ -190,7 +192,7 @@ void Attitude_control_v3()
   float stable_roll,stable_pitch,stable_yaw;
   
   // ROLL CONTROL    
-  if (AP_mode == 2 || AP_mode == 1)        // Normal Mode => Stabilization mode
+  if (AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_STABLE)        // Normal Mode => Stabilization mode
     err_roll = command_rx_roll - ToDeg(roll);
   else
     err_roll = (command_rx_roll + command_gps_roll) - ToDeg(roll);  // Position control  
@@ -209,7 +211,7 @@ void Attitude_control_v3()
   control_roll = constrain(control_roll,-MAX_CONTROL_OUTPUT,MAX_CONTROL_OUTPUT);
 
   // PITCH CONTROL
-  if (AP_mode == 2 || AP_mode == 1)        // Normal mode => Stabilization mode
+  if (AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_STABLE)        // Normal mode => Stabilization mode
     err_pitch = command_rx_pitch - ToDeg(pitch);
   else                   // GPS Position hold
     err_pitch = (command_rx_pitch + command_gps_pitch) - ToDeg(pitch);  // Position Control
@@ -666,8 +668,8 @@ void loop(){
 
 #ifdef UseBMP || IsSonar
   
-      // New Altitude Hold using BMP Pressure sensor.  If Trottle stick moves more then 10%, switch Altitude Hold off    
-      if (AP_mode == 3 || AP_mode == 1) 
+      // New Altitude Hold using BMP Pressure sensor.  If Throttle stick moves more then 10%, switch Altitude Hold off    
+      if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) 
       {
         if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200) 
         {
@@ -780,39 +782,39 @@ void loop(){
   
 //     We read the Quad Mode from Gear and Aux2 Channel on radio (example Spektrum Radio)
 
-//     AUX2 OFF && GEAR OFF = Acro Mode (AP_mode = 0)
-//     AUX2 ON  && GEAR OFF = Stable Mode (AP_mode = 2)
-//     AUX2 ON  && GEAR ON  = Stable & Altitude Hold (AP_mode = 1)
-//     AUX2 OFF && GEAR ON  = Position & Altitude Hold (AP_mode = 3)
+//     AUX2 OFF && GEAR OFF = Acrobatic mode
+//     AUX2 ON  && GEAR OFF = Stable Mode (Heading Hold only)
+//     AUX2 ON  && GEAR ON  = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement)
+//     AUX2 OFF && GEAR ON  = Position hold mode and Altitude Hold  
       
       if (ch_aux2 < 1250 && ch_gear > 1800)
       {
-        AP_mode = 2;          // Normal mode (Stabilization assist mode)
+        AP_mode = F_MODE_STABLE  ;      // Stable mode (Heading Hold only)
         digitalWrite(LED_Yellow,LOW); // Yellow LED off
       }
       else if (ch_gear < 1250 && ch_aux2 > 1800)
       {
-        AP_mode = 3;           // Position & Altitude hold mode (GPS position control & Altitude control)
+        AP_mode = F_MODE_ABS_HOLD;      // Position & Altitude hold mode (GPS position control & Altitude control)
         digitalWrite(LED_Yellow,HIGH); // Yellow LED On
       }
       else if (ch_gear < 1250 && ch_aux2 < 1250)
       {
-        AP_mode = 1;           // Stable & Altitude Hold
-        digitalWrite(LED_Yellow,HIGH); // Yellow LED On
+        AP_mode = F_MODE_SUPER_STABLE;  // Super Stable Mode (Stable mode & Altitude hold mode)
+        digitalWrite(LED_Yellow,LOW); // Yellow LED off
       }
       else 
       {
-        AP_mode = 0;          // Acrobatic mode
+        AP_mode = F_MODE_ACROBATIC;     // Acrobatic mode
+        digitalWrite(LED_Yellow,LOW); // Yellow LED off
       }
       // Write Radio data to DataFlash log
 //        Log_Write_Radio(ch_roll,ch_pitch,ch_throttle,ch_yaw,int(K_aux*100),(int)AP_mode);
     }  // END new radio data
 
 
-  if (AP_mode==3)  // Position & Altitude Hold Mode
+    if (AP_mode==F_MODE_ABS_HOLD)  // Position & Altitude Hold Mode
     {
       heading_hold_mode = 1;
-      if (target_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
       {
         target_lattitude = GPS.Lattitude;
         target_longitude = GPS.Longitude;
@@ -847,7 +849,7 @@ void loop(){
         command_altitude = 0;
       }        
     }
-    else if (AP_mode==1)  // Stable & Altitude Hold
+   else if (AP_mode==F_MODE_SUPER_STABLE)  // Super Stable Mode (Stable & Altitude Hold)
     {
       heading_hold_mode = 1;
       target_position = 0;
@@ -880,7 +882,7 @@ void loop(){
       gps_roll_I = 0;
       gps_pitch_I = 0;
     }
-    else if (AP_mode==2)  // Stable Mode
+    else if (AP_mode==F_MODE_STABLE)  // Stable Mode (Heading Hold only)
     {
       target_position = 0;
       heading_hold_mode = 1;
@@ -902,7 +904,7 @@ void loop(){
       command_gps_pitch = 0;
       command_altitude = 0;
     }
-    else if (AP_mode == 0)  //Acrobatic Mode
+    else if (AP_mode == F_MODE_ACROBATIC)  //Acrobatic Mode
     {
     // Reset I terms
       altitude_I = 0;
@@ -946,7 +948,7 @@ void loop(){
       else
         digitalWrite(LED_Red,LOW);
 
-      if (AP_mode == 3)
+      if (AP_mode == F_MODE_ABS_HOLD)
       {
         if ((target_position == 1) && (GPS.Fix))
         {
@@ -968,11 +970,12 @@ void loop(){
       }
     }
     
-    if ((AP_mode == 3 || AP_mode == 1) && Throttle_Altitude_Change_mode == 0)  // Position Control (Altitude control + Obstacle avoidance)
+    if ((AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) && Throttle_Altitude_Change_mode == 0)  // Altitude control
     {
 #ifdef IsSonar
       if (Sonar_new_data == 1 && Use_BMP_Altitude == 0)  // Do altitude control on each new sonar data
       { 
+//        command_altitude = Altitude_control_Sonar_v2(Sonar_value,target_sonar_altitude);
         command_altitude = Altitude_control_Sonar(Sonar_value,target_sonar_altitude);
         Sonar_new_data=0;
       }
@@ -1000,7 +1003,7 @@ void loop(){
       command_altitude = 0;
       
     // Control methodology selected using AUX2
-    if (AP_mode == 1 || AP_mode == 2 || AP_mode == 3) 
+    if (AP_mode == F_MODE_STABLE || AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_ABS_HOLD) 
     {
       gled_speed = 1200;
       Attitude_control_v3();

@@ -314,13 +314,13 @@ void sendSerialTelemetry() {
     break;
   case 'T': // Spare
     SerPri("AP Mode = ");
-    if (AP_mode == 0) 
+    if (AP_mode == F_MODE_ACROBATIC) 
       SerPriln("Acrobatic");
-    else if (AP_mode == 1)
-      SerPriln("Stable & Altitude Hold");
-    else if (AP_mode == 2)
-      SerPriln("Stable Mode only");
-    else if (AP_mode == 3)
+    else if (AP_mode == F_MODE_STABLE)
+      SerPriln("Stable mode");
+    else if (AP_mode == F_MODE_SUPER_STABLE)
+      SerPriln("Super Stable Mode");
+    else if (AP_mode == F_MODE_ABS_HOLD)
       SerPriln("Position & Altitude Hold");
     SerPri("Current Sonar Valude = ");
     SerPriln(Sonar_value);

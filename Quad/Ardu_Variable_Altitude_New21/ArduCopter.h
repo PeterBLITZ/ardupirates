@@ -294,6 +294,12 @@ long tlmTimer = 0;
 uint8_t Arming_counter=0;
 uint8_t Disarming_counter=0;
 
+// Flying modes (lyagukh@gmail.com, 20101121)
+#define F_MODE_ACROBATIC    0
+#define F_MODE_STABLE       2
+#define F_MODE_SUPER_STABLE 1
+#define F_MODE_ABS_HOLD     3
+
 // Range Finder (RF) variables
 int IR_adc_fl=0;
 int IR_adc_fr=0;
