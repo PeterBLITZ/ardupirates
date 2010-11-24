@@ -255,8 +255,9 @@ int roll_mid;
 int pitch_mid;
 int yaw_mid;
 int Hover_Throttle_Position = 1450;  //Were Chopper Hovers.  This must be changed for each Chopper.
-                                     //This reading is low because the total weight is 1.3kg
-                                     //Heavier quad will have a bigger value. 
+                                     //Reading of 1377 is recommend for quad with total weight of 1.3kg
+                                     //1450 for 1.9kg.  Heavier quads will have a bigger value. 
+                                     //This reading is the position of your throttle stick when quad is hovering.
 int Neutro_yaw;
 int ch_roll;
 int ch_pitch;

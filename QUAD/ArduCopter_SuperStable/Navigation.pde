@@ -146,8 +146,8 @@ int Altitude_control_baro(int altitude, int target_altitude)
 //  #define KD_BARO_ALTITUDE 0.0  //0.05
 //  #define KI_BARO_ALTITUDE 0.1  //0.1
 
-  float KP_BARO_ALTITUDE = (KP_ALTITUDE * 0.1); //0.08
-  float KI_BARO_ALTITUDE = (KI_ALTITUDE * 0.1); //0.02
+  float KP_BARO_ALTITUDE = (KP_ALTITUDE * 0.1); //0.08  //  Used a multiplication factor because Configurator have not enough
+  float KI_BARO_ALTITUDE = (KI_ALTITUDE * 0.1); //0.02  //  variables available for adjustments.
   float KD_BARO_ALTITUDE = (KD_ALTITUDE * 0.1);
   
   int control_altitude;

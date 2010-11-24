@@ -27,7 +27,7 @@
  AUX2 OFF && GEAR OFF = Acro Mode (AP_mode = 0)
  AUX2 ON  && GEAR OFF = Stable Mode (Heading Hold only) (AP_mode = 2)
  AUX2 ON  && GEAR ON  = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 1)
- AUX2 OFF && GEAR ON  = Postion & Altitude Hold (AP_mode = 3)
+ AUX2 OFF && GEAR ON  = Position & Altitude Hold (AP_mode = 3)
  
  **** LED Feedback ****
  Bootup Sequence:
@@ -101,7 +101,7 @@
 
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
-#define MAGOFFSET -81.00,-35.00,30.50
+#define MAGOFFSET -81.00,-35.00,30.50  // You will have to determine your own settings.
 
 // MAGCALIBRATION is the correction angle in degrees (can be + or -). You must calibrating your magnetometer to show magnetic north correctly.
 // After calibration you will have to determine the declination value between Magnetic north and true north, see following link
@@ -155,6 +155,9 @@
 #define LOW_VOLTAGE      12.5   // Pack voltage at which to trigger alarm (Set to about 1 volt above ESC low voltage cutoff)
 #define VOLT_DIV_OHMS    3690   // Value of resistor (in ohms) used on voltage divider
 
+//  Also remember to determine your Hover_Throttle_Position.  Make a note 
+//  when your quad is hovering of the physical position of your throttle stick and in adjustments (Configurator) move your throttle
+//  stick to this position and take the reading down.  Change your Hover_Throttle_Position reading under AruCopter.h line 257. 
 
 /******************************************************** */
 /* END CONFIGURATION                                      */
@@ -1154,7 +1157,7 @@ void loop(){
       case F_MODE_ACROBATIC:
         mm_led1_speed = 400;    // Rapid blink
         break;
-      case F_MODE_POS_HOLD:
+      case F_MODE_STABLE:
         mm_led1_speed = 1200;   // Slow blink
         break;
       case F_MODE_SUPER_STABLE:
@@ -1173,7 +1176,7 @@ void loop(){
       case F_MODE_SUPER_STABLE:
         mm_led2_speed = 400;    // Rapid blink
         break;
-      case F_MODE_POS_HOLD:
+      case F_MODE_STABLE:
         mm_led2_speed = 1200;   // Slow blink
         break;
       case F_MODE_ABS_HOLD:
