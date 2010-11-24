@@ -8,9 +8,10 @@
 /* Authors : Arducopter development team                                  */
 /*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
-/*           Sandro Benigno, Chris Anderson , Hein, Philipp Maloney       */
+/*           Sandro Benigno, Chris Anderson , Hein, Philipp Maloney,      */
+/*           Igor.                                                        */
 /* Date : 12-7-2010                                                       */
-/* Version : 1.5  minor modificatios by Philipp Maloney (alt+head hold)   */
+/* Version : 1.6                                                          */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
 /* Mounting position : RC connectors pointing backwards                   */
 /* This code use this libraries :                                         */
@@ -24,8 +25,8 @@
 
 /**** Switch Functions *****
  AUX2 OFF && GEAR OFF = Acro Mode (AP_mode = 0)
- AUX2 ON  && GEAR OFF = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 2)
- AUX2 ON  && GEAR ON  = Position Hold Mode (AP_mode = 1)
+ AUX2 ON  && GEAR OFF = Stable Mode (Heading Hold only) (AP_mode = 2)
+ AUX2 ON  && GEAR ON  = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 1)
  AUX2 OFF && GEAR ON  = Postion & Altitude Hold (AP_mode = 3)
  
  **** LED Feedback ****
@@ -55,19 +56,20 @@
 #define IsGPS               // Do we have a GPS connected?
 
 //#define MTK_GPS           // MediaTEK DIY Drones GPS. 
-//#define IsNEWMTEK         // Do we have MTEK with new firmware?
-//#include <GPS_MTK.h>      
+#define IsNEWMTEK         // Do we have MTEK with new firmware?
+#include <GPS_MTK.h>      
 
 //#define UBLOX_GPS         // uBlox GPS
 //#include <GPS_UBLOX.h>   
 
-#include <GPS_NMEA.h>       // General NMEA GPS
-#define NMEA_GPS            
+//#include <GPS_NMEA.h>       // General NMEA GPS
+//#define NMEA_GPS            
 
 
 
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
+//#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
 //#define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
@@ -111,7 +113,7 @@
 // value until you have a 0 dergrees reading in the configurator's artificial horizon. 
 // Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
 
-#define MAGCALIBRATION -13.6
+#define MAGCALIBRATION -13.6 // You have to determine your own setting.
 
 // orientations for DIYDrones magnetometer
 #define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD
@@ -203,7 +205,7 @@
 #endif
 
 /* Software version */
-#define VER 1.5    // Current software version (only numeric values)
+#define VER 1.6    // Current software version (only numeric values)
 
 
 /* ***************************************************************************** */
@@ -223,7 +225,7 @@ void Attitude_control_v3()
   float stable_roll,stable_pitch,stable_yaw;
   
   // ROLL CONTROL    
-  if (AP_mode==F_MODE_SUPER_STABLE)        // Normal Mode => Stabilization mode
+  if (AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_STABLE)        // Normal Mode => Stabilization mode
     err_roll = command_rx_roll - ToDeg(roll);
   else
     err_roll = (command_rx_roll + command_gps_roll) - ToDeg(roll);  // Position control  
@@ -242,7 +244,7 @@ void Attitude_control_v3()
   control_roll = constrain(control_roll,-MAX_CONTROL_OUTPUT,MAX_CONTROL_OUTPUT);
 
   // PITCH CONTROL
-  if (AP_mode==F_MODE_SUPER_STABLE)        // Normal mode => Stabilization mode
+  if (AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_STABLE)        // Normal mode => Stabilization mode
     err_pitch = command_rx_pitch - ToDeg(pitch);
   else                   // GPS Position hold
     err_pitch = (command_rx_pitch + command_gps_pitch) - ToDeg(pitch);  // Position Control
@@ -397,6 +399,7 @@ int channel_filter(int ch, int ch_old)
   return((ch + ch_old) >> 1);   // Small filtering
 } 
 
+// not used at the moment.  Phil and Hein will implement the latest technique.....
 // BMP slope filter for readings... (limit max differences between readings)
 float BMP_filter(float BMP_reading, float BMP_reading_old)
 {
@@ -627,11 +630,11 @@ void loop(){
   if((millis()-timer)>=5)   // Main loop 200Hz
   {
     Magneto_counter++;
-    BMP_counter++;
+    GPS_counter++;
+    Sonar_Counter++;
     cameracounteron++;
 
 //    BMP_buffercounter++;
-    GPS_counter++;
     timer_old = timer;
     timer=millis();
     G_Dt = (timer-timer_old)*0.001;      // Real time of loop run 
@@ -654,6 +657,7 @@ void loop(){
       }
 #endif   
 
+/*
 #ifdef UseBMP
       if (BMP_counter > 10)  // Reading Barometric data at 20Hz 
       {
@@ -683,7 +687,18 @@ void loop(){
           BMP_alt_tmp = 0;
         }   
 *************************************************************************************/
-      }
+//      }
+//#endif
+
+#ifdef UseBMP
+    BMP_counter++;
+    if (BMP_counter > 10)  // Reading Barometric data at 20Hz
+    {
+      BMP_counter = 0;
+      APM_BMP085.Read();
+      read_baro();
+      Baro_new_data=1;
+    }
 #endif
 
 #ifdef IsCAMERATRIGGER
@@ -711,6 +726,26 @@ void loop(){
       SerPri(log_yaw);
 #endif
  
+ #ifdef IsSonar
+    sonar_read = analogRead(7);   // Sonar is connected to Expansion Ports input on shield Analogue Input 7(AN-7)
+                                  //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+    sonar_adc += sonar_read;      // For testing purposes I am monitoring sonar_read value.
+#endif
+    
+#ifdef IsSonar
+  if (Sonar_Counter > 10)   // New sonar data at 20Hz
+      {
+      sonar_adc = sonar_adc/Sonar_Counter;  // Average sensor readings (to filter noise)
+      Sonar_value = Sensor_Filter(SonarToCm(sonar_adc),Sonar_value,4);
+      sonar_adc=0;
+      Sonar_Counter=0;
+      Sonar_new_data=1;  // New sonar data flag
+      //Serial.println(Sonar_value);
+      //Serial.println(sonar_adc);
+      }
+#endif
+
+
     if (APM_RC.GetState() == 1)   // New radio frame?
     {
       // Commands from radio Rx... 
@@ -722,32 +757,30 @@ void loop(){
       ch_gear = APM_RC.InputCh(4) * ch_gear_slope + ch_gear_offset;
       ch_aux2 = APM_RC.InputCh(5) * ch_aux2_slope + ch_aux2_offset;
       ch_aux1 = APM_RC.InputCh(6);  // flight mode 3-position switch.
-
+      // Channel Aux1 can be used for PID tuning or Changing Camera Pitch Angles... 
+      
       #define STICK_TO_ANGLE_FACTOR 12.0;
       
-      command_throttle = (ch_throttle-throttle_mid) / STICK_TO_ANGLE_FACTOR 12.0; 
-      command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR 12.0;
-      command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR 12.0;
+      command_throttle = (ch_throttle - Hover_Throttle_Position) / STICK_TO_ANGLE_FACTOR; 
+      command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
+      command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 
-#ifdef UseBMP  
-        // New Altitude Hold using BMP Pressure sensor.  If Trottle stick moves more then 10%, switch Altitude Hold off    
-        if (AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_ABS_HOLD) 
+
+#ifdef UseBMP || IsSonar
+  
+      // New Altitude Hold using BMP Pressure sensor.  If Throttle stick moves more then 10%, switch Altitude Hold off    
+      if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) 
+      {
+        if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200) 
         {
-          if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200)
-          {
-            BMP_mode = 0; //Altitude hold is switched off because of stick movement 
-            BMP_altitude_I = 0;
-            BMP_altitude_D = 0;
-            BMP_err_altitude_old = 0;
-            BMP_err_altitude = 0;
-            BMP_command_altitude = 0;
-            target_alt_position = 0;  //target altitude reset
-          } 
-          else 
-          {
-            BMP_mode = 1;  //Altitude hold is swithed on.
-          }
+          Throttle_Altitude_Change_mode = 1; //Throttle Applied in Altitude hold is switched on.  Changing Altitude. 
+          target_alt_position = 0;
         } 
+        else 
+        {
+          Throttle_Altitude_Change_mode = 0;  //No more Throttle Applied in Altitude hold is swithed off.  Lock Altitude again.
+        }
+      } 
 #endif
   
       if (abs(ch_yaw-yaw_mid)<12)   // Take into account a bit of "dead zone" on yaw
@@ -764,15 +797,15 @@ void loop(){
 //     We read the Quad Mode from Gear and Aux2 Channel on radio (example Spektrum Radio)
 
 //     AUX2 OFF && GEAR OFF = Acrobatic mode
-//     AUX2 ON  && GEAR OFF = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement)
-//     AUX2 ON  && GEAR ON  = Position hold mode (GPS position control)
+//     AUX2 ON  && GEAR OFF = Stable Mode (Heading Hold only)
+//     AUX2 ON  && GEAR ON  = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement)
 //     AUX2 OFF && GEAR ON  = Position hold mode and Altitude Hold  
 
 
       if (ch_aux2 < 1250 && ch_gear > 1800)
       {
-        AP_mode = F_MODE_SUPER_STABLE;  // Stable mode & Altitude hold mode (Stabilization assist mode)
-        digitalWrite(LED_Yellow,LOW);   // Yellow LED off
+        AP_mode = F_MODE_STABLE  ;      // Stable mode (Heading Hold only)
+        digitalWrite(LED_Yellow,LOW);  // Yellow LED off
       }
       else if (ch_gear < 1250 && ch_aux2 > 1800)
       {
@@ -781,17 +814,17 @@ void loop(){
       }
       else if (ch_gear < 1250 && ch_aux2 < 1250)
       {
-        AP_mode = F_MODE_POS_HOLD;      // Position hold mode (GPS position control)
-        digitalWrite(LED_Yellow,HIGH);  // Yellow LED On
+        AP_mode = F_MODE_SUPER_STABLE;  // Super Stable Mode (Stable mode & Altitude hold mode)
+        digitalWrite(LED_Yellow,LOW);   // Yellow LED off
       }
       else 
       {
         AP_mode = F_MODE_ACROBATIC;     // Acrobatic mode
         digitalWrite(LED_Yellow,LOW); // Yellow LED off
-      }     // End reading Quad Mode from Channel 5 & 6
+      } //  End reading  the Quad Mode from Gear and Aux2 Channel on radio (example Spektrum Radio)
 
 #ifdef RELAY_LED_LIGHTS
-      if( ch_mode > 1500 ) {  // FIXME, Rx channel and value should be configurable
+      if( ch_aux1 > 1500 ) {  // FIXME, Rx channel and value should be configurable
         digitalWrite( RELE_pin, HIGH );
       } else {
         digitalWrite( RELE_pin, LOW );
@@ -800,49 +833,13 @@ void loop(){
     }  // End reading new radio frame
 	  
    if (AP_mode==F_MODE_ABS_HOLD)  // Position & Altitude Hold Mode
-    {
+   {
       heading_hold_mode = 1;
-      if (target_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
-      {
-        target_lattitude = GPS.Lattitude;
-        target_longitude = GPS.Longitude;
-        if (target_alt_position == 0)
-        {
-          BMP_target_altitude = BMP_Altitude;  //first time setting current altitude is target altitude
-          if (BMP_mode == 0)  // If Altitude hold has been disabled reset variables
-          {
-            BMP_altitude_I = 0;
-            BMP_altitude_D = 0;
-            BMP_err_altitude_old = 0;
-            BMP_err_altitude = 0;
-            BMP_command_altitude = 0;
-          } 
-          target_alt_position = 1;  //target altitude has been set
-        }  
-        target_position = 1;  //target position has been set
-        gps_roll_I = 0;
-        gps_pitch_I = 0;
-        gps_err_roll = 0;
-        gps_err_pitch = 0;
-        gps_roll_D = 0;
-        gps_pitch_D = 0;
-        gps_err_roll_old = 0;
-        gps_err_pitch_old = 0;
-        command_gps_roll = 0;
-        command_gps_pitch = 0;
-      }        
-    }
-    else if (AP_mode==F_MODE_POS_HOLD)  // Position Control (just GPS without altitude)
-    {
-      heading_hold_mode = 1;
-      target_alt_position = 0;
       if (target_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
       {
         target_lattitude = GPS.Lattitude;
         target_longitude = GPS.Longitude;
         target_position = 1;
-        gps_roll_I = 0;
-        gps_pitch_I = 0;
         gps_err_roll = 0;
         gps_err_pitch = 0;
         gps_roll_D = 0;
@@ -851,40 +848,64 @@ void loop(){
         gps_err_pitch_old = 0;
         command_gps_roll = 0;
         command_gps_pitch = 0;
+        // Reset I terms
+        gps_roll_I = 0;
+        gps_pitch_I = 0;
       }        
-      BMP_mode = 0;   // Altitude hold mode disabled followed by reset of variables
-      BMP_altitude_I = 0;
-      BMP_altitude_D = 0;
-      BMP_err_altitude_old = 0;
-      BMP_err_altitude = 0;
-      BMP_command_altitude = 0;
-    }
-    else if (AP_mode==F_MODE_SUPER_STABLE)  // SuperStable Mode (Altitude Hold and Heading Hold) (if no stick movement)
-    {
-      if (target_alt_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
+      if (target_alt_position == 0)   // If this is the first time we switch to Altitude control, actual position is our target position
       {
-        BMP_target_altitude = BMP_Altitude;  //first time setting current altitude is target altitude
-        if (BMP_mode == 0)    // If Altitude hold mode has been disabled reset variables
-        {
-          BMP_altitude_I = 0;
-          BMP_altitude_D = 0;
-          BMP_err_altitude_old = 0;
-          BMP_err_altitude = 0;
-          BMP_command_altitude = 0;
-        } 
-        target_alt_position = 1;  //target altitude has been set
-      }
+        target_sonar_altitude = Sonar_value;
+        if (target_sonar_altitude == 0)
+          Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
+        else if (target_sonar_altitude > 150)
+          Use_BMP_Altitude = 1; 
+        else
+          Use_BMP_Altitude = 0;
+        target_baro_altitude = press_alt;
+       // Reset I terms
+        altitude_I = 0;
+        target_alt_position=1;
+        command_altitude = 0;
+      }        
+    }
+    else if (AP_mode==F_MODE_SUPER_STABLE)  // Super Stable Mode (Stable & Altitude Hold)
+    {
       heading_hold_mode = 1;
       target_position = 0;
+      if (target_alt_position == 0)   // If this is the first time we switch to Altitude control, actual position is our target position
+      {
+        target_alt_position = 1;
+        target_sonar_altitude = Sonar_value;
+        if (target_sonar_altitude == 0)
+          Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
+        else if (target_sonar_altitude > 150)
+          Use_BMP_Altitude = 1; 
+        else
+          Use_BMP_Altitude = 0;
+        target_baro_altitude = press_alt;
+        // Reset I terms
+        altitude_I = 0;
+        command_altitude = 0;
+      }        
+      gps_err_roll = 0;
+      gps_err_pitch = 0;
+      gps_roll_D = 0;
+      gps_pitch_D = 0;
+      gps_err_roll_old = 0;
+      gps_err_pitch_old = 0;
+      command_gps_roll = 0;
+      command_gps_pitch = 0;
+      // Reset I terms
+      gps_roll_I = 0;
+      gps_pitch_I = 0;
     }
-    else if (AP_mode == F_MODE_ACROBATIC)  //Acrobatic Mode
+     else if (AP_mode==F_MODE_STABLE)  // Stable Mode (Heading Hold only)
     {
-      BMP_altitude_I = 0;
-      BMP_altitude_D = 0;
-      BMP_err_altitude_old = 0;
-      BMP_err_altitude = 0;
-      BMP_command_altitude = 0;
-      BMP_mode = 0;   //Altitude hold mode has been disabled
+      target_position = 0;
+      heading_hold_mode = 1;
+      target_alt_position = 0;
+      // Reset I terms
+      altitude_I = 0;
       gps_roll_I = 0;
       gps_pitch_I = 0;
       gps_err_roll = 0;
@@ -895,6 +916,23 @@ void loop(){
       gps_err_pitch_old = 0;
       command_gps_roll = 0;
       command_gps_pitch = 0;
+      command_altitude = 0;
+    }
+    else if (AP_mode == F_MODE_ACROBATIC)  //Acrobatic Mode
+    {
+     // Reset I terms
+      altitude_I = 0;
+      gps_roll_I = 0;
+      gps_pitch_I = 0;
+      gps_err_roll = 0;
+      gps_err_pitch = 0;
+      gps_roll_D = 0;
+      gps_pitch_D = 0;
+      gps_err_roll_old = 0;
+      gps_err_pitch_old = 0;
+      command_gps_roll = 0;
+      command_gps_pitch = 0;
+      command_altitude = 0;
       heading_hold_mode = 0;
       target_position = 0;
       target_alt_position = 0;
@@ -918,7 +956,7 @@ void loop(){
       else
         digitalWrite(LED_Red,LOW);
 
-      if (AP_mode == F_MODE_POS_HOLD || AP_mode ==F_MODE_ABS_HOLD)
+      if (AP_mode == F_MODE_ABS_HOLD)
       {
         if ((target_position == 1) && (GPS.Fix))
         {
@@ -939,14 +977,35 @@ void loop(){
         }
       }
     }
-
-    if (AP_mode == F_MODE_POS_HOLD || AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_ABS_HOLD) 
+ 
+    if ((AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) && Throttle_Altitude_Change_mode == 0)  // Altitude control
+    {
+#ifdef IsSonar
+      if (Sonar_new_data == 1 && Use_BMP_Altitude == 0)  // Do altitude control on each new sonar data
+      { 
+//        command_altitude = Altitude_control_Sonar_v2(Sonar_value,target_sonar_altitude);
+        command_altitude = Altitude_control_Sonar(Sonar_value,target_sonar_altitude);
+        Sonar_new_data=0;
+      }
+#endif
+#ifdef UseBMP
+      if (Baro_new_data == 1 && Use_BMP_Altitude == 1)
+      {
+//        command_altitude = Altitude_control_baro_v2(press_alt,target_baro_altitude);
+        command_altitude = Altitude_control_baro(press_alt,target_baro_altitude);
+        Baro_new_data=0;
+      }
+#endif
+    }
+    else
+      command_altitude = 0;
+      
+      
+    if (AP_mode == F_MODE_STABLE || AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_ABS_HOLD) 
     {
       gled_speed = 1200;
       Attitude_control_v3();
-      if (BMP_mode == 1)
-        BMP_Altitude_control(BMP_target_altitude);
-     }
+    }
     else
     {
       gled_speed = 400;
@@ -996,30 +1055,16 @@ void loop(){
       digitalWrite(FR_LED, HIGH);    // AM-Mode
 #endif
 #ifdef FLIGHT_MODE_+
-      if (BMP_mode == 1){
-        rightMotor = constrain(ch_throttle + BMP_command_altitude - control_roll + control_yaw, minThrottle, 2000);
-        leftMotor = constrain(ch_throttle + BMP_command_altitude + control_roll + control_yaw, minThrottle, 2000);
-        frontMotor = constrain(ch_throttle + BMP_command_altitude + control_pitch - control_yaw, minThrottle, 2000);
-        backMotor = constrain(ch_throttle + BMP_command_altitude - control_pitch - control_yaw, minThrottle, 2000);
-      } else {
-        rightMotor = constrain(ch_throttle - control_roll + control_yaw, minThrottle, 2000);
-        leftMotor = constrain(ch_throttle + control_roll + control_yaw, minThrottle, 2000);
-        frontMotor = constrain(ch_throttle + control_pitch - control_yaw, minThrottle, 2000);
-        backMotor = constrain(ch_throttle - control_pitch - control_yaw, minThrottle, 2000);
-      }
+        rightMotor = constrain(ch_throttle + command_altitude - control_roll + control_yaw, minThrottle, 2000);
+        leftMotor = constrain(ch_throttle + command_altitude + control_roll + control_yaw, minThrottle, 2000);
+        frontMotor = constrain(ch_throttle + command_altitude + control_pitch - control_yaw, minThrottle, 2000);
+        backMotor = constrain(ch_throttle + command_altitude - control_pitch - control_yaw, minThrottle, 2000);
 #endif
 #ifdef FLIGHT_MODE_X
-      if (BMP_mode == 1){
-        rightMotor = constrain(ch_throttle + BMP_command_altitude - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
-        leftMotor = constrain(ch_throttle + BMP_command_altitude + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
-        frontMotor = constrain(ch_throttle + BMP_command_altitude + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
-        backMotor = constrain(ch_throttle + BMP_command_altitude - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
-      } else {
-        rightMotor = constrain(ch_throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
-        leftMotor = constrain(ch_throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
-        frontMotor = constrain(ch_throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
-        backMotor = constrain(ch_throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
-      }  
+        rightMotor = constrain(ch_throttle + command_altitude - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
+        leftMotor = constrain(ch_throttle + command_altitude + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
+        frontMotor = constrain(ch_throttle + command_altitude + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
+        backMotor = constrain(ch_throttle + command_altitude - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
 #endif
     }
     if (motorArmed == 0) {
@@ -1039,9 +1084,7 @@ void loop(){
       yaw_I = 0; 
       // Initialize yaw command to actual yaw when throttle is down...
       command_rx_yaw = ToDeg(yaw);
-      BMP_mode = 1;   // in general we reinitialize altitude hold as "on"
     }
-    
     APM_RC.OutputCh(0, rightMotor);   // Right motor
     APM_RC.OutputCh(1, leftMotor);    // Left motor
     APM_RC.OutputCh(2, frontMotor);   // Front motor
