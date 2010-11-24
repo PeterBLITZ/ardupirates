@@ -77,7 +77,7 @@ void RadioCalibration() {
         ch_pitch = channel_filter(APM_RC.InputCh(1), ch_pitch);
         ch_throttle = channel_filter(APM_RC.InputCh(2), ch_throttle);
         ch_yaw = channel_filter(APM_RC.InputCh(3), ch_yaw);
-        ch_aux = APM_RC.InputCh(4);
+        ch_gear = APM_RC.InputCh(4);
         ch_aux2 = APM_RC.InputCh(5);
 
         SerPri(ch_roll);

@@ -48,8 +48,8 @@ void readSerialCommand() {
       break;
     case 'E': // Receive altitude PID
       KP_ALTITUDE = readFloatSerial();
-      KD_ALTITUDE = readFloatSerial();
       KI_ALTITUDE = readFloatSerial();
+      KD_ALTITUDE = readFloatSerial();
       break;
     case 'G': // Receive drift correction PID
       Kp_ROLLPITCH = readFloatSerial();
@@ -101,8 +101,8 @@ void readSerialCommand() {
       ch_yaw_offset = readFloatSerial();
       ch_throttle_slope = readFloatSerial();
       ch_throttle_offset = readFloatSerial();
-      ch_aux_slope = readFloatSerial();
-      ch_aux_offset = readFloatSerial();
+      ch_gear_slope = readFloatSerial();
+      ch_gear_offset = readFloatSerial();
       ch_aux2_slope = readFloatSerial();
       ch_aux2_offset = readFloatSerial();
     break;
@@ -426,7 +426,7 @@ void sendSerialTelemetry() {
     comma();
     SerPri(ch_throttle); // Throttle
     comma();
-    SerPri(ch_aux); // AUX1 (Mode)
+    SerPri(ch_gear); // AUX1 (Mode)
     comma();
     SerPri(ch_aux2); // AUX2 
     comma();
@@ -461,9 +461,9 @@ void sendSerialTelemetry() {
     comma();
     SerPri(ch_throttle_offset);
     comma();
-    SerPri(ch_aux_slope);
+    SerPri(ch_gear_slope);
     comma();
-    SerPri(ch_aux_offset);
+    SerPri(ch_gear_offset);
     comma();
     SerPri(ch_aux2_slope);
     comma();

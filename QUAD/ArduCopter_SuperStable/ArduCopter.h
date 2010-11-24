@@ -246,9 +246,9 @@ int ch_roll;
 int ch_pitch;
 int ch_throttle;
 int ch_yaw;
-int ch_aux;
+int ch_gear;
 int ch_aux2;
-int ch_mode;
+int ch_aux1;
 
 int frontMotor;
 int backMotor;

@@ -125,13 +125,13 @@ float ch_roll_slope = 1;
 float ch_pitch_slope = 1;
 float ch_throttle_slope = 1;
 float ch_yaw_slope = 1;
-float ch_aux_slope = 1;
+float ch_gear_slope = 1;
 float ch_aux2_slope = 1;
 float ch_roll_offset = 0;
 float ch_pitch_offset = 0;
 float ch_throttle_offset = 0;
 float ch_yaw_offset = 0;
-float ch_aux_offset = 0;
+float ch_gear_offset = 0;
 float ch_aux2_offset = 0;
 
 // This function call contains the default values that are set to the ArduCopter
@@ -186,13 +186,13 @@ void defaultUserConfig() {
   ch_pitch_slope = 1;
   ch_throttle_slope = 1;
   ch_yaw_slope = 1;
-  ch_aux_slope = 1;
+  ch_gear_slope = 1;
   ch_aux2_slope = 1;
   ch_roll_offset = 0;
   ch_pitch_offset = 0;
   ch_throttle_offset = 0;
   ch_yaw_offset = 0;
-  ch_aux_offset = 0;
+  ch_gear_offset = 0;
   ch_aux2_offset = 0;
 }
 
@@ -246,13 +246,13 @@ void defaultUserConfig() {
 #define ch_pitch_slope_ADR 184
 #define ch_throttle_slope_ADR 188
 #define ch_yaw_slope_ADR 192
-#define ch_aux_slope_ADR 196
+#define ch_gear_slope_ADR 196
 #define ch_aux2_slope_ADR 200
 #define ch_roll_offset_ADR 204
 #define ch_pitch_offset_ADR 208
 #define ch_throttle_offset_ADR 212
 #define ch_yaw_offset_ADR 216
-#define ch_aux_offset_ADR 220
+#define ch_gear_offset_ADR 220
 #define ch_aux2_offset_ADR 224
 
 // Utilities for writing and reading from the EEPROM
@@ -328,13 +328,13 @@ void readUserConfig() {
   ch_pitch_slope = readEEPROM(ch_pitch_slope_ADR);
   ch_throttle_slope = readEEPROM(ch_throttle_slope_ADR);
   ch_yaw_slope = readEEPROM(ch_yaw_slope_ADR);
-  ch_aux_slope = readEEPROM(ch_aux_slope_ADR);
+  ch_gear_slope = readEEPROM(ch_gear_slope_ADR);
   ch_aux2_slope = readEEPROM(ch_aux2_slope_ADR);
   ch_roll_offset = readEEPROM(ch_roll_offset_ADR);
   ch_pitch_offset = readEEPROM(ch_pitch_offset_ADR);
   ch_throttle_offset = readEEPROM(ch_throttle_offset_ADR);
   ch_yaw_offset = readEEPROM(ch_yaw_offset_ADR);
-  ch_aux_offset = readEEPROM(ch_aux_offset_ADR);
+  ch_gear_offset = readEEPROM(ch_gear_offset_ADR);
   ch_aux2_offset = readEEPROM(ch_aux2_offset_ADR);
 }
 
@@ -388,12 +388,12 @@ void writeUserConfig() {
   writeEEPROM(ch_pitch_slope, ch_pitch_slope_ADR);
   writeEEPROM(ch_throttle_slope, ch_throttle_slope_ADR);
   writeEEPROM(ch_yaw_slope, ch_yaw_slope_ADR);
-  writeEEPROM(ch_aux_slope, ch_aux_slope_ADR);
+  writeEEPROM(ch_gear_slope, ch_gear_slope_ADR);
   writeEEPROM(ch_aux2_slope, ch_aux2_slope_ADR);
   writeEEPROM(ch_roll_offset, ch_roll_offset_ADR);
   writeEEPROM(ch_pitch_offset, ch_pitch_offset_ADR);
   writeEEPROM(ch_throttle_offset, ch_throttle_offset_ADR);
   writeEEPROM(ch_yaw_offset, ch_yaw_offset_ADR);
-  writeEEPROM(ch_aux_offset, ch_aux_offset_ADR);
+  writeEEPROM(ch_gear_offset, ch_gear_offset_ADR);
   writeEEPROM(ch_aux2_offset, ch_aux2_offset_ADR);
 }
