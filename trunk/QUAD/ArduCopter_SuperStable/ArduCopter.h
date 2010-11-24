@@ -135,11 +135,18 @@ float GPS_Dt=0.2;   // GPS Dt
 float command_rx_roll=0;        // User commands
 float command_rx_pitch=0;
 float command_rx_yaw=0;
-//float amount_rx_yaw=0;
 int control_roll;           // PID control results
 int control_pitch;
 int control_yaw;
 float K_aux;
+
+// Acceleration damping variables
+float command_roll;
+float command_pitch;
+float ax_f;
+float ay_f;
+float az_f;
+byte az_f_counter;
 
 // Attitude PID controls
 float roll_I=0;
@@ -159,7 +166,7 @@ byte target_position = 0;
 byte target_alt_position = 0;
 byte heading_hold_mode = 0;
 float current_heading_hold;
-float target_altitude;
+//float target_altitude;
 float gps_err_roll;
 float gps_err_roll_old;
 float gps_roll_D;
@@ -173,24 +180,27 @@ float command_gps_pitch;
 float command_throttle;
 
 //Altitude control
-int Initial_Throttle;
+//int Initial_Throttle;
 int target_sonar_altitude;
+long target_baro_altitude;
 int err_altitude;
 int err_altitude_old;
-float command_altitude;
+float command_altitude = 0;
 float altitude_I;
 float altitude_D;
 
-//Pressure Sensor variables
+///Pressure Sensor variables
+long 	press_alt			= 0;
+byte    Use_BMP_Altitude                = 1;    // Default make use of BMP sensor for Altitude Hold control
 #ifdef UseBMP
-float BMP_target_altitude;
-float BMP_err_altitude;
-float BMP_err_altitude_old;
-float BMP_command_altitude;
-float BMP_altitude_I;
-float BMP_altitude_D;
-float tempPresAlt;
-float BMP_Altitude;
+unsigned long abs_press 	        = 0;    
+unsigned long abs_press_filt            = 0;
+unsigned long abs_press_gnd             = 0;
+int 	ground_temperature	        = 0;    // 
+int 	temp_unfilt			= 0;
+long 	ground_alt			= 0;	// Ground altitude from gps at startup in centimeters
+byte    baro_counter                    = 0;
+byte    Baro_new_data                   = 0;
 #endif
 
 #define RELAY_PIN        47
@@ -207,14 +217,19 @@ float 	battery_voltage = LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized ab
 //Airspeed
 #define AIRSPEED_PIN     1      // Unused?
 
-// Sonar variables
+//// Sonar variables
 int Sonar_value=0;
-#define SonarToCm(x) (x*1.26)   // Sonar raw value to centimeters
+//#define SonarToCm(x) (x*1.26)   // Sonar raw value to centimeters
+#define SonarToCm(x) (x*0.22)   // Sonar raw value to centimeters
+#define SonarTomm(x) (x*2.2)   // Sonar raw value to milimeters
 int Sonar_Counter=0;
+byte Sonar_new_data=0;
+int sonar_adc=0;
+int sonar_read = 0;
 
 // AP_mode : 1=> Position hold  2=> Stabilization assist mode (normal mode) 0=> Acrobatic mode
 byte AP_mode = 0;  
-byte BMP_mode = 0;  //0 = Altitude hold off
+byte Throttle_Altitude_Change_mode = 0;  //0 = Throttle applied in Altitude hold = off
 
 //  PID Tuning
 byte Plus = 0;
@@ -239,8 +254,9 @@ float aux_debug;
 int roll_mid;
 int pitch_mid;
 int yaw_mid;
-int throttle_mid = 1450;
-
+int Hover_Throttle_Position = 1450;  //Were Chopper Hovers.  This must be changed for each Chopper.
+                                     //This reading is low because the total weight is 1.3kg
+                                     //Heavier quad will have a bigger value. 
 int Neutro_yaw;
 int ch_roll;
 int ch_pitch;
@@ -269,8 +285,8 @@ uint8_t Disarming_counter=0;
 // Flying modes (lyagukh@gmail.com, 20101121)
 
 #define F_MODE_ACROBATIC    0
-#define F_MODE_POS_HOLD     1
-#define F_MODE_SUPER_STABLE 2
+#define F_MODE_STABLE       2
+#define F_MODE_SUPER_STABLE 1
 #define F_MODE_ABS_HOLD     3
 
 // Pins used for motormount LEDs (lyagukh@gmail.com, 20101121)

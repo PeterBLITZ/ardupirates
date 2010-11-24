@@ -314,14 +314,15 @@ void sendSerialTelemetry() {
     break;
   case 'T': // Spare
     SerPri("AP Mode = ");
-    if (AP_mode == 0) 
+    if (AP_mode == F_MODE_ACROBATIC) 
       SerPriln("Acrobatic");
-    else if (AP_mode == 1)
-      SerPriln("Position Hold");
-    else if (AP_mode == 2)
-      SerPriln("Stable Mode");
-    else if (AP_mode == 3)
+    else if (AP_mode == F_MODE_STABLE)
+      SerPriln("Stable mode");
+    else if (AP_mode == F_MODE_SUPER_STABLE)
+      SerPriln("Super Stable Mode");
+    else if (AP_mode == F_MODE_ABS_HOLD)
       SerPriln("Position & Altitude Hold");
+
 //    SerPri("BMP Mode = ");
 //    if (BMP_mode == 0) {
 //      SerPriln("Off");
@@ -349,11 +350,6 @@ void sendSerialTelemetry() {
 //    SerPriln(ToDeg(errorCourse), 3);
     SerPri("Heading Hold Mode = ");
     if (heading_hold_mode == 0) 
-      SerPriln("Off");
-    else 
-      SerPriln("On");
-    SerPri("BMP Mode = ");
-    if (BMP_mode == 0) 
       SerPriln("Off");
     else 
       SerPriln("On");
