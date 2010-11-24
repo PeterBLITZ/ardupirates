@@ -23,10 +23,10 @@
 /* ********************************************************************** */
 
 /**** Switch Functions *****
- AUX OFF && GEAR OFF = Acro Mode (AP_mode = 0)
- AUX ON  && GEAR OFF = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 2)
- AUX ON  && GEAR ON  = Position Hold Mode (AP_mode = 1)
- AUX OFF && GEAR ON  = Postion & Altitude Hold (AP_mode = 3)
+ AUX2 OFF && GEAR OFF = Acro Mode (AP_mode = 0)
+ AUX2 ON  && GEAR OFF = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 2)
+ AUX2 ON  && GEAR ON  = Position Hold Mode (AP_mode = 1)
+ AUX2 OFF && GEAR ON  = Postion & Altitude Hold (AP_mode = 3)
  
  **** LED Feedback ****
  Bootup Sequence:
@@ -101,11 +101,16 @@
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
 #define MAGOFFSET -81.00,-35.00,30.50
 
-// MAGCALIBRATION is the correction angle in degrees (can be + or -). You need to do this for making sure
-// that your Magnetometer is truly showing 0 degress when your AeroQuad is looking to the North.
-// Use a real compass (! not your iPhone) to point your AeroQuad to the magnetic north and then adjust this 
-// value until you have a 0 dergrees reading in the configurator's atificial horizont. 
+// MAGCALIBRATION is the correction angle in degrees (can be + or -). You must calibrating your magnetometer to show magnetic north correctly.
+// After calibration you will have to determine the declination value between Magnetic north and true north, see following link
+// http://code.google.com/p/arducopter/wiki/Quad_Magnetos under additional settings. Both values have to be incorporated
+// Example:  Magnetic north calibration show -1.2 degrees offset and declination (true north) is -5.6 then the MAGCALIBRATION shoud be -6.8.
+// Your GPS readings is based on true north.
+// For Magnetic north calibration make sure that your Magnetometer is truly showing 0 degress when your ArduQuad is looking to the North.
+// Use a real compass (! not your iPhone) to point your ArduQuad to the magnetic north and then adjust this 
+// value until you have a 0 dergrees reading in the configurator's artificial horizon. 
 // Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
+
 #define MAGCALIBRATION -13.6
 
 // orientations for DIYDrones magnetometer
@@ -714,13 +719,15 @@ void loop(){
       ch_pitch = channel_filter(APM_RC.InputCh(1) * ch_pitch_slope + ch_pitch_offset, ch_pitch);
       ch_throttle = channel_filter(APM_RC.InputCh(2), ch_throttle); // Transmiter calibration not used on throttle
       ch_yaw = channel_filter(APM_RC.InputCh(3) * ch_yaw_slope + ch_yaw_offset, ch_yaw);
-      ch_aux = APM_RC.InputCh(4);
-      ch_aux2 = APM_RC.InputCh(5);
-      ch_mode = APM_RC.InputCh(6);
-   
-      command_throttle = (ch_throttle-throttle_mid) / 12; 
-      command_rx_roll = (ch_roll-roll_mid) / 12.0;
-      command_rx_pitch = (ch_pitch-pitch_mid) / 12.0;
+      ch_gear = APM_RC.InputCh(4) * ch_gear_slope + ch_gear_offset;
+      ch_aux2 = APM_RC.InputCh(5) * ch_aux2_slope + ch_aux2_offset;
+      ch_aux1 = APM_RC.InputCh(6);  // flight mode 3-position switch.
+
+      #define STICK_TO_ANGLE_FACTOR 12.0;
+      
+      command_throttle = (ch_throttle-throttle_mid) / STICK_TO_ANGLE_FACTOR 12.0; 
+      command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR 12.0;
+      command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR 12.0;
 
 #ifdef UseBMP  
         // New Altitude Hold using BMP Pressure sensor.  If Trottle stick moves more then 10%, switch Altitude Hold off    
@@ -754,23 +761,25 @@ void loop(){
         command_rx_yaw += 360.0;
 
 // **************************************************************************		
-//     We read the Quad Mode from Channel 5 & 6
-//     AP_mode = 0;          // Acrobatic mode
-//     AP_mode = 2;          // SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement)
-//     AP_mode = 1;          // Position hold mode (GPS position control)
-//     AP_mode = 3;          // Position hold mode and Altitude Hold
-      
-      if (ch_aux2 < 1250 && ch_aux > 1800)
+//     We read the Quad Mode from Gear and Aux2 Channel on radio (example Spektrum Radio)
+
+//     AUX2 OFF && GEAR OFF = Acrobatic mode
+//     AUX2 ON  && GEAR OFF = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement)
+//     AUX2 ON  && GEAR ON  = Position hold mode (GPS position control)
+//     AUX2 OFF && GEAR ON  = Position hold mode and Altitude Hold  
+
+
+      if (ch_aux2 < 1250 && ch_gear > 1800)
       {
         AP_mode = F_MODE_SUPER_STABLE;  // Stable mode & Altitude hold mode (Stabilization assist mode)
         digitalWrite(LED_Yellow,LOW);   // Yellow LED off
       }
-      else if (ch_aux < 1250 && ch_aux2 > 1800)
+      else if (ch_gear < 1250 && ch_aux2 > 1800)
       {
         AP_mode = F_MODE_ABS_HOLD;      // Position & Altitude hold mode (GPS position control & Altitude control)
         digitalWrite(LED_Yellow,HIGH);  // Yellow LED On
       }
-      else if (ch_aux < 1250 && ch_aux2 < 1250)
+      else if (ch_gear < 1250 && ch_aux2 < 1250)
       {
         AP_mode = F_MODE_POS_HOLD;      // Position hold mode (GPS position control)
         digitalWrite(LED_Yellow,HIGH);  // Yellow LED On
