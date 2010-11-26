@@ -580,7 +580,7 @@ void loop(){
     {
       APM_BMP085.Read();
       BMP_counter = 0;
-      press_alt = Sensor_Filter(APM_BMP085.Press, press_alt, 5);  // Filter Barometric readings.
+      press_alt = BMP_Sensor_Filter(APM_BMP085.Press, press_alt, 5);  // Filter Barometric readings.
 //      read_baro();
       Baro_new_data=1;
     }

@@ -77,8 +77,8 @@ int Altitude_control_Sonar(int Sonar_altitude, int target_sonar_altitude)
   err_altitude = target_sonar_altitude - Sonar_altitude;  
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;
   altitude_I += (float)err_altitude*0.05;
-  altitude_I = constrain(altitude_I,-100,100); //-1000,1000
-  control_altitude = KP_SONAR_ALTITUDE*err_altitude + KD_SONAR_ALTITUDE*altitude_D + KI_SONAR_ALTITUDE*altitude_I;
+  altitude_I = constrain(altitude_I,-120,120); //-1000,1000
+  control_altitude = (int)(KP_SONAR_ALTITUDE*err_altitude + KD_SONAR_ALTITUDE*altitude_D + KI_SONAR_ALTITUDE*altitude_I);
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_SONAR_OUTPUT_MIN,ALTITUDE_CONTROL_SONAR_OUTPUT_MAX);
   return control_altitude;
 }
@@ -103,10 +103,10 @@ int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, flo
   err_altitude = target_sonar_altitude - Sonar_altitude;  
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;
   altitude_I += (float)err_altitude*0.05;
-  altitude_I = constrain(altitude_I,-25,50); //-1000,1000 
-  control_altitude = KP_SONAR_ALTITUDE*err_altitude + KD_SONAR_ALTITUDE*altitude_D + KI_SONAR_ALTITUDE*altitude_I;
+  altitude_I = constrain(altitude_I,-120,120); //-1000,1000 
+  control_altitude = (int)(KP_SONAR_ALTITUDE*err_altitude + KD_SONAR_ALTITUDE*altitude_D + KI_SONAR_ALTITUDE*altitude_I);
   damp_factor = constrain(1-(err_altitude/40),0,1);
-  control_altitude -= KP_ACCZ_DAMP*damp_factor*az_f;
+  control_altitude -= (int)(KP_ACCZ_DAMP*damp_factor*az_f);
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_SONAR_OUTPUT_MIN,ALTITUDE_CONTROL_SONAR_OUTPUT_MAX);
   return control_altitude;
 }
@@ -114,7 +114,7 @@ int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, flo
 
 /* ************************************************************ */
 /* Altitude control... (based on barometer) */
-int Altitude_control_baro(int altitude, int target_altitude)
+int Altitude_control_baro(long altitude, long target_altitude)
 { 
   #define ALTITUDE_CONTROL_BARO_OUTPUT_MIN 120
   #define ALTITUDE_CONTROL_BARO_OUTPUT_MAX 40
@@ -130,18 +130,18 @@ int Altitude_control_baro(int altitude, int target_altitude)
   int control_altitude;
   
   err_altitude_old = err_altitude;
-  err_altitude = -(target_altitude - altitude);              // Invert error because barometric pressure becomes less the higher the Altitude.
+  err_altitude = -(int)(target_altitude - altitude);              // Invert error because barometric pressure becomes less the higher the Altitude.
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;  // 20Hz
   altitude_I += (float)err_altitude*0.05;
   altitude_I = constrain(altitude_I,-25,50);
-  control_altitude = KP_BARO_ALTITUDE*err_altitude + KD_BARO_ALTITUDE*altitude_D + KI_BARO_ALTITUDE*altitude_I;
+  control_altitude = (int)(KP_BARO_ALTITUDE*err_altitude + KD_BARO_ALTITUDE*altitude_D + KI_BARO_ALTITUDE*altitude_I);
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_BARO_OUTPUT_MIN,ALTITUDE_CONTROL_BARO_OUTPUT_MAX);
   return control_altitude;
 }
 
 /* Altitude control... (based on barometer) */
 /* Added accelerometer dumping control */
-int Altitude_control_baro_v2(int altitude, int target_altitude)
+int Altitude_control_baro_v2(long altitude, long target_altitude)
 { 
   #define ALTITUDE_CONTROL_BARO_OUTPUT_MIN 40
   #define ALTITUDE_CONTROL_BARO_OUTPUT_MAX 120
@@ -159,17 +159,17 @@ int Altitude_control_baro_v2(int altitude, int target_altitude)
   int control_altitude;
   
   err_altitude_old = err_altitude;
-  err_altitude = -(target_altitude - altitude);              // Invert error because barometric pressure becomes less the higher the Altitude.
+  err_altitude = -(int)(target_altitude - altitude);              // Invert error because barometric pressure becomes less the higher the Altitude.
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;  // 20Hz
   altitude_I += (float)err_altitude*0.05;
   altitude_I = constrain(altitude_I,-25,50);
-  control_altitude = KP_BARO_ALTITUDE*err_altitude + KD_BARO_ALTITUDE*altitude_D + KI_BARO_ALTITUDE*altitude_I;
+  control_altitude = (int)(KP_BARO_ALTITUDE*err_altitude + KD_BARO_ALTITUDE*altitude_D + KI_BARO_ALTITUDE*altitude_I);
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_BARO_OUTPUT_MIN,ALTITUDE_CONTROL_BARO_OUTPUT_MAX);
   
   // Z accel on NED frame (convert accz from plane frame to NED frame [earth])
   az_f = Vector_Dot_Product(&DCM_Matrix[2][0],Accel_Vector);
   //Serial.println((int)az_f);
-  control_altitude -= KP_ACCZ_DAMP*(az_f-GRAVITY);
+  control_altitude -= (int)(KP_ACCZ_DAMP*(az_f-GRAVITY));
   
   return control_altitude;
 }
