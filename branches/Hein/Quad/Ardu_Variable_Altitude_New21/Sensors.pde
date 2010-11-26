@@ -36,6 +36,7 @@ void read_airpressure(void){
   //  Need to add comments for theory.....
 }
 */
+/*
 void read_baro(void)
 {
   float tempPresAlt;
@@ -50,6 +51,7 @@ void read_baro(void)
     press_alt = press_alt*0.9 + ((1.0 - tempPresAlt) * 443300);  // Altitude in cm (filtered)
 }
 
+*/
 #endif
 
 #if BATTERY_EVENT == 1
