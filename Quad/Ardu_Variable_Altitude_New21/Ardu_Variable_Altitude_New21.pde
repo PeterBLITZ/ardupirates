@@ -10,7 +10,7 @@
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
 /*           Sandro Benigno, Chris Anderson.                              */  
 /* Authors : ArduPirates deveopment team                                  */
-/*           Philipp Maloney, Hein, Igor.                                 */
+/*           Philipp Maloney, Norbert, Hein, Igor.                        */
 /* Date : 08-08-2010                                                      */
 /* Version : 1.7 beta                                                     */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
@@ -578,9 +578,10 @@ void loop(){
     BMP_counter++;
     if (BMP_counter > 10)  // Reading Barometric data at 20Hz
     {
-      BMP_counter = 0;
       APM_BMP085.Read();
-      read_baro();
+      BMP_counter = 0;
+      press_alt = Sensor_Filter(APM_BMP085.Press, press_alt, 5);  // Filter Barometric readings.
+//      read_baro();
       Baro_new_data=1;
     }
 #endif
