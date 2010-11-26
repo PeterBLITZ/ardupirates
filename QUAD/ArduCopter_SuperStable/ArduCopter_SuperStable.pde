@@ -10,7 +10,7 @@
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
 /*           Sandro Benigno, Chris Anderson.                              */  
 /* Authors : ArduPirates deveopment team                                  */
-/*           Philipp Maloney, Hein, Igor.                                 */
+/*           Philipp Maloney, Norbert, Hein, Igor.                        */
 /* Date : 12-7-2010                                                       */
 /* Version : 1.6                                                          */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
@@ -77,7 +77,7 @@
 //#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
 //#define UseAirspeed       // Do we have an airspeed sensor?
 //#define BATTERY_EVENT     // Do we have battery alarm wired up?
-//#define MOTORMOUNT_LEDS   // Do we have motormount LEDs attched to AN4 and AN5 (NOT the same as IsAM)? See bottom of the file for details
+//#define MOTORMOUNT_LEDS   // Do we have motormount LEDs attached to AN4 and AN5 (NOT the same as IsAM)? See bottom of the file for details
 //#define RELAY_LED_LIGHTS  // Do we have LED lights attached through the relay? Turned on and off with Rx Ch7 (FIXME: should be configurable)
 
 
@@ -102,7 +102,7 @@
 
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
-#define MAGOFFSET -81.00,-35.00,30.50  // You will have to determine your own settings.
+#define MAGOFFSET -76,22.5,-55.5  // You will have to determine your own settings.
 
 // MAGCALIBRATION is the correction angle in degrees (can be + or -). You must calibrating your magnetometer to show magnetic north correctly.
 // After calibration you will have to determine the declination value between Magnetic north and true north, see following link
@@ -114,10 +114,10 @@
 // value until you have a 0 dergrees reading in the configurator's artificial horizon. 
 // Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
 
-#define MAGCALIBRATION -13.6 // You have to determine your own setting.
+#define MAGCALIBRATION -17.65 // You have to determine your own setting.
 
 // orientations for DIYDrones magnetometer
-#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_RIGHT
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_BACK_RIGHT
@@ -143,7 +143,7 @@
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
-//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
+#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -403,8 +403,9 @@ int channel_filter(int ch, int ch_old)
   return((ch + ch_old) >> 1);   // Small filtering
 } 
 
-// not used at the moment.  Phil and Hein will implement the latest technique.....
+// not used at the moment.  We will use the same sensor filter as sonar.....
 // BMP slope filter for readings... (limit max differences between readings)
+/*
 float BMP_filter(float BMP_reading, float BMP_reading_old)
 {
   float diff_BMP_reading_old;
@@ -424,6 +425,7 @@ float BMP_filter(float BMP_reading, float BMP_reading_old)
   }
   return((BMP_reading + BMP_reading_old ) / 2);   // Small filtering
 } 
+*/
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */
 /* ************************************************************ */
@@ -661,7 +663,8 @@ void loop(){
       }
 #endif   
 
-/*
+/*  // In the future the GCS can do the conversion to cm and give as the 
+    // barometric pressure for a specific altitude...less processing power needed.
 #ifdef UseBMP
       if (BMP_counter > 10)  // Reading Barometric data at 20Hz 
       {
@@ -698,9 +701,10 @@ void loop(){
     BMP_counter++;
     if (BMP_counter > 10)  // Reading Barometric data at 20Hz
     {
-      BMP_counter = 0;
       APM_BMP085.Read();
-      read_baro();
+      BMP_counter = 0;
+      press_alt = BMP_Sensor_Filter(APM_BMP085.Press, press_alt, 5);  // Filter Barometric readings.
+//      read_baro();
       Baro_new_data=1;
     }
 #endif
