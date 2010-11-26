@@ -57,6 +57,27 @@ int Sensor_Filter(int new_value, int old_value, int max_diff)
   return(result); 
 }
 
+// This filter limits the max difference between readings and also aply an average filter
+long BMP_Sensor_Filter(long new_value, long old_value, int max_diff)
+{
+  long diff_values;
+  long result;
+  
+  if (old_value==0)     // Filter is not initialized (no old value)
+    return(new_value);
+  diff_values = new_value - old_value;      // Difference with old reading
+  if (diff_values>max_diff)   
+    result = old_value+max_diff;    // We limit the max difference between readings
+  else
+    {
+    if (diff_values<-max_diff)
+      result = old_value-max_diff;        // We limit the max difference between readings
+    else
+      result = (new_value+old_value)>>1;  // Small filtering (average filter)
+    }
+  return(result); 
+}
+
 void ReadSCP1000(void) {
 }
 
