@@ -787,10 +787,116 @@ void loop(){
         else 
         {
           Throttle_Altitude_Change_mode = 0;  //No more Throttle Applied in Altitude hold is swithed off.  Lock Altitude again.
+          ch_throttle += throttle_hover_reference;  // Add more throttle to make it easier to keep altitude control on a cushion of extra air.
+          if (altitude_I_grow > 100)                // We monitor the quads hover throttle level and adjust if necessary.
+          {
+            if (throttle_hover_reference < 75)
+              throttle_hover_reference ++;
+            altitude_I_grow = 0;
+          }
+          else if (altitude_I_grow < -100)
+          {
+            if (throttle_hover_reference > -50)
+              throttle_hover_reference --;
+            altitude_I_grow = 0;
+          }
         }
       } 
 #endif
-  
+
+/* 
+      // Tuning Engine for PID's using only 3 position channel switch (Flight Mode - aux1 channel).
+     if (ch_aux1 >= 1800) 
+     {
+       Plus = 1;
+       Minus = 0;
+     } 
+     else if (ch_aux1 <= 1200) 
+     {
+          Plus = 0;
+          Minus = 1;
+     } 
+     else if (ch_aux1 >= 1400 && ch_aux1 <= 1600) 
+     {
+             if (Plus == 1){
+//                KP_GPS_ROLL += 0.001;
+//                writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
+//                KP_GPS_PITCH += 0.001;
+//                writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
+//                KI_GPS_ROLL += 0.0001;
+//                writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
+//                KI_GPS_PITCH += 0.0001;
+//                writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
+//                KP_QUAD_YAW += 0.1;
+//                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
+//                KI_QUAD_YAW += 0.01;
+//                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
+//                STABLE_MODE_KP_RATE += 0.05;
+//                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);
+//                STABLE_MODE_KP_RATE_YAW += 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
+//                STABLE_MODE_KP_RATE_ROLL += 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
+//                STABLE_MODE_KP_RATE_PITCH += 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+//                Kp_RateRoll += 0.1;
+//                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
+//                Kp_RatePitch += 0.1;
+//                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
+                KP_ALTITUDE += 0.05;
+                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+//                KI_ALTITUDE += 0.05;
+//                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
+//                KD_ALTITUDE += 0.3;
+//                writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
+//                Magoffset1 += 1;
+//                writeEEPROM(Magoffset1_ADR);
+//                APM_Compass.SetOffsets(Magoffset1);    
+
+                Plus = 0;
+                Minus = 0;
+             } else if (Minus == 1) {
+//                KP_GPS_ROLL -= 0.001;
+//                writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
+//                KP_GPS_PITCH -= 0.001;
+//                writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
+//                KI_GPS_ROLL -= 0.0001;
+//                writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
+//                KI_GPS_PITCH -= 0.0001;
+//                writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
+//                KP_QUAD_YAW -= 0.1;
+//                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
+//                KI_QUAD_YAW -= 0.01;
+//                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
+//                STABLE_MODE_KP_RATE -= 0.05;
+//                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);
+//                STABLE_MODE_KP_RATE_YAW -= 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
+//                STABLE_MODE_KP_RATE_ROLL -= 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
+//                STABLE_MODE_KP_RATE_PITCH -= 0.1;
+//                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+//                Kp_RateRoll -= 0.1;
+//                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
+//                Kp_RatePitch -= 0.1;
+//                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
+                KP_ALTITUDE -= 0.05;
+                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+//                KI_ALTITUDE -= 0.05;
+//                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
+//                KD_ALTITUDE -= 0.3;
+//                writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
+//                Magoffset1 -= 1;
+//                writeEEPROM(Magoffset1_ADR);
+//                APM_Compass.SetOffsets(Magoffset1);    
+
+                Plus = 0;
+                Minus = 0;
+             }
+     }
+
+*/
+
       if (abs(ch_yaw-yaw_mid)<12)   // Take into account a bit of "dead zone" on yaw
         aux_float = 0.0;
       else
@@ -872,6 +978,8 @@ void loop(){
         target_baro_altitude = press_alt;
        // Reset I terms
         altitude_I = 0;
+        altitude_I_grow = 0;
+        throttle_hover_reference = 0;
         target_alt_position=1;
         command_altitude = 0;
       }        
@@ -893,6 +1001,8 @@ void loop(){
         target_baro_altitude = press_alt;
         // Reset I terms
         altitude_I = 0;
+        altitude_I_grow = 0;
+        throttle_hover_reference = 0;
         command_altitude = 0;
       }        
       gps_err_roll = 0;
@@ -914,6 +1024,8 @@ void loop(){
       target_alt_position = 0;
       // Reset I terms
       altitude_I = 0;
+      altitude_I_grow = 0;
+      throttle_hover_reference = 0;
       gps_roll_I = 0;
       gps_pitch_I = 0;
       gps_err_roll = 0;
@@ -930,6 +1042,8 @@ void loop(){
     {
      // Reset I terms
       altitude_I = 0;
+      altitude_I_grow = 0;
+      throttle_hover_reference = 0;
       gps_roll_I = 0;
       gps_pitch_I = 0;
       gps_err_roll = 0;
