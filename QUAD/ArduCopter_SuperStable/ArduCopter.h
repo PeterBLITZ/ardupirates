@@ -188,6 +188,8 @@ int err_altitude_old;
 float command_altitude = 0;
 float altitude_I;
 float altitude_D;
+int throttle_hover_reference = 0;
+float altitude_I_grow;
 
 ///Pressure Sensor variables
 long 	press_alt			= 0;
