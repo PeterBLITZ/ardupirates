@@ -340,10 +340,14 @@ void sendSerialTelemetry() {
       SerPriln("Off");
     else if (Use_BMP_Altitude == 1)
       SerPriln("On");
-    SerPri("Current Sonar raw Reading = ");
-    SerPriln(sonar_read);
-    SerPri("STABLE MODE KP RATE = ");
-    SerPriln(STABLE_MODE_KP_RATE, 3);
+    SerPri("Throttle Hover Reference = ");
+    SerPriln(throttle_hover_reference);
+    SerPri("Altitude I Grow = ");
+    SerPriln(altitude_I_grow);
+//    SerPri("Current Sonar raw Reading = ");
+//    SerPriln(sonar_read);
+//    SerPri("STABLE MODE KP RATE = ");
+//    SerPriln(STABLE_MODE_KP_RATE, 3);
 //    SerPri("Altitude Command = ");
 //    SerPriln(command_altitude);
 //    SerPri("Total Throttle Command = ");
@@ -359,18 +363,18 @@ void sendSerialTelemetry() {
 //    SerPriln(BMP_command_altitude);
 //    SerPri("Amount RX Yaw = ");
 //    SerPriln(amount_rx_yaw);
-    SerPri("Current Compass Heading = ");
-    current_heading_hold = APM_Compass.Heading;
-    if (current_heading_hold < 0)
-      current_heading_hold += ToRad(360);
-    SerPriln(ToDeg(current_heading_hold), 3);
+//    SerPri("Current Compass Heading = ");
+//    current_heading_hold = APM_Compass.Heading;
+//    if (current_heading_hold < 0)
+//      current_heading_hold += ToRad(360);
+//    SerPriln(ToDeg(current_heading_hold), 3);
 //    SerPri("Error Course = ");
 //    SerPriln(ToDeg(errorCourse), 3);
-    SerPri("Heading Hold Mode = ");
-    if (heading_hold_mode == 0) 
-      SerPriln("Off");
-    else 
-      SerPriln("On");
+//    SerPri("Heading Hold Mode = ");
+//    if (heading_hold_mode == 0) 
+//      SerPriln("Off");
+//    else 
+//      SerPriln("On");
 //    SerPri("KP ALTITUDE = ");
 //    SerPriln(KP_ALTITUDE, 3);
 //    SerPri("EEPROM KP ALTITUDE = ");
@@ -387,14 +391,14 @@ void sendSerialTelemetry() {
 //    SerPriln(Kp_RateRoll, 3);
 //    SerPri("EEPROM KP ROLL ACRO MODE = ");
 //    SerPriln(readEEPROM(KP_RATEROLL_ADR), 3);
-    SerPri("STABLE MODE KP RATE ROLL = ");
-    SerPriln(STABLE_MODE_KP_RATE_ROLL, 3);
-    SerPri("EEPROM STABLE MODE KP RATE ROLL = ");
-    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_ROLL_ADR), 3);
-    SerPri("STABLE MODE KP RATE PITCH = ");
-    SerPriln(STABLE_MODE_KP_RATE_PITCH, 3);
-    SerPri("EEPROM STABLE MODE KP RATE PITCH = ");
-    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_PITCH_ADR), 3);
+//    SerPri("STABLE MODE KP RATE ROLL = ");
+//    SerPriln(STABLE_MODE_KP_RATE_ROLL, 3);
+//    SerPri("EEPROM STABLE MODE KP RATE ROLL = ");
+//    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_ROLL_ADR), 3);
+//    SerPri("STABLE MODE KP RATE PITCH = ");
+//    SerPriln(STABLE_MODE_KP_RATE_PITCH, 3);
+//    SerPri("EEPROM STABLE MODE KP RATE PITCH = ");
+//    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_PITCH_ADR), 3);
 //    SerPri("KP PITCH ACRO MODE = ");
 //    SerPriln(Kp_RatePitch, 3);
 //    SerPri("EEPROM KP PITCH ACRO MODE = ");
@@ -420,10 +424,10 @@ void sendSerialTelemetry() {
 //    SerPriln(readEEPROM(KI_GPS_ROLL_ADR), 4);
 //    SerPri("EEPROM KP GPS PITCH = ");
 //    SerPriln(readEEPROM(KI_GPS_ROLL_ADR), 4);
-    SerPri("Magnetometer = ");
-    SerPriln(MAGNETOMETER);
-    SerPri("EEPROM Magnetometer = ");
-    SerPriln(readEEPROM(MAGNETOMETER_ADR));
+//    SerPri("Magnetometer = ");
+//    SerPriln(MAGNETOMETER);
+//    SerPri("EEPROM Magnetometer = ");
+//    SerPriln(readEEPROM(MAGNETOMETER_ADR));
 //    SerPri("Magnetometer Offset= ");
 //    SerPriln(Magoffset);
 //    SerPri("EEPROM Magoffset = ");

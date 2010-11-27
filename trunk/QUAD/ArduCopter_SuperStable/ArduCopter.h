@@ -189,7 +189,7 @@ float command_altitude = 0;
 float altitude_I;
 float altitude_D;
 int throttle_hover_reference = 0;
-float altitude_I_grow;
+float altitude_I_grow = 0;
 
 ///Pressure Sensor variables
 long 	press_alt			= 0;
@@ -256,7 +256,7 @@ float aux_debug;
 int roll_mid;
 int pitch_mid;
 int yaw_mid;
-int Hover_Throttle_Position = 1450;  //Were Chopper Hovers.  This must be changed for each Chopper.
+int Hover_Throttle_Position = 1377;  //Were Chopper Hovers.  This must be changed for each Chopper.
                                      //Reading of 1377 is recommend for quad with total weight of 1.3kg
                                      //1450 for 1.9kg.  Heavier quads will have a bigger value. 
                                      //This reading is the position of your throttle stick when quad is hovering.
@@ -269,10 +269,20 @@ int ch_gear;
 int ch_aux2;
 int ch_aux1;
 
+// Quad motors
 int frontMotor;
 int backMotor;
 int leftMotor;
 int rightMotor;
+
+// Hexa motors
+int LeftCWMotor;
+int LeftCCWMotor;
+int RightCWMotor;
+int RightCCWMotor;
+int BackCWMotor;
+int BackCCWMotor;
+
 byte motorArmed = 0;
 int minThrottle = 0;
 

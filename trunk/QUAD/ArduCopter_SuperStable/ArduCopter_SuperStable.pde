@@ -1,5 +1,5 @@
 /* ********************************************************************** */
-/*               ArduCopter & ArduPirates Quadcopter code                 */
+/*             ArduCopter & ArduPirates Quad & Hexa copter code           */
 /*                                                                        */
 /* Quadcopter code from AeroQuad project and ArduIMU quadcopter project   */
 /* IMU DCM code from Diydrones.com                                        */
@@ -73,7 +73,7 @@
 //#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
-//#define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
+#define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
 //#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
 //#define UseAirspeed       // Do we have an airspeed sensor?
 //#define BATTERY_EVENT     // Do we have battery alarm wired up?
@@ -82,6 +82,10 @@
 
 
 /**********************************************/
+//    QUAD COPTER SETUP                       //
+
+#define Quad
+
 // Frame build configuration
 // THIS FLIGHT MODE X CODE - APM FRONT BETWEEN FRONT AND RIGHT MOTOR.
 // NOT LIKE THE ALPHA RELEASE !!!.
@@ -94,10 +98,27 @@
 //                                          R = Right motor, 
 //                                          B = Back motor,
 //                                          F = Front motor.  
+
 #define FLIGHT_MODE_X
 //#define FLIGHT_MODE_+
 
 /**********************************************/
+//    HEXA COPTER SETUP                       //
+
+//#define Hexa
+
+// Frame build condiguration
+//Hexa Diamond Mode - 6 Motor system in diamond shape
+
+//      L  CCW 0.Front.0 CW  R           // 0 = Motor
+//         ......***......               // *** = APM 
+//   L  CW 0.....***......0 CCW  R       // ***
+//         ......***......               // *** 
+//     B  CCW  0.Back..0  CW  B          L = Left motors, R = Right motors, B = Back motors.
+
+
+/**********************************************/
+
 //  Magnetometer Setup
 
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
@@ -114,7 +135,7 @@
 // value until you have a 0 dergrees reading in the configurator's artificial horizon. 
 // Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
 
-#define MAGCALIBRATION -17.65 // You have to determine your own setting.
+#define MAGCALIBRATION -21.65 // You have to determine your own setting.
 
 // orientations for DIYDrones magnetometer
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD
@@ -455,12 +476,25 @@ void setup()
 #endif
   
   APM_RC.Init();             // APM Radio initialization
+
+#ifdef Quad
   // RC channels Initialization (Quad motors)  
   APM_RC.OutputCh(0,MIN_THROTTLE);  // Motors stoped
   APM_RC.OutputCh(1,MIN_THROTTLE);
   APM_RC.OutputCh(2,MIN_THROTTLE);
   APM_RC.OutputCh(3,MIN_THROTTLE);
+#endif
 
+#ifdef Hexa
+  // RC channels Initialization (Hexa motors) - Motors stoped 
+  APM_RC.OutputCh(0,MIN_THROTTLE);     // Left Motor CW
+  APM_RC.OutputCh(1, MIN_THROTTLE);    // Left Motor CCW
+  APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
+  APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
+  APM_RC.OutputCh(6, MIN_THROTTLE);    // Back Motor CW
+  APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
+#endif
+  
   //  delay(1000); // Wait until frame is not moving after initial power cord has connected
   for(i = 0; i <= 50; i++) {
     digitalWrite(LED_Green, HIGH);
@@ -734,7 +768,7 @@ void loop(){
       SerPri(log_yaw);
 #endif
  
- #ifdef IsSonar
+#ifdef IsSonar
     sonar_read = analogRead(7);   // Sonar is connected to Expansion Ports input on shield Analogue Input 7(AN-7)
                                   //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
     sonar_adc += sonar_read;      // For testing purposes I am monitoring sonar_read value.
@@ -788,16 +822,16 @@ void loop(){
         {
           Throttle_Altitude_Change_mode = 0;  //No more Throttle Applied in Altitude hold is swithed off.  Lock Altitude again.
           ch_throttle += throttle_hover_reference;  // Add more throttle to make it easier to keep altitude control on a cushion of extra air.
-          if (altitude_I_grow > 100)                // We monitor the quads hover throttle level and adjust if necessary.
+          if (altitude_I_grow > 75)                // We monitor the quads hover throttle level and adjust if necessary. (Hover Throttle Engin) 
           {
             if (throttle_hover_reference < 75)
-              throttle_hover_reference ++;
+              throttle_hover_reference += 5;
             altitude_I_grow = 0;
           }
-          else if (altitude_I_grow < -100)
+          else if (altitude_I_grow < -75)
           {
             if (throttle_hover_reference > -50)
-              throttle_hover_reference --;
+              throttle_hover_reference -= 5;
             altitude_I_grow = 0;
           }
         }
@@ -1146,6 +1180,8 @@ void loop(){
           {
             motorArmed = 1;
             minThrottle = MIN_THROTTLE + 60;  // A minimun value for mantain a bit if throttle
+//            motorArmed = 0;
+//            minThrottle = MIN_THROTTLE;
           }
         }
         else
@@ -1171,11 +1207,13 @@ void loop(){
       Disarming_counter=0;
     }
 
-    // Quadcopter mix
+
     if (motorArmed == 1) {   
 #ifdef IsAM
       digitalWrite(FR_LED, HIGH);    // AM-Mode
 #endif
+#ifdef Quad
+   // Quadcopter mix
 #ifdef FLIGHT_MODE_+
         rightMotor = constrain(ch_throttle + command_altitude - control_roll + control_yaw, minThrottle, 2000);
         leftMotor = constrain(ch_throttle + command_altitude + control_roll + control_yaw, minThrottle, 2000);
@@ -1188,6 +1226,17 @@ void loop(){
         frontMotor = constrain(ch_throttle + command_altitude + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
         backMotor = constrain(ch_throttle + command_altitude - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
 #endif
+#endif
+
+#ifdef Hexa
+   // Hexacopter mix
+        LeftCWMotor = constrain(ch_throttle + command_altitude + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor = constrain(ch_throttle + command_altitude + (0.43*control_roll) + (0.69*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor = constrain(ch_throttle + command_altitude - (0.43*control_roll) + (0.69*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(ch_throttle + command_altitude - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor = constrain(ch_throttle + command_altitude - (0.44*control_roll) - (0.79*control_pitch) - control_yaw, minThrottle, 2000);  // Back Motor CW
+        BackCCWMotor = constrain(ch_throttle + command_altitude + (0.44*control_roll) - (0.79*control_pitch) + control_yaw, minThrottle, 2000); // Back Motor CCW
+#endif   
     }
     if (motorArmed == 0) {
       
@@ -1197,28 +1246,57 @@ void loop(){
     
       digitalWrite(LED_Green,HIGH); // Ready LED on
 
+#ifdef Quad
       rightMotor = MIN_THROTTLE;
       leftMotor = MIN_THROTTLE;
       frontMotor = MIN_THROTTLE;
       backMotor = MIN_THROTTLE;
+#endif
+#ifdef Hexa
+      LeftCWMotor = MIN_THROTTLE;
+      LeftCCWMotor = MIN_THROTTLE;
+      RightCWMotor = MIN_THROTTLE;
+      RightCCWMotor = MIN_THROTTLE;
+      BackCWMotor = MIN_THROTTLE;
+      BackCCWMotor = MIN_THROTTLE;
+#endif
       roll_I = 0;     // reset I terms of PID controls
       pitch_I = 0;
       yaw_I = 0; 
       // Initialize yaw command to actual yaw when throttle is down...
       command_rx_yaw = ToDeg(yaw);
     }
+    
+#ifdef Quad
     APM_RC.OutputCh(0, rightMotor);   // Right motor
     APM_RC.OutputCh(1, leftMotor);    // Left motor
     APM_RC.OutputCh(2, frontMotor);   // Front motor
     APM_RC.OutputCh(3, backMotor);    // Back motor   
-  
+#endif
+#ifdef Hexa
+    APM_RC.OutputCh(0, LeftCWMotor);    // Left Motor CW
+    APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
+    APM_RC.OutputCh(2, RightCWMotor);   // Right Motor CW
+    APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
+    APM_RC.OutputCh(6, BackCWMotor);   // Back Motor CW
+    APM_RC.OutputCh(7, BackCCWMotor);   // Back Motor CCW    
+#endif
+
     // Camera Stabilization
 //    APM_RC.OutputCh(4, APM_RC.InputCh(6)+(pitch)*1000); // Tilt correction 
 //    APM_RC.OutputCh(5, 1510+(roll)*-400);               // Roll correction
-   
+
+#ifdef Quad   
      // InstantPWM
     APM_RC.Force_Out0_Out1();
     APM_RC.Force_Out2_Out3();
+#endif
+#ifdef Hexa
+      // InstantPWM
+    APM_RC.Force_Out0_Out1();
+    APM_RC.Force_Out2_Out3();
+    APM_RC.Force_Out6_Out7();
+#endif
 
 #ifndef CONFIGURATOR
       SerPriln();  // Line END 
