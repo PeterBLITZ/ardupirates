@@ -56,7 +56,7 @@
 #define IsMAG    // Do we have a Magnetometer connected, if have remember to activate it from Configurator
 #define IsXBEE    // Do we have a telemetry connected, eg. XBee connected on Telemetry port
 //#define IsAM     // Do we have motormount LED's. AM = Attraction Mode
-#define IsSonar  // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+//#define IsSonar  // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
 //#define IsIR_RF  // Do we have IR Range Finders
 
 #define CONFIGURATOR  // Do se use Configurator or normal text output over serial link
@@ -680,6 +680,7 @@ void loop(){
         else 
         {
           Throttle_Altitude_Change_mode = 0;  //No more Throttle Applied in Altitude hold is swithed off.  Lock Altitude again.
+//          ch_throttle += 50;                  // Add more throttle to make it easier to keep altitude control on a cushion of extra air.
         }
       } 
 #endif
