@@ -18,6 +18,66 @@
  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef UseBMP
+
+void read_baro(void)
+{
+  float tempPresAlt;
+  
+  tempPresAlt = float(APM_BMP085.Press)/101325.0;
+  //tempPresAlt = pow(tempPresAlt, 0.190284);
+  //press_alt = (1.0 - tempPresAlt) * 145366.45;
+  tempPresAlt = pow(tempPresAlt, 0.190295);
+  if (press_alt==0)
+    press_alt = (1.0 - tempPresAlt) * 4433000;      // Altitude in cm
+  else
+    press_alt = press_alt*0.9 + ((1.0 - tempPresAlt) * 443300);  // Altitude in cm (filtered)
+}
+
+#endif
+
+// This filter limits the max difference between readings and also aply an average filter
+int Sensor_Filter(int new_value, int old_value, int max_diff)
+{
+  int diff_values;
+  int result;
+  
+  if (old_value==0)     // Filter is not initialized (no old value)
+    return(new_value);
+  diff_values = new_value - old_value;      // Difference with old reading
+  if (diff_values>max_diff)   
+    result = old_value+max_diff;    // We limit the max difference between readings
+  else
+    {
+    if (diff_values<-max_diff)
+      result = old_value-max_diff;        // We limit the max difference between readings
+    else
+      result = (new_value+old_value)>>1;  // Small filtering (average filter)
+    }
+  return(result); 
+}
+
+// This filter limits the max difference between readings and also aply an average filter
+long BMP_Sensor_Filter(long new_value, long old_value, int max_diff)
+{
+  long diff_values;
+  long result;
+  
+  if (old_value==0)     // Filter is not initialized (no old value)
+    return(new_value);
+  diff_values = new_value - old_value;      // Difference with old reading
+  if (diff_values>max_diff)   
+    result = old_value+max_diff;    // We limit the max difference between readings
+  else
+    {
+    if (diff_values<-max_diff)
+      result = old_value-max_diff;        // We limit the max difference between readings
+    else
+      result = (new_value+old_value)>>1;  // Small filtering (average filter)
+    }
+  return(result); 
+}
+
 void ReadSCP1000(void) {
 }
 
@@ -55,18 +115,19 @@ void read_airspeed(void) {
 #ifdef BATTERY_EVENT
 void read_battery(void)
 {
-  battery_voltage = BATTERY_VOLTAGE(analogRead(BATTERY_PIN));
+  battery_voltage = BATTERY_VOLTAGE(analogRead(BATTERY_ADC));
   
-  //Check to see if voltage is below low voltage threshold, but has battery connected
+  //Check to see if voltage is below low voltage threshold,
+  //but don't sound alarm if no battery is connected
   if((battery_voltage < LOW_VOLTAGE) && (battery_voltage > 3))
   {
     //Sound alarm
-    digitalWrite(47, HIGH);
+    digitalWrite(LOW_BATTERY_OUT, HIGH);
   }
   else
   {
     //Silence
-    digitalWrite(47, LOW);
+    digitalWrite(LOW_BATTERY_OUT, LOW);
   }
 }
 #endif
