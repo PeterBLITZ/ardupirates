@@ -77,7 +77,7 @@ void RadioCalibration() {
         ch_pitch = channel_filter(APM_RC.InputCh(1), ch_pitch);
         ch_throttle = channel_filter(APM_RC.InputCh(2), ch_throttle);
         ch_yaw = channel_filter(APM_RC.InputCh(3), ch_yaw);
-        ch_aux = APM_RC.InputCh(4);
+        ch_gear = APM_RC.InputCh(4);
         ch_aux2 = APM_RC.InputCh(5);
 
         SerPri(ch_roll);
@@ -145,7 +145,7 @@ void Attitude_control_v3()
   float stable_roll,stable_pitch,stable_yaw;
   
   // ROLL CONTROL    
-  if (AP_mode==2)        // Normal Mode => Stabilization mode
+  if (AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_STABLE)        // Normal Mode => Stabilization mode
     err_roll = command_rx_roll - ToDeg(roll);
   else
     err_roll = (command_rx_roll + command_gps_roll) - ToDeg(roll);  // Position control  
@@ -164,7 +164,7 @@ void Attitude_control_v3()
   control_roll = constrain(control_roll,-MAX_CONTROL_OUTPUT,MAX_CONTROL_OUTPUT);
 
   // PITCH CONTROL
-  if (AP_mode==2)        // Normal mode => Stabilization mode
+  if (AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_STABLE)        // Normal mode => Stabilization mode
     err_pitch = command_rx_pitch - ToDeg(pitch);
   else                   // GPS Position hold
     err_pitch = (command_rx_pitch + command_gps_pitch) - ToDeg(pitch);  // Position Control
@@ -319,7 +319,9 @@ int channel_filter(int ch, int ch_old)
   return((ch + ch_old) >> 1);   // Small filtering
 } 
 
+// not used at the moment.  We will use the same sensor filter as sonar.....
 // BMP slope filter for readings... (limit max differences between readings)
+/*
 float BMP_filter(float BMP_reading, float BMP_reading_old)
 {
   float diff_BMP_reading_old;
@@ -338,5 +340,7 @@ float BMP_filter(float BMP_reading, float BMP_reading_old)
       return(BMP_reading_old + 5);
   }
   return((BMP_reading + BMP_reading_old ) / 2);   // Small filtering
-}
+} 
+*/
+
 
