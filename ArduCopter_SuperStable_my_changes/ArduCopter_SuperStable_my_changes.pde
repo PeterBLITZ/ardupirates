@@ -835,8 +835,8 @@ void loop(){
     {
       heading_hold_mode = 1;
       target_position = 0;
+      Waypoint_counter=0;
       waypoint_i=0;
-      //target_alt_position = 0; TYPO
       if (target_alt_position == 0)   // If this is the first time we switch to Altitude control, actual position is our target position
       {
         target_sonar_altitude = Sonar_value;
