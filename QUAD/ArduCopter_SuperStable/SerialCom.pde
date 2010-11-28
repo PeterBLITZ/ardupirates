@@ -344,8 +344,8 @@ void sendSerialTelemetry() {
     SerPriln(throttle_hover_reference);
     SerPri("Altitude I Grow = ");
     SerPriln(altitude_I_grow);
-//    SerPri("Current Sonar raw Reading = ");
-//    SerPriln(sonar_read);
+    SerPri("Current Sonar raw Reading = ");
+    SerPriln(sonar_read);
 //    SerPri("STABLE MODE KP RATE = ");
 //    SerPriln(STABLE_MODE_KP_RATE, 3);
 //    SerPri("Altitude Command = ");

@@ -64,7 +64,6 @@ void Position_control(long lat_dest, long lon_dest)
 /* Altitude control... (based on sonar) */
 int Altitude_control_Sonar(int Sonar_altitude, int target_sonar_altitude)
 {
-//  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 60
   #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 60
   #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 120
 
@@ -90,8 +89,7 @@ int Altitude_control_Sonar(int Sonar_altitude, int target_sonar_altitude)
 // With accelerometer damping
 int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, float az_f)
 {
-//  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 60
-  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 40
+  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 60
   #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 120
   #define KP_ACCZ_DAMP 0.2
 
@@ -106,7 +104,7 @@ int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, flo
   err_altitude = target_sonar_altitude - Sonar_altitude;  
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;
   altitude_I += (float)err_altitude*0.05;
-  altitude_I = constrain(altitude_I,-120,120); //-1000,1000 
+  altitude_I = constrain(altitude_I,-50,50); //-1000,1000 
   control_altitude = (int)(KP_SONAR_ALTITUDE*err_altitude + KD_SONAR_ALTITUDE*altitude_D + KI_SONAR_ALTITUDE*altitude_I);
   damp_factor = constrain(1-(err_altitude/40),0,1);
   control_altitude -= (int)(KP_ACCZ_DAMP*damp_factor*az_f);
@@ -119,7 +117,7 @@ int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, flo
 /* Altitude control... (based on barometer) */
 int Altitude_control_baro(long altitude, long target_altitude)
 { 
-  #define ALTITUDE_CONTROL_BARO_OUTPUT_MIN 40
+  #define ALTITUDE_CONTROL_BARO_OUTPUT_MIN 60
   #define ALTITUDE_CONTROL_BARO_OUTPUT_MAX 120
   
   float KP_BARO_ALTITUDE = KP_ALTITUDE; //0.08  //  Used a multiplication factor because Configurator have not enough
@@ -134,7 +132,7 @@ int Altitude_control_baro(long altitude, long target_altitude)
   altitude_I += (float)err_altitude*0.05;
   altitude_I_grow += (float)err_altitude*0.05;  // Will use this factor to determine if throttle reference point is moving.
   altitude_I_grow = constrain(altitude_I_grow,-120,120);
-  altitude_I = constrain(altitude_I,-25,50);
+  altitude_I = constrain(altitude_I,-50,50);
   control_altitude = (int)(KP_BARO_ALTITUDE*err_altitude + KD_BARO_ALTITUDE*altitude_D + KI_BARO_ALTITUDE*altitude_I);
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_BARO_OUTPUT_MIN,ALTITUDE_CONTROL_BARO_OUTPUT_MAX);
   return control_altitude;
@@ -144,7 +142,7 @@ int Altitude_control_baro(long altitude, long target_altitude)
 /* Added accelerometer dumping control */
 int Altitude_control_baro_v2(long altitude, long target_altitude)
 { 
-  #define ALTITUDE_CONTROL_BARO_OUTPUT_MIN 40
+  #define ALTITUDE_CONTROL_BARO_OUTPUT_MIN 60
   #define ALTITUDE_CONTROL_BARO_OUTPUT_MAX 120
   
   float KP_BARO_ALTITUDE = KP_ALTITUDE; //0.08
@@ -160,7 +158,7 @@ int Altitude_control_baro_v2(long altitude, long target_altitude)
   err_altitude = -(int)(target_altitude - altitude);              // Invert error because barometric pressure becomes less the higher the Altitude.
   altitude_D = (float)(err_altitude-err_altitude_old)/0.05;  // 20Hz
   altitude_I += (float)err_altitude*0.05;
-  altitude_I = constrain(altitude_I,-25,50);
+  altitude_I = constrain(altitude_I,-50,50);
   control_altitude = (int)(KP_BARO_ALTITUDE*err_altitude + KD_BARO_ALTITUDE*altitude_D + KI_BARO_ALTITUDE*altitude_I);
   control_altitude = constrain(control_altitude,-ALTITUDE_CONTROL_BARO_OUTPUT_MIN,ALTITUDE_CONTROL_BARO_OUTPUT_MAX);
   

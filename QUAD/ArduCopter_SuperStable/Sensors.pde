@@ -37,7 +37,7 @@ void read_baro(void)
 #endif
 
 // This filter limits the max difference between readings and also aply an average filter
-int Sensor_Filter(int new_value, int old_value, int max_diff)
+int Sonar_Sensor_Filter(long new_value, int old_value, int max_diff)
 {
   int diff_values;
   int result;

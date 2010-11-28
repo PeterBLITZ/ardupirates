@@ -226,7 +226,7 @@ int Sonar_value=0;
 #define SonarTomm(x) (x*2.2)   // Sonar raw value to milimeters
 int Sonar_Counter=0;
 byte Sonar_new_data=0;
-int sonar_adc=0;
+long sonar_adc=0;
 int sonar_read = 0;
 
 // AP_mode : 1=> Position hold  2=> Stabilization assist mode (normal mode) 0=> Acrobatic mode

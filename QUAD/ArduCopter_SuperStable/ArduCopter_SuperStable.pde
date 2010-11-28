@@ -665,10 +665,9 @@ void loop(){
   {
     Magneto_counter++;
     GPS_counter++;
-    Sonar_Counter++;
     cameracounteron++;
 
-	timer_old = timer;
+    timer_old = timer;
     timer=millis();
     G_Dt = (timer-timer_old)*0.001;      // Real time of loop run 
 
@@ -746,16 +745,24 @@ void loop(){
 #endif
  
 #ifdef IsSonar
-    sonar_read = analogRead(7);   // Sonar is connected to Expansion Ports input on shield Analogue Input 7(AN-7)
-                                  //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
-    sonar_adc += sonar_read;      // For testing purposes I am monitoring sonar_read value.
+    sonar_read = APM_ADC.Ch(7);   // Sonar is connected to pitot input in shield (Infront of shield, marked pitot between led's)
+                                  // At the bottom of shield is written gnd +5V IN.  We use the IN....
+                                  //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output. (pin 3)  Will still consider PW..pin2
+    if (sonar_read > 2000)        // For testing purposes I am monitoring sonar_read value.
+      Use_BMP_Altitude = 1; 
+    else  
+    {  
+      sonar_adc += sonar_read;      
+      Sonar_Counter++;
+      Use_BMP_Altitude = 0;
+    }
 #endif
     
 #ifdef IsSonar
   if (Sonar_Counter > 10)   // New sonar data at 20Hz
       {
       sonar_adc = sonar_adc/Sonar_Counter;  // Average sensor readings (to filter noise)
-      Sonar_value = Sensor_Filter(SonarToCm(sonar_adc),Sonar_value,4);
+      Sonar_value = Sonar_Sensor_Filter(SonarToCm(sonar_adc),Sonar_value,4);
       sonar_adc=0;
       Sonar_Counter=0;
       Sonar_new_data=1;  // New sonar data flag
@@ -799,13 +806,13 @@ void loop(){
         {
           Throttle_Altitude_Change_mode = 0;  //No more Throttle Applied in Altitude hold is swithed off.  Lock Altitude again.
           ch_throttle += throttle_hover_reference;  // Add more throttle to make it easier to keep altitude control on a cushion of extra air.
-          if (altitude_I_grow > 75)                // We monitor the quads hover throttle level and adjust if necessary. (Hover Throttle Engin) 
+          if (altitude_I_grow > 50)                // We monitor the quads hover throttle level and adjust if necessary. (Hover Throttle Engin) 
           {
             if (throttle_hover_reference < 75)
-              throttle_hover_reference += 5;
+              throttle_hover_reference += 10;
             altitude_I_grow = 0;
           }
-          else if (altitude_I_grow < -75)
+          else if (altitude_I_grow < -50)
           {
             if (throttle_hover_reference > -50)
               throttle_hover_reference -= 5;
@@ -982,14 +989,17 @@ void loop(){
         target_sonar_altitude = Sonar_value;
         if (target_sonar_altitude == 0)
           Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
-        else if (target_sonar_altitude > 150)
+        else if (target_sonar_altitude > 450)
           Use_BMP_Altitude = 1; 
         else
           Use_BMP_Altitude = 0;
         target_baro_altitude = press_alt;
        // Reset I terms
         altitude_I = 0;
+        altitude_D = 0;
         altitude_I_grow = 0;
+        err_altitude_old = 0;
+        err_altitude = 0;
         throttle_hover_reference = 0;
         target_alt_position=1;
         command_altitude = 0;
@@ -1012,7 +1022,10 @@ void loop(){
         target_baro_altitude = press_alt;
         // Reset I terms
         altitude_I = 0;
+        altitude_D = 0;
         altitude_I_grow = 0;
+        err_altitude_old = 0;
+        err_altitude = 0;
         throttle_hover_reference = 0;
         command_altitude = 0;
       }        
@@ -1036,6 +1049,9 @@ void loop(){
       // Reset I terms
       altitude_I = 0;
       altitude_I_grow = 0;
+      altitude_D = 0;
+      err_altitude_old = 0;
+      err_altitude = 0;
       throttle_hover_reference = 0;
       gps_roll_I = 0;
       gps_pitch_I = 0;
@@ -1054,6 +1070,9 @@ void loop(){
      // Reset I terms
       altitude_I = 0;
       altitude_I_grow = 0;
+      altitude_D = 0;
+      err_altitude_old = 0;
+      err_altitude = 0;
       throttle_hover_reference = 0;
       gps_roll_I = 0;
       gps_pitch_I = 0;
@@ -1157,7 +1176,7 @@ void loop(){
           {
             motorArmed = 1;
             minThrottle = MIN_THROTTLE + 60;  // A minimun value for mantain a bit if throttle
-//            motorArmed = 0;
+//            motorArmed = 0;                 // Disable sometimes motors when testing sensors. 
 //            minThrottle = MIN_THROTTLE;
           }
         }
@@ -1189,6 +1208,7 @@ void loop(){
 #ifdef IsAM
       digitalWrite(FR_LED, HIGH);    // AM-Mode
 #endif
+
 #ifdef Quad
    // Quadcopter mix
 #ifdef FLIGHT_MODE_+
@@ -1229,6 +1249,7 @@ void loop(){
       frontMotor = MIN_THROTTLE;
       backMotor = MIN_THROTTLE;
 #endif
+
 #ifdef Hexa
       LeftCWMotor = MIN_THROTTLE;
       LeftCCWMotor = MIN_THROTTLE;
@@ -1237,6 +1258,7 @@ void loop(){
       BackCWMotor = MIN_THROTTLE;
       BackCCWMotor = MIN_THROTTLE;
 #endif
+
       roll_I = 0;     // reset I terms of PID controls
       pitch_I = 0;
       yaw_I = 0; 
@@ -1250,6 +1272,7 @@ void loop(){
     APM_RC.OutputCh(2, frontMotor);   // Front motor
     APM_RC.OutputCh(3, backMotor);    // Back motor   
 #endif
+
 #ifdef Hexa
     APM_RC.OutputCh(0, LeftCWMotor);    // Left Motor CW
     APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
@@ -1268,6 +1291,7 @@ void loop(){
     APM_RC.Force_Out0_Out1();
     APM_RC.Force_Out2_Out3();
 #endif
+
 #ifdef Hexa
       // InstantPWM
     APM_RC.Force_Out0_Out1();
