@@ -656,12 +656,6 @@ void loop(){
   int aux;
   float aux_float;
   
-/*  //BMP varaibles
-  int runs;
-  int BMP_alt_buffer[10];
-  int BMP_buffercounter;
-  int BMP_alt_tmp;  */
-
   //Log variables
   int log_roll;
   int log_pitch;
@@ -674,8 +668,7 @@ void loop(){
     Sonar_Counter++;
     cameracounteron++;
 
-//    BMP_buffercounter++;
-    timer_old = timer;
+	timer_old = timer;
     timer=millis();
     G_Dt = (timer-timer_old)*0.001;      // Real time of loop run 
 
@@ -711,23 +704,7 @@ void loop(){
 //        tempPresAlt = float(APM_BMP085.Press)/101325.0;
 //        tempPresAlt = pow(tempPresAlt, 0.190295);
 //        BMP_Altitude = (1.0 - tempPresAlt) * 4433000;      // Altitude in cm
-//***********************************************************************************
-
-// Idea with median of 10 values (to be checked...)
-/*************************************************************************************
-        runs = 10;
-        if (BMP_buffercounter < runs)  //reading x runs values and making median
-        {
-          BMP_alt_buffer[BMP_buffercounter] = APM_BMP085.Press;
-          BMP_alt_tmp = BMP_alt_buffer[BMP_buffercounter] + BMP_alt_tmp;
-        }
-        else
-        {
-          BMP_Altitude = BMP_alt_tmp / runs;  //calculating median of x runs
-          BMP_buffercounter = 0;
-          BMP_alt_tmp = 0;
-        }   
-*************************************************************************************/
+//***********************************************************************************/
 //      }
 //#endif
 
@@ -935,7 +912,7 @@ void loop(){
         aux_float = 0.0;
       else
         aux_float = (ch_yaw-yaw_mid) / 180.0;
-      command_rx_yaw += aux_float;
+      command_rx_yaw = aux_float;
       if (command_rx_yaw > 180)         // Normalize yaw to -180,180 degrees
         command_rx_yaw -= 360.0;
       else if (command_rx_yaw < -180)
