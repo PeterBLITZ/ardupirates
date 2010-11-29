@@ -919,7 +919,7 @@ void loop(){
         aux_float = 0.0;
       else
         aux_float = (ch_yaw-yaw_mid) / 180.0;
-      command_rx_yaw = aux_float;
+      command_rx_yaw += aux_float;
       if (command_rx_yaw > 180)         // Normalize yaw to -180,180 degrees
         command_rx_yaw -= 360.0;
       else if (command_rx_yaw < -180)
