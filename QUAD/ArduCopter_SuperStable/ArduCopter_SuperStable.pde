@@ -70,7 +70,7 @@
 
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
-//#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
 #define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
@@ -1015,7 +1015,7 @@ void loop(){
         target_sonar_altitude = Sonar_value;
         if (target_sonar_altitude == 0)
           Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
-        else if (target_sonar_altitude > 150)
+        else if (target_sonar_altitude > 450)
           Use_BMP_Altitude = 1; 
         else
           Use_BMP_Altitude = 0;
