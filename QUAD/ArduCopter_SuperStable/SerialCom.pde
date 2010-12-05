@@ -330,22 +330,22 @@ void sendSerialTelemetry() {
     SerPriln(press_alt);
     SerPri("Target Baro Altitude = ");
     SerPriln(target_baro_altitude);
-    SerPri("Throttle Altitude Change Mode = ");
-    if (Throttle_Altitude_Change_mode == 0) 
-      SerPriln("Off");
-    else if (Throttle_Altitude_Change_mode == 1)  
-      SerPriln("On");
+//    SerPri("Throttle Altitude Change Mode = ");
+//    if (Throttle_Altitude_Change_mode == 0) 
+//      SerPriln("Off");
+//    else if (Throttle_Altitude_Change_mode == 1)  
+//      SerPriln("On");
     SerPri("USE BMP Altitude mode = ");
     if (Use_BMP_Altitude == 0) 
       SerPriln("Off");
     else if (Use_BMP_Altitude == 1)
       SerPriln("On");
-    SerPri("Throttle Hover Reference = ");
-    SerPriln(throttle_hover_reference);
-    SerPri("Altitude I Grow = ");
-    SerPriln(altitude_I_grow);
-    SerPri("Current Sonar raw Reading = ");
-    SerPriln(sonar_read);
+//    SerPri("Throttle Hover Reference = ");
+//    SerPriln(throttle_hover_reference);
+//    SerPri("Altitude I Grow = ");
+//    SerPriln(altitude_I_grow);
+//    SerPri("Current Sonar raw Reading = ");
+//    SerPriln(sonar_read);
 //    SerPri("STABLE MODE KP RATE = ");
 //    SerPriln(STABLE_MODE_KP_RATE, 3);
 //    SerPri("Altitude Command = ");

@@ -70,7 +70,7 @@
 
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
-#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+//#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
 #define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
@@ -177,9 +177,6 @@
 #define LOW_VOLTAGE      12.5   // Pack voltage at which to trigger alarm (Set to about 1 volt above ESC low voltage cutoff)
 #define VOLT_DIV_OHMS    3690   // Value of resistor (in ohms) used on voltage divider
 
-//  Also remember to determine your Hover_Throttle_Position.  Make a note 
-//  when your quad is hovering of the physical position of your throttle stick and in adjustments (Configurator) move your throttle
-//  stick to this position and take the reading down.  Change your Hover_Throttle_Position reading under AruCopter.h line 257. 
 
 /******************************************************** */
 /* END CONFIGURATION                                      */
@@ -190,6 +187,7 @@
 
 
 // Quick and easy hack to change FTDI Serial output to Telemetry port. Just activate #define IsXBEE some lines earlier
+// Arduino 21 seems to work best with Telemetry.
 #ifndef IsXBEE
   #define SerBau  115200
   #define SerPri  Serial.print
@@ -210,6 +208,7 @@
   #define SerPor  "Telemetry"
 #endif
 
+
 /* ****************************************************************************** */
 /* ****************************** Includes ************************************** */
 /* ****************************************************************************** */
@@ -219,7 +218,6 @@
 #include <APM_RC.h>
 #include <DataFlash.h>
 #include <APM_Compass.h>
-
 
 #include <EEPROM.h>         // EEPROM storage for user configurable values
 #include "ArduCopter.h"
@@ -424,29 +422,7 @@ int channel_filter(int ch, int ch_old)
   return((ch + ch_old) >> 1);   // Small filtering
 } 
 
-// not used at the moment.  We will use the same sensor filter as sonar.....
-// BMP slope filter for readings... (limit max differences between readings)
-/*
-float BMP_filter(float BMP_reading, float BMP_reading_old)
-{
-  float diff_BMP_reading_old;
 
-  if (BMP_reading_old == 0)      // BMP_reading_old not initialized
-    return(BMP_reading);
-    diff_BMP_reading_old = BMP_reading - BMP_reading_old;      // Difference with old reading
-  if (diff_BMP_reading_old < 0)
-  {
-    if (diff_BMP_reading_old <- 5)
-      return(BMP_reading_old - 5);        // We limit the max difference between readings
-  }
-  else
-  {
-    if (diff_BMP_reading_old > 5)    
-      return(BMP_reading_old + 5);
-  }
-  return((BMP_reading + BMP_reading_old ) / 2);   // Small filtering
-} 
-*/
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */
 /* ************************************************************ */
@@ -691,21 +667,12 @@ void loop(){
 
 /*  // In the future the GCS can do the conversion to cm and give as the 
     // barometric pressure for a specific altitude...less processing power needed.
-#ifdef UseBMP
-      if (BMP_counter > 10)  // Reading Barometric data at 20Hz 
-      {
-        BMP_counter = 0;
-        APM_BMP085.Read();
-        BMP_Altitude = BMP_filter(APM_BMP085.Press, BMP_Altitude);  // New slope filter engaged
-
 // Former translation from pressure&temperature into cm        
 //***********************************************************************************
 //        tempPresAlt = float(APM_BMP085.Press)/101325.0;
 //        tempPresAlt = pow(tempPresAlt, 0.190295);
 //        BMP_Altitude = (1.0 - tempPresAlt) * 4433000;      // Altitude in cm
 //***********************************************************************************/
-//      }
-//#endif
 
 #ifdef UseBMP
     BMP_counter++;
@@ -713,8 +680,7 @@ void loop(){
     {
       APM_BMP085.Read();
       BMP_counter = 0;
-      press_alt = BMP_Sensor_Filter(APM_BMP085.Press, press_alt, 5);  // Filter Barometric readings.
-//      read_baro();
+      press_alt = BMP_Sensor_Filter(APM_BMP085.Press, press_alt, 15);  // Filter Barometric readings.
       Baro_new_data=1;
     }
 #endif
@@ -766,8 +732,6 @@ void loop(){
       sonar_adc=0;
       Sonar_Counter=0;
       Sonar_new_data=1;  // New sonar data flag
-      //Serial.println(Sonar_value);
-      //Serial.println(sonar_adc);
       }
 #endif
 
@@ -787,40 +751,9 @@ void loop(){
       
       #define STICK_TO_ANGLE_FACTOR 12.0;
       
-      command_throttle = (ch_throttle - Hover_Throttle_Position) / STICK_TO_ANGLE_FACTOR; 
       command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
       command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 
-
-#ifdef UseBMP || IsSonar
-  
-      // New Altitude Hold using BMP Pressure sensor.  If Throttle stick moves more then 10%, switch Altitude Hold off    
-      if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) 
-      {
-        if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200) 
-        {
-          Throttle_Altitude_Change_mode = 1; //Throttle Applied in Altitude hold is switched on.  Changing Altitude. 
-          target_alt_position = 0;
-        } 
-        else 
-        {
-          Throttle_Altitude_Change_mode = 0;  //No more Throttle Applied in Altitude hold is swithed off.  Lock Altitude again.
-          ch_throttle += throttle_hover_reference;  // Add more throttle to make it easier to keep altitude control on a cushion of extra air.
-          if (altitude_I_grow > 50)                // We monitor the quads hover throttle level and adjust if necessary. (Hover Throttle Engin) 
-          {
-            if (throttle_hover_reference < 75)
-              throttle_hover_reference += 10;
-            altitude_I_grow = 0;
-          }
-          else if (altitude_I_grow < -50)
-          {
-            if (throttle_hover_reference > -50)
-              throttle_hover_reference -= 5;
-            altitude_I_grow = 0;
-          }
-        }
-      } 
-#endif
 
 /* 
       // Tuning Engine for PID's using only 3 position channel switch (Flight Mode - aux1 channel).
@@ -987,22 +920,23 @@ void loop(){
       if (target_alt_position == 0)   // If this is the first time we switch to Altitude control, actual position is our target position
       {
         target_sonar_altitude = Sonar_value;
+#ifdef IsSonar
         if (target_sonar_altitude == 0)
           Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
         else if (target_sonar_altitude > 450)
           Use_BMP_Altitude = 1; 
         else
           Use_BMP_Altitude = 0;
+#endif          
+        Initial_Throttle = ch_throttle;
+        ch_throttle_altitude_hold = ch_throttle;
         target_baro_altitude = press_alt;
        // Reset I terms
         altitude_I = 0;
         altitude_D = 0;
-        altitude_I_grow = 0;
         err_altitude_old = 0;
         err_altitude = 0;
-        throttle_hover_reference = 0;
         target_alt_position=1;
-        command_altitude = 0;
       }        
     }
     else if (AP_mode==F_MODE_SUPER_STABLE)  // Super Stable Mode (Stable & Altitude Hold)
@@ -1013,21 +947,22 @@ void loop(){
       {
         target_alt_position = 1;
         target_sonar_altitude = Sonar_value;
+#ifdef IsSonar
         if (target_sonar_altitude == 0)
           Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
         else if (target_sonar_altitude > 450)
           Use_BMP_Altitude = 1; 
         else
           Use_BMP_Altitude = 0;
+#endif
+        Initial_Throttle = ch_throttle;
+        ch_throttle_altitude_hold = ch_throttle;
         target_baro_altitude = press_alt;
         // Reset I terms
         altitude_I = 0;
         altitude_D = 0;
-        altitude_I_grow = 0;
         err_altitude_old = 0;
         err_altitude = 0;
-        throttle_hover_reference = 0;
-        command_altitude = 0;
       }        
       gps_err_roll = 0;
       gps_err_pitch = 0;
@@ -1048,11 +983,9 @@ void loop(){
       target_alt_position = 0;
       // Reset I terms
       altitude_I = 0;
-      altitude_I_grow = 0;
       altitude_D = 0;
       err_altitude_old = 0;
       err_altitude = 0;
-      throttle_hover_reference = 0;
       gps_roll_I = 0;
       gps_pitch_I = 0;
       gps_err_roll = 0;
@@ -1063,17 +996,14 @@ void loop(){
       gps_err_pitch_old = 0;
       command_gps_roll = 0;
       command_gps_pitch = 0;
-      command_altitude = 0;
     }
     else if (AP_mode == F_MODE_ACROBATIC)  //Acrobatic Mode
     {
      // Reset I terms
       altitude_I = 0;
-      altitude_I_grow = 0;
       altitude_D = 0;
       err_altitude_old = 0;
       err_altitude = 0;
-      throttle_hover_reference = 0;
       gps_roll_I = 0;
       gps_pitch_I = 0;
       gps_err_roll = 0;
@@ -1084,7 +1014,6 @@ void loop(){
       gps_err_pitch_old = 0;
       command_gps_roll = 0;
       command_gps_pitch = 0;
-      command_altitude = 0;
       heading_hold_mode = 0;
       target_position = 0;
       target_alt_position = 0;
@@ -1130,27 +1059,25 @@ void loop(){
       }
     }
  
-    if ((AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) && Throttle_Altitude_Change_mode == 0)  // Altitude control
+    if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE)  // Altitude control
     {
 #ifdef IsSonar
       if (Sonar_new_data == 1 && Use_BMP_Altitude == 0)  // Do altitude control on each new sonar data
       { 
-//        command_altitude = Altitude_control_Sonar_v2(Sonar_value,target_sonar_altitude);
-        command_altitude = Altitude_control_Sonar(Sonar_value,target_sonar_altitude);
-        Sonar_new_data=0;
+//         ch_throttle_altitude_hold = (ch_throttle_altitude_hold*0.5) + (Altitude_control_Sonar_v2(Sonar_value,target_sonar_altitude)*0.5);
+         ch_throttle_altitude_hold = (ch_throttle_altitude_hold*0.5) + (Altitude_control_Sonar(Sonar_value,target_sonar_altitude)*0.5);
+         Sonar_new_data=0;
       }
 #endif
 #ifdef UseBMP
       if (Baro_new_data == 1 && Use_BMP_Altitude == 1)
       {
-//        command_altitude = Altitude_control_baro_v2(press_alt,target_baro_altitude);
-        command_altitude = Altitude_control_baro(press_alt,target_baro_altitude);
+//        ch_throttle_altitude_hold = Altitude_control_baro_v2(press_alt,target_baro_altitude);
+        ch_throttle_altitude_hold = Altitude_control_baro(press_alt,target_baro_altitude);
         Baro_new_data=0;
       }
 #endif
     }
-    else
-      command_altitude = 0;
       
       
     if (AP_mode == F_MODE_STABLE || AP_mode == F_MODE_SUPER_STABLE || AP_mode == F_MODE_ABS_HOLD) 
@@ -1165,6 +1092,16 @@ void loop(){
       // Reset yaw, so if we change to stable mode we continue with the actual yaw direction
       command_rx_yaw = ToDeg(yaw);
     }
+
+#ifdef IsSonar
+    if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE)  // Altitude control
+      ch_throttle = ch_throttle_altitude_hold;
+#endif
+
+#ifdef UseBMP
+    if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE)  // Altitude control
+      ch_throttle = (ch_throttle_altitude_hold + 20);
+#endif
     
     // Arm motor output : Throttle down and full yaw right for more than 2 seconds
     if (ch_throttle < (MIN_THROTTLE + 100)) {
@@ -1212,28 +1149,29 @@ void loop(){
 #ifdef Quad
    // Quadcopter mix
 #ifdef FLIGHT_MODE_+
-        rightMotor = constrain(ch_throttle + command_altitude - control_roll + control_yaw, minThrottle, 2000);
-        leftMotor = constrain(ch_throttle + command_altitude + control_roll + control_yaw, minThrottle, 2000);
-        frontMotor = constrain(ch_throttle + command_altitude + control_pitch - control_yaw, minThrottle, 2000);
-        backMotor = constrain(ch_throttle + command_altitude - control_pitch - control_yaw, minThrottle, 2000);
+        rightMotor = constrain(ch_throttle - control_roll + control_yaw, minThrottle, 2000);
+        leftMotor = constrain(ch_throttle + control_roll + control_yaw, minThrottle, 2000);
+        frontMotor = constrain(ch_throttle + control_pitch - control_yaw, minThrottle, 2000);
+        backMotor = constrain(ch_throttle - control_pitch - control_yaw, minThrottle, 2000);
 #endif
 #ifdef FLIGHT_MODE_X
-        rightMotor = constrain(ch_throttle + command_altitude - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
-        leftMotor = constrain(ch_throttle + command_altitude + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
-        frontMotor = constrain(ch_throttle + command_altitude + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
-        backMotor = constrain(ch_throttle + command_altitude - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
+        rightMotor = constrain(ch_throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
+        leftMotor = constrain(ch_throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
+        frontMotor = constrain(ch_throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
+        backMotor = constrain(ch_throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
 #endif
 #endif
 
 #ifdef Hexa
    // Hexacopter mix
-        LeftCWMotor = constrain(ch_throttle + command_altitude + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
-        LeftCCWMotor = constrain(ch_throttle + command_altitude + (0.43*control_roll) + (0.69*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
-        RightCWMotor = constrain(ch_throttle + command_altitude - (0.43*control_roll) + (0.69*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-        RightCCWMotor = constrain(ch_throttle + command_altitude - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
-        BackCWMotor = constrain(ch_throttle + command_altitude - (0.44*control_roll) - (0.79*control_pitch) - control_yaw, minThrottle, 2000);  // Back Motor CW
-        BackCCWMotor = constrain(ch_throttle + command_altitude + (0.44*control_roll) - (0.79*control_pitch) + control_yaw, minThrottle, 2000); // Back Motor CCW
+        LeftCWMotor = constrain(ch_throttle + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor = constrain(ch_throttle + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor = constrain(ch_throttle - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(ch_throttle - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor = constrain(ch_throttle - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
+        BackCCWMotor = constrain(ch_throttle + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif   
+  
     }
     if (motorArmed == 0) {
       
