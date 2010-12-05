@@ -17,7 +17,7 @@
  You should have received a copy of the GNU General Public License 
  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/*
 #ifdef UseBMP
 
 void read_baro(void)
@@ -25,8 +25,6 @@ void read_baro(void)
   float tempPresAlt;
   
   tempPresAlt = float(APM_BMP085.Press)/101325.0;
-  //tempPresAlt = pow(tempPresAlt, 0.190284);
-  //press_alt = (1.0 - tempPresAlt) * 145366.45;
   tempPresAlt = pow(tempPresAlt, 0.190295);
   if (press_alt==0)
     press_alt = (1.0 - tempPresAlt) * 4433000;      // Altitude in cm
@@ -35,7 +33,7 @@ void read_baro(void)
 }
 
 #endif
-
+*/
 // This filter limits the max difference between readings and also aply an average filter
 int Sonar_Sensor_Filter(long new_value, int old_value, int max_diff)
 {
