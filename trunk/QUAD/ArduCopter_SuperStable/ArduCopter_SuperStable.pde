@@ -1094,12 +1094,12 @@ void loop(){
     }
 
 #ifdef IsSonar
-    if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE)  // Altitude control
+    if ((AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) && Use_BMP_Altitude == 0)  // Altitude control
       ch_throttle = ch_throttle_altitude_hold;
 #endif
 
 #ifdef UseBMP
-    if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE)  // Altitude control
+    if ((AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) && Use_BMP_Altitude == 1)  // Altitude control
       ch_throttle = (ch_throttle_altitude_hold + 20);
 #endif
     
