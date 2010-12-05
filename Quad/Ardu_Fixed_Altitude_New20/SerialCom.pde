@@ -313,16 +313,16 @@ void sendSerialTelemetry() {
     SerPriln(read_adc(5));
     break;
   case 'T': // Spare
-    SerPri("AP Mode = ");
-    if (AP_mode == 0) 
+   SerPri("AP Mode = ");
+    if (AP_mode == F_MODE_ACROBATIC) 
       SerPriln("Acrobatic");
-    else if (AP_mode == 1)
-      SerPriln("Stable & Altitude Hold");
-    else if (AP_mode == 2)
-      SerPriln("Stable Mode only");
-    else if (AP_mode == 3)
+    else if (AP_mode == F_MODE_STABLE)
+      SerPriln("Stable mode");
+    else if (AP_mode == F_MODE_SUPER_STABLE)
+      SerPriln("Super Stable Mode");
+    else if (AP_mode == F_MODE_ABS_HOLD)
       SerPriln("Position & Altitude Hold");
-    SerPri("Current Sonar Altitude = ");
+    SerPri("Current Sonar Valude = ");
     SerPriln(Sonar_value);
     SerPri("Target Sonar Altitude = ");
     SerPriln(target_sonar_altitude);
@@ -330,7 +330,7 @@ void sendSerialTelemetry() {
     SerPriln(press_alt);
     SerPri("Target Baro Altitude = ");
     SerPriln(target_baro_altitude);
-    SerPri("Throttle Altitude Change Mode = ");
+//    SerPri("Throttle Altitude Change Mode = ");
 //    if (Throttle_Altitude_Change_mode == 0) 
 //      SerPriln("Off");
 //    else if (Throttle_Altitude_Change_mode == 1)  
@@ -340,6 +340,23 @@ void sendSerialTelemetry() {
       SerPriln("Off");
     else if (Use_BMP_Altitude == 1)
       SerPriln("On");
+//    SerPri("Throttle Hover Reference = ");
+//    SerPriln(throttle_hover_reference);
+//    SerPri("Altitude I Grow = ");
+//    SerPriln(altitude_I_grow);
+//    SerPri("Current Sonar raw Reading = ");
+//    SerPriln(sonar_read);
+//    SerPri("STABLE MODE KP RATE = ");
+//    SerPriln(STABLE_MODE_KP_RATE, 3);
+//    SerPri("Altitude Command = ");
+//    SerPriln(command_altitude);
+//    SerPri("Total Throttle Command = ");
+//    SerPriln(ch_throttle + command_altitude);
+
+//    SerPri("Current Altitude = ");
+//    SerPriln(BMP_Altitude);
+//    SerPri("throttle_command = ");
+//    SerPriln(ch_throttle);
 //    SerPri("Yaw mid = ");
 //    SerPriln(yaw_mid);
 //    SerPri("BMP_altitude command = ");
@@ -353,12 +370,11 @@ void sendSerialTelemetry() {
 //    SerPriln(ToDeg(current_heading_hold), 3);
 //    SerPri("Error Course = ");
 //    SerPriln(ToDeg(errorCourse), 3);
-    SerPri("Heading Hold Mode = ");
-    if (heading_hold_mode == 0) 
-      SerPriln("Off");
-    else 
-      SerPriln("On");
-    
+//    SerPri("Heading Hold Mode = ");
+//    if (heading_hold_mode == 0) 
+//      SerPriln("Off");
+//    else 
+//      SerPriln("On");
 //    SerPri("KP ALTITUDE = ");
 //    SerPriln(KP_ALTITUDE, 3);
 //    SerPri("EEPROM KP ALTITUDE = ");
@@ -426,7 +442,7 @@ void sendSerialTelemetry() {
 
     SerPriln(); 
     queryType = 'X';
-     break;
+      break;
   case 'U': // Send receiver values
     SerPri(ch_roll); // Aileron
     comma();

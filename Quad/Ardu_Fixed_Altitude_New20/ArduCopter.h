@@ -165,7 +165,6 @@ byte target_position = 0;
 byte target_alt_position = 0;
 byte heading_hold_mode = 0;
 float current_heading_hold;
-//float target_altitude;
 float gps_err_roll;
 float gps_err_roll_old;
 float gps_roll_D;
@@ -176,7 +175,7 @@ float gps_pitch_D;
 float gps_pitch_I=0;
 float command_gps_roll;
 float command_gps_pitch;
-float command_throttle;
+//float command_throttle;
 
 //Altitude control
 int Initial_Throttle;
@@ -184,7 +183,6 @@ int target_sonar_altitude;
 long target_baro_altitude;
 int err_altitude;
 int err_altitude_old;
-//float command_altitude = 0;
 float altitude_I;
 float altitude_D;
 int ch_throttle_altitude_hold;
@@ -223,12 +221,11 @@ byte    battery_status=0;
 
 /// Sonar variables
 int Sonar_value=0;
-//#define SonarToCm(x) (x*1.26)   // Sonar raw value to centimeters
 #define SonarToCm(x) (x*0.22)   // Sonar raw value to centimeters
 #define SonarTomm(x) (x*2.2)   // Sonar raw value to milimeters
 int Sonar_Counter=0;
 byte Sonar_new_data=0;
-int sonar_adc=0;
+long sonar_adc=0;
 int sonar_read = 0;
 
 // AP_mode : 1=> Position hold  2=> Stabilization assist mode (normal mode) 0=> Acrobatic mode
@@ -258,8 +255,6 @@ float aux_debug;
 int roll_mid;
 int pitch_mid;
 int yaw_mid;
-int throttle_mid = 1377;  //Were Chopper Hovers.  This must be changed for each Chopper.
-
 int Neutro_yaw;
 int ch_roll;
 int ch_pitch;
@@ -269,10 +264,20 @@ int ch_gear;
 int ch_aux2;
 int ch_aux1;
 
+// Quad motors
 int frontMotor;
 int backMotor;
 int leftMotor;
 int rightMotor;
+
+// Hexa motors
+int LeftCWMotor;
+int LeftCCWMotor;
+int RightCWMotor;
+int RightCCWMotor;
+int BackCWMotor;
+int BackCCWMotor;
+
 byte motorArmed = 0;
 int minThrottle = 0;
 
@@ -283,6 +288,12 @@ long tlmTimer = 0;
 // Arming/Disarming
 uint8_t Arming_counter=0;
 uint8_t Disarming_counter=0;
+
+// Flying modes (lyagukh@gmail.com, 20101121)
+#define F_MODE_ACROBATIC    0
+#define F_MODE_STABLE       2
+#define F_MODE_SUPER_STABLE 1
+#define F_MODE_ABS_HOLD     3
 
 // Range Finder (RF) variables
 int IR_adc_fl=0;
