@@ -178,6 +178,11 @@
 #define VOLT_DIV_OHMS    3690   // Value of resistor (in ohms) used on voltage divider
 
 
+/* Preliminary/Experimental support for Wii Hardware,
+   replaces the DIYDRONES.COM Oilpan */
+//#define USE_WII
+
+
 /******************************************************** */
 /* END CONFIGURATION                                      */
 /******************************************************** */
@@ -215,6 +220,7 @@
 
 #include <Wire.h>
 #include <APM_ADC.h>
+//#include <APM_Wii.h>
 #include <APM_RC.h>
 #include <DataFlash.h>
 #include <APM_Compass.h>
