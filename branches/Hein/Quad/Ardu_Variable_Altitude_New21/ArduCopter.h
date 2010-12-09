@@ -174,7 +174,6 @@ byte target_position = 0;
 byte target_alt_position = 0;
 byte heading_hold_mode = 0;
 float current_heading_hold;
-//float target_altitude;
 float gps_err_roll;
 float gps_err_roll_old;
 float gps_roll_D;
@@ -188,7 +187,7 @@ float command_gps_pitch;
 float command_throttle;
 
 //Altitude control
-//int Initial_Throttle;
+int Initial_Throttle;
 int target_sonar_altitude;
 long target_baro_altitude;
 int err_altitude;
@@ -196,7 +195,7 @@ int err_altitude_old;
 float command_altitude = 0;
 float altitude_I;
 float altitude_D;
-//int ch_throttle_altitude_hold;
+int ch_throttle_altitude_hold;
 
 
 //Pressure Sensor variables
@@ -232,7 +231,6 @@ byte    battery_status=0;
 
 /// Sonar variables
 int Sonar_value=0;
-//#define SonarToCm(x) (x*1.26)   // Sonar raw value to centimeters
 #define SonarToCm(x) (x*0.22)   // Sonar raw value to centimeters
 #define SonarTomm(x) (x*2.2)   // Sonar raw value to milimeters
 int Sonar_Counter=0;
@@ -243,6 +241,7 @@ int sonar_read = 0;
 // AP_mode : 1=> Position hold  2=> Stabilization assist mode (normal mode) 0=> Acrobatic mode
 byte AP_mode = 0;  
 byte Throttle_Altitude_Change_mode = 0;  //0 = Throttle applied in Altitude hold = off
+byte Hover_Throttle_Position_mode = 0;
 
 //  PID Tuning
 byte Plus = 0;
