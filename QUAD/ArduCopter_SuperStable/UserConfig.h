@@ -88,7 +88,7 @@ float STABLE_MODE_KP_RATE_PITCH;
 float KP_QUAD_YAW;
 float KI_QUAD_YAW;
 float STABLE_MODE_KP_RATE_YAW;
-float STABLE_MODE_KP_RATE; // NOT USED NOW
+//float STABLE_MODE_KP_RATE; // NOT USED NOW
 float KP_GPS_ROLL;
 float KI_GPS_ROLL;
 float KD_GPS_ROLL;
@@ -99,12 +99,12 @@ float GPS_MAX_ANGLE;
 float KP_ALTITUDE;
 float KI_ALTITUDE;
 float KD_ALTITUDE;
-int acc_offset_x;
-int acc_offset_y;
-int acc_offset_z;
-int gyro_offset_roll;
-int gyro_offset_pitch;
-int gyro_offset_yaw;
+//int acc_offset_x;    //Moved these 6 offsets to Sensor_Offset so we don't store the same variables twice
+//int acc_offset_y;
+//int acc_offset_z;
+//int gyro_offset_roll;
+//int gyro_offset_pitch;
+//int gyro_offset_yaw;
 float Kp_ROLLPITCH;
 float Ki_ROLLPITCH;
 float Kp_YAW;
@@ -146,7 +146,7 @@ void defaultUserConfig() {
   KP_QUAD_YAW = 3.0;
   KI_QUAD_YAW = 0.15;
   STABLE_MODE_KP_RATE_YAW = 2.4;
-  STABLE_MODE_KP_RATE = 0.2;     // NOT USED NOW
+  //STABLE_MODE_KP_RATE = 0.2;     // NOT USED NOW
   KP_GPS_ROLL = 0.003;
   KI_GPS_ROLL = 0.001;
   KD_GPS_ROLL = 0.0;
@@ -157,12 +157,12 @@ void defaultUserConfig() {
   KP_ALTITUDE = 0.8;   //1.6  //1.5
   KI_ALTITUDE = 0.3;   // 0   //0.02
   KD_ALTITUDE = 0.55;   // 0.5 //0.05
-  acc_offset_x = 2047;
-  acc_offset_y = 2032;
-  acc_offset_z = 2071;
-  gyro_offset_roll = 1659;
-  gyro_offset_pitch = 1618;
-  gyro_offset_yaw = 1673;
+  Sensor_Offset[ACCEL_X] = 2047;
+  Sensor_Offset[ACCEL_Y] = 2032;
+  Sensor_Offset[ACCEL_Z] = 2071;
+  Sensor_Offset[GYRO_ROLL] = 1659;    //recalibrated at startup
+  Sensor_Offset[GYRO_PITCH] = 1618;
+  Sensor_Offset[GYRO_YAW] = 1673;
   Kp_ROLLPITCH = 0.0014;
   Ki_ROLLPITCH = 0.00000015;
   Kp_YAW = 1.2;
@@ -206,7 +206,7 @@ void defaultUserConfig() {
 #define KP_QUAD_YAW_ADR 24
 #define KI_QUAD_YAW_ADR 32
 #define STABLE_MODE_KP_RATE_YAW_ADR 28
-#define STABLE_MODE_KP_RATE_ADR 36      // NOT USED NOW
+//#define STABLE_MODE_KP_RATE_ADR 36      // NOT USED NOW
 #define KP_GPS_ROLL_ADR 40
 #define KI_GPS_ROLL_ADR 48
 #define KD_GPS_ROLL_ADR 44
@@ -220,9 +220,9 @@ void defaultUserConfig() {
 #define acc_offset_x_ADR 80
 #define acc_offset_y_ADR 84
 #define acc_offset_z_ADR 88
-#define gyro_offset_roll_ADR 92
-#define gyro_offset_pitch_ADR 96
-#define gyro_offset_yaw_ADR 100
+//#define gyro_offset_roll_ADR 92        //Not used
+//#define gyro_offset_pitch_ADR 96
+//#define gyro_offset_yaw_ADR 100
 #define Kp_ROLLPITCH_ADR 104
 #define Ki_ROLLPITCH_ADR 108
 #define Kp_YAW_ADR 112
@@ -288,7 +288,7 @@ void readUserConfig() {
   KP_QUAD_YAW = readEEPROM(KP_QUAD_YAW_ADR);
   KI_QUAD_YAW = readEEPROM(KI_QUAD_YAW_ADR);
   STABLE_MODE_KP_RATE_YAW = readEEPROM(STABLE_MODE_KP_RATE_YAW_ADR);
-  STABLE_MODE_KP_RATE = readEEPROM(STABLE_MODE_KP_RATE_ADR);          // NOT USED NOW
+//  STABLE_MODE_KP_RATE = readEEPROM(STABLE_MODE_KP_RATE_ADR);          // NOT USED NOW
   KP_GPS_ROLL = readEEPROM(KP_GPS_ROLL_ADR);
   KI_GPS_ROLL = readEEPROM(KI_GPS_ROLL_ADR);
   KD_GPS_ROLL = readEEPROM(KD_GPS_ROLL_ADR);
@@ -299,12 +299,12 @@ void readUserConfig() {
   KP_ALTITUDE = readEEPROM(KP_ALTITUDE_ADR);
   KI_ALTITUDE = readEEPROM(KI_ALTITUDE_ADR);
   KD_ALTITUDE = readEEPROM(KD_ALTITUDE_ADR);
-  acc_offset_x = readEEPROM(acc_offset_x_ADR);
-  acc_offset_y = readEEPROM(acc_offset_y_ADR);
-  acc_offset_z = readEEPROM(acc_offset_z_ADR);
-  gyro_offset_roll = readEEPROM(gyro_offset_roll_ADR);
-  gyro_offset_pitch = readEEPROM(gyro_offset_pitch_ADR);
-  gyro_offset_yaw = readEEPROM(gyro_offset_yaw_ADR);
+  Sensor_Offset[ACCEL_X] = readEEPROM(acc_offset_x_ADR);
+  Sensor_Offset[ACCEL_Y] = readEEPROM(acc_offset_y_ADR);
+  Sensor_Offset[ACCEL_Z] = readEEPROM(acc_offset_z_ADR);
+//  gyro_offset_roll = readEEPROM(gyro_offset_roll_ADR);        //Not Used
+//  gyro_offset_pitch = readEEPROM(gyro_offset_pitch_ADR);
+//  gyro_offset_yaw = readEEPROM(gyro_offset_yaw_ADR);
   Kp_ROLLPITCH = readEEPROM(Kp_ROLLPITCH_ADR);
   Ki_ROLLPITCH = readEEPROM(Ki_ROLLPITCH_ADR);
   Kp_YAW = readEEPROM(Kp_YAW_ADR);
@@ -348,7 +348,7 @@ void writeUserConfig() {
   writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
   writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
   writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
-  writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);  // NOT USED NOW
+//  writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);  // NOT USED NOW
   writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
   writeEEPROM(KD_GPS_ROLL, KD_GPS_ROLL_ADR);
   writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
@@ -359,12 +359,12 @@ void writeUserConfig() {
   writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
   writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
   writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
-  writeEEPROM(acc_offset_x, acc_offset_x_ADR);
-  writeEEPROM(acc_offset_y, acc_offset_y_ADR);
-  writeEEPROM(acc_offset_z, acc_offset_z_ADR);
-  writeEEPROM(gyro_offset_roll, gyro_offset_roll_ADR);
-  writeEEPROM(gyro_offset_pitch, gyro_offset_pitch_ADR);
-  writeEEPROM(gyro_offset_yaw, gyro_offset_yaw_ADR);
+  writeEEPROM(Sensor_Offset[ACCEL_X], acc_offset_x_ADR);
+  writeEEPROM(Sensor_Offset[ACCEL_Y], acc_offset_y_ADR);
+  writeEEPROM(Sensor_Offset[ACCEL_Z], acc_offset_z_ADR);
+//  writeEEPROM(gyro_offset_roll, gyro_offset_roll_ADR);        //Not used
+//  writeEEPROM(gyro_offset_pitch, gyro_offset_pitch_ADR);
+//  writeEEPROM(gyro_offset_yaw, gyro_offset_yaw_ADR);
   writeEEPROM(Kp_ROLLPITCH, Kp_ROLLPITCH_ADR);
   writeEEPROM(Ki_ROLLPITCH, Ki_ROLLPITCH_ADR);
   writeEEPROM(Kp_YAW, Kp_YAW_ADR);

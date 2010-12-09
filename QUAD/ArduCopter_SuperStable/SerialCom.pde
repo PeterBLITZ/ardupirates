@@ -19,6 +19,8 @@
 */
 
 void readSerialCommand() {
+  int tmp;
+  
   // Check for serial message
   if (SerAva()) {
     queryType = SerRea();
@@ -33,7 +35,7 @@ void readSerialCommand() {
       KP_QUAD_YAW = readFloatSerial();
       KI_QUAD_YAW = readFloatSerial();
       STABLE_MODE_KP_RATE_YAW = readFloatSerial();
-      STABLE_MODE_KP_RATE = readFloatSerial();   // NOT USED NOW
+      tmp = readFloatSerial();   // STABLE_MODE_KP_RATE - NOT USED NOW
       MAGNETOMETER = readFloatSerial();
       break;
     case 'C': // Receive GPS PID
@@ -58,12 +60,12 @@ void readSerialCommand() {
       Ki_YAW = readFloatSerial();
       break;
     case 'I': // Receive sensor offset
-      gyro_offset_roll = readFloatSerial();
-      gyro_offset_pitch = readFloatSerial();
-      gyro_offset_yaw = readFloatSerial();
-      acc_offset_x = readFloatSerial();
-      acc_offset_y = readFloatSerial();
-      acc_offset_z = readFloatSerial();
+      tmp = readFloatSerial();  //old gyro offset roll
+      tmp = readFloatSerial();  //old gyro offset pitch
+      tmp = readFloatSerial();  //old gyro offset yaw
+      Sensor_Offset[ACCEL_X] = readFloatSerial();
+      Sensor_Offset[ACCEL_Y] = readFloatSerial();
+      Sensor_Offset[ACCEL_Z] = readFloatSerial();
       break;
     case 'K': // Spare
       break;
@@ -142,8 +144,6 @@ void sendSerialTelemetry() {
     SerPriln(command_rx_yaw);
     SerPriln(); 
     queryType = 'X';*/
-    SerPri(APM_RC.InputCh(0));
-    comma();
     SerPri(ch_roll_slope);
     comma();
     SerPri(ch_roll_offset);
@@ -169,7 +169,7 @@ void sendSerialTelemetry() {
     comma();
     SerPri(STABLE_MODE_KP_RATE_YAW, 3);
     comma();
-    SerPri(STABLE_MODE_KP_RATE, 3);    // NOT USED NOW
+    SerPri(0, 3);    //STABLE_MODE_KP_RATE - NOT USED NOW
     comma();
     SerPriln(MAGNETOMETER, 3);
     queryType = 'X';
@@ -211,20 +211,12 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'J': // Send sensor offset
-    SerPri(gyro_offset_roll);
-    comma();
-    SerPri(gyro_offset_pitch);
-    comma();
-    SerPri(gyro_offset_yaw);
-    comma();
-    SerPri(acc_offset_x);
-    comma();
-    SerPri(acc_offset_y);
-    comma();
-    SerPriln(acc_offset_z);
-    AN_OFFSET[3] = acc_offset_x;
-    AN_OFFSET[4] = acc_offset_y;
-    AN_OFFSET[5] = acc_offset_z;
+    for(char i = 0; i < 5; i++)
+    {
+      SerPri(Sensor_Offset[i]);
+      comma();
+    }
+    SerPriln(Sensor_Offset[5]);
     queryType = 'X';
     break;
   case 'L': // Spare
@@ -257,18 +249,11 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'Q': // Send sensor data
-    SerPri(read_adc(0));
-    comma();
-    SerPri(read_adc(1));
-    comma();
-    SerPri(read_adc(2));
-    comma();
-    SerPri(read_adc(4));
-    comma();
-    SerPri(read_adc(3));
-    comma();
-    SerPri(read_adc(5));
-    comma();
+    for(char y = 0; y < 6; y++)
+    {
+      SerPri(Sensor_Input[y]);
+      comma();
+    }
     SerPri(err_roll);
     comma();
     SerPri(err_pitch);
@@ -280,16 +265,21 @@ void sendSerialTelemetry() {
     SerPriln(degrees(yaw));
     break;
   case 'R': // Send raw sensor data
+    /*for(char y = 0; y < 6; y++)
+    {
+      SerPri(Sensor_Data_Raw[y]);
+      comma();
+    }
+    SerPriln("");*/
     break;
   case 'S': // Send all flight data
     SerPri(timer-timer_old);
     comma();
-    SerPri(read_adc(0));
-    comma();
-    SerPri(read_adc(1));
-    comma();
-    SerPri(read_adc(2));
-    comma();
+    for(char y = 0; y < 3; y++)
+    {
+      SerPri(Sensor_Input[y]);
+      comma();
+    }
     SerPri(ch_throttle);
     comma();
     SerPri(control_roll);
@@ -306,11 +296,11 @@ void sendSerialTelemetry() {
     comma();
     SerPri(leftMotor); // Left Motor
     comma();
-    SerPri(read_adc(4));
+    SerPri(Sensor_Input[3]);
     comma();
-    SerPri(read_adc(3));
+    SerPri(Sensor_Input[4]);
     comma();
-    SerPriln(read_adc(5));
+    SerPriln(Sensor_Input[5]);
     break;
   case 'T': // Spare
     SerPri("AP Mode = ");
