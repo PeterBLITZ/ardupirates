@@ -225,8 +225,8 @@ void defaultUserConfig() {
 #define KD_GPS_PITCH_ADR 56
 #define GPS_MAX_ANGLE_ADR 64
 #define KP_ALTITUDE_ADR 68
-#define KI_ALTITUDE_ADR 72
-#define KD_ALTITUDE_ADR 76
+#define KI_ALTITUDE_ADR 76
+#define KD_ALTITUDE_ADR 72
 #define acc_offset_x_ADR 80
 #define acc_offset_y_ADR 84
 #define acc_offset_z_ADR 88

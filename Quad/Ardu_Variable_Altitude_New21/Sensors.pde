@@ -76,7 +76,28 @@ void read_battery(void)
 #endif
 
 // This filter limits the max difference between readings and also aply an average filter
-int Sensor_Filter(int new_value, int old_value, int max_diff)
+int Sonar_Sensor_Filter(long new_value, int old_value, int max_diff)
+{
+  int diff_values;
+  int result;
+  
+  if (old_value==0)     // Filter is not initialized (no old value)
+    return(new_value);
+  diff_values = new_value - old_value;      // Difference with old reading
+  if (diff_values>max_diff)   
+    result = old_value+max_diff;    // We limit the max difference between readings
+  else
+    {
+    if (diff_values<-max_diff)
+      result = old_value-max_diff;        // We limit the max difference between readings
+    else
+      result = (new_value+old_value)>>1;  // Small filtering (average filter)
+    }
+  return(result); 
+}
+
+// This filter limits the max difference between readings and also aply an average filter
+int IR_Sensor_Filter(int new_value, int old_value, int max_diff)
 {
   int diff_values;
   int result;
@@ -132,10 +153,10 @@ void Read_IR_Sensors()
   RF_Sensor3 = constrain(14500/IR_adc_br,20,150);    
   RF_Sensor4 = constrain(14500/IR_adc_bl,20,150);    
   
-  RF_Sensor1 = Sensor_Filter(RF_Sensor1,old_RF_Sensor1,10);   // Filter the range data
-  RF_Sensor2 = Sensor_Filter(RF_Sensor2,old_RF_Sensor2,10);
-  RF_Sensor3 = Sensor_Filter(RF_Sensor3,old_RF_Sensor3,10);
-  RF_Sensor4 = Sensor_Filter(RF_Sensor4,old_RF_Sensor4,10);  
+  RF_Sensor1 = IR_Sensor_Filter(RF_Sensor1,old_RF_Sensor1,10);   // Filter the range data
+  RF_Sensor2 = IR_Sensor_Filter(RF_Sensor2,old_RF_Sensor2,10);
+  RF_Sensor3 = IR_Sensor_Filter(RF_Sensor3,old_RF_Sensor3,10);
+  RF_Sensor4 = IR_Sensor_Filter(RF_Sensor4,old_RF_Sensor4,10);  
 }
 
 /* ************************************************************ */
