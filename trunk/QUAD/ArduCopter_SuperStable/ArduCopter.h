@@ -38,17 +38,8 @@
 #define SW1_pin 41
 #define SW2_pin 40
 
-// Sensor: GYROX, GYROY, GYROZ, ACCELX, ACCELY, ACCELZ
-uint8_t sensors[6] = {1, 2, 0, 4, 5, 6};  // For ArduPilot Mega Sensor Shield Hardware
-
-// Sensor: GYROX, GYROY, GYROZ,   ACCELX, ACCELY, ACCELZ,     MAGX, MAGY, MAGZ
-int SENSOR_SIGN[]={
-  1, -1, -1,    -1, 1, 1,     -1, -1, -1}; 
-  
-/* APM Hardware definitions, END */
 
 /* General definitions */
-
 #define TRUE 1
 #define FALSE 0
 #define ON 1
@@ -76,9 +67,21 @@ int SENSOR_SIGN[]={
 /*For debugging purposes*/
 #define OUTPUTMODE 1  //If value = 1 will print the corrected data, 0 will print uncorrected data of the gyros (with drift), 2 Accel only data
 
-int AN[6]; //array that store the 6 ADC channels
-int AN_OFFSET[6]; //Array that store the Offset of the gyros and accelerometers
-int gyro_temp;
+int Sensor_Input[6]; //array that stores the gyros and accelerometers output data
+int Sensor_Offset[6]; //Array that store the gyros and accelerometers offset values
+//int Sensor_Data_Raw[6]; //Raw data from sensors, for debugging
+#define GYRO_ROLL  0
+#define GYRO_PITCH 1
+#define GYRO_YAW   2
+#define ACCEL_X    3
+#define ACCEL_Y    4
+#define ACCEL_Z    5
+
+/* Define functions for reading sensors */
+// Sensor: GYROX, GYROY, GYROZ,   ACCELX, ACCELY, ACCELZ
+char SENSOR_SIGN[]={1, -1, -1,    -1, 1, 1}; 
+  
+/* APM Hardware definitions, END */
 
 
 float G_Dt=0.02;                  // Integration time for the gyros (DCM algorithm)

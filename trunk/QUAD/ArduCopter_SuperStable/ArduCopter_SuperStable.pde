@@ -311,7 +311,7 @@ void Rate_control()
   float currentRollRate, currentPitchRate, currentYawRate;
 
   // ROLL CONTROL
-  currentRollRate = read_adc(0);      // I need a positive sign here
+  currentRollRate = Sensor_Input[GYRO_ROLL];      // I need a positive sign here
 
   err_roll = ((ch_roll - roll_mid) * xmitFactor) - currentRollRate;
 
@@ -325,7 +325,7 @@ void Rate_control()
   control_roll = Kp_RateRoll * err_roll + Kd_RateRoll * roll_D + Ki_RateRoll * roll_I; 
 
   // PITCH CONTROL
-  currentPitchRate = read_adc(1);
+  currentPitchRate = Sensor_Input[GYRO_PITCH];
   err_pitch = ((ch_pitch - pitch_mid) * xmitFactor) - currentPitchRate;
 
   pitch_I += err_pitch*G_Dt;
@@ -338,7 +338,7 @@ void Rate_control()
   control_pitch = Kp_RatePitch*err_pitch + Kd_RatePitch*pitch_D + Ki_RatePitch*pitch_I; 
 
   // YAW CONTROL
-  currentYawRate = read_adc(2);
+  currentYawRate = Sensor_Input[GYRO_YAW];
   err_yaw = ((ch_yaw - yaw_mid) * xmitFactor) - currentYawRate;
 
   yaw_I += err_yaw*G_Dt;
@@ -428,8 +428,7 @@ int channel_filter(int ch, int ch_old)
 /* ************************************************************ */
 void setup()
 {
-  int i, j;
-  float aux_float[3];
+  int i;
 
   pinMode(LED_Yellow,OUTPUT); //Yellow LED A  (PC1)
   pinMode(LED_Red,OUTPUT);    //Red LED B     (PC2)
@@ -547,71 +546,12 @@ void setup()
     delay(30000);
   }
 
-  Read_adc_raw();
-  delay(10);
-
-  // Offset values for accels and gyros...
-  AN_OFFSET[3] = acc_offset_x;
-  AN_OFFSET[4] = acc_offset_y;
-  AN_OFFSET[5] = acc_offset_z;
-  aux_float[0] = gyro_offset_roll;
-  aux_float[1] = gyro_offset_pitch;
-  aux_float[2] = gyro_offset_yaw;
-
-  j = 0;
-  // Take the gyro offset values
-  for(i=0;i<300;i++)
-  {
-    Read_adc_raw();
-    for(int y=0; y<=2; y++)   // Read initial ADC values for gyro offset.
-    {
-      aux_float[y]=aux_float[y]*0.8 + AN[y]*0.2;
-    }
-
-    delay(10);
-    
-    // Runnings lights effect to let user know that we are taking mesurements
-    if(j == 0) {
-      digitalWrite(LED_Green, HIGH);
-      digitalWrite(LED_Yellow, LOW);
-      digitalWrite(LED_Red, LOW);
-    } 
-    else if (j == 1) {
-      digitalWrite(LED_Green, LOW);
-      digitalWrite(LED_Yellow, HIGH);
-      digitalWrite(LED_Red, LOW);
-    } 
-    else {
-      digitalWrite(LED_Green, LOW);
-      digitalWrite(LED_Yellow, LOW);
-      digitalWrite(LED_Red, HIGH);
-    }
-    if((i % 5) == 0) j++;
-    if(j >= 3) j = 0;
-  }
-  digitalWrite(LED_Green, LOW);
-  digitalWrite(LED_Yellow, LOW);
-  digitalWrite(LED_Red, LOW);
-
-  for(int y=0; y<=2; y++)   
-    AN_OFFSET[y]=aux_float[y];
-
-#ifndef CONFIGURATOR
-    for(i=0;i<6;i++)
-    {
-      SerPri("AN[]:");
-      SerPriln(AN_OFFSET[i]);
-    }
-    SerPri("Yaw neutral value:");
-    SerPri(yaw_mid);
-#endif
-  
-  delay(1000);
+  Calibrate_Gyro_Offsets();
 
   DataFlash.StartWrite(1);   // Start a write session on page 1
   timer = millis();
   tlmTimer = millis();
-  Read_adc_raw();        // Initialize ADC readings...
+  Update_Sensors();        // Initialize ADC readings...
   delay(20);
 
 #ifdef IsAM
@@ -648,7 +588,7 @@ void loop(){
     G_Dt = (timer-timer_old)*0.001;      // Real time of loop run 
 
     // IMU DCM Algorithm
-    Read_adc_raw();
+    Update_Sensors();
     
 #ifdef BATTERY_EVENT
     read_battery();

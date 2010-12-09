@@ -19,29 +19,6 @@
 */
  
  
-/* ******* ADC functions ********************* */
-// Read all the ADC channles
-void Read_adc_raw(void)
-{
-  int temp;
-  
-  for (int i=0;i<6;i++)
-    AN[i] = APM_ADC.Ch(sensors[i]);
-  
-  // Correction for non ratiometric sensor (test code)
-  gyro_temp = APM_ADC.Ch(3);
-}
-
-// Returns an analog value with the offset
-int read_adc(int select)
-{
-  if (SENSOR_SIGN[select]<0)
-    return (AN_OFFSET[select]-AN[select]);
-  else
-    return (AN[select]-AN_OFFSET[select]);
-}
-/* ******************************************* */
-
 /* ******* DCM IMU functions ********************* */
 /**************************************************/
 void Normalize(void)
@@ -121,14 +98,14 @@ void Accel_adjust(void)
 
 void Matrix_update(void)
 {
-  Gyro_Vector[0]=Gyro_Scaled_X(read_adc(0)); //gyro x roll
-  Gyro_Vector[1]=Gyro_Scaled_Y(read_adc(1)); //gyro y pitch
-  Gyro_Vector[2]=Gyro_Scaled_Z(read_adc(2)); //gyro Z yaw
+  Gyro_Vector[0]=Gyro_Scaled_X(Sensor_Input[GYRO_ROLL]); //gyro x roll
+  Gyro_Vector[1]=Gyro_Scaled_Y(Sensor_Input[GYRO_PITCH]);//gyro y pitch
+  Gyro_Vector[2]=Gyro_Scaled_Z(Sensor_Input[GYRO_YAW]);  //gyro Z yaw
   
   // Low pass filter on accelerometer data (to filter vibrations)
-  Accel_Vector[0]=Accel_Vector[0]*0.6 + (float)read_adc(3)*0.4; // acc x
-  Accel_Vector[1]=Accel_Vector[1]*0.6 + (float)read_adc(4)*0.4; // acc y
-  Accel_Vector[2]=Accel_Vector[2]*0.6 + (float)read_adc(5)*0.4; // acc z
+  Accel_Vector[0]=Accel_Vector[0]*0.6 + (float)Sensor_Input[ACCEL_X]*0.4; // acc x
+  Accel_Vector[1]=Accel_Vector[1]*0.6 + (float)Sensor_Input[ACCEL_Y]*0.4; // acc y
+  Accel_Vector[2]=Accel_Vector[2]*0.6 + (float)Sensor_Input[ACCEL_Z]*0.4; // acc z
   
   Vector_Add(&Omega[0], &Gyro_Vector[0], &Omega_I[0]);//adding integrator
   Vector_Add(&Omega_Vector[0], &Omega[0], &Omega_P[0]);//adding proportional
