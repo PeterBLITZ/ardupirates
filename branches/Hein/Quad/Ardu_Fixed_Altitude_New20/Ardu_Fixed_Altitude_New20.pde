@@ -122,12 +122,14 @@
 
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
-#define MAGOFFSET -76,22.5,-55.5  // Hein's calibration settings.  You have to determine your own.
+#define MAGOFFSET -76,22.5,-55.5  // Hein's Quad calibration settings.  You have to determine your own.
+//#define MAGOFFSET -70,55.5,-61.5  // Hein's Hexa calibration settings.  You have to determine your own.
 
 // Declination is a correction factor between North Pole and real magnetic North. This is different on every location
 // IF you want to use really accurate headholding and future navigation features, you should update this
 // You can check Declination to your location from http://www.magnetic-declination.com/
-#define DECLINATION -17.65      // Hein, South Africa, Centurion.
+#define DECLINATION -21.65      //  Quad Hein, South Africa, Centurion.
+//#define DECLINATION -15.65      //  Hexa Hein, South Africa, Centurion.
 
 // And remember result from NOAA website is in form of DEGREES°MINUTES'. Degrees you can use directly but Minutes you need to 
 // recalculate due they one degree is 60 minutes.. For example Jani's real declination is 0.61, correct way to calculate this is
@@ -257,6 +259,9 @@ void Attitude_control_v3()
   else if(err_yaw < -180)
     err_yaw += 360;
   err_yaw = constrain(err_yaw,-60,60);  // to limit max yaw command...
+
+  if (command_rx_yaw > 0 || command_rx_yaw < 0)
+    yaw_I = 0;  
   
   yaw_I += err_yaw*G_Dt;
   yaw_I = constrain(yaw_I,-20,20);
