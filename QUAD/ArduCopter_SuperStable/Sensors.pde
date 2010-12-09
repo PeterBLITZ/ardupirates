@@ -39,13 +39,24 @@ void Update_Sensors(void)
 // Remap hardware functions to autopilot functions
 int Raw_Sensor_Read(char n)
 {
+#ifdef USE_WII
+  //Read values from Wii sensors
+  if(n == GYRO_ROLL) return APM_Wii.Ch(0);
+  if(n == GYRO_PITCH)return APM_Wii.Ch(1);
+  if(n == GYRO_YAW)  return APM_Wii.Ch(2);
+  if(n == ACCEL_X)   return APM_Wii.Ch(3);
+  if(n == ACCEL_Y)   return APM_Wii.Ch(4);
+  if(n == ACCEL_Z)   return APM_Wii.Ch(5);
+#else
+  //Read values from oilpan sensors
   if(n == GYRO_ROLL) return APM_ADC.Ch(1);
   if(n == GYRO_PITCH)return APM_ADC.Ch(2);
   if(n == GYRO_YAW)  return APM_ADC.Ch(0);
   if(n == ACCEL_X)   return APM_ADC.Ch(4);
   if(n == ACCEL_Y)   return APM_ADC.Ch(5);
   if(n == ACCEL_Z)   return APM_ADC.Ch(6);
-  
+#endif
+
   return 0;
 }
   
