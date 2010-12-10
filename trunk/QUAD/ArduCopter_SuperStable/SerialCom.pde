@@ -249,11 +249,22 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'Q': // Send sensor data
-    for(char y = 0; y < 6; y++)
-    {
-      SerPri(Sensor_Input[y]);
-      comma();
-    }
+    SerPri(Sensor_Input[GYRO_ROLL]);
+    comma();
+    SerPri(Sensor_Input[GYRO_PITCH]);
+    comma();
+    SerPri(Sensor_Input[GYRO_YAW]);
+    comma();
+
+    /* ==== NOTE: Configurator requires these out of sequence!! === */
+    SerPri(Sensor_Input[ACCEL_Y]);
+    comma();
+    SerPri(Sensor_Input[ACCEL_X]);
+    comma();
+    /* ============================================================= */
+    
+    SerPri(Sensor_Input[ACCEL_Z]);
+    comma();
     SerPri(err_roll);
     comma();
     SerPri(err_pitch);
@@ -296,11 +307,15 @@ void sendSerialTelemetry() {
     comma();
     SerPri(leftMotor); // Left Motor
     comma();
-    SerPri(Sensor_Input[3]);
+
+    /* ==== NOTE: Configurator requires these out of sequence!! === */
+    SerPri(Sensor_Input[ACCEL_Y]);
     comma();
-    SerPri(Sensor_Input[4]);
+    SerPri(Sensor_Input[ACCEL_X]);
     comma();
-    SerPriln(Sensor_Input[5]);
+    /* ============================================================= */
+    
+    SerPriln(Sensor_Input[ACCEL_Z]);
     break;
   case 'T': // Spare
     SerPri("AP Mode = ");
