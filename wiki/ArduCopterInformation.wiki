@@ -1,0 +1,52 @@
+#summary Download & Info Pages.
+#labels Featured
+
+== DOWNLOAD & INFO PAGES ==
+
+There are several sources for the !ArduCopter project.
+
+*The first one is the official !ArduCopter Wiki:*
+
+http://code.google.com/p/arducopter/wiki/ArduCopter_Quad
+
+You'll find all basic info there.
+
+*Second one is Kinderkram's !ArduPirates Build log:*
+
+http://www.rcgroups.com/forums/showthread.php?t=1286011
+
+Meet an international community of copter enthusiasts there!
+
+*Download Page for the Arduino Software:*
+
+http://arduino.cc/en/Main/Software
+
+For several OS like Windows, Linux...
+
+*Download of the Carancho Configurator 1.1*
+
+http://www.board-portal.de/ArduCopter/ArduCopterConfigurator_v1.1.zip
+
+*Download of the Configurator Update 1.22*
+
+http://www.board-portal.de/ArduCopter/Configurator-update-v1.22.zip
+
+*Download Page for Tortoise SVN:*
+
+http://tortoisesvn.net
+
+*Tutorial for Tortoise SVN:*
+
+http://www.rcgroups.com/forums/showthread.php?t=1317685
+
+*Tutorial for the UBlox GPS:*
+
+http://code.google.com/p/ardupirates/wiki/UbloxGPSTutorial#whb
+
+*Where to buy frames?*
+
+A great resource for stable and reasonably priced frames is Jakub's new frame site.
+
+http://www.quadframe.com/
+
+He offers a great amount of cnced frames for Tri, Quad and Hexa
