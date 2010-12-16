@@ -113,6 +113,9 @@ float yaw = 0;
 unsigned int Magneto_counter = 0;
 unsigned int BMP_counter = 0;
 unsigned int GPS_counter = 0;
+unsigned int Sonar_counter = 0;
+unsigned int cameracounteron = 0;
+
 
 float DCM_Matrix[3][3]= {
   { 1,0,0 },
@@ -212,28 +215,22 @@ byte    baro_counter                    = 0;
 byte    Baro_new_data                   = 0;
 #endif
 
+#define RELAY_PIN        47
 
-#define BATTERY_VOLTAGE(x) (x*(INPUT_VOLTAGE/1024.0))*VOLT_DIV_RATIO
+//Low Battery Alarm
+#define BATTERY_VOLTAGE(x) (x * (INPUT_VOLTAGE / 1024.0)) * ((10000 + VOLT_DIV_OHMS) / VOLT_DIV_OHMS)
 
-#define AIRSPEED_PIN 1		// Need to correct value
-#define BATTERY_PIN 0		// Need to correct value
-#define RELAY_PIN 47
-#define NO_BATTERY      100     // Anlog value to detect if no battery is connected
-#define LOW_VOLTAGE_1	10.8    // Pack voltage at which to trigger alarm (first alarm)
-#define LOW_VOLTAGE_2   10.2    // Pack voltage at which to trigger alarm (critical alarm)
-#define INPUT_VOLTAGE 5.0	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery level readings. (you need a multimeter to measure and set this of course)
-#define VOLT_DIV_RATIO 3.3	//  Voltage divider ratio set with thru-hole resistor (see manual)
+#define BATTERY_ADC      0	// ADC Channel of voltage divider
+#define LOW_BATTERY_OUT  49     // Digital output pin for alarm    
+#define INPUT_VOLTAGE    5.0	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery level readings. (you need a multimeter to measure and set this of course)
 
-float 	battery_voltage 	= LOW_VOLTAGE_1 * 1.05;		// Battery Voltage, initialized above threshold for filter
-byte    battery_counter=0;
-byte    battery_status=0;
-
+float 	battery_voltage = LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold
 
 /// Sonar variables
 int Sonar_value=0;
-#define SonarToCm(x) (x*0.22)   // Sonar raw value to centimeters
+//#define SonarToCm(x) (x*0.22)   // Sonar raw value to centimeters
+#define SonarToCm(x) (x*0.156)   // Sonar raw value to centimeters
 #define SonarTomm(x) (x*2.2)   // Sonar raw value to milimeters
-int Sonar_Counter=0;
 byte Sonar_new_data=0;
 int sonar_adc=0;
 int sonar_read = 0;
@@ -266,13 +263,12 @@ float aux_debug;
 int roll_mid;
 int pitch_mid;
 int yaw_mid;
-int Hover_Throttle_Position = 1377;  //Were Chopper Hovers.  This must be changed for each Chopper.
-                                     //This reading is low because the total weight is 1.3kg
-                                     //Heavier quad will have a bigger value. 
+int Hover_Throttle_Position = 1377;  //Default Hover Throttle Position. 
 int Neutro_yaw;
 int ch_roll;
 int ch_pitch;
 int ch_throttle;
+int ch_throttle_change;
 int ch_yaw;
 int ch_gear;
 int ch_aux2;

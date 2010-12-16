@@ -330,18 +330,23 @@ void sendSerialTelemetry() {
     SerPriln(press_alt);
     SerPri("Target Baro Altitude = ");
     SerPriln(target_baro_altitude);
-//    SerPri("Throttle Altitude Change Mode = ");
-//    if (Throttle_Altitude_Change_mode == 0) 
-//      SerPriln("Off");
-//    else if (Throttle_Altitude_Change_mode == 1)  
-//      SerPriln("On");
+    SerPri("Throttle Altitude Change Mode = ");
+    if (Throttle_Altitude_Change_mode == 0) 
+      SerPriln("Off");
+    else if (Throttle_Altitude_Change_mode == 1)  
+      SerPriln("On");
+    SerPri("Hover Throttle Position Mode = ");
+    if (Hover_Throttle_Position_mode == 0) 
+      SerPriln("Off");
+    else if (Hover_Throttle_Position_mode == 1)  
+      SerPriln("On");
     SerPri("USE BMP Altitude mode = ");
     if (Use_BMP_Altitude == 0) 
       SerPriln("Off");
     else if (Use_BMP_Altitude == 1)
       SerPriln("On");
-//    SerPri("Throttle Hover Reference = ");
-//    SerPriln(throttle_hover_reference);
+    SerPri("Hover Throttle Position = ");
+    SerPriln(Hover_Throttle_Position);
 //    SerPri("Altitude I Grow = ");
 //    SerPriln(altitude_I_grow);
 //    SerPri("Current Sonar raw Reading = ");
@@ -355,8 +360,8 @@ void sendSerialTelemetry() {
 
 //    SerPri("Current Altitude = ");
 //    SerPriln(BMP_Altitude);
-//    SerPri("throttle_command = ");
-//    SerPriln(ch_throttle);
+    SerPri("Current throttle = ");
+    SerPriln(ch_throttle);
 //    SerPri("Yaw mid = ");
 //    SerPriln(yaw_mid);
 //    SerPri("BMP_altitude command = ");
