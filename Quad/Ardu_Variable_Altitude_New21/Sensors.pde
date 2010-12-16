@@ -54,24 +54,23 @@ void read_baro(void)
 */
 #endif
 
-#if BATTERY_EVENT == 1
+#ifdef BATTERY_EVENT
 void read_battery(void)
 {
-  int analog_value;
-  analog_value = analogRead(BATTERY_PIN);
-  if (analog_value < NO_BATTERY)
-    return;
-  battery_voltage = BATTERY_VOLTAGE(analog_value)*0.1 + battery_voltage*0.9;    
-  //Serial.println(battery_voltage);
-  if (battery_status==2)   // If we reach battery status 2, we mantain this status of alert
-    battery_status=2;  
-  else if (battery_voltage < LOW_VOLTAGE_2)
-    battery_status=2;
-  else if (battery_voltage < LOW_VOLTAGE_1)
-    battery_status=1;
+  battery_voltage = BATTERY_VOLTAGE(analogRead(BATTERY_ADC));
+  
+  //Check to see if voltage is below low voltage threshold,
+  //but don't sound alarm if no battery is connected
+  if((battery_voltage < LOW_VOLTAGE) && (battery_voltage > 3))
+  {
+    //Sound alarm
+    digitalWrite(LOW_BATTERY_OUT, HIGH);
+  }
   else
-    battery_status=0;
-  low_battery_event(battery_status);
+  {
+    //Silence
+    digitalWrite(LOW_BATTERY_OUT, LOW);
+  }
 }
 #endif
 

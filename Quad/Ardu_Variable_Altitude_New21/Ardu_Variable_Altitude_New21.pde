@@ -11,8 +11,8 @@
 /*           Sandro Benigno, Chris Anderson.                              */  
 /* Authors : ArduPirates deveopment team                                  */
 /*           Philipp Maloney, Norbert, Hein, Igor.                        */
-/* Date : 08-08-2010                                                      */
-/* Version : 1.7 beta                                                     */
+/* Date : 15-12-2010                                                      */
+/* Version : 2.1 beta                                                     */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
 /* Mounting position : RC connectors pointing backwards                   */
 /* This code use this libraries :                                         */
@@ -24,8 +24,8 @@
 /*   GPS_UBLOX or GPS_NMEA or GPS_MTK : GPS library    [optional]         */
 /* ********************************************************************** */
 
-/*
-**** Switch Functions *****
+
+/**** Switch Functions *****
  AUX2 OFF && GEAR OFF = Acro Mode (AP_mode = 0)
  AUX2 ON  && GEAR OFF = Stable Mode (Heading Hold only) (AP_mode = 2)
  AUX2 ON  && GEAR ON  = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 1)
@@ -46,28 +46,39 @@
  Green LED blink slow = Motors armed, Stable mode
  Green LED blink rapid = Motors armed, Acro mode 
 
-*/
+ ********************************************************************** */
 
-/* User definable modules */
 
-// Comment out with // modules that you are not using
-#define IsGPS    // Do we have a GPS connected
-#define IsNEWMTEK// Do we have MTEK with new firmware
-#define IsMAG    // Do we have a Magnetometer connected, if have remember to activate it from Configurator
-#define IsXBEE    // Do we have a telemetry connected, eg. XBee connected on Telemetry port
-//#define IsAM     // Do we have motormount LED's. AM = Attraction Mode
-//#define IsSonar  // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
-//#define IsIR_RF  // Do we have IR Range Finders
 
-#define CONFIGURATOR  // Do se use Configurator or normal text output over serial link
+/* *****************************************************************************
+                  ArduPirate Configuration Setup
+   ***************************************************************************** */
 
-/**********************************************/
-// Not in use yet, starting to work with battery monitors and pressure sensors. 
-// Added 19-08-2010
+//GPS Config
+#define IsGPS               // Do we have a GPS connected?
 
-//#define UseAirspeed
-#define UseBMP
-//#define BATTERY_EVENT 1   // (boolean) 0 = don't read battery, 1 = read battery voltage (only if you have it wired up!)
+// MTK_GPS           // MediaTEK DIY Drones GPS. 
+#define IsNEWMTEK         // Do we have MTEK with new firmware?
+#include <GPS_MTK.h>      
+
+// UBLOX_GPS         // uBlox GPS
+//#include <GPS_UBLOX.h>   
+
+// NMEA_GPS
+//#include <GPS_NMEA.h>       // General NMEA GPS
+            
+
+
+
+#define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
+#define UseBMP              // Do we want to use the barometer sensor on the IMU?
+//#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+#define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
+//#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
+#define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
+//#define IsAM              // Do we have motormount LED's? (AM = Atraction Mode)
+//#define BATTERY_EVENT     // Do we have battery alarm wired up?
+
 
 /**********************************************/
 //    QUAD COPTER SETUP                       //
@@ -109,48 +120,76 @@
 
 //  Magnetometer Setup
 
-#ifdef IsMAG
-// DIYDrones Magnetometer
-//#define MAGORIENTATION  APM_COMPASS_COMPONENTS_UP_PINS_FORWARD       // This is default solution for ArduCopter
-//#define MAGORIENTATION  APM_COMPASS_COMPONENTS_UP_PINS_BACK        // Alternative orientation for ArduCopter
-//#define MAGORIENTATION  APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD    // If you have soldered Magneto to IMU shield in WIki pictures shows
-// or 
-// Sparkfun Magnetometer
-//#define MAGORIENTATION  APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD // Sparkfun Magnetometer orientation.
-//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK
-#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
-
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
 #define MAGOFFSET -76,22.5,-55.5  // Hein's Quad calibration settings.  You have to determine your own.
 //#define MAGOFFSET -70,55.5,-61.5  // Hein's Hexa calibration settings.  You have to determine your own.
 
-// Declination is a correction factor between North Pole and real magnetic North. This is different on every location
-// IF you want to use really accurate headholding and future navigation features, you should update this
+// MAGCALIBRATION is the correction angle in degrees (can be + or -). You must calibrating your magnetometer to show magnetic north correctly.
+// After calibration you will have to determine the declination value between Magnetic north and true north, see following link
+// http://code.google.com/p/arducopter/wiki/Quad_Magnetos under additional settings. Both values have to be incorporated
 // You can check Declination to your location from http://www.magnetic-declination.com/
-#define DECLINATION -21.65      //  Quad Hein, South Africa, Centurion.
-//#define DECLINATION -15.65      //  Hexa Hein, South Africa, Centurion.
+// Example:  Magnetic north calibration show -1.2 degrees offset and declination (true north) is -5.6 then the MAGCALIBRATION shoud be -6.8.
+// Your GPS readings is based on true north.
+// For Magnetic north calibration make sure that your Magnetometer is truly showing 0 degress when your ArduQuad is looking to the North.
+// Use a real compass (! not your iPhone) to point your ArduQuad to the magnetic north and then adjust this 
+// value until you have a 0 dergrees reading in the configurator's artificial horizon. 
+// Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
 
-// And remember result from NOAA website is in form of DEGREES°MINUTES'. Degrees you can use directly but Minutes you need to 
-// recalculate due they one degree is 60 minutes.. For example Jani's real declination is 0.61, correct way to calculate this is
-// 37 / 60 = 0.61 and for Helsinki it would be 7°44' eg 7. and then 44/60 = 0.73 so declination for Helsinki/South Finland would be 7.73
+#define MAGCALIBRATION -21.65      //  Quad Hein, South Africa, Centurion.  You have to determine your own.
+//#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
 
-// East values are positive
-// West values are negative
+// orientations for DIYDrones magnetometer
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_BACK_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_BACK
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_BACK
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_BACK_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_LEFT
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_LEFT
 
-// Some of devel team's Declinations and their Cities
-//#define DECLINATION 0.61      // Jani, Bangkok, 0°37' E  (Due I live almost at Equator, my Declination is rather small)
-//#define DECLINATION 7.73      // Jani, Helsinki,7°44' E  (My "summer" home back at Finland)
-//#define DECLINATION -20.68    // Sandro, Belo Horizonte, 22°08' W  (Whoah... Sandro is really DECLINED)
-//#define DECLINATION 7.03      // Randy, Tokyo, 7°02'E
-//#define DECLINATION 8.91      // Doug, Denver, 8°55'E
-//#define DECLINATION -6.08     // Jose, Canary Islands, 6°5'W
-//#define DECLINATION 0.73      // Tony, Minneapolis, 0°44'E
-//#define DECLINATION -17.65      // Hein, South Africa, Centurion.
+// orientations for Sparkfun magnetometer
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
+#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_LEFT
+//#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_LEFT
 
-#endif
+//Low Battery Alarm
+#define LOW_VOLTAGE      12.5   // Pack voltage at which to trigger alarm (Set to about 1 volt above ESC low voltage cutoff)
+#define VOLT_DIV_OHMS    3690   // Value of resistor (in ohms) used on voltage divider
+
+
+/******************************************************** */
+/* END CONFIGURATION                                      */
+/******************************************************** */
+
+
+
+
 
 // Quick and easy hack to change FTDI Serial output to Telemetry port. Just activate #define IsXBEE some lines earlier
+// Arduino 21 seems to work best with Telemetry.
 #ifndef IsXBEE
 #define SerBau  115200
 #define SerPri  Serial.print
@@ -183,10 +222,6 @@
 #ifdef UseBMP
 #include <APM_BMP085.h>
 #endif
-
-//#include <GPS_NMEA.h>   // General NMEA GPS 
-#include <GPS_MTK.h>      // MediaTEK DIY Drones GPS. 
-//#include <GPS_UBLOX.h>  // uBlox GPS
 
 // EEPROM storage for user configurable values
 #include <EEPROM.h>
@@ -421,7 +456,7 @@ void setup()
 
 #ifdef Hexa
   // RC channels Initialization (Hexa motors) - Motors stoped 
-  APM_RC.OutputCh(0,MIN_THROTTLE);     // Left Motor CW
+  APM_RC.OutputCh(0, MIN_THROTTLE);     // Left Motor CW
   APM_RC.OutputCh(1, MIN_THROTTLE);    // Left Motor CCW
   APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
   APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
@@ -473,13 +508,14 @@ void setup()
     APM_Compass.Init();  // I2C initialization
     APM_Compass.SetOrientation(MAGORIENTATION);
     APM_Compass.SetOffsets(MAGOFFSET);
-    APM_Compass.SetDeclination(ToRad(DECLINATION));
+    APM_Compass.SetDeclination(ToRad(MAGCALIBRATION));
   }
 #endif
 
   DataFlash.StartWrite(1);   // Start a write session on page 1
 
   SerBeg(SerBau);                      // Initialize SerialXX.port, IsXBEE define declares which port
+
 #ifndef CONFIGURATOR  
   SerPri("ArduCopter Quadcopter v");
   SerPriln(VER)
@@ -487,7 +523,11 @@ void setup()
   SerPriln(SerPor);                    // Printout serial port name
 #endif
  
- 
+#ifdef BATTERY_EVENT
+  pinMode(LOW_BATTERY_OUT, OUTPUT);   // Battery Alarm output
+  digitalWrite(LOW_BATTERY_OUT, LOW); // Silence Alarm
+#endif
+
   // Check if we enable the DataFlash log Read Mode (switch)
   // If we press switch 1 at startup we read the Dataflash eeprom
   while (digitalRead(SW1_pin)==0)
@@ -593,6 +633,8 @@ void loop(){
     Magneto_counter++;
     GPS_counter++;
     RF_Counter++;
+    cameracounteron++;
+
     timer_old = timer;
     timer=millis();
     G_Dt = (timer-timer_old)*0.001;      // Real time of loop run 
@@ -600,6 +642,10 @@ void loop(){
     // IMU DCM Algorithm
     Read_adc_raw();
     
+#ifdef BATTERY_EVENT
+    read_battery();
+#endif
+
 #ifdef IsMAG
     if (MAGNETOMETER == 1) {
       if (Magneto_counter > 20)  // Read compass data at 10Hz... (20 loop runs)
@@ -620,6 +666,17 @@ void loop(){
       press_alt = BMP_Sensor_Filter(APM_BMP085.Press, press_alt, 15);  // Filter Barometric readings.
       Baro_new_data=1;
     }
+#endif
+
+#ifdef IsCAMERATRIGGER
+      if (cameracounteron < 1000)   //interval in seconds between triggering the camera (1000 = 5 seconds)
+        APM_RC.OutputCh(4, 2000);    //output for the servo - zero position
+      else
+        APM_RC.OutputCh(4, 200);     //output for the servo - push
+      if (cameracounteron > 1200)   //pushduration of the trigger (interval time + pushduration -> +200 = 1 second)    
+      {
+        cameracounteron = 0;
+      }
 #endif
 
     Matrix_update(); 
@@ -650,15 +707,10 @@ void loop(){
     sonar_read = APM_ADC.Ch(7);   // Sonar is connected to pitot input in shield (Infront of shield, marked pitot between led's)
                                   // At the bottom of shield is written gnd +5V IN.  We use the IN....
                                   //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output. (pin 3)  Will still consider PW..pin2
-    if (sonar_read > 2000)        // For testing purposes I am monitoring sonar_read value.
-      Use_BMP_Altitude = 1; 
-    else  
-    {  
-      sonar_adc += sonar_read;      
-      Sonar_Counter++;
-      Use_BMP_Altitude = 0;
-    }
+    sonar_adc += sonar_read;      
+    Sonar_counter++;
 #endif
+
     
 #ifdef IsIR_RF
     IR_adc_fl += analogRead(IR_Front_Left);
@@ -667,16 +719,24 @@ void loop(){
     IR_adc_bl += analogRead(IR_Back_Left);
 #endif
 
+
 #ifdef IsSonar
-  if (Sonar_Counter > 10)   // New sonar data at 20Hz
+  if (Sonar_counter > 10)   // New sonar data at 20Hz
       {
-      sonar_adc = sonar_adc/Sonar_Counter;  // Average sensor readings (to filter noise)
-      Sonar_value = Sensor_Filter(SonarToCm(sonar_adc),Sonar_value,4);
+      sonar_adc = sonar_adc/Sonar_counter;  // Average sensor readings (to filter noise)
+      Sonar_value = Sonar_Sensor_Filter(SonarToCm(sonar_read),Sonar_value,5);
+      if (Sonar_value == 0 || Sonar_value > 600 || target_sonar_altitude > 500 || target_sonar_altitude == 0)
+        Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
+      else 
+      {  
+        Use_BMP_Altitude = 0;
+        Sonar_new_data = 1;  // New sonar data flag
+      }
       sonar_adc=0;
-      Sonar_Counter=0;
-      Sonar_new_data=1;  // New sonar data flag
+      Sonar_counter=0;
       }
 #endif
+
 #ifdef IsIR_RF
   if (RF_Counter > 10)
       {
@@ -697,24 +757,22 @@ void loop(){
       ch_roll = channel_filter(APM_RC.InputCh(0) * ch_roll_slope + ch_roll_offset, ch_roll);
       ch_pitch = channel_filter(APM_RC.InputCh(1) * ch_pitch_slope + ch_pitch_offset, ch_pitch);
       ch_throttle = channel_filter(APM_RC.InputCh(2), ch_throttle); // Transmiter calibration not used on throttle
+      ch_throttle_change = channel_filter(APM_RC.InputCh(2), ch_throttle_change); // Transmiter calibration not used on throttle change
       ch_yaw = channel_filter(APM_RC.InputCh(3) * ch_yaw_slope + ch_yaw_offset, ch_yaw);
       ch_gear = APM_RC.InputCh(4) * ch_gear_slope + ch_gear_offset;
       ch_aux2 = APM_RC.InputCh(5) * ch_aux2_slope + ch_aux2_offset;
       ch_aux1 = APM_RC.InputCh(6);  // flight mode 3-position switch.
 
-      #define STICK_TO_ANGLE_FACTOR 12.0
+      #define STICK_TO_ANGLE_FACTOR 12
    
-      command_throttle = (ch_throttle - Hover_Throttle_Position) / STICK_TO_ANGLE_FACTOR; 
+      command_throttle = (ch_throttle_change - Hover_Throttle_Position) / STICK_TO_ANGLE_FACTOR; 
       command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
       command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 
-
-#ifdef UseBMP || IsSonar
-  
       // New Altitude Hold using BMP Pressure sensor.  If Throttle stick moves more then 10%, switch Altitude Hold off    
       if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) 
       {
-        if(command_throttle >= 12 || command_throttle <= -12 || ch_throttle <= 1200) 
+        if(command_throttle > 10 || command_throttle < -10 || ch_throttle < 1200) 
         {
           Throttle_Altitude_Change_mode = 1; //Throttle Applied in Altitude hold is switched on.  Changing Altitude. 
           target_alt_position = 0;
@@ -724,7 +782,6 @@ void loop(){
           Throttle_Altitude_Change_mode = 0;  //No more Throttle Applied in Altitude hold is swithed off.  Lock Altitude again.
         }
       } 
-#endif
 
 /*
      // Tuning P of PID using only 3 position channel switch (Flight Mode).
@@ -884,11 +941,9 @@ void loop(){
       {
         target_sonar_altitude = Sonar_value;
 #ifdef IsSonar
-        if (target_sonar_altitude == 0)
+        if (target_sonar_altitude == 0 || target_sonar_altitude > 500)
           Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
-        else if (target_sonar_altitude > 450)
-          Use_BMP_Altitude = 1; 
-        else
+        else 
           Use_BMP_Altitude = 0;
 #endif          
         Initial_Throttle = ch_throttle;
@@ -916,11 +971,9 @@ void loop(){
         target_alt_position = 1;
         target_sonar_altitude = Sonar_value;
 #ifdef IsSonar
-        if (target_sonar_altitude == 0)
+        if (target_sonar_altitude == 0 || target_sonar_altitude > 500)
           Use_BMP_Altitude = 1;      // We test if Sonar sensor is not out of range, else we use BMP sensor for Alitude Hold.
-        else if (target_sonar_altitude > 450)
-          Use_BMP_Altitude = 1; 
-        else
+        else 
           Use_BMP_Altitude = 0;
 #endif
         Initial_Throttle = ch_throttle;
@@ -1044,7 +1097,8 @@ void loop(){
       if (Sonar_new_data == 1 && Use_BMP_Altitude == 0)  // Do altitude control on each new sonar data
       { 
 //         ch_throttle_altitude_hold = (ch_throttle_altitude_hold*0.5) + (Altitude_control_Sonar_v2(Sonar_value,target_sonar_altitude)*0.5);
-         ch_throttle_altitude_hold = (ch_throttle_altitude_hold*0.5) + (Altitude_control_Sonar(Sonar_value,target_sonar_altitude)*0.5);
+//         ch_throttle_altitude_hold = (ch_throttle_altitude_hold*0.5) + (Altitude_control_Sonar(Sonar_value,target_sonar_altitude)*0.5);
+         ch_throttle_altitude_hold = Altitude_control_Sonar(Sonar_value,target_sonar_altitude);
          Sonar_new_data=0;
       }
 #endif
@@ -1101,7 +1155,7 @@ void loop(){
           if(ch_throttle > 800) 
           {
             motorArmed = 1;
-            minThrottle = MIN_THROTTLE+60;  // A minimun value for mantain a bit of throttle
+            minThrottle = MIN_THROTTLE+60;  // A minimun value for maintain a bit of throttle
 //            motorArmed = 0;
 //            minThrottle = MIN_THROTTLE;
 
@@ -1190,7 +1244,7 @@ void loop(){
       command_rx_yaw = ToDeg(yaw);
     }
  
- #ifdef Quad
+#ifdef Quad
     APM_RC.OutputCh(0, rightMotor);   // Right motor
     APM_RC.OutputCh(1, leftMotor);    // Left motor
     APM_RC.OutputCh(2, frontMotor);   // Front motor
