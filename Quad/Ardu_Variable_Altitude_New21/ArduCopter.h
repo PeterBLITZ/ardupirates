@@ -274,10 +274,20 @@ int ch_gear;
 int ch_aux2;
 int ch_aux1;
 
+// Quad motors
 int frontMotor;
 int backMotor;
 int leftMotor;
 int rightMotor;
+
+// Hexa motors
+int LeftCWMotor;
+int LeftCCWMotor;
+int RightCWMotor;
+int RightCCWMotor;
+int BackCWMotor;
+int BackCCWMotor;
+
 byte motorArmed = 0;
 int minThrottle = 0;
 
