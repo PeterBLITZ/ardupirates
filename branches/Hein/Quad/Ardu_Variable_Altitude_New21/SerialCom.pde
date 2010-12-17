@@ -284,8 +284,8 @@ void sendSerialTelemetry() {
   case 'S': // Send all flight data
     SerPri(timer-timer_old);
     comma();
-//    SerPri(read_adc(0));
-    SerPri(Sonar_value);
+    SerPri(read_adc(0));
+//    SerPri(Sonar_value);
     comma();
     SerPri(read_adc(1));
     comma();
