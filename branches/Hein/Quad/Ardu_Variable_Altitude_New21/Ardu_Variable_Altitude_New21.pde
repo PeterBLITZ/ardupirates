@@ -72,7 +72,7 @@
 
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
-//#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+//#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.  EZ0 seems to be a better choice.
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
 #define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
@@ -148,7 +148,7 @@
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
-//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
+//#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD      // Hein Hexa
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION APM_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -166,7 +166,7 @@
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
-#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
+#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD       //Hein quad
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION APM_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -294,12 +294,12 @@ void Attitude_control_v3()
     err_yaw += 360;
   err_yaw = constrain(err_yaw,-60,60);  // to limit max yaw command...
   
-  if (command_rx_yaw > 0 || command_rx_yaw < 0)
-    yaw_I = 0;  
-  
   yaw_I += err_yaw*G_Dt;
   yaw_I = constrain(yaw_I,-20,20);
  
+  if (command_rx_yaw > 0 || command_rx_yaw < 0)
+    yaw_I = 0;  
+
   // PID absoulte angle control
   stable_yaw = KP_QUAD_YAW*err_yaw + KI_QUAD_YAW*yaw_I;
   // PD rate control (we use also the bias corrected gyro rates)
@@ -769,10 +769,10 @@ void loop(){
       command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
       command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 
-      // New Altitude Hold using BMP Pressure sensor.  If Throttle stick moves more then 10%, switch Altitude Hold off    
+      // New Altitude Hold using BMP Pressure sensor.  If Throttle stick moves more then small %, switch Altitude Hold off    
       if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE) 
       {
-        if(command_throttle > 10 || command_throttle < -10 || ch_throttle < 1200) 
+        if(command_throttle > 2 || command_throttle < -2 || ch_throttle < 1200) 
         {
           Throttle_Altitude_Change_mode = 1; //Throttle Applied in Altitude hold is switched on.  Changing Altitude. 
           target_alt_position = 0;
