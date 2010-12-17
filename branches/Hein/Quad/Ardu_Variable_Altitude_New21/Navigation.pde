@@ -65,7 +65,7 @@ void Position_control(long lat_dest, long lon_dest)
 int Altitude_control_Sonar(int Sonar_altitude, int target_sonar_altitude)
 {
   #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 60
-  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 120
+  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 60
 
   float KP_SONAR_ALTITUDE = KP_ALTITUDE; //0.7//0.8 //0.9 //1.0//1.05
   float KI_SONAR_ALTITUDE = KI_ALTITUDE; //0.1//0.3
@@ -88,12 +88,12 @@ int Altitude_control_Sonar(int Sonar_altitude, int target_sonar_altitude)
 int Altitude_control_Sonar_v2(int Sonar_altitude, int target_sonar_altitude, float az_f)
 {
   #define ALTITUDE_CONTROL_SONAR_OUTPUT_MIN 60
-  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 120
+  #define ALTITUDE_CONTROL_SONAR_OUTPUT_MAX 60
   #define KP_ACCZ_DAMP 0.2
 
-  float KP_SONAR_ALTITUDE = (KP_ALTITUDE * 0.5); //0.8 //0.9 //1.0//1.05
-  float KI_SONAR_ALTITUDE = (KI_ALTITUDE); //0.3
-  float KD_SONAR_ALTITUDE = (KD_ALTITUDE * 0.5); //0.7 //0.7 //0.75 //0.8
+  float KP_SONAR_ALTITUDE = KP_ALTITUDE; //0.8 //0.9 //1.0//1.05
+  float KI_SONAR_ALTITUDE = KI_ALTITUDE; //0.3
+  float KD_SONAR_ALTITUDE = KD_ALTITUDE; //0.7 //0.7 //0.75 //0.8
   
   int control_altitude;
   float damp_factor;

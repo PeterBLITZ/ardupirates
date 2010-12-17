@@ -72,7 +72,7 @@
 
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
-//#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.  EZ0 seems to be a better choice.
+#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.  EZ0 seems to be a better choice.
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
 #define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
@@ -706,7 +706,7 @@ void loop(){
 #ifdef IsSonar
     sonar_read = APM_ADC.Ch(7);   // Sonar is connected to pitot input in shield (Infront of shield, marked pitot between led's)
                                   // At the bottom of shield is written gnd +5V IN.  We use the IN....
-                                  //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output. (pin 3)  Will still consider PW..pin2
+                                  //XL-Maxsonar EZ4 - Product 9495 from SPF.  Some recommend the EZ0.  I use Analgue output. (pin 3)  Will still consider PW..pin2
     sonar_adc += sonar_read;      
     Sonar_counter++;
 #endif
