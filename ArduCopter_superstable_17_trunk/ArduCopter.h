@@ -32,26 +32,25 @@
 
 /* APM Hardware definitions */
 #define LED_Yellow 36
-#define LED_Red 35
-#define LED_Green 37
-#define RELE_pin 47
-#define SW1_pin 41
-#define SW2_pin 40
+#define LED_Red    35
+#define LED_Green  37
+#define RELE_pin   47
+#define SW1_pin    41
+#define SW2_pin    40
 
-// Sensor: GYROX, GYROY, GYROZ, ACCELX, ACCELY, ACCELZ
-uint8_t sensors[6] = {1, 2, 0, 4, 5, 6};  // For ArduPilot Mega Sensor Shield Hardware
+// Sensor:         YROX, GYROY, GYROZ, ACCELX, ACCELY, ACCELZ
+uint8_t sensors[6] = {1,     2,     0,      4,      5,      6};  // For ArduPilot Mega Sensor Shield Hardware
 
-// Sensor: GYROX, GYROY, GYROZ,   ACCELX, ACCELY, ACCELZ,     MAGX, MAGY, MAGZ
-int SENSOR_SIGN[]={
-  1, -1, -1,    -1, 1, 1,     -1, -1, -1}; 
+// Sensor Sign:GYROX, GYROY, GYROZ,   ACCELX, ACCELY, ACCELZ,     MAGX, MAGY, MAGZ
+int SENSOR_SIGN[]={1,    -1,    -1,       -1,      1,      1,       -1,   -1,   -1}; 
   
 /* APM Hardware definitions, END */
 
 /* General definitions */
 
-#define TRUE 1
+#define TRUE  1
 #define FALSE 0
-#define ON 1
+#define ON  1
 #define OFF 0
 
 
@@ -76,7 +75,7 @@ int SENSOR_SIGN[]={
 /*For debugging purposes*/
 #define OUTPUTMODE 1  //If value = 1 will print the corrected data, 0 will print uncorrected data of the gyros (with drift), 2 Accel only data
 
-int AN[6]; //array that store the 6 ADC channels
+int AN[6];        //array that store the 6 ADC channels
 int AN_OFFSET[6]; //Array that store the Offset of the gyros and accelerometers
 int gyro_temp;
 
@@ -84,11 +83,11 @@ int gyro_temp;
 float G_Dt=0.02;                  // Integration time for the gyros (DCM algorithm)
 float Accel_Vector[3]= {0, 0, 0}; //Store the acceleration in a vector
 float Accel_Vector_unfiltered[3]= {0, 0, 0}; //Store the acceleration in a vector
-float Gyro_Vector[3]= {0, 0, 0};  //Store the gyros rutn rate in a vector
+float Gyro_Vector[3] = {0, 0, 0}; //Store the gyros rutn rate in a vector
 float Omega_Vector[3]= {0, 0, 0}; //Corrected Gyro_Vector data
-float Omega_P[3]= {0, 0, 0};      //Omega Proportional correction
-float Omega_I[3]= {0, 0, 0};      //Omega Integrator
-float Omega[3]= {0, 0, 0};
+float Omega_P[3]     = {0, 0, 0}; //Omega Proportional correction
+float Omega_I[3]     = {0, 0, 0}; //Omega Integrator
+float Omega[3]       = {0, 0, 0};
 
 float errorRollPitch[3] = {0, 0, 0};
 float errorYaw[3] = {0, 0, 0};
@@ -96,9 +95,9 @@ float errorCourse = 0;
 float COGX = 0; //Course overground X axis
 float COGY = 1; //Course overground Y axis
 
-float roll = 0;
+float roll  = 0;
 float pitch = 0;
-float yaw = 0;
+float yaw   = 0;
 
 //  Counter for Loop Control
 unsigned int Magneto_counter = 0;
@@ -109,6 +108,7 @@ float DCM_Matrix[3][3]= {
   { 1,0,0 },
   { 0,1,0 },
   { 0,0,1 }}; 
+
 float Update_Matrix[3][3]={
   { 0,1,2 },
   { 3,4,5 },
@@ -120,8 +120,8 @@ float Temporary_Matrix[3][3]={
   { 0,0,0 }};
 
 // GPS variables
-float speed_3d=0;
-int GPS_ground_speed=0;
+float speed_3d       = 0;
+int GPS_ground_speed = 0;
 
 // Main timers
 long timer=0; 
@@ -131,23 +131,22 @@ long GPS_timer_old;
 float GPS_Dt=0.2;   // GPS Dt
 
 // Attitude control variables
-float command_rx_roll=0;        // User commands
-float command_rx_pitch=0;
-float command_rx_yaw=0;
-//float amount_rx_yaw=0;
+float command_rx_roll  = 0;        // User commands
+float command_rx_pitch = 0;
+float command_rx_yaw   = 0;
 int control_roll;           // PID control results
 int control_pitch;
 int control_yaw;
 float K_aux;
 
 // Attitude PID controls
-float roll_I=0;
+float roll_I  = 0;
 float roll_D;
 float err_roll;
-float pitch_I=0;
+float pitch_I = 0;
 float pitch_D;
 float err_pitch;
-float yaw_I=0;
+float yaw_I   = 0;
 float yaw_D;
 float err_yaw;
 
@@ -182,24 +181,24 @@ float altitude_D;
 
 //Pressure Sensor variables
 #ifdef UseBMP
-float BMP_target_altitude;
-float BMP_err_altitude;
-float BMP_err_altitude_old;
-float BMP_command_altitude;
-float BMP_altitude_I;
-float BMP_altitude_D;
-float tempPresAlt;
-float BMP_Altitude;
+  float BMP_target_altitude;
+  float BMP_err_altitude;
+  float BMP_err_altitude_old;
+  float BMP_command_altitude;
+  float BMP_altitude_I;
+  float BMP_altitude_D;
+  float tempPresAlt;
+  float BMP_Altitude;
 #endif
 
 
 #define BATTERY_VOLTAGE(x) (x*(INPUT_VOLTAGE/1024.0))*VOLT_DIV_RATIO
 
-#define AIRSPEED_PIN 1		// Need to correct value
-#define BATTERY_PIN 1		// Need to correct value
-#define RELAY_PIN 47
-#define LOW_VOLTAGE	11.4    // Pack voltage at which to trigger alarm
-#define INPUT_VOLTAGE 5.2	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery level readings. (you need a multimeter to measure and set this of course)
+#define AIRSPEED_PIN   1  // Need to correct value
+#define BATTERY_PIN    1  // Need to correct value
+#define RELAY_PIN     47
+#define LOW_VOLTAGE	  11.4  // Pack voltage at which to trigger alarm
+#define INPUT_VOLTAGE  5.2	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery level readings. (you need a multimeter to measure and set this of course)
 #define VOLT_DIV_RATIO 1.0	//  Voltage divider ratio set with thru-hole resistor (see manual)
 
 float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold for filter
@@ -211,27 +210,27 @@ int Sonar_value=0;
 int Sonar_Counter=0;
 
 // AP_mode : 1=> Position hold  2=> Stabilization assist mode (normal mode) 0=> Acrobatic mode
-byte AP_mode = 0;  
+byte AP_mode  = 0;  
 byte BMP_mode = 0;  //0 = Altitude hold off
 
 //  PID Tuning
-byte Plus = 0;
-byte Minus = 0;
-byte Plus_mode = 0;
-byte Minus_mode = 0;
-byte P_of_PID_mode = 0;
-byte I_of_PID_mode = 0;
-byte D_of_PID_mode = 0;
-byte toggle_switch = 0;
+//DSP byte Plus          = 0;
+//DSP byte Minus         = 0;
+//DSP byte Plus_mode     = 0;
+//DSP byte Minus_mode    = 0;
+//DSP byte P_of_PID_mode = 0;
+//DSP byte I_of_PID_mode = 0;
+//DSP byte D_of_PID_mode = 0;
+//DSP byte toggle_switch = 0;
 
 // Mode LED timers and variables, used to blink LED_Green
 byte gled_status = HIGH;
 long gled_timer;
 int gled_speed;
 
-long t0;
-int num_iter;
-float aux_debug;
+//long t0;
+//int num_iter;
+//float aux_debug;
 
 // Radio definitions
 int roll_mid;
@@ -239,7 +238,7 @@ int pitch_mid;
 int yaw_mid;
 int throttle_mid = 1450;
 
-int Neutro_yaw;
+//int Neutro_yaw;
 int ch_roll;
 int ch_pitch;
 int ch_throttle;
@@ -260,5 +259,5 @@ char queryType;
 long tlmTimer = 0;
 
 // Arming/Disarming
-uint8_t Arming_counter=0;
-uint8_t Disarming_counter=0;
+uint8_t Arming_counter    = 0;
+uint8_t Disarming_counter = 0;
