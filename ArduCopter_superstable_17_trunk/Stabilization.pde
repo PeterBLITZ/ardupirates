@@ -86,6 +86,7 @@ void Attitude_control_v3()
 }
 
 // ACRO MODE
+/* COMMENTED FUNTIONS AS THEY WERE FOR THE DELETED ACRO MODE
 void Rate_control()
 {
   static float previousRollRate, previousPitchRate, previousYawRate;
@@ -135,7 +136,6 @@ void Rate_control()
 
 // RATE CONTROL MODE
 // Using Omega vector (bias corrected gyro rate)
-/* COMMENTED FUNTION AS IT WAS FOR THE DELETED ACRO MODE
 void Rate_control_v2()
 {
   static float previousRollRate, previousPitchRate, previousYawRate;
