@@ -52,6 +52,11 @@ int SENSOR_SIGN[]={1,    -1,    -1,       -1,      1,      1,       -1,   -1,   
 #define FALSE 0
 #define ON  1
 #define OFF 0
+#define SWITCH_CH_ON  1800  //Switch Channel level ON
+#define SWITCH_CH_OFF 1250  //Switch Channel level OFF
+
+#define LED_SPEED_FAST  400  //small value means less time between blinks, thus fast blink
+#define LED_SPEED_SLOW 1200  //high  value means more time between blinks, thus slow blink
 
 
 // ADC : Voltage reference 3.3v / 12bits(4096 steps) => 0.8mV/ADC step
@@ -243,6 +248,7 @@ int ch_roll;
 int ch_pitch;
 int ch_throttle;
 int ch_yaw;
+int ch_gear;
 int ch_aux;
 int ch_aux2;
 int ch_mode;

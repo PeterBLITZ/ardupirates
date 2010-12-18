@@ -1,13 +1,12 @@
-/* test*/
 /* ********************************************************************** */
 /*             ArduCopter & ArduPirates Quad / Hexa                       */
 /*                                                                        */
 /* Quadcopter code from AeroQuad project and ArduIMU quadcopter project   */
 /* IMU DCM code from Diydrones.com                                        */
-/* (Original ArduIMU code from Jordi Muñoz and William Premerlani)        */
+/* (Original ArduIMU code from Jordi Muñoz and William Premerlani)       */
 /* Ardupilot core code : from DIYDrones.com development team              */
 /* Authors : Arducopter development team                                  */
-/*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
+/*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,           */
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
 /*           Sandro Benigno, Chris Anderson.                              */
 /* Authors : ArduPirates deveopment team                                  */
@@ -37,13 +36,14 @@
  3) Green LED Solid after initialization finished
  
  Green LED On = APM Initialization Finished
+ Green LED blink slow  = Motors armed, Stable mode (Mode 0) or Position & Altirude Hold (Mode 2)
+ Green LED blink rapid = Motors armed, Super Stable (Mode 1)
+
  Yellow LED On = GPS Hold Mode
  Yellow LED Off = Flight Assist Mode (No GPS)
+
  Red LED On = GPS Fix, 2D or 3D
  Red LED Off = No GPS Fix
- 
- Green LED blink slow = Motors armed, Stable mode
- Green LED blink rapid = Motors armed, Acro mode 
 
 
 /* *****************************************************************************
@@ -236,31 +236,26 @@
    AUX2 OFF && GEAR ON  = SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 1)
    AUX2 ON  && GEAR ON  = Position & Altitude Hold Mode (AP_mode = 2)
  * ************************************************************ */
-
 byte Read_AP_mode()
 {
   byte APmode;  //local var so we don't mess gob vars.
       
-  if (ch_aux2 < 1250 && ch_aux > 1800)
+  if (ch_aux2 < SWITCH_CH_OFF && ch_gear < SWITCH_CH_OFF) //AUX2 OFF && GEAR OFF = StableMode (AP_mode = 0)
   {
-    APmode = 2;          // Stable mode & Altitude hold mode (Stabilization assist mode)
+    APmode = 0;
     digitalWrite(LED_Yellow,LOW); // Yellow LED off
   }
-  else if (ch_aux < 1250 && ch_aux2 > 1800)
-  {
-    APmode = 3;           // Position & Altitude hold mode (GPS position control & Altitude control)
-    digitalWrite(LED_Yellow,HIGH); // Yellow LED On
-  }
-  else if (ch_aux < 1250 && ch_aux2 < 1250)
-  {
-    APmode = 1;           // Position hold mode (GPS position control)
-    digitalWrite(LED_Yellow,HIGH); // Yellow LED On
-  }
-  else 
-  {
-    APmode = 0;          // Acrobatic mode
+  else if (ch_aux2 < SWITCH_CH_OFF && ch_gear < SWITCH_CH_ON) //AUX2 OFF && GEAR ON  = SuperStable Mode 
+  {                                                           //  (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 1)
+    APmode = 1;
     digitalWrite(LED_Yellow,LOW); // Yellow LED off
-  }     // End reading Quad Mode from Channel 5 & 6
+  }
+  else if (ch_aux2 < SWITCH_CH_ON && ch_gear < SWITCH_CH_ON) //AUX2 ON  && GEAR ON  = Position & Altitude Hold Mode (AP_mode = 2)
+  {                                            
+    APmode = 2;
+    digitalWrite(LED_Yellow,HIGH); // Yellow LED On
+  
+  }
   return (APmode);
 }
 
@@ -490,7 +485,7 @@ void Read_Channels_Commands()
   ch_pitch    = channel_filter(APM_RC.InputCh(1) * ch_pitch_slope + ch_pitch_offset, ch_pitch);
   ch_yaw      = channel_filter(APM_RC.InputCh(3) * ch_yaw_slope   + ch_yaw_offset  , ch_yaw);
   ch_throttle = channel_filter(APM_RC.InputCh(2), ch_throttle); // Transmiter calibration not used on throttle
-  ch_aux  = APM_RC.InputCh(4);
+  ch_gear = APM_RC.InputCh(4);
   ch_aux2 = APM_RC.InputCh(5);
   ch_mode = APM_RC.InputCh(6);
 
@@ -896,30 +891,18 @@ void loop()
     
     if (APM_RC.GetState() == 1)  // Do we have a new radio frame?
     {
-      AP_mode = Read_AP_mode();  // Reads the flying mode
+      AP_mode = Read_AP_mode();  // Reads the flying mode and sets green led
       Read_Channels_Commands();  // Reads sticks position from radio Rx and sets commands 
       Check_BMP(AP_mode);        // Reads BMP_Altitude and check throttle for deactivation of Altitude Hold
     }  // End reading new radio frame
 
     switch (AP_mode)
     {
-      case 0: //Acrobatic Mode
-          heading_hold_mode   = 0;
-          target_alt_position = 0;
-          target_position     = 0;
-          BMP_mode            = 0; // Altitude hold mode disabled followed by reset of variables
-          Clean_BMP_vars();
-          Clean_GPS_vars();
+      // (AP_mode = 0) - StableMode 
+      // (AP_mode = 1) - SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) 
+      // (AP_mode = 2) - Position & Altitude Hold Mode 
 
-//DSP          Read_GPS();        //DSP in v1.5, we where reading GPS even in Acro mode.....REMOVE?
-
-          gled_speed = 400;  //Sets green led Speed to fast
-          Rate_control_v2();
-          command_rx_yaw = ToDeg(yaw); // Reset yaw, so if we change to stable mode we continue with the actual yaw direction
-        break;
-
-
-      case 1: // Position Control (just GPS without altitude)
+      case 0: // Position Control (just GPS without altitude)
           heading_hold_mode   = 1;
           target_alt_position = 0;
 
@@ -931,32 +914,23 @@ void loop()
           BMP_mode = 0;   // Altitude hold mode disabled followed by reset of variables
           Clean_BMP_vars();
           Read_GPS();
-          gled_speed = 1200;  //Sets green led Speed to slow
+          gled_speed = LED_SPEED_SLOW;  
           Attitude_control_v3();
-//DSP we have just set BMP_mode = 0, so the following code is useless
-//DSP          if (BMP_mode == 1)   // mst - was on AP_mode: probabely altitude bug we have searched for
-//DSP            BMP_Altitude_control(BMP_target_altitude);
 
         break;
 
 
-      case 2: // SuperStable Mode (Altitude Hold and Heading Hold) (if no stick movement)
+      case 1: // SuperStable Mode (Altitude Hold and Heading Hold) (if no stick movement)
           heading_hold_mode = 1;
           if (target_alt_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
           {
             BMP_target_altitude = BMP_Altitude;  //first time setting current altitude is target altitude
-
-//DSP Clean_BMP_vars is called after the if always, so this part is useless
-//DSP            if (BMP_mode == 0)    // If Altitude hold mode has been disabled reset variables
-//DSP            {
-//DSP              Clean_BMP_vars();
-//DSP            } 
             target_alt_position = 1;  //target altitude has been set
           }
           target_position   = 0;
           Clean_BMP_vars();
           Read_GPS();
-          gled_speed = 1200;  //Sets green led Speed to slow
+          gled_speed = LED_SPEED_FAST;  
           Attitude_control_v3();
 
           if (BMP_mode == 1)   // mst - was on AP_mode: probabely altitude bug we have searched for
@@ -965,7 +939,7 @@ void loop()
         break;
 
 
-      case 3:  // Position & Altitude Hold Mode
+      case 2:  // Position & Altitude Hold Mode
           heading_hold_mode = 1;
           if (target_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
           {
@@ -984,12 +958,26 @@ void loop()
           }        
 
           Read_GPS();
-          gled_speed = 1200;  //Sets green led Speed to slow
+          gled_speed = LED_SPEED_SLOW;  
           Attitude_control_v3();
           if (BMP_mode == 1)   // mst - was on AP_mode: probabely altitude bug we have searched for
             BMP_Altitude_control(BMP_target_altitude);
 
         break;
+
+/*
+      case 0: // OLD Acrobatic Mode
+          heading_hold_mode   = 0;
+          target_alt_position = 0;
+          target_position     = 0;
+          BMP_mode            = 0; // Altitude hold mode disabled followed by reset of variables
+          Clean_BMP_vars();
+          Clean_GPS_vars();
+          gled_speed = 400;  //Sets green led Speed to fast
+          Rate_control_v2();
+          command_rx_yaw = ToDeg(yaw); // Reset yaw, so if we change to stable mode we continue with the actual yaw direction
+        break;
+*/
     } //End of switch AP_mode
 
 
