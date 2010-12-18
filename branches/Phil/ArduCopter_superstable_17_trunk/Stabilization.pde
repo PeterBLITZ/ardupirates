@@ -135,6 +135,7 @@ void Rate_control()
 
 // RATE CONTROL MODE
 // Using Omega vector (bias corrected gyro rate)
+/* COMMENTED FUNTION AS IT WAS FOR THE DELETED ACRO MODE
 void Rate_control_v2()
 {
   static float previousRollRate, previousPitchRate, previousYawRate;
@@ -182,4 +183,4 @@ void Rate_control_v2()
   control_yaw = Kp_RateYaw*err_yaw + Kd_RateYaw*yaw_D + Ki_RateYaw*yaw_I; 
 }
 
-
+*/
