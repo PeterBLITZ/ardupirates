@@ -242,17 +242,17 @@ byte Read_AP_mode()
       
   if (ch_aux2 < SWITCH_CH_OFF && ch_gear < SWITCH_CH_OFF) //AUX2 OFF && GEAR OFF = StableMode (AP_mode = 0)
   {
-    APmode = 0;
+    APmode = F_MODE_STABLE;
     digitalWrite(LED_Yellow,LOW); // Yellow LED off
   }
   else if (ch_aux2 < SWITCH_CH_OFF && ch_gear < SWITCH_CH_ON) //AUX2 OFF && GEAR ON  = SuperStable Mode 
   {                                                           //  (Altitude Hold and Heading Hold if no throttle stick movement) (AP_mode = 1)
-    APmode = 1;
+    APmode = F_MODE_SUPER_STABLE;
     digitalWrite(LED_Yellow,LOW); // Yellow LED off
   }
   else if (ch_aux2 < SWITCH_CH_ON && ch_gear < SWITCH_CH_ON) //AUX2 ON  && GEAR ON  = Position & Altitude Hold Mode (AP_mode = 2)
   {                                            
-    APmode = 2;
+    APmode = F_MODE_ABS_HOLD;
     digitalWrite(LED_Yellow,HIGH); // Yellow LED On
   
   }
@@ -341,7 +341,7 @@ void  Read_GPS()
       else
         digitalWrite(LED_Red,LOW);
 
-      if (AP_mode == 1 || AP_mode ==3)
+      if (AP_mode == F_MODE_ABS_HOLD)
       {
         if ((target_position == 1) && (GPS.Fix))
         {
@@ -415,7 +415,7 @@ void Check_BMP(byte APmode)
 {
   #ifdef UseBMP  
     // New Altitude Hold using BMP Pressure sensor.  If Trottle stick moves more then 10%, switch Altitude Hold off    
-    if (APmode == 2 || APmode == 3) 
+    if (APmode == F_MODE_SUPER_STABLE || APmode == F_MODE_ABS_HOLD) 
     {
       if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200)
       {
@@ -558,36 +558,6 @@ byte Get_Arm_Disarm_Motors(byte AuxMotorArmed)
     Disarming_counter=0;
   }
   return (AuxMotorArmed);
-}
-
-/* ************************************************************ * 
-   void Show_Leds();
-     Desc: Shows leds status
- * ************************************************************ */
-void Show_Leds()
-{
-  // AM and Mode status LED lights
-  if(millis() - gled_timer > gled_speed) 
-  {
-    gled_timer = millis();
-    if(gled_status == HIGH) 
-    { 
-      digitalWrite(LED_Green, LOW);
-      #ifdef IsAM      
-        digitalWrite(RE_LED, LOW);
-      #endif
-      gled_status = LOW;
-    } 
-    else 
-    {
-      digitalWrite(LED_Green, HIGH);
-      #ifdef IsAM
-        if(motorArmed) 
-          digitalWrite(RE_LED, HIGH);
-      #endif
-      gled_status = HIGH;
-    } 
-  }
 }
 
 
@@ -736,6 +706,8 @@ void setup()
   pinMode(RELE_pin,OUTPUT);   // Rele output
   digitalWrite(RELE_pin,LOW);
   
+  MotorMount_Leds_Init();
+
   APM_RC.Init();             // APM Radio initialization
 
   #ifdef Quad
@@ -933,7 +905,7 @@ void loop()
       // (AP_mode = 1) - SuperStable Mode (Altitude Hold and Heading Hold if no throttle stick movement) 
       // (AP_mode = 2) - Position & Altitude Hold Mode 
 
-      case 0: // Position Control (just GPS without altitude)
+      case F_MODE_STABLE: // Position Control (just GPS without altitude)
           heading_hold_mode   = 1;
           target_alt_position = 0;
 
@@ -951,7 +923,7 @@ void loop()
         break;
 
 
-      case 1: // SuperStable Mode (Altitude Hold and Heading Hold) (if no stick movement)
+      case F_MODE_SUPER_STABLE: // SuperStable Mode (Altitude Hold and Heading Hold) (if no stick movement)
           heading_hold_mode = 1;
           if (target_alt_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
           {
@@ -970,7 +942,7 @@ void loop()
         break;
 
 
-      case 2:  // Position & Altitude Hold Mode
+      case F_MODE_ABS_HOLD:  // Position & Altitude Hold Mode
           heading_hold_mode = 1;
           if (target_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
           {
@@ -1036,7 +1008,9 @@ void loop()
     }
   #endif
 
-  Show_Leds();  // Shows leds status
+  Show_Leds();  // Shows status leds 
+
+  Show_MotorMount_Leds(AP_mode);
 
 } // End of void loop()
 
