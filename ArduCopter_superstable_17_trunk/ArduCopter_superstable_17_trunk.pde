@@ -597,54 +597,71 @@ void Show_Leds()
  * ************************************************************ */
 void Get_Motor_Values(byte Motor_Armed)
 {
-  // Quadcopter mix
   if (Motor_Armed == 1) 
   {   
     #ifdef IsAM
       digitalWrite(FR_LED, HIGH);    // AM-Mode
     #endif
 
-    #ifdef FLIGHT_MODE_+
+    #ifdef Quad
+      // Quadcopter mix
+      #ifdef FLIGHT_MODE_+
+        if (BMP_mode == 1)
+        {
+          rightMotor = constrain(ch_throttle + BMP_command_altitude - control_roll  + control_yaw, minThrottle, 2000);
+          leftMotor  = constrain(ch_throttle + BMP_command_altitude + control_roll  + control_yaw, minThrottle, 2000);
+          frontMotor = constrain(ch_throttle + BMP_command_altitude + control_pitch - control_yaw, minThrottle, 2000);
+          backMotor  = constrain(ch_throttle + BMP_command_altitude - control_pitch - control_yaw, minThrottle, 2000);
+        } 
+        else 
+        {
+          rightMotor = constrain(ch_throttle - control_roll  + control_yaw, minThrottle, 2000);
+          leftMotor  = constrain(ch_throttle + control_roll  + control_yaw, minThrottle, 2000);
+          frontMotor = constrain(ch_throttle + control_pitch - control_yaw, minThrottle, 2000);
+          backMotor  = constrain(ch_throttle - control_pitch - control_yaw, minThrottle, 2000);
+        }
+      #endif
+
+      #ifdef FLIGHT_MODE_X
+        if (BMP_mode == 1)
+        {
+          rightMotor = constrain(ch_throttle + BMP_command_altitude - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
+          leftMotor  = constrain(ch_throttle + BMP_command_altitude + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
+          frontMotor = constrain(ch_throttle + BMP_command_altitude + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
+          backMotor  = constrain(ch_throttle + BMP_command_altitude - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
+        } 
+        else 
+        {
+          rightMotor = constrain(ch_throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
+          leftMotor  = constrain(ch_throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
+          frontMotor = constrain(ch_throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
+          backMotor  = constrain(ch_throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
+        }  
+      #endif
+
+    #endif
+
+    #ifdef Hexa
+      // Hexacopter mix
       if (BMP_mode == 1)
       {
-        rightMotor = constrain(ch_throttle + BMP_command_altitude - control_roll  + control_yaw, minThrottle, 2000);
-        leftMotor  = constrain(ch_throttle + BMP_command_altitude + control_roll  + control_yaw, minThrottle, 2000);
-        frontMotor = constrain(ch_throttle + BMP_command_altitude + control_pitch - control_yaw, minThrottle, 2000);
-        backMotor  = constrain(ch_throttle + BMP_command_altitude - control_pitch - control_yaw, minThrottle, 2000);
-      } 
-      else 
-      {
-        rightMotor = constrain(ch_throttle - control_roll  + control_yaw, minThrottle, 2000);
-        leftMotor  = constrain(ch_throttle + control_roll  + control_yaw, minThrottle, 2000);
-        frontMotor = constrain(ch_throttle + control_pitch - control_yaw, minThrottle, 2000);
-        backMotor  = constrain(ch_throttle - control_pitch - control_yaw, minThrottle, 2000);
+        LeftCWMotor   = constrain(ch_throttle + BMP_command_altitude + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor  = constrain(ch_throttle + BMP_command_altitude + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor  = constrain(ch_throttle + BMP_command_altitude - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(ch_throttle + BMP_command_altitude - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor   = constrain(ch_throttle + BMP_command_altitude - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
+        BackCCWMotor  = constrain(ch_throttle + BMP_command_altitude + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
       }
-    #endif
-
-    #ifdef FLIGHT_MODE_X
-      if (BMP_mode == 1)
+      else
       {
-        rightMotor = constrain(ch_throttle + BMP_command_altitude - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
-        leftMotor  = constrain(ch_throttle + BMP_command_altitude + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
-        frontMotor = constrain(ch_throttle + BMP_command_altitude + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
-        backMotor  = constrain(ch_throttle + BMP_command_altitude - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
-      } 
-      else 
-      {
-        rightMotor = constrain(ch_throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
-        leftMotor  = constrain(ch_throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
-        frontMotor = constrain(ch_throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
-        backMotor  = constrain(ch_throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
-      }  
-    #endif
-
-
-
-
-
-
-
-
+        LeftCWMotor   = constrain(ch_throttle + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor  = constrain(ch_throttle + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor  = constrain(ch_throttle - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(ch_throttle - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor   = constrain(ch_throttle - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
+        BackCCWMotor  = constrain(ch_throttle + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
+      }
+    #endif   
   }
   else
   {
@@ -654,17 +671,21 @@ void Get_Motor_Values(byte Motor_Armed)
   
     digitalWrite(LED_Green,HIGH); // Ready LED on
 
-    rightMotor = MIN_THROTTLE;
-    leftMotor  = MIN_THROTTLE;
-    frontMotor = MIN_THROTTLE;
-    backMotor  = MIN_THROTTLE;
+    #ifdef Quad
+      rightMotor = MIN_THROTTLE;
+      leftMotor  = MIN_THROTTLE;
+      frontMotor = MIN_THROTTLE;
+      backMotor  = MIN_THROTTLE;
+    #endif
 
-
-
-
-
-
-
+    #ifdef Hexa
+      LeftCWMotor   = MIN_THROTTLE;
+      LeftCCWMotor  = MIN_THROTTLE;
+      RightCWMotor  = MIN_THROTTLE;
+      RightCCWMotor = MIN_THROTTLE;
+      BackCWMotor   = MIN_THROTTLE;
+      BackCCWMotor  = MIN_THROTTLE;
+    #endif
 
     roll_I  = 0;     // reset I terms of PID controls
     pitch_I = 0;
@@ -682,14 +703,30 @@ void Get_Motor_Values(byte Motor_Armed)
  * ************************************************************ */
 void Output_Motors()
 {
-  APM_RC.OutputCh(0, rightMotor);   // Right motor
-  APM_RC.OutputCh(1, leftMotor);    // Left motor
-  APM_RC.OutputCh(2, frontMotor);   // Front motor
-  APM_RC.OutputCh(3, backMotor);    // Back motor   
+  #ifdef Quad
+    APM_RC.OutputCh(0, rightMotor);   // Right motor
+    APM_RC.OutputCh(1, leftMotor);    // Left motor
+    APM_RC.OutputCh(2, frontMotor);   // Front motor
+    APM_RC.OutputCh(3, backMotor);    // Back motor   
 
-   // InstantPWM
-  APM_RC.Force_Out0_Out1();
-  APM_RC.Force_Out2_Out3();
+     // InstantPWM
+    APM_RC.Force_Out0_Out1();
+    APM_RC.Force_Out2_Out3();
+  #endif
+
+  #ifdef Hexa
+    APM_RC.OutputCh(0, LeftCWMotor);    // Left Motor CW
+    APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
+    APM_RC.OutputCh(2, RightCWMotor);   // Right Motor CW
+    APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
+    APM_RC.OutputCh(6, BackCWMotor);   // Back Motor CW
+    APM_RC.OutputCh(7, BackCCWMotor);   // Back Motor CCW    
+
+      // InstantPWM
+    APM_RC.Force_Out0_Out1();
+    APM_RC.Force_Out2_Out3();
+    APM_RC.Force_Out6_Out7();
+  #endif
 }
 
 
@@ -725,11 +762,23 @@ void setup()
   
   APM_RC.Init();             // APM Radio initialization
 
-  // RC channels Initialization (Quad motors)  
-  APM_RC.OutputCh(0,MIN_THROTTLE);  // Motors stoped
-  APM_RC.OutputCh(1,MIN_THROTTLE);
-  APM_RC.OutputCh(2,MIN_THROTTLE);
-  APM_RC.OutputCh(3,MIN_THROTTLE);
+  #ifdef Quad
+    // RC channels Initialization (Quad motors)  
+    APM_RC.OutputCh(0,MIN_THROTTLE);  // Motors stoped
+    APM_RC.OutputCh(1,MIN_THROTTLE);
+    APM_RC.OutputCh(2,MIN_THROTTLE);
+    APM_RC.OutputCh(3,MIN_THROTTLE);
+  #endif
+
+  #ifdef Hexa
+    // RC channels Initialization (Hexa motors) - Motors stoped 
+    APM_RC.OutputCh(0,MIN_THROTTLE);     // Left Motor CW
+    APM_RC.OutputCh(1, MIN_THROTTLE);    // Left Motor CCW
+    APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
+    APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
+    APM_RC.OutputCh(6, MIN_THROTTLE);    // Back Motor CW
+    APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
+  #endif
 
   //  delay(1000); // Wait until frame is not moving after initial power cord has connected
   for(i = 0; i <= 50; i++) 
@@ -887,8 +936,14 @@ void loop()
     Drift_correction();
     Euler_angles();
 
-    Log_Read_Attitude();  //This one could be omited??
-    
+    #ifndef CONFIGURATOR    
+      SerPri(ToDeg(roll) * 10);
+      SerPri(",");
+      SerPri(ToDeg(pitch) * 10);
+      SerPri(",");
+      SerPri(ToDeg(yaw) * 10);
+    #endif
+
     if (APM_RC.GetState() == 1)  // Do we have a new radio frame?
     {
       AP_mode = Read_AP_mode();  // Reads the flying mode and sets green led
@@ -991,25 +1046,22 @@ void loop()
 
     Stabilize_Camera();  // Outputs the values for Pitch and Roll to stabilize camera 
 
-
-    #ifdef CONFIGURATOR
-      if((millis()-tlmTimer)>=100) 
-      {
-        readSerialCommand();
-        sendSerialTelemetry();
-        tlmTimer = millis();
-      }
-    #else
+    #ifndef CONFIGURATOR
       SerPriln();  // Line END 
     #endif
-
-
-    Show_Leds();  // Shows leds status
-
   } // Main loop 200Hz
+
+  #ifdef CONFIGURATOR
+    if((millis()-tlmTimer)>=100) 
+    {
+      readSerialCommand();
+      sendSerialTelemetry();
+      tlmTimer = millis();
+    }
+  #endif
+
+  Show_Leds();  // Shows leds status
+
 } // End of void loop()
 
 // END of Arducopter.pde
-
-
-
