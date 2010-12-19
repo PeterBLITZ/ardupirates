@@ -1,5 +1,5 @@
 /*
- ArduCopter v1.3 - August 2010
+ ArduCopter v1.7 - Dec 2010
  www.ArduCopter.com
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
@@ -17,6 +17,122 @@
  You should have received a copy of the GNU General Public License 
  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/* ************************************************************ *
+   void Init_BMP()                                        
+     Desc: Initializes APM ADC
+ * ************************************************************ */
+void  Init_BMP()
+{
+  #ifdef UseBMP
+    APM_BMP085.Init();   // APM ADC initialization
+  #endif
+}
+
+/* ************************************************************ * 
+   void Clean_BMP_vars()                                        
+     Desc: Sets to 0 BMP related global vars                    
+ * ************************************************************ */
+void Clean_BMP_vars()
+{
+  BMP_altitude_I       = 0;
+  BMP_altitude_D       = 0;
+  BMP_err_altitude_old = 0;
+  BMP_err_altitude     = 0;
+  BMP_command_altitude = 0;
+}
+
+
+/* ************************************************************ * 
+   void Read_BMP()
+     Desc: Reads barometer to set BMP_Altitude 
+ * ************************************************************ */
+void Read_BMP()
+{
+  #ifdef UseBMP
+
+    float tempPresAlt;
+
+    BMP_counter++;
+    if (BMP_counter > 10)  // Reading Barometric data at 20Hz 
+    {
+      BMP_counter = 0;
+      APM_BMP085.Read();
+      tempPresAlt = float(APM_BMP085.Press)/101325.0;
+      tempPresAlt = pow(tempPresAlt, 0.190295);
+      BMP_Altitude = (1.0 - tempPresAlt) * 4433000;      // Altitude in cm
+    }
+
+  #endif
+}
+
+
+/* ************************************************************ * 
+   void Check_BMP(AP_mode)
+     Desc: Reads BMP_Altitude and check throttle for 
+           deactivation of Altitude Hold
+     Params: Receives Flying Mode (AP_Mode)
+ * ************************************************************ */
+void Check_BMP(byte APmode)
+{
+  #ifdef UseBMP  
+    // New Altitude Hold using BMP Pressure sensor.  If Trottle stick moves more then 10%, switch Altitude Hold off    
+    if (APmode == F_MODE_SUPER_STABLE || APmode == F_MODE_ABS_HOLD) 
+    {
+      if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200)
+      {
+        BMP_mode = 0; //Altitude hold is switched off because of stick movement 
+
+        Clean_BMP_vars();
+        
+        target_alt_position = 0;  //target altitude reset
+      } 
+      else 
+      {
+        BMP_mode = 1;  //Altitude hold is swithed on.
+      }
+    } 
+  #endif
+}
+
+/* ************************************************************ * 
+   void Init_MAG();
+     Desc: Initializes Magnetometer
+ * ************************************************************ */
+void Init_MAG()
+{
+  #ifdef IsMAG
+    if (MAGNETOMETER == 1) 
+    {
+      APM_Compass.Init();  // I2C initialization
+      APM_Compass.SetOrientation(MAGORIENTATION);
+      APM_Compass.SetOffsets(MAGOFFSET);
+      APM_Compass.SetDeclination(ToRad(MAGCALIBRATION));
+    }
+  #endif
+}
+
+/* ************************************************************ * 
+   void Read_MAG()
+     Desc: Reads Magnetomer to calculate roll and pitch 
+ * ************************************************************ */
+void Read_MAG()
+{
+  #ifdef IsMAG
+    if (MAGNETOMETER == 1) 
+    {
+      Magneto_counter++;
+      if (Magneto_counter > 20)  // Read compass data at 10Hz... (20 loop runs)
+      {
+        Magneto_counter = 0;
+        APM_Compass.Read();     // Read magnetometer
+        APM_Compass.Calculate(roll,pitch);  // Calculate heading
+      }
+    }
+  #endif   
+}
+
+
 
 void ReadSCP1000(void) {
 }

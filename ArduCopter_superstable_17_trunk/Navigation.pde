@@ -1,5 +1,5 @@
 /*
- ArduCopter v1.3 - August 2010
+ ArduCopter v1.7 - Dec 2010
  www.ArduCopter.com
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
@@ -17,6 +17,102 @@
  You should have received a copy of the GNU General Public License 
  along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+/* ************************************************************ *
+   void Init_GPS()                                        
+     Desc: Initializes GPS
+ * ************************************************************ */
+void  Init_GPS()
+{
+  #ifdef IsGPS  
+    GPS.Init();                // GPS Initialization
+  
+    #ifdef IsNEWMTEK  
+      delay(250);
+      // DIY Drones MTEK GPS needs binary sentences activated if you upgraded to latest firmware.
+      // If your GPS shows solid blue but LED C (Red) does not go on, your GPS is on NMEA mode
+      Serial1.print("$PMTK220,200*2C\r\n");          // 5Hz update rate
+      delay(200);
+      Serial1.print("$PGCMD,16,0,0,0,0,0*6A\r\n"); 
+    #endif
+  #endif
+}
+
+/* ************************************************************ *
+   void Clean_GPS_vars()                                        
+     Desc: Sets to 0 GPS related global vars                    
+ * ************************************************************ */
+void Clean_GPS_vars()
+{
+  #ifdef IsGPS
+    gps_roll_I        = 0;
+    gps_pitch_I       = 0;
+    gps_err_roll      = 0;
+    gps_err_pitch     = 0;
+    gps_roll_D        = 0;
+    gps_pitch_D       = 0;
+    gps_err_roll_old  = 0;
+    gps_err_pitch_old = 0;
+    command_gps_roll  = 0;
+    command_gps_pitch = 0;
+  #endif
+}
+
+/* ************************************************************ *
+   void Get_Target_Position_GPS()                                        
+     Desc: set GPS target_lattitude, target_longitude, target_position
+ * ************************************************************ */
+void Get_Target_Position_GPS()
+{
+  #ifdef IsGPS
+    target_lattitude = GPS.Lattitude;
+    target_longitude = GPS.Longitude;
+    target_position = 1;
+  #endif
+}
+
+
+/* ************************************************************ *
+   void Read_GPS()                                        
+     Desc: Reads GPS 
+ * ************************************************************ */
+void  Read_GPS()
+{
+  #ifdef IsGPS
+    GPS_counter++;
+
+    //Read GPS
+    if (GPS_counter > 3)  // Reading GPS data at 60 Hz
+    {
+      GPS_counter = 0;
+      GPS.Read();
+    } 
+    if (GPS.NewData)  // New GPS data?
+    {
+      GPS_timer_old = GPS_timer;   // Update GPS timer
+      GPS_timer     = timer;
+      GPS_Dt = (GPS_timer - GPS_timer_old) * 0.001;   // GPS_Dt
+      GPS.NewData = 0;    // We Reset the flag...
+
+      if (GPS.Fix)
+        digitalWrite(LED_Red,HIGH);  // GPS Fix => Blue LED
+      else
+        digitalWrite(LED_Red,LOW);
+
+      if (AP_mode == F_MODE_ABS_HOLD)
+      {
+        if ((target_position == 1) && (GPS.Fix))
+        {
+          Position_control(target_lattitude,target_longitude);  // Call position hold routine
+        }
+        else
+        {
+          Clean_GPS_vars();
+        }
+      }
+    }
+  #endif
+}
+
 
 /* ************************************************************ */
 /* GPS based Position control */
