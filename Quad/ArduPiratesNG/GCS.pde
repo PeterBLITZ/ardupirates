@@ -397,6 +397,16 @@ void sendSerialTelemetry() {
     else {
       SerPrln("+ mode");
     }
+    #if AIRFRAME == QUAD  
+      SerPriln("Airframe = Quad");
+    #endif
+    #if AIRFRAME == HEXA  
+      SerPriln("Airframe = Hexa");
+    #endif
+    #if AIRFRAME == HELI  
+      SerPriln("Airframe = Heli");
+    #endif
+    
 //    SerPri("AP Mode = ");
 //    if (AP_mode == F_MODE_ACROBATIC) 
 //      SerPriln("Acrobatic");
