@@ -597,8 +597,16 @@ void Show_Leds()
  * ************************************************************ */
 void Get_Motor_Values(byte Motor_Armed)
 {
+  int ch_throttle_aux;
+
   if (Motor_Armed == 1) 
-  {   
+  {
+
+    if (BMP_mode == 1)
+      ch_throttle_aux = ch_throttle + BMP_command_altitude;
+    else
+      ch_throttle_aux = ch_throttle;
+
     #ifdef IsAM
       digitalWrite(FR_LED, HIGH);    // AM-Mode
     #endif
@@ -606,61 +614,29 @@ void Get_Motor_Values(byte Motor_Armed)
     #ifdef Quad
       // Quadcopter mix
       #ifdef FLIGHT_MODE_+
-        if (BMP_mode == 1)
-        {
-          rightMotor = constrain(ch_throttle + BMP_command_altitude - control_roll  + control_yaw, minThrottle, 2000);
-          leftMotor  = constrain(ch_throttle + BMP_command_altitude + control_roll  + control_yaw, minThrottle, 2000);
-          frontMotor = constrain(ch_throttle + BMP_command_altitude + control_pitch - control_yaw, minThrottle, 2000);
-          backMotor  = constrain(ch_throttle + BMP_command_altitude - control_pitch - control_yaw, minThrottle, 2000);
-        } 
-        else 
-        {
-          rightMotor = constrain(ch_throttle - control_roll  + control_yaw, minThrottle, 2000);
-          leftMotor  = constrain(ch_throttle + control_roll  + control_yaw, minThrottle, 2000);
-          frontMotor = constrain(ch_throttle + control_pitch - control_yaw, minThrottle, 2000);
-          backMotor  = constrain(ch_throttle - control_pitch - control_yaw, minThrottle, 2000);
-        }
+        rightMotor = constrain(ch_throttle_aux - control_roll  + control_yaw, minThrottle, 2000);
+        leftMotor  = constrain(ch_throttle_aux + control_roll  + control_yaw, minThrottle, 2000);
+        frontMotor = constrain(ch_throttle_aux + control_pitch - control_yaw, minThrottle, 2000);
+        backMotor  = constrain(ch_throttle_aux - control_pitch - control_yaw, minThrottle, 2000);
       #endif
 
       #ifdef FLIGHT_MODE_X
-        if (BMP_mode == 1)
-        {
-          rightMotor = constrain(ch_throttle + BMP_command_altitude - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
-          leftMotor  = constrain(ch_throttle + BMP_command_altitude + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
-          frontMotor = constrain(ch_throttle + BMP_command_altitude + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
-          backMotor  = constrain(ch_throttle + BMP_command_altitude - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
-        } 
-        else 
-        {
-          rightMotor = constrain(ch_throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
-          leftMotor  = constrain(ch_throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
-          frontMotor = constrain(ch_throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
-          backMotor  = constrain(ch_throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
-        }  
+        rightMotor = constrain(ch_throttle_aux - control_roll + control_pitch + control_yaw, minThrottle, 2000); // front right motor
+        leftMotor  = constrain(ch_throttle_aux + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // rear left motor
+        frontMotor = constrain(ch_throttle_aux + control_roll + control_pitch - control_yaw, minThrottle, 2000); // front left motor
+        backMotor  = constrain(ch_throttle_aux - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // rear right motor
       #endif
 
     #endif
 
     #ifdef Hexa
       // Hexacopter mix
-      if (BMP_mode == 1)
-      {
-        LeftCWMotor   = constrain(ch_throttle + BMP_command_altitude + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
-        LeftCCWMotor  = constrain(ch_throttle + BMP_command_altitude + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
-        RightCWMotor  = constrain(ch_throttle + BMP_command_altitude - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-        RightCCWMotor = constrain(ch_throttle + BMP_command_altitude - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
-        BackCWMotor   = constrain(ch_throttle + BMP_command_altitude - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
-        BackCCWMotor  = constrain(ch_throttle + BMP_command_altitude + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
-      }
-      else
-      {
-        LeftCWMotor   = constrain(ch_throttle + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
-        LeftCCWMotor  = constrain(ch_throttle + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
-        RightCWMotor  = constrain(ch_throttle - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-        RightCCWMotor = constrain(ch_throttle - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
-        BackCWMotor   = constrain(ch_throttle - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
-        BackCCWMotor  = constrain(ch_throttle + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
-      }
+      LeftCWMotor   = constrain(ch_throttle_aux + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
+      LeftCCWMotor  = constrain(ch_throttle_aux + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+      RightCWMotor  = constrain(ch_throttle_aux - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+      RightCCWMotor = constrain(ch_throttle_aux - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
+      BackCWMotor   = constrain(ch_throttle_aux - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
+      BackCCWMotor  = constrain(ch_throttle_aux + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
     #endif   
   }
   else
