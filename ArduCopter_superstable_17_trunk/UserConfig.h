@@ -157,9 +157,9 @@ void defaultUserConfig() {
   KP_ALTITUDE = 0.08;
   KI_ALTITUDE = 0.02;
   KD_ALTITUDE = 0.001;
-  acc_offset_x = 2040;
-  acc_offset_y = 2032;
-  acc_offset_z = 2071;
+  acc_offset_x = 2041;
+  acc_offset_y = 2024;
+  acc_offset_z = 2072;
   gyro_offset_roll = 1659;
   gyro_offset_pitch = 1618;
   gyro_offset_yaw = 1673;
