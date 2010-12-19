@@ -57,6 +57,8 @@ int SENSOR_SIGN[]={1,    -1,    -1,       -1,      1,      1,       -1,   -1,   
 
 #define LED_SPEED_FAST  400  //small value means less time between blinks, thus fast blink
 #define LED_SPEED_SLOW 1200  //high  value means more time between blinks, thus slow blink
+#define LED_SPEED_ON      0  //Led solid On
+#define LED_SPEED_OFF    -1  //Led Off
 
 
 // ADC : Voltage reference 3.3v / 12bits(4096 steps) => 0.8mV/ADC step
@@ -267,3 +269,7 @@ long tlmTimer = 0;
 // Arming/Disarming
 uint8_t Arming_counter    = 0;
 uint8_t Disarming_counter = 0;
+
+#define F_MODE_STABLE        0
+#define F_MODE_SUPER_STABLE  1
+#define F_MODE_ABS_HOLD      2
