@@ -118,7 +118,7 @@ void Log_Read_Attitude()
   log_roll = DataFlash.ReadInt();
   log_pitch = DataFlash.ReadInt();
   log_yaw = DataFlash.ReadInt(); 
-  SerPri("ATT:");
+  SerPri("ATT:"); 
   SerPri(log_roll);
   SerPri(",");
   SerPri(log_pitch);
