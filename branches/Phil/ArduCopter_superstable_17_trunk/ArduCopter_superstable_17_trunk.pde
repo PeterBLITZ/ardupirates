@@ -259,218 +259,6 @@ byte Read_AP_mode()
   return (APmode);
 }
 
-
-/* ************************************************************ *
-   void Init_GPS()                                        
-     Desc: Initializes GPS
- * ************************************************************ */
-void  Init_GPS()
-{
-  #ifdef IsGPS  
-    GPS.Init();                // GPS Initialization
-  
-    #ifdef IsNEWMTEK  
-      delay(250);
-      // DIY Drones MTEK GPS needs binary sentences activated if you upgraded to latest firmware.
-      // If your GPS shows solid blue but LED C (Red) does not go on, your GPS is on NMEA mode
-      Serial1.print("$PMTK220,200*2C\r\n");          // 5Hz update rate
-      delay(200);
-      Serial1.print("$PGCMD,16,0,0,0,0,0*6A\r\n"); 
-    #endif
-  #endif
-}
-
-/* ************************************************************ *
-   void Clean_GPS_vars()                                        
-     Desc: Sets to 0 GPS related global vars                    
- * ************************************************************ */
-void Clean_GPS_vars()
-{
-  #ifdef IsGPS
-    gps_roll_I        = 0;
-    gps_pitch_I       = 0;
-    gps_err_roll      = 0;
-    gps_err_pitch     = 0;
-    gps_roll_D        = 0;
-    gps_pitch_D       = 0;
-    gps_err_roll_old  = 0;
-    gps_err_pitch_old = 0;
-    command_gps_roll  = 0;
-    command_gps_pitch = 0;
-  #endif
-}
-
-/* ************************************************************ *
-   void Get_Target_Position_GPS()                                        
-     Desc: set GPS target_lattitude, target_longitude, target_position
- * ************************************************************ */
-void Get_Target_Position_GPS()
-{
-  #ifdef IsGPS
-    target_lattitude = GPS.Lattitude;
-    target_longitude = GPS.Longitude;
-    target_position = 1;
-  #endif
-}
-
-
-/* ************************************************************ *
-   void Read_GPS()                                        
-     Desc: Reads GPS 
- * ************************************************************ */
-void  Read_GPS()
-{
-  #ifdef IsGPS
-    GPS_counter++;
-
-    //Read GPS
-    if (GPS_counter > 3)  // Reading GPS data at 60 Hz
-    {
-      GPS_counter = 0;
-      GPS.Read();
-    } 
-    if (GPS.NewData)  // New GPS data?
-    {
-      GPS_timer_old = GPS_timer;   // Update GPS timer
-      GPS_timer     = timer;
-      GPS_Dt = (GPS_timer - GPS_timer_old) * 0.001;   // GPS_Dt
-      GPS.NewData = 0;    // We Reset the flag...
-
-      if (GPS.Fix)
-        digitalWrite(LED_Red,HIGH);  // GPS Fix => Blue LED
-      else
-        digitalWrite(LED_Red,LOW);
-
-      if (AP_mode == F_MODE_ABS_HOLD)
-      {
-        if ((target_position == 1) && (GPS.Fix))
-        {
-          Position_control(target_lattitude,target_longitude);  // Call position hold routine
-        }
-        else
-        {
-          Clean_GPS_vars();
-        }
-      }
-    }
-  #endif
-}
-
-/* ************************************************************ *
-   void Init_BMP()                                        
-     Desc: Initializes APM ADC
- * ************************************************************ */
-void  Init_BMP()
-{
-  #ifdef UseBMP
-    APM_BMP085.Init();   // APM ADC initialization
-  #endif
-}
-
-/* ************************************************************ * 
-   void Clean_BMP_vars()                                        
-     Desc: Sets to 0 BMP related global vars                    
- * ************************************************************ */
-void Clean_BMP_vars()
-{
-  BMP_altitude_I       = 0;
-  BMP_altitude_D       = 0;
-  BMP_err_altitude_old = 0;
-  BMP_err_altitude     = 0;
-  BMP_command_altitude = 0;
-}
-
-
-/* ************************************************************ * 
-   void Read_BMP()
-     Desc: Reads barometer to set BMP_Altitude 
- * ************************************************************ */
-void Read_BMP()
-{
-  #ifdef UseBMP
-
-    float tempPresAlt;
-
-    BMP_counter++;
-    if (BMP_counter > 10)  // Reading Barometric data at 20Hz 
-    {
-      BMP_counter = 0;
-      APM_BMP085.Read();
-      tempPresAlt = float(APM_BMP085.Press)/101325.0;
-      tempPresAlt = pow(tempPresAlt, 0.190295);
-      BMP_Altitude = (1.0 - tempPresAlt) * 4433000;      // Altitude in cm
-    }
-
-  #endif
-}
-
-
-/* ************************************************************ * 
-   void Check_BMP(AP_mode)
-     Desc: Reads BMP_Altitude and check throttle for 
-           deactivation of Altitude Hold
-     Params: Receives Flying Mode (AP_Mode)
- * ************************************************************ */
-void Check_BMP(byte APmode)
-{
-  #ifdef UseBMP  
-    // New Altitude Hold using BMP Pressure sensor.  If Trottle stick moves more then 10%, switch Altitude Hold off    
-    if (APmode == F_MODE_SUPER_STABLE || APmode == F_MODE_ABS_HOLD) 
-    {
-      if(command_throttle >= 15 || command_throttle <= -15 || ch_throttle <= 1200)
-      {
-        BMP_mode = 0; //Altitude hold is switched off because of stick movement 
-
-        Clean_BMP_vars();
-        
-        target_alt_position = 0;  //target altitude reset
-      } 
-      else 
-      {
-        BMP_mode = 1;  //Altitude hold is swithed on.
-      }
-    } 
-  #endif
-}
-
-/* ************************************************************ * 
-   void Init_MAG();
-     Desc: Initializes Magnetometer
- * ************************************************************ */
-void Init_MAG()
-{
-  #ifdef IsMAG
-    if (MAGNETOMETER == 1) 
-    {
-      APM_Compass.Init();  // I2C initialization
-      APM_Compass.SetOrientation(MAGORIENTATION);
-      APM_Compass.SetOffsets(MAGOFFSET);
-      APM_Compass.SetDeclination(ToRad(MAGCALIBRATION));
-    }
-  #endif
-}
-
-/* ************************************************************ * 
-   void Read_MAG()
-     Desc: Reads Magnetomer to calculate roll and pitch 
- * ************************************************************ */
-void Read_MAG()
-{
-  #ifdef IsMAG
-    if (MAGNETOMETER == 1) 
-    {
-      Magneto_counter++;
-      if (Magneto_counter > 20)  // Read compass data at 10Hz... (20 loop runs)
-      {
-        Magneto_counter = 0;
-        APM_Compass.Read();     // Read magnetometer
-        APM_Compass.Calculate(roll,pitch);  // Calculate heading
-      }
-    }
-  #endif   
-}
-
-
 /* ************************************************************ * 
    void Read_Channels_Commands()
      Desc: Reads Commands from radio Rx... 
@@ -507,7 +295,6 @@ void Read_Channels_Commands()
     command_rx_yaw += 360.0;
 
 }
-
 
 
 /* ************************************************************ * 
@@ -781,11 +568,6 @@ void setup()
     delay(30000);
   }
 
-
-
-
-
-
   Read_adc_raw();
   delay(10);
 
@@ -983,12 +765,9 @@ void loop()
 */
     } //End of switch AP_mode
 
-
     motorArmed = Get_Arm_Disarm_Motors(motorArmed);  // Check Throttle down and full yaw right for more than 2 seconds
 
-
     Get_Motor_Values(motorArmed);  // Gets values for rightMotor,leftMotor,frontMotor,backMotor
-
 
     Output_Motors();  // Outputs the values for the motors
 
