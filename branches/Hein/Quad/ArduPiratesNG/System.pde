@@ -73,6 +73,17 @@ void APM_Init() {
   APM_RC.OutputCh(2,CHANN_CENTER);
   APM_RC.OutputCh(3,CHANN_CENTER);
 #endif 
+
+#if AIRFRAME == HEXA
+  // RC channels Initialization (Hexa motors) - Motors stoped 
+  APM_RC.OutputCh(0, MIN_THROTTLE);     // Left Motor CW
+  APM_RC.OutputCh(1, MIN_THROTTLE);    // Left Motor CCW
+  APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
+  APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
+  APM_RC.OutputCh(6, MIN_THROTTLE);    // Back Motor CW
+  APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
+#endif
+
   // Make sure that Relay is switched off.
   digitalWrite(RELAY,LOW);
 
@@ -111,7 +122,7 @@ void APM_Init() {
   }
 
 
-  flightOrientation = SW_DIP1;    // DIP1 off = we are in + mode, DIP1 on = we are in x mode
+  flightOrientation = SW_DIP1;    // DIP1 off (up) = we are in x mode, DIP1 on (down) = we are in + mode
   readUserConfig();               // Load user configurable items from EEPROM
 
   // Safety measure for Channel mids
@@ -134,6 +145,16 @@ void APM_Init() {
   APM_RC.OutputCh(2,CHANN_CENTER);
   APM_RC.OutputCh(3,CHANN_CENTER);
 #endif 
+
+#if AIRFRAME == HEXA
+  // RC channels Initialization (Hexa motors) - Motors stoped 
+  APM_RC.OutputCh(0, MIN_THROTTLE);     // Left Motor CW
+  APM_RC.OutputCh(1, MIN_THROTTLE);    // Left Motor CCW
+  APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
+  APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
+  APM_RC.OutputCh(6, MIN_THROTTLE);    // Back Motor CW
+  APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
+#endif
 
   // Initialise Wire library used by Magnetometer and Barometer
   Wire.begin();

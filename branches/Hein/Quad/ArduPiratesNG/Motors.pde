@@ -53,26 +53,38 @@ void motor_output()
   if ((throttle_mode==0)&&(ch_throttle < (MIN_THROTTLE + 100)))  // If throttle is low we disable yaw (neccesary to arm/disarm motors safely)
     control_yaw = 0; 
 
-  // Quadcopter mix
+  // Copter motor mix
   if (motorArmed == 1) {   
 #ifdef IsAM
     digitalWrite(FR_LED, HIGH);    // AM-Mode
 #endif
 
+#if AIRFRAME == QUAD
+    // Quadcopter mix
     if(flightOrientation) {
-          // For X mode we make a mix in the input
+          // For X mode - APM front between front and right motor 
           rightMotor = constrain(throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
           leftMotor = constrain(throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
           frontMotor = constrain(throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
           backMotor = constrain(throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
         } else {
-          // For + mode we make a mix in the input
+          // For + mode 
           rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
           leftMotor = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
           frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
           backMotor = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
         }
-  
+#endif 
+#if AIRFRAME == HEXA
+   // Hexacopter mix
+        LeftCWMotor = constrain(throttle + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor = constrain(throttle + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor = constrain(throttle - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor = constrain(throttle - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
+        BackCCWMotor = constrain(throttle + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
+#endif 
+
   } else {    // MOTORS DISARMED
 
 #ifdef IsAM
@@ -80,10 +92,21 @@ void motor_output()
 #endif
     digitalWrite(LED_Green,HIGH); // Ready LED on
 
-    rightMotor = MIN_THROTTLE;
-    leftMotor = MIN_THROTTLE;
-    frontMotor = MIN_THROTTLE;
-    backMotor = MIN_THROTTLE;
+#if AIRFRAME == QUAD
+      rightMotor = MIN_THROTTLE;
+      leftMotor = MIN_THROTTLE;
+      frontMotor = MIN_THROTTLE;
+      backMotor = MIN_THROTTLE;
+#endif
+
+#if AIRFRAME == HEXA
+      LeftCWMotor = MIN_THROTTLE;
+      LeftCCWMotor = MIN_THROTTLE;
+      RightCWMotor = MIN_THROTTLE;
+      RightCCWMotor = MIN_THROTTLE;
+      BackCWMotor = MIN_THROTTLE;
+      BackCCWMotor = MIN_THROTTLE;
+#endif
 
     // Reset_I_Terms();
     roll_I = 0;     // reset I terms of PID controls
@@ -96,14 +119,35 @@ void motor_output()
 
 //#if MOTORTYPE == PWM
   // Send commands to motors
-  APM_RC.OutputCh(0, rightMotor);
-  APM_RC.OutputCh(1, leftMotor);
-  APM_RC.OutputCh(2, frontMotor);
-  APM_RC.OutputCh(3, backMotor);
+#if AIRFRAME == QUAD
+    APM_RC.OutputCh(0, rightMotor);   // Right motor
+    APM_RC.OutputCh(1, leftMotor);    // Left motor
+    APM_RC.OutputCh(2, frontMotor);   // Front motor
+    APM_RC.OutputCh(3, backMotor);    // Back motor   
+#endif
+
+#if AIRFRAME == HEXA
+    APM_RC.OutputCh(0, LeftCWMotor);    // Left Motor CW
+    APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
+    APM_RC.OutputCh(2, RightCWMotor);   // Right Motor CW
+    APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
+    APM_RC.OutputCh(6, BackCWMotor);   // Back Motor CW
+    APM_RC.OutputCh(7, BackCCWMotor);   // Back Motor CCW    
+#endif
 
   // InstantPWM => Force inmediate output on PWM signals
-  APM_RC.Force_Out0_Out1();
-  APM_RC.Force_Out2_Out3();
+#if AIRFRAME == QUAD   
+     // InstantPWM
+    APM_RC.Force_Out0_Out1();
+    APM_RC.Force_Out2_Out3();
+#endif
+
+#if AIRFRAME == HEXA
+      // InstantPWM
+    APM_RC.Force_Out0_Out1();
+    APM_RC.Force_Out2_Out3();
+    APM_RC.Force_Out6_Out7();
+#endif
 //#elif MOTORTYPE == I2C
 
 //#else

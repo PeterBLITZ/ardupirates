@@ -37,9 +37,10 @@ TODO:
 // Airframe
 #define QUAD 0
 #define HELI 1
+#define HEXA 2
 
 // Note: do not change AIRFRAME to HELI and then load it into a QUAD or you will end up with your engines going to 50% during the initialisation sequence
-#define AIRFRAME QUAD
+#define AIRFRAME HEXA
 
 /*************************************************************/
 // Safety & Security 

@@ -76,7 +76,7 @@
 // use but they need to be here so implementation work can continue.
 
                              // New frame model definitions. (not in use yet, 28-11-10 jp)
-#define FRAME_MODEL QUAD     // Quad frame model 
+//#define FRAME_MODEL QUAD     // Quad frame model 
 //#define FRAME_MODEL HEXA     // Quad frame model 
 //#define FRAME_MODEL OCTO     // Quad frame model 
 
@@ -98,7 +98,7 @@
 
 // Serial data, do we have FTDI cable or Xbee on Telemetry port as our primary command link
 // If we are using normal FTDI/USB port as our telemetry/configuration, keep next line disabled
-//#define SerXbee
+#define SerXbee
 
 // Telemetry port speed, default is 115200
 //#define SerBau  19200
@@ -125,7 +125,7 @@
 
 
 /* ************************************************* */
-// Flight & Electronics orientation
+//    PWM - QUAD COPTER SETUP                       //
 
 // Frame build condiguration
 // FLIGHT_MODE_+    // Traditional "one arm as nose" frame configuration
@@ -140,11 +140,25 @@
 //                                          R = Right motor, 
 //                                          B = Back motor,
 //                                          F = Front motor.  
-// 18-12-10 by Hein
 
-// This feature has been disabled for now, if you want to change between flight orientations
-// just use DIP switch for that. DIP1 up = X, DIP1 down = +  double check in configurator - Serial command "T" enter.
+
+// To change between flight orientations just use DIP switch for that. DIP1 up (off) = X, DIP1 down (on)= +
+// Double check in configurator - Serial command "T" enter.
 // remember after changing DIP switch you must reboot APM.
+
+/**********************************************/
+//    PWM - HEXA COPTER SETUP   
+//
+//  Just change AIRFRAME to HEXA in ArduUser.h
+
+// Frame build condiguration
+//Hexa Diamond Mode - 6 Motor system in diamond shape
+
+//      L  CCW 0.Front.0 CW  R           // 0 = Motor
+//         ......***......               // *** = APM 
+//   L  CW 0.....***......0 CCW  R       // ***
+//         ......***......               // *** 
+//     B  CCW  0.Back..0  CW  B          L = Left motors, R = Right motors, B = Back motors.
 
 
 /**********************************************/
@@ -154,8 +168,8 @@
 #ifdef IsMAG
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
-#define MAGOFFSET -76,22.5,-55.5  // Hein's Quad calibration settings.  You have to determine your own.
-//#define MAGOFFSET -70,55.5,-61.5  // Hein's Hexa calibration settings.  You have to determine your own.
+//#define MAGOFFSET -76,22.5,-55.5  // Hein's Quad calibration settings.  You have to determine your own.
+#define MAGOFFSET -70,55.5,-61.5  // Hein's Hexa calibration settings.  You have to determine your own.
 
 // MAGCALIBRATION is the correction angle in degrees (can be + or -). You must calibrating your magnetometer to show magnetic north correctly.
 // After calibration you will have to determine the declination value between Magnetic north and true north, see following link
@@ -168,8 +182,8 @@
 // value until you have a 0 dergrees reading in the configurator's artificial horizon. 
 // Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
 
-#define MAGCALIBRATION -21.65      //  Quad Hein, South Africa, Centurion.  You have to determine your own.
-//#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
+//#define MAGCALIBRATION -21.65      //  Quad Hein, South Africa, Centurion.  You have to determine your own.
+#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
 
 // orientations for DIYDrones magnetometer
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD
@@ -180,7 +194,7 @@
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD      // Hein Hexa
+#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD      // Hein Hexa
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -198,7 +212,7 @@
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
-#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD       //Hein quad
+//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD       //Hein quad
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -352,6 +366,9 @@ void loop()
 #if AIRFRAME == QUAD    
       read_radio();
 #endif
+#if AIRFRAME == HEXA    
+      read_radio();
+#endif
 #if AIRFRAME == HELI
       heli_read_radio();
 #endif
@@ -364,11 +381,17 @@ void loop()
 #if AIRFRAME == QUAD
         Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
 #endif        
+#if AIRFRAME == HEXA
+        Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
+#endif        
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll,command_rx_pitch,command_rx_collective,command_rx_yaw);
 #endif
       }else{                        // Automatic mode : GPS position hold mode
 #if AIRFRAME == QUAD      
+        Attitude_control_v3(command_rx_roll+command_gps_roll,command_rx_pitch+command_gps_pitch,command_rx_yaw);
+#endif        
+#if AIRFRAME == HEXA      
         Attitude_control_v3(command_rx_roll+command_gps_roll,command_rx_pitch+command_gps_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HELI
@@ -385,6 +408,9 @@ void loop()
 
     // Send output commands to motor ESCs...
 #if AIRFRAME == QUAD     // we update the heli swashplate at about 60hz
+    motor_output();
+#endif    
+#if AIRFRAME == HEXA     // we update the heli swashplate at about 60hz
     motor_output();
 #endif    
 

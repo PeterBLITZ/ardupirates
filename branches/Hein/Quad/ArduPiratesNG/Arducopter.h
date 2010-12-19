@@ -348,10 +348,20 @@ int   ch_yaw;
 int   ch_aux;
 int   ch_aux2;
 
-int   frontMotor;
-int   backMotor;
-int   leftMotor;
-int   rightMotor;
+// Quad motors
+int frontMotor;
+int backMotor;
+int leftMotor;
+int rightMotor;
+
+// Hexa motors
+int LeftCWMotor;
+int LeftCCWMotor;
+int RightCWMotor;
+int RightCCWMotor;
+int BackCWMotor;
+int BackCCWMotor;
+
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed
 byte  motorSafety = 1;                             // 0 = safety off, 1 = on.  When On, sudden increases in throttle not allowed
 int   minThrottle = 0;
