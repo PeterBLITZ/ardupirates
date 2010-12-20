@@ -98,7 +98,7 @@
 
 // Serial data, do we have FTDI cable or Xbee on Telemetry port as our primary command link
 // If we are using normal FTDI/USB port as our telemetry/configuration, keep next line disabled
-#define SerXbee
+//#define SerXbee
 
 // Telemetry port speed, default is 115200
 //#define SerBau  19200
