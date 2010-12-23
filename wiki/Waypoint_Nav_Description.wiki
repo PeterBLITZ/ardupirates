@@ -13,7 +13,7 @@ The waypoint feature is wrapped with a #define UseWaypoint for easy disabling of
 #ifdef UseWaypoint
     if(Waypoint_counter>(200*loiter_time)&&((waypoint_i+1)<(num_of_waypoints*2))){      //12000=200hz*60s
 
-      target_lattitude+=waypoint_array[waypoint_i];
+      !target_lattitude+=waypoint_array[waypoint_i];
 
       target_longitude+=waypoint_array[waypoint_i+1];
 
