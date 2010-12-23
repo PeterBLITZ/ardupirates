@@ -8,7 +8,7 @@
 /* Authors : Arducopter development team                                  */
 /*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
 /*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
-/*           Sandro Benigno, Chris Anderson.                              */  
+/*           Sandro Benigno, Chris Anderson.                              */
 /* Authors : ArduPirates deveopment team                                  */
 /*           Philipp Maloney, Norbert, Hein, Igor.                        */
 /* Date : 18-12-2010                                                      */
@@ -17,16 +17,16 @@
 /* Mounting position : RC connectors pointing backwards                   */
 /* This code use this libraries :                                         */
 /*   APM_RC : Radio library (with InstantPWM)                             */
-/*   AP_ADC : External ADC library                                       */
+/*   AP_ADC : External ADC library                                        */
 /*   DataFlash : DataFlash log library                                    */
 /*   APM_BMP085 : BMP085 barometer library                                */
-/*   AP_Compass : HMC5843 compass library [optional]                     */
+/*   AP_Compass : HMC5843 compass library [optional]                      */
 /*   GPS_MTK or GPS_UBLOX or GPS_NMEA : GPS library    [optional]         */
 /* ********************************************************************** */
- 
+
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
- 
+
 /* ********************************************************************** */
 
 /* ************************************************************ */
@@ -75,17 +75,17 @@
 // Introducing new frame / Motor / ESC definitions for future expansion. Currently these are not in 
 // use but they need to be here so implementation work can continue.
 
-                             // New frame model definitions. (not in use yet, 28-11-10 jp)
+// New frame model definitions. (not in use yet, 28-11-10 jp)
 //#define FRAME_MODEL QUAD     // Quad frame model 
 //#define FRAME_MODEL HEXA     // Quad frame model 
 //#define FRAME_MODEL OCTO     // Quad frame model 
 
 
-                             // New motor definition for different frame type (not in use yet, 28-11-10 jp)
+// New motor definition for different frame type (not in use yet, 28-11-10 jp)
 #define MAX_MOTORS  4        // Are we using more motors than 4, possible choises are 4, 6, 8
-                             // This has to be on main .pde to get included on all other header etc files
+// This has to be on main .pde to get included on all other header etc files
 
-                             // Not in use yet, 28-11-10 jp
+// Not in use yet, 28-11-10 jp
 #define MOTORTYPE  PWM       // Traditional PWM ESC's controlling motors
 //#define MOTORTYPE  I2C     // I2C style ESC's controlling motors
 //#define MOTORTYPE UART     // UART style ESC's controlling motors
@@ -175,7 +175,7 @@
 // After calibration you will have to determine the declination value between Magnetic north and true north, see following link
 // http://code.google.com/p/arducopter/wiki/Quad_Magnetos under additional settings. Both values have to be incorporated
 // You can check Declination to your location from http://www.magnetic-declination.com/
-// Example:  Magnetic north calibration show -1.2 degrees offset and declination (true north) is -5.6 then the MAGCALIBRATION shoud be -6.8.
+// Example:  Magnetic north calibration show -1.2 degrees offset and declination (true north) is -5.6 then the MAGCALIBRATION should be -6.8.
 // Your GPS readings is based on true north.
 // For Magnetic north calibration make sure that your Magnetometer is truly showing 0 degress when your ArduQuad is looking to the North.
 // Use a real compass (! not your iPhone) to point your ArduQuad to the magnetic north and then adjust this 
@@ -248,6 +248,7 @@
 #include "Arducopter.h"
 #include "ArduUser.h"
 
+
 #ifdef IsGPS
 // GPS library (Include only one library)
 #include <GPS_MTK.h>            // ArduPilot MTK GPS Library
@@ -280,6 +281,7 @@ unsigned long mainLoop = 0;
 unsigned long mediumLoop = 0;
 unsigned long slowLoop = 0;
 
+
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */
 /* ************************************************************ */
@@ -291,11 +293,11 @@ void setup() {
   mediumLoop = mainLoop;
   GPS_timer = mainLoop;
   motorArmed = 0;
-  
+
   GEOG_CORRECTION_FACTOR = 0;   // Geographic correction factor will be automatically calculated
 
   Read_adc_raw();            // Initialize ADC readings...
-  
+
 #ifdef SerXbee
   Serial.begin(SerBau);
   Serial.print("ArduCopter v");
@@ -378,7 +380,7 @@ void loop()
     if(flightMode == STABLE_MODE) {    // STABLE Mode
       gled_speed = 1200;
       if (AP_mode == AP_NORMAL_MODE) {   // Normal mode
-#if AIRFRAME == QUAD
+#if AIRFRAME == QUAD    
         Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HEXA
@@ -387,8 +389,9 @@ void loop()
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll,command_rx_pitch,command_rx_collective,command_rx_yaw);
 #endif
-      }else{                        // Automatic mode : GPS position hold mode
-#if AIRFRAME == QUAD      
+      }
+      else{                        // Automatic mode : GPS position hold mode
+#if AIRFRAME == QUAD    
         Attitude_control_v3(command_rx_roll+command_gps_roll,command_rx_pitch+command_gps_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HEXA      
@@ -407,16 +410,16 @@ void loop()
     }
 
     // Send output commands to motor ESCs...
-#if AIRFRAME == QUAD     // we update the heli swashplate at about 60hz
+#if AIRFRAME == QUAD    
     motor_output();
 #endif    
-#if AIRFRAME == HEXA     // we update the heli swashplate at about 60hz
+#if AIRFRAME == HEXA     
     motor_output();
 #endif    
 
 #ifdef IsCAM
-  // Do we have cameras stabilization connected and in use?
-  if(!SW_DIP2) camera_output();
+    // Do we have cameras stabilization connected and in use?
+    if(!SW_DIP2) camera_output();
 #endif
 
     // Autopilot mode functions
@@ -425,24 +428,24 @@ void loop()
       digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
       if (target_position) 
       {
-        #ifdef IsGPS
+#ifdef IsGPS
         if (GPS.NewData)     // New GPS info?
         {
           if (GPS.Fix)
-            {
+          {
             read_GPS_data();    // In Navigation.pde
             Position_control(target_lattitude,target_longitude);     // Call GPS position hold routine
-            }
+          }
           else
-            {
+          {
             command_gps_roll=0;
             command_gps_pitch=0;
-            }
+          }
         }
-        #endif
-        #ifdef UseBMP
+#endif
+#ifdef UseBMP
         if (Baro_new_data)   // New altitude data?
-          {
+        {
           ch_throttle_altitude_hold = Altitude_control_baro(press_alt,target_baro_altitude);   // Altitude control
           Baro_new_data=0;
           if (abs(ch_throttle-Initial_Throttle)>100)  // Change in stick position => altitude ascend/descend rate control
@@ -452,18 +455,18 @@ void loop()
           //Serial.print(ch_throttle);
           //Serial.print(" ");
           //Serial.println(target_baro_altitude);
-          }
-        #endif
+        }
+#endif
       }
       else   // First time we enter in GPS position hold we capture the target position as the actual position
       {
-        #ifdef IsGPS
+#ifdef IsGPS
         if (GPS.Fix){   // We need a GPS Fix to capture the actual position...
           target_lattitude = GPS.Lattitude;
           target_longitude = GPS.Longitude;
           target_position=1;
         }
-        #endif
+#endif
         command_gps_roll=0;
         command_gps_pitch=0;
         target_baro_altitude = press_alt;
@@ -473,10 +476,10 @@ void loop()
       }
     }
     else
-      {
+    {
       digitalWrite(LED_Yellow,LOW);
       target_position=0;
-      }
+    }
   }
 
   // Medium loop (about 60Hz) 
@@ -485,8 +488,8 @@ void loop()
 #ifdef IsGPS
     GPS.Read();     // Read GPS data 
 #endif
-    
-#if AIRFRAME == HELI    
+
+#if AIRFRAME == HELI    // we update the heli swashplate at about 60hz
     // Send output commands to heli swashplate...
     heli_moveSwashPlate();
 #endif
@@ -552,7 +555,7 @@ void loop()
       digitalWrite(RE_LED, LOW);
 #endif
       gled_status = LOW;
-//      SerPrln("L");
+      //      SerPrln("L");
     } 
     else {
       digitalWrite(LED_Green, HIGH);
@@ -564,5 +567,6 @@ void loop()
   }
 
 }
+
 
 

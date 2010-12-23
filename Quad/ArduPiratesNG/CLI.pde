@@ -414,7 +414,7 @@ void CALIB_Esc() {
     }
   }
 
- #if AIRFRAME == QUAD
+#if AIRFRAME == QUAD
     APM_RC.OutputCh(0, 900);   // Right motor
     APM_RC.OutputCh(1, 900);    // Left motor
     APM_RC.OutputCh(2, 900);   // Front motor

@@ -55,6 +55,7 @@ void APM_Init() {
   /* ********************************************************* */
   ///////////////////////////////////////////////////////// 
   // Normal Initialization sequence starts from here.
+  readUserConfig();               // Load user configurable items from EEPROM
 
   APM_RC.Init();             // APM Radio initialization
 
@@ -123,7 +124,6 @@ void APM_Init() {
 
 
   flightOrientation = SW_DIP1;    // DIP1 off (up) = we are in x mode, DIP1 on (down) = we are in + mode
-  readUserConfig();               // Load user configurable items from EEPROM
 
   // Safety measure for Channel mids
   if(roll_mid < 1400 || roll_mid > 1600) roll_mid = 1500;
