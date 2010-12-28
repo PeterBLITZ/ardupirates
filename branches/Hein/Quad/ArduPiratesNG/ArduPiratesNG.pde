@@ -154,11 +154,13 @@
 // Frame build condiguration
 //Hexa Diamond Mode - 6 Motor system in diamond shape
 
-//      L  CCW 0.Front.0 CW  R           // 0 = Motor
-//         ......***......               // *** = APM 
-//   L  CW 0.....***......0 CCW  R       // ***
-//         ......***......               // *** 
-//     B  CCW  0.Back..0  CW  B          L = Left motors, R = Right motors, B = Back motors.
+//           F CW 0 
+//           ...FRONT....                // 0 = Motor
+//    L CCW 0....***....0 CCW R
+//          .....***.....                // *** = APM 
+//   L  CW  0....***....0 CW  R          // ***
+//          .....BACK....                // *** 
+//        B  CCW  0                  F = Front motor, L = Left motors, R = Right motors, B = Back motor.
 
 
 /**********************************************/
