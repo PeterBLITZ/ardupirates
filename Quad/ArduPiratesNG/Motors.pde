@@ -77,12 +77,12 @@ void motor_output()
 #endif 
 #if AIRFRAME == HEXA
    // Hexacopter mix
-        LeftCWMotor = constrain(throttle + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
-        LeftCCWMotor = constrain(throttle + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
-        RightCWMotor = constrain(throttle - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-        RightCCWMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
-        BackCWMotor = constrain(throttle - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
-        BackCCWMotor = constrain(throttle + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
+        LeftCWMotor = constrain(throttle + control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor = constrain(throttle + control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor = constrain(throttle - control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(throttle - control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
+        FrontCWMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
+        BackCCWMotor = constrain(throttle - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif 
 
   } else {    // MOTORS DISARMED
@@ -104,7 +104,7 @@ void motor_output()
       LeftCCWMotor = MIN_THROTTLE;
       RightCWMotor = MIN_THROTTLE;
       RightCCWMotor = MIN_THROTTLE;
-      BackCWMotor = MIN_THROTTLE;
+      FrontCWMotor = MIN_THROTTLE;
       BackCCWMotor = MIN_THROTTLE;
 #endif
 
@@ -127,12 +127,12 @@ void motor_output()
 #endif
 
 #if AIRFRAME == HEXA
-    APM_RC.OutputCh(0, LeftCWMotor);    // Left Motor CW
+    APM_RC.OutputCh(0, LeftCWMotor);     // Left Motor CW
     APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
-    APM_RC.OutputCh(2, RightCWMotor);   // Right Motor CW
+    APM_RC.OutputCh(2, RightCWMotor);    // Right Motor CW
     APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
-    APM_RC.OutputCh(6, BackCWMotor);   // Back Motor CW
-    APM_RC.OutputCh(7, BackCCWMotor);   // Back Motor CCW    
+    APM_RC.OutputCh(6, FrontCWMotor);    // Front Motor CW
+    APM_RC.OutputCh(7, BackCCWMotor);    // Back Motor CCW    
 #endif
 
   // InstantPWM => Force inmediate output on PWM signals

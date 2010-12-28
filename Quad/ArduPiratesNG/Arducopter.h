@@ -360,7 +360,7 @@ int LeftCWMotor;
 int LeftCCWMotor;
 int RightCWMotor;
 int RightCCWMotor;
-int BackCWMotor;
+int FrontCWMotor;
 int BackCCWMotor;
 
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed

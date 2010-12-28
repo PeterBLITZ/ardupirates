@@ -383,18 +383,18 @@ void CALIB_Esc() {
   while(1) {
     ch_throttle = APM_RC.InputCh(CH_THROTTLE);  
 #if AIRFRAME == QUAD
-    APM_RC.OutputCh(0, ch_throttle);   // Right motor
+    APM_RC.OutputCh(0, ch_throttle);    // Right motor
     APM_RC.OutputCh(1, ch_throttle);    // Left motor
-    APM_RC.OutputCh(2, ch_throttle);   // Front motor
+    APM_RC.OutputCh(2, ch_throttle);    // Front motor
     APM_RC.OutputCh(3, ch_throttle);    // Back motor   
 #endif
 #if AIRFRAME == HEXA
     APM_RC.OutputCh(0, ch_throttle);    // Left Motor CW
     APM_RC.OutputCh(1, ch_throttle);    // Left Motor CCW
-    APM_RC.OutputCh(2, ch_throttle);   // Right Motor CW
-    APM_RC.OutputCh(3, ch_throttle);   // Right Motor CCW    
-    APM_RC.OutputCh(6, ch_throttle);   // Back Motor CW
-    APM_RC.OutputCh(7, ch_throttle);   // Back Motor CCW    
+    APM_RC.OutputCh(2, ch_throttle);    // Right Motor CW
+    APM_RC.OutputCh(3, ch_throttle);    // Right Motor CCW    
+    APM_RC.OutputCh(6, ch_throttle);    // Front Motor CW
+    APM_RC.OutputCh(7, ch_throttle);    // Back Motor CCW    
 #endif
     // InstantPWM => Force inmediate output on PWM signals
 #if AIRFRAME == QUAD   
@@ -415,18 +415,18 @@ void CALIB_Esc() {
   }
 
 #if AIRFRAME == QUAD
-    APM_RC.OutputCh(0, 900);   // Right motor
+    APM_RC.OutputCh(0, 900);    // Right motor
     APM_RC.OutputCh(1, 900);    // Left motor
-    APM_RC.OutputCh(2, 900);   // Front motor
+    APM_RC.OutputCh(2, 900);    // Front motor
     APM_RC.OutputCh(3, 900);    // Back motor   
 #endif
 #if AIRFRAME == HEXA
     APM_RC.OutputCh(0, 900);    // Left Motor CW
     APM_RC.OutputCh(1, 900);    // Left Motor CCW
-    APM_RC.OutputCh(2, 900);   // Right Motor CW
-    APM_RC.OutputCh(3, 900);   // Right Motor CCW    
-    APM_RC.OutputCh(6, 900);   // Back Motor CW
-    APM_RC.OutputCh(7, 900);   // Back Motor CCW    
+    APM_RC.OutputCh(2, 900);    // Right Motor CW
+    APM_RC.OutputCh(3, 900);    // Right Motor CCW    
+    APM_RC.OutputCh(6, 900);    // Front Motor CW
+    APM_RC.OutputCh(7, 900);    // Back Motor CCW    
 #endif 
 #if AIRFRAME == QUAD   
      // InstantPWM
