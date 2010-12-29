@@ -1,32 +1,38 @@
+/*
+ www.ArduCopter.com - www.DIYDrones.com
+ Copyright (c) 2010.  All rights reserved.
+ An Open Source Arduino based multicopter.
+ 
+ File     : ArducopterNG.pde
+ Version  : v1.0, 11 October 2010
+ Author(s): ArduCopter Team
+ Ted Carancho (AeroQuad), Jose Julio, Jordi Muñoz,
+ Jani Hirvinen, Ken McEwans, Roberto Navoni,          
+ Sandro Benigno, Chris Anderson
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ 
 /* ********************************************************************** */
-/*               ArduCopter & ArduPirates Quadcopter code                 */
-/*                                                                        */
-/* Quadcopter code from AeroQuad project and ArduIMU quadcopter project   */
-/* IMU DCM code from Diydrones.com                                        */
-/* (Original ArduIMU code from Jordi Muñoz and William Premerlani)        */
-/* Ardupilot core code : from DIYDrones.com development team              */
-/* Authors : Arducopter development team                                  */
-/*           Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,            */
-/*           Jani Hirvinen, Ken McEwans, Roberto Navoni,                  */
-/*           Sandro Benigno, Chris Anderson.                              */
-/* Authors : ArduPirates deveopment team                                  */
-/*           Philipp Maloney, Norbert, Hein, Igor.                        */
-/* Date : 18-12-2010                                                      */
-/* Version : 1.0 beta                                                     */
 /* Hardware : ArduPilot Mega + Sensor Shield (Production versions)        */
 /* Mounting position : RC connectors pointing backwards                   */
 /* This code use this libraries :                                         */
 /*   APM_RC : Radio library (with InstantPWM)                             */
-/*   AP_ADC : External ADC library                                        */
+/*   AP_ADC : External ADC library                                       */
 /*   DataFlash : DataFlash log library                                    */
 /*   APM_BMP085 : BMP085 barometer library                                */
-/*   AP_Compass : HMC5843 compass library [optional]                      */
+/*   AP_Compass : HMC5843 compass library [optional]                     */
 /*   GPS_MTK or GPS_UBLOX or GPS_NMEA : GPS library    [optional]         */
-/* ********************************************************************** */
-
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 /* ********************************************************************** */
 
 /* ************************************************************ */
@@ -56,6 +62,7 @@
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP       // Use pressure sensor
 //#define BATTERY_EVENT 1   // (boolean) 0 = don't read battery, 1 = read battery voltage (only if you have it _wired_ up!)
+//#define IsRANGEFINDER // are we using a Sonar for altitude hold?  use this or "UseBMP" not both!
 
 #define CONFIGURATOR
 
@@ -75,17 +82,17 @@
 // Introducing new frame / Motor / ESC definitions for future expansion. Currently these are not in 
 // use but they need to be here so implementation work can continue.
 
-// New frame model definitions. (not in use yet, 28-11-10 jp)
-//#define FRAME_MODEL QUAD     // Quad frame model 
+                             // New frame model definitions. (not in use yet, 28-11-10 jp)
+#define FRAME_MODEL QUAD     // Quad frame model 
 //#define FRAME_MODEL HEXA     // Quad frame model 
 //#define FRAME_MODEL OCTO     // Quad frame model 
 
 
-// New motor definition for different frame type (not in use yet, 28-11-10 jp)
+                             // New motor definition for different frame type (not in use yet, 28-11-10 jp)
 #define MAX_MOTORS  4        // Are we using more motors than 4, possible choises are 4, 6, 8
-// This has to be on main .pde to get included on all other header etc files
+                             // This has to be on main .pde to get included on all other header etc files
 
-// Not in use yet, 28-11-10 jp
+                             // Not in use yet, 28-11-10 jp
 #define MOTORTYPE  PWM       // Traditional PWM ESC's controlling motors
 //#define MOTORTYPE  I2C     // I2C style ESC's controlling motors
 //#define MOTORTYPE UART     // UART style ESC's controlling motors
@@ -123,7 +130,6 @@
 // NOTE! MODE1 is not working yet, we need to have input from users to be sure of channel orders.  03-11-10, jp
 
 
-
 /* ************************************************* */
 //    PWM - QUAD COPTER SETUP                       //
 
@@ -155,12 +161,12 @@
 //Hexa Diamond Mode - 6 Motor system in diamond shape
 
 //           F CW 0 
-//           ...FRONT....                // 0 = Motor
+//          ....FRONT....                // 0 = Motor
 //    L CCW 0....***....0 CCW R
 //          .....***.....                // *** = APM 
-//   L  CW  0....***....0 CW  R          // ***
+//    L CW  0....***....0 CW  R          // ***
 //          .....BACK....                // *** 
-//        B  CCW  0                  F = Front motor, L = Left motors, R = Right motors, B = Back motor.
+//          B CCW 0                  F = Front motor, L = Left motors, R = Right motors, B = Back motor.
 
 
 /**********************************************/
@@ -229,7 +235,6 @@
 
 
 
-
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - INCLUDES ******************* */
 /* ************************************************************ */
@@ -246,10 +251,10 @@
 #include <AP_Compass.h>	        // ArduPilot Mega Magnetometer Library
 #include <Wire.h>               // I2C Communication library
 #include <EEPROM.h>             // EEPROM 
+#include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
 //#include <AP_GPS.h>
 #include "Arducopter.h"
 #include "ArduUser.h"
-
 
 #ifdef IsGPS
 // GPS library (Include only one library)
@@ -270,6 +275,7 @@
 AP_ADC_ADS7844		adc;
 APM_BMP085_Class	APM_BMP085;
 AP_Compass_HMC5843	AP_Compass;
+AP_RangeFinder_MaxsonarXL  AP_RangeFinder_down;  // Other possible sonar is AP_RangeFinder_MaxsonarLV
 
 /* ************************************************************ */
 /* ************* MAIN PROGRAM - DECLARATIONS ****************** */
@@ -283,7 +289,6 @@ unsigned long mainLoop = 0;
 unsigned long mediumLoop = 0;
 unsigned long slowLoop = 0;
 
-
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */
 /* ************************************************************ */
@@ -295,11 +300,11 @@ void setup() {
   mediumLoop = mainLoop;
   GPS_timer = mainLoop;
   motorArmed = 0;
-
+  
   GEOG_CORRECTION_FACTOR = 0;   // Geographic correction factor will be automatically calculated
 
   Read_adc_raw();            // Initialize ADC readings...
-
+  
 #ifdef SerXbee
   Serial.begin(SerBau);
   Serial.print("ArduCopter v");
@@ -343,17 +348,13 @@ void setup() {
 // Main loop 
 void loop()
 {
-  //int aux;
-  //int i;
-  //float aux_float;
-
+  
   currentTimeMicros = micros();
   currentTime = currentTimeMicros / 1000;
 
   // Main loop at 200Hz (IMU + control)
   if ((currentTime-mainLoop) > 5)    // about 200Hz (every 5ms)
   {
-    //G_Dt = (currentTime-mainLoop)*0.001;   // Microseconds!!!
     G_Dt = (currentTimeMicros-previousTimeMicros) * 0.000001;   // Microseconds!!!
     mainLoop = currentTime;
     previousTimeMicros = currentTimeMicros;
@@ -382,23 +383,22 @@ void loop()
     if(flightMode == STABLE_MODE) {    // STABLE Mode
       gled_speed = 1200;
       if (AP_mode == AP_NORMAL_MODE) {   // Normal mode
-#if AIRFRAME == QUAD    
+#if AIRFRAME == QUAD
         Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HEXA
         Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
-#endif        
+#endif       
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll,command_rx_pitch,command_rx_collective,command_rx_yaw);
 #endif
-      }
-      else{                        // Automatic mode : GPS position hold mode
-#if AIRFRAME == QUAD    
-        Attitude_control_v3(command_rx_roll+command_gps_roll,command_rx_pitch+command_gps_pitch,command_rx_yaw);
+      }else{                        // Automatic mode : GPS position hold mode
+#if AIRFRAME == QUAD      
+        Attitude_control_v3(command_rx_roll+command_gps_roll+command_RF_roll,command_rx_pitch+command_gps_pitch+command_RF_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HEXA      
         Attitude_control_v3(command_rx_roll+command_gps_roll,command_rx_pitch+command_gps_pitch,command_rx_yaw);
-#endif        
+#endif   
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll+command_gps_roll,command_rx_pitch+command_gps_pitch,command_rx_collective,command_rx_yaw);
 #endif
@@ -412,75 +412,104 @@ void loop()
     }
 
     // Send output commands to motor ESCs...
-#if AIRFRAME == QUAD    
+#if AIRFRAME == QUAD     // we update the heli swashplate at about 60hz
     motor_output();
-#endif    
+#endif  
 #if AIRFRAME == HEXA     
     motor_output();
 #endif    
 
 #ifdef IsCAM
-    // Do we have cameras stabilization connected and in use?
-    if(!SW_DIP2) camera_output();
+  // Do we have cameras stabilization connected and in use?
+  if(!SW_DIP2) camera_output();
 #endif
 
-    // Autopilot mode functions
+    // Autopilot mode functions - GPS Hold, Altitude Hold + object avoidance
     if (AP_mode == AP_AUTOMATIC_MODE)
     {
       digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
       if (target_position) 
       {
-#ifdef IsGPS
+        #ifdef IsGPS
         if (GPS.NewData)     // New GPS info?
         {
           if (GPS.Fix)
-          {
+            {
             read_GPS_data();    // In Navigation.pde
             Position_control(target_lattitude,target_longitude);     // Call GPS position hold routine
-          }
+            //Position_control_v2(target_lattitude,target_longitude);     // V2 of GPS Position holdCall GPS position hold routine
+            }
           else
-          {
+            {
             command_gps_roll=0;
             command_gps_pitch=0;
-          }
+            }
         }
-#endif
-#ifdef UseBMP
-        if (Baro_new_data)   // New altitude data?
-        {
-          ch_throttle_altitude_hold = Altitude_control_baro(press_alt,target_baro_altitude);   // Altitude control
-          Baro_new_data=0;
-          if (abs(ch_throttle-Initial_Throttle)>100)  // Change in stick position => altitude ascend/descend rate control
-            target_baro_altitude += (ch_throttle-Initial_Throttle)/25;
-          //Serial.print(Initial_Throttle);
-          //Serial.print(" ");
-          //Serial.print(ch_throttle);
-          //Serial.print(" ");
-          //Serial.println(target_baro_altitude);
-        }
-#endif
-      }
-      else   // First time we enter in GPS position hold we capture the target position as the actual position
-      {
-#ifdef IsGPS
+        #endif
+      } else {  // First time we enter in GPS position hold we capture the target position as the actual position
+        #ifdef IsGPS
         if (GPS.Fix){   // We need a GPS Fix to capture the actual position...
           target_lattitude = GPS.Lattitude;
           target_longitude = GPS.Longitude;
           target_position=1;
         }
-#endif
+        #endif
         command_gps_roll=0;
         command_gps_pitch=0;
-        target_baro_altitude = press_alt;
-        Initial_Throttle = ch_throttle;
-        ch_throttle_altitude_hold = ch_throttle;
         Reset_I_terms_navigation();  // Reset I terms (in Navigation.pde)
       }
-    }
-    else
-    {
+      
+      // Barometer Altitude control
+      #ifdef UseBMP
+      if( Baro_new_data )   // New altitude data?
+      {
+        // if it's the first time we're entering baro hold, grab some initial values
+        if( target_baro_altitude == 0 ) {
+            target_baro_altitude = press_alt;
+            Initial_Throttle = ch_throttle;
+            ch_throttle_altitude_hold = ch_throttle;
+            altitude_I = 0;
+        }
+        ch_throttle_altitude_hold = Altitude_control_baro(press_alt,target_baro_altitude);   // calculate throttle to maintain altitude
+        Baro_new_data=0;  // record that we have consumed the new data
+        
+        // modify the target altitude if user moves stick more than 100 up or down
+        if (abs(ch_throttle-Initial_Throttle)>100)
+          target_baro_altitude += (ch_throttle-Initial_Throttle)/25;  // Change in stick position => altitude ascend/descend rate control
+      }
+      #endif
+      
+      // Sonar Altitude control + object avoidance
+      #ifdef IsRANGEFINDER // Do we have Range Finders connected?
+      if( RF_new_data )
+      {       
+        if( sonar_altitude_valid ) {
+          // if it's the first time we're entering sonar altitude hold, grab some initial values
+          if( target_sonar_altitude == 0 ) {
+              target_sonar_altitude = press_alt;
+              Initial_Throttle = ch_throttle;
+              ch_throttle_altitude_hold = ch_throttle;
+          }
+          ch_throttle_altitude_hold = Altitude_control_Sonar(press_alt,target_sonar_altitude);  // calculate throttle to maintain altitude
+
+          // modify the target altitude if user moves stick more than 100 up or down
+          if (abs(ch_throttle-Initial_Throttle)>100) { // Change in stick position => altitude ascend/descend rate control
+            target_sonar_altitude += (ch_throttle-Initial_Throttle)/25;
+            target_sonar_altitude = constrain(target_sonar_altitude,AP_RangeFinder_down.min_distance*2,AP_RangeFinder_down.max_distance*0.8);
+          }
+        }else{
+            // if sonar_altitude becomes invalid we return control to user
+            ch_throttle_altitude_hold = ch_throttle;
+        }
+        Obstacle_avoidance(RF_SAFETY_ZONE);  // main obstacle avoidance function
+        RF_new_data = 0;  // record that we have consumed the rangefinder data
+      }
+      #endif
+    }else{
       digitalWrite(LED_Yellow,LOW);
       target_position=0;
+      target_baro_altitude=0;
+      target_sonar_altitude=0;
     }
   }
 
@@ -490,8 +519,8 @@ void loop()
 #ifdef IsGPS
     GPS.Read();     // Read GPS data 
 #endif
-
-#if AIRFRAME == HELI    // we update the heli swashplate at about 60hz
+    
+#if AIRFRAME == HELI    
     // Send output commands to heli swashplate...
     heli_moveSwashPlate();
 #endif
@@ -507,13 +536,17 @@ void loop()
       }
 #endif
       break;
-    case 1:  // Barometer reading (2x10Hz = 20Hz)
+    case 1:  // Barometer + RangeFinder reading (2x10Hz = 20Hz)
       medium_loopCounter++;
 #ifdef UseBMP
       if (APM_BMP085.Read()){
         read_baro();
         Baro_new_data = 1;
       }
+#endif
+#ifdef IsRANGEFINDER
+      read_RF_Sensors();
+      RF_new_data = 1;      
 #endif
       break;
     case 2:  // Send serial telemetry (10Hz)
@@ -528,15 +561,17 @@ void loop()
       readSerialCommand();
 #endif
       break;
-    case 4:  // second Barometer reading (2x10Hz = 20Hz)
+    case 4:  // second Barometer + RangeFinder reading (2x10Hz = 20Hz)
       medium_loopCounter++;
 #ifdef UseBMP
       if (APM_BMP085.Read()){
         read_baro();
         Baro_new_data = 1;
-        //Serial.print("B ");
-        //Serial.println(press_alt);
       }
+#endif
+#ifdef IsRANGEFINDER
+      read_RF_Sensors();
+      RF_new_data = 1;
 #endif
       break;
     case 5:  //  Battery monitor (10Hz)
@@ -557,7 +592,7 @@ void loop()
       digitalWrite(RE_LED, LOW);
 #endif
       gled_status = LOW;
-      //      SerPrln("L");
+//      SerPrln("L");
     } 
     else {
       digitalWrite(LED_Green, HIGH);
@@ -569,6 +604,5 @@ void loop()
   }
 
 }
-
 
 

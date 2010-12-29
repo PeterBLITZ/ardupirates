@@ -55,7 +55,7 @@ void APM_Init() {
   /* ********************************************************* */
   ///////////////////////////////////////////////////////// 
   // Normal Initialization sequence starts from here.
-  readUserConfig();               // Load user configurable items from EEPROM
+  readUserConfig();          // Load user configurable items from EEPROM
 
   APM_RC.Init();             // APM Radio initialization
 
@@ -74,7 +74,7 @@ void APM_Init() {
   APM_RC.OutputCh(2,CHANN_CENTER);
   APM_RC.OutputCh(3,CHANN_CENTER);
 #endif 
-
+ 
 #if AIRFRAME == HEXA
   // RC channels Initialization (Hexa motors) - Motors stoped 
   APM_RC.OutputCh(0, MIN_THROTTLE);     // Left Motor CW
@@ -123,7 +123,10 @@ void APM_Init() {
   }
 
 
-  flightOrientation = SW_DIP1;    // DIP1 off (up) = we are in x mode, DIP1 on (down) = we are in + mode
+  flightOrientation = SW_DIP1;    // DIP1 off = we are in + mode, DIP1 on = we are in x mode
+
+  // readUserConfig moved to up to ensure min throttle is read from eeprom 
+  //readUserConfig();               // Load user configurable items from EEPROM 
 
   // Safety measure for Channel mids
   if(roll_mid < 1400 || roll_mid > 1600) roll_mid = 1500;
@@ -189,23 +192,28 @@ void APM_Init() {
 #ifndef CONFIGURATOR
   for(i=0;i<6;i++)
   {
-    Serial.print("AN[]:");
-    Serial.println(AN_OFFSET[i]);
+    SerPri("AN[]:");
+    SerPrln(AN_OFFSET[i]);
   }
-  Serial.print("Yaw neutral value:");
-  //  Serial.println(Neutro_yaw);
-  Serial.print(yaw_mid);
+  SerPri("Yaw neutral value:");
+  SerPri(yaw_mid);
 #endif
 
 #ifdef UseBMP
   APM_BMP085.Init(FALSE);
 #endif
 
+#ifdef IsRANGEFINDER
+  AP_RangeFinder_down.init(AN1);  AP_RangeFinder_down.set_orientation(AP_RANGEFINDER_ORIENTATION_DOWN);
+  //AP_RangeFinder_frontRight.init(AN5);  AP_RangeFinder_frontRight.set_orientation(AP_RANGEFINDER_ORIENTATION_FRONT_RIGHT);
+  //AP_RangeFinder_backRight.init(AN4);  AP_RangeFinder_backRight.set_orientation(AP_RANGEFINDER_ORIENTATION_BACK_RIGHT);
+  //AP_RangeFinder_backLeft.init(AN3);  AP_RangeFinder_backLeft.set_orientation(AP_RANGEFINDER_ORIENTATION_BACK_LEFT);
+  //AP_RangeFinder_frontLeft.init(AN2);  AP_RangeFinder_frontLeft.set_orientation(AP_RANGEFINDER_ORIENTATION_FRONT_LEFT);
+#endif
+
   delay(1000);
 
   DataFlash.StartWrite(1);   // Start a write session on page 1
-  //timer = millis();
-  //tlmTimer = millis();
 
   // initialise helicopter
 #if AIRFRAME == HELI
