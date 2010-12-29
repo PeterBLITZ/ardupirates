@@ -42,18 +42,18 @@ void motor_output()
   byte throttle_mode=0;
  
   throttle = ch_throttle;
-  #ifdef UseBMP
+  #if defined(UseBMP) || defined(IsRANGEFINDER)
   if (AP_mode == AP_AUTOMATIC_MODE)
-    {
+  {
     throttle = ch_throttle_altitude_hold;
     throttle_mode=1;
-    }
+  }
   #endif
   
   if ((throttle_mode==0)&&(ch_throttle < (MIN_THROTTLE + 100)))  // If throttle is low we disable yaw (neccesary to arm/disarm motors safely)
     control_yaw = 0; 
 
-  // Copter motor mix
+  // Quadcopter mix
   if (motorArmed == 1) {   
 #ifdef IsAM
     digitalWrite(FR_LED, HIGH);    // AM-Mode
@@ -84,7 +84,7 @@ void motor_output()
         FrontCWMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
         BackCCWMotor = constrain(throttle - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif 
-
+ 
   } else {    // MOTORS DISARMED
 
 #ifdef IsAM
