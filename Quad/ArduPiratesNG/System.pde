@@ -77,11 +77,11 @@ void APM_Init() {
  
 #if AIRFRAME == HEXA
   // RC channels Initialization (Hexa motors) - Motors stoped 
-  APM_RC.OutputCh(0, MIN_THROTTLE);     // Left Motor CW
+  APM_RC.OutputCh(0, MIN_THROTTLE);    // Left Motor CW
   APM_RC.OutputCh(1, MIN_THROTTLE);    // Left Motor CCW
   APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
   APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
-  APM_RC.OutputCh(6, MIN_THROTTLE);    // Back Motor CW
+  APM_RC.OutputCh(6, MIN_THROTTLE);    // Front Motor CW
   APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
 #endif
 
@@ -151,11 +151,11 @@ void APM_Init() {
 
 #if AIRFRAME == HEXA
   // RC channels Initialization (Hexa motors) - Motors stoped 
-  APM_RC.OutputCh(0, MIN_THROTTLE);     // Left Motor CW
+  APM_RC.OutputCh(0, MIN_THROTTLE);    // Left Motor CW
   APM_RC.OutputCh(1, MIN_THROTTLE);    // Left Motor CCW
   APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
   APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
-  APM_RC.OutputCh(6, MIN_THROTTLE);    // Back Motor CW
+  APM_RC.OutputCh(6, MIN_THROTTLE);    // Front Motor CW
   APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
 #endif
 

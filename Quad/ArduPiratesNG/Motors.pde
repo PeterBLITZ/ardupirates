@@ -53,7 +53,7 @@ void motor_output()
   if ((throttle_mode==0)&&(ch_throttle < (MIN_THROTTLE + 100)))  // If throttle is low we disable yaw (neccesary to arm/disarm motors safely)
     control_yaw = 0; 
 
-  // Quadcopter mix
+  // Copter mix
   if (motorArmed == 1) {   
 #ifdef IsAM
     digitalWrite(FR_LED, HIGH);    // AM-Mode
