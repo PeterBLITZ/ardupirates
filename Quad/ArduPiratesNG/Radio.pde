@@ -94,6 +94,7 @@ void read_radio()
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
 //      #ifdef FLIGHT_MODE_X
+ /*
       if(flightOrientation) {
         // For X mode we make a mix in the input
         float aux_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
@@ -104,7 +105,11 @@ void read_radio()
         command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
         command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
       }
+*/
 
+      command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
+      command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
+  
       // YAW
       if (abs(ch_yaw-yaw_mid)>6)   // Take into account a bit of "dead zone" on yaw
         {
