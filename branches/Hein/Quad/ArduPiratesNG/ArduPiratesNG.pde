@@ -83,7 +83,7 @@
 // use but they need to be here so implementation work can continue.
 
                              // New frame model definitions. (not in use yet, 28-11-10 jp)
-#define FRAME_MODEL QUAD     // Quad frame model 
+//#define FRAME_MODEL QUAD     // Quad frame model 
 //#define FRAME_MODEL HEXA     // Quad frame model 
 //#define FRAME_MODEL OCTO     // Quad frame model 
 
@@ -397,7 +397,7 @@ void loop()
         Attitude_control_v3(command_rx_roll+command_gps_roll+command_RF_roll,command_rx_pitch+command_gps_pitch+command_RF_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HEXA      
-        Attitude_control_v3(command_rx_roll+command_gps_roll,command_rx_pitch+command_gps_pitch,command_rx_yaw);
+        Attitude_control_v3(command_rx_roll+command_gps_roll+command_RF_roll,command_rx_pitch+command_gps_pitch+command_RF_pitch,command_rx_yaw);
 #endif   
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll+command_gps_roll,command_rx_pitch+command_gps_pitch,command_rx_collective,command_rx_yaw);
