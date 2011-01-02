@@ -113,23 +113,31 @@ void read_radio()
     if (flightMode == FM_STABLE_MODE)  // IN STABLE MODE we convert stick positions to absoulte angles
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
-//      #ifdef FLIGHT_MODE_X
- /*
+#ifdef QUAD
       if(flightOrientation) {
-        // For X mode we make a mix in the input
+        // For X mode - (APM-front pointing towards front motor)
+#ifdef FLIGHT_MODE_X_45Degree
         float aux_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
         float aux_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
         command_rx_roll = aux_roll - aux_pitch;
         command_rx_pitch = aux_roll + aux_pitch;
-      } else {
+#endif
+        // For X mode - APM front between front and right motor 
+#ifdef FLIGHT_MODE_X
+        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
+        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
+#endif
+      } 
+      else 
+      {
         command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
         command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
       }
-*/
-
-      command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
-      command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
-  
+#endif
+#ifdef HEXA
+        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
+        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
+#endif  
       // YAW
       if (abs(ch_yaw-yaw_mid)>6)   // Take into account a bit of "dead zone" on yaw
         {

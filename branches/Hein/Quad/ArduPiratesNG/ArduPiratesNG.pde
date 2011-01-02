@@ -149,11 +149,11 @@
 
 // Frame build condiguration
 // FLIGHT_MODE_+    // Traditional "one arm as nose" frame configuration
-// FLIGHT MODE X    // APM FRONT BETWEEN FRONT AND RIGHT MOTOR.
-// NOT LIKE THE ALPHA RELEASE !!!.
-
+// FLIGHT_MODE_X    // 2x Options (see below).
+// 
+//  FLIGHT_MODE_X (APM-front between Front and Right motor).
 //   F  CW  0....Front....0 CCW  R        // 0 = Motor
-//          ......***......               // *** = APM 
+//          ......***......               // *** = APM (APM-front between Front and Right motor)
 //          ......***......               // ***
 //          ......***......               // *** 
 //   L CCW  0....Back.....0  CW  B          L = Left motor, 
@@ -161,8 +161,22 @@
 //                                          B = Back motor,
 //                                          F = Front motor.  
 
+//  FLIGHT_MODE_X_45Degree (APM-front pointing towards front motor).
+//   F  CW  0....Front....0 CCW  R        // 0 = Motor
+//          ...****........               // ****  = APM (APM-front pointing towards front motor)
+//          ......****.....               //    **** 
+//          .........****..               //      ****
+//   L CCW  0....Back.....0  CW  B          L = Left motor, 
+//                                          R = Right motor, 
+//                                          B = Back motor,
+//                                          F = Front motor.  
+
 
 // To change between flight orientations just use DIP switch for that. DIP1 up (off) = X-mode, DIP1 down (on)= + mode
+// When selecting Flight_Mode_X choice one of the two options below.
+#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above.
+//#define FLIGHT_MODE_X_45Degree   // (APM-front pointing towards front motor).  See layout above.
+
 // Double check in configurator - Serial command "T" enter.
 // remember after changing DIP switch you must reboot APM.
 
@@ -182,6 +196,8 @@
 //          .....BACK....                // *** 
 //          B CCW 0                  F = Front motor, L = Left motors, R = Right motors, B = Back motor.
 
+// Double check in configurator - Serial command "T" enter.
+// remember after changing DIP switch you must reboot APM.
 
 /**********************************************/
 
