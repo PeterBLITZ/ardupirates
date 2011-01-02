@@ -181,6 +181,7 @@
 /* Preliminary/Experimental support for Wii Hardware,
    replaces the DIYDRONES.COM Oilpan */
 //#define USE_WII
+//#include <APM_Wii.h>
 
 
 /******************************************************** */
@@ -189,6 +190,11 @@
 
 
 
+//Disable some IMU functions when using Wii
+#ifndef USE_WII
+  #define USE_DATAFLASH
+  #define USE_IMUADC
+#endif
 
 
 // Quick and easy hack to change FTDI Serial output to Telemetry port. Just activate #define IsXBEE some lines earlier
@@ -220,7 +226,6 @@
 
 #include <Wire.h>
 #include <APM_ADC.h>
-//#include <APM_Wii.h>
 #include <APM_RC.h>
 #include <DataFlash.h>
 #include <APM_Compass.h>
@@ -488,8 +493,17 @@ void setup()
     delay(20);
   }
 
+#ifdef USE_IMUADC
   APM_ADC.Init();            // APM ADC library initialization
+#endif
+
+#ifdef USE_WII
+  APM_Wii.Init();
+#endif
+
+#ifdef USE_DATAFLASH
   DataFlash.Init();          // DataFlash log initialization
+#endif
 
 #ifdef IsGPS  
     GPS.Init();                // GPS Initialization
@@ -506,7 +520,6 @@ void setup()
 #ifdef UseBMP
     APM_BMP085.Init();   // APM ADC initialization
 #endif
-
   readUserConfig(); // Load user configurable items from EEPROM
 
   // Safety measure for Channel mids
@@ -527,7 +540,9 @@ void setup()
     }
 #endif
 
+#ifdef USE_DATAFLASH
   DataFlash.StartWrite(1);   // Start a write session on page 1
+#endif
 
   SerBeg(SerBau);                      // Initialize SerialXX.port, IsXBEE define declares which port
   
@@ -545,16 +560,21 @@ void setup()
   
   // Check if we enable the DataFlash log Read Mode (switch)
   // If we press switch 1 at startup we read the Dataflash eeprom
+#ifdef USE_DATAFLASH
   while (digitalRead(SW1_pin)==0)
   {
     SerPriln("Entering Log Read Mode...");
     Log_Read(1,2000);
     delay(30000);
   }
+#endif
 
   Calibrate_Gyro_Offsets();
 
+#ifdef USE_DATAFLASH
   DataFlash.StartWrite(1);   // Start a write session on page 1
+#endif
+
   timer = millis();
   tlmTimer = millis();
   Update_Sensors();        // Initialize ADC readings...
@@ -593,7 +613,7 @@ void loop(){
     timer=millis();
     G_Dt = (timer-timer_old)*0.001;      // Real time of loop run 
 
-    // IMU DCM Algorithm
+    //Read sensor inputs
     Update_Sensors();
     
 #ifdef BATTERY_EVENT
@@ -848,8 +868,10 @@ void loop(){
       heading_hold_mode = 1;
       if (target_position == 0)   // If this is the first time we switch to Position control, actual position is our target position
       {
+#ifdef IsGPS
         target_lattitude = GPS.Lattitude;
         target_longitude = GPS.Longitude;
+#endif
         target_position = 1;
         gps_err_roll = 0;
         gps_err_pitch = 0;
@@ -966,6 +988,7 @@ void loop(){
     }
 
     //Read GPS
+#ifdef IsGPS
     if (GPS_counter > 3)  // Reading GPS data at 60 Hz
     {
       GPS_counter = 0;
@@ -1004,6 +1027,7 @@ void loop(){
         }
       }
     }
+#endif
  
     if (AP_mode == F_MODE_ABS_HOLD || AP_mode == F_MODE_SUPER_STABLE)  // Altitude control
     {

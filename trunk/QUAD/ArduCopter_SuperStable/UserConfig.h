@@ -160,9 +160,9 @@ void defaultUserConfig() {
   Sensor_Offset[ACCEL_X] = 2047;
   Sensor_Offset[ACCEL_Y] = 2032;
   Sensor_Offset[ACCEL_Z] = 2071;
-  Sensor_Offset[GYRO_ROLL] = 1659;    //recalibrated at startup
+/*  Sensor_Offset[GYRO_ROLL] = 1659;    //recalibrated at startup
   Sensor_Offset[GYRO_PITCH] = 1618;
-  Sensor_Offset[GYRO_YAW] = 1673;
+  Sensor_Offset[GYRO_YAW] = 1673;*/
   Kp_ROLLPITCH = 0.0014;
   Ki_ROLLPITCH = 0.00000015;
   Kp_YAW = 1.2;

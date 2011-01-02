@@ -58,8 +58,8 @@
 // IDG500 Sensitivity (from datasheet) => 2.0mV/º/s, 0.8mV/ADC step => 0.8/3.33 = 0.4
 // Tested values : 
 #define Gyro_Gain_X 0.4  //X axis Gyro gain
-#define Gyro_Gain_Y 0.41 //Y axis Gyro gain
-#define Gyro_Gain_Z 0.41 //Z axis Gyro gain
+#define Gyro_Gain_Y 0.4 //Y axis Gyro gain
+#define Gyro_Gain_Z 0.4 //Z axis Gyro gain
 #define Gyro_Scaled_X(x) x*ToRad(Gyro_Gain_X) //Return the scaled ADC raw data of the gyro in radians for second
 #define Gyro_Scaled_Y(x) x*ToRad(Gyro_Gain_Y) //Return the scaled ADC raw data of the gyro in radians for second
 #define Gyro_Scaled_Z(x) x*ToRad(Gyro_Gain_Z) //Return the scaled ADC raw data of the gyro in radians for second
@@ -69,7 +69,7 @@
 
 int Sensor_Input[6]; //array that stores the gyros and accelerometers output data
 int Sensor_Offset[6]; //Array that store the gyros and accelerometers offset values
-//int Sensor_Data_Raw[6]; //Raw data from sensors, for debugging
+int Sensor_Data_Raw[6]; //Raw data from sensors, for debugging
 #define GYRO_ROLL  0
 #define GYRO_PITCH 1
 #define GYRO_YAW   2
@@ -79,7 +79,11 @@ int Sensor_Offset[6]; //Array that store the gyros and accelerometers offset val
 
 /* Define functions for reading sensors */
 // Sensor: GYROX, GYROY, GYROZ,   ACCELX, ACCELY, ACCELZ
-char SENSOR_SIGN[]={1, -1, -1,    -1, 1, 1}; 
+#ifdef USE_WII
+  char SENSOR_SIGN[]={-1, -1, -1,    1, -1, 1}; 
+#else
+  char SENSOR_SIGN[]={1, -1, -1,    -1, 1, 1}; 
+#endif
   
 /* APM Hardware definitions, END */
 
