@@ -365,6 +365,7 @@ int   ch_throttle;
 int   ch_yaw;
 int   ch_aux;
 int   ch_aux2;
+int   ch_flightmode;
 
 // Quad motors
 int frontMotor;

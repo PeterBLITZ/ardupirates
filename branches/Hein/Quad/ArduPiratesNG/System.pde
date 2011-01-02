@@ -123,7 +123,8 @@ void APM_Init() {
   }
 
 
-  flightOrientation = SW_DIP1;    // DIP1 off = we are in + mode, DIP1 on = we are in x mode
+  flightOrientation = SW_DIP1;    // DIP1 up (off) = X-mode, DIP1 down (on)= + mode
+  flightMode = SW_DIP3;           // DIP3 up (off) = Acrobatic Mode, DIP3 down (0n) = Stable Mode.
 
   // readUserConfig moved to up to ensure min throttle is read from eeprom 
   //readUserConfig();               // Load user configurable items from EEPROM 
