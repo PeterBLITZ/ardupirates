@@ -182,52 +182,70 @@ void LEDAllOFF() {
 //
 // Camera functions moved to event due it's and event 31-10-10, jp
 
-/*
+
+//  Use this function for PID tuning using your flightmode 3-position switch on the radio.
+//  You will need at least a 7 channel radio.  Radio must be in Acro (plane) mode.
+//  Select only one set of parameters below.  See default selection below.
 void PID_Tuning()  {
 // Tuning PID values using only 3 position channel switch (Flight Mode).
-     if (ch_aux1 >= 1800) 
+     if (ch_flightmode >= 1800) 
      {
        Plus = 1;
        Minus = 0;
      } 
-     else if (ch_aux1 <= 1200) 
+     else if (ch_flightmode <= 1200) 
      {
           Plus = 0;
           Minus = 1;
      } 
-     else if (ch_aux1 >= 1400 && ch_aux1 <= 1600) 
+     else if (ch_flightmode >= 1400 && ch_flightmode <= 1600) 
      {
              if (Plus == 1){
 //                KP_GPS_ROLL += 0.001;
 //                writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
+
 //                KP_GPS_PITCH += 0.001;
 //                writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
+
 //                KI_GPS_ROLL += 0.0001;
 //                writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
+
 //                KI_GPS_PITCH += 0.0001;
 //                writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
+
 //                KP_QUAD_YAW += 0.1;
 //                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
+
 //                KI_QUAD_YAW += 0.01;
 //                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
-                STABLE_MODE_KP_RATE += 0.05;
-                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);
+
+                STABLE_MODE_KP_RATE += 0.05;                                        // default
+                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);          // default
+
 //                STABLE_MODE_KP_RATE_YAW += 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
+
 //                STABLE_MODE_KP_RATE_ROLL += 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
+
 //                STABLE_MODE_KP_RATE_PITCH += 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+
 //                Kp_RateRoll += 0.1;
 //                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
+
 //                Kp_RatePitch += 0.1;
 //                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
+
 //                KP_ALTITUDE += 0.1;
 //                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+
 //                KI_ALTITUDE += 0.3;
 //                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
+
 //                KD_ALTITUDE += 0.3;
 //                writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
+
 //                Magoffset1 += 1;
 //                writeEEPROM(Magoffset1_ADR);
 //                APM_Compass.SetOffsets(Magoffset1);    
@@ -237,34 +255,49 @@ void PID_Tuning()  {
              } else if (Minus == 1) {
 //                KP_GPS_ROLL -= 0.001;
 //                writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
+
 //                KP_GPS_PITCH -= 0.001;
 //                writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
+
 //                KI_GPS_ROLL -= 0.0001;
 //                writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
+
 //                KI_GPS_PITCH -= 0.0001;
 //                writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
+
 //                KP_QUAD_YAW -= 0.1;
 //                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
+
 //                KI_QUAD_YAW -= 0.01;
 //                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
-                STABLE_MODE_KP_RATE -= 0.05;
-                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);
+
+                STABLE_MODE_KP_RATE -= 0.05;                                        // default
+                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);          // default
+
 //                STABLE_MODE_KP_RATE_YAW -= 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
+
 //                STABLE_MODE_KP_RATE_ROLL -= 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
+
 //                STABLE_MODE_KP_RATE_PITCH -= 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+
 //                Kp_RateRoll -= 0.1;
 //                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
+
 //                Kp_RatePitch -= 0.1;
 //                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
+
 //                KP_ALTITUDE -= 0.1;
 //                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+
 //                KI_ALTITUDE -= 0.3;
 //                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
+
 //                KD_ALTITUDE -= 0.3;
 //                writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
+
 //                Magoffset1 -= 1;
 //                writeEEPROM(Magoffset1_ADR);
 //                APM_Compass.SetOffsets(Magoffset1);    
@@ -274,5 +307,5 @@ void PID_Tuning()  {
              }
      }
 }
-*/
+
 
