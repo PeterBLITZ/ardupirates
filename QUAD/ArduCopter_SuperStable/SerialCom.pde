@@ -276,12 +276,12 @@ void sendSerialTelemetry() {
     SerPriln(degrees(yaw));
     break;
   case 'R': // Send raw sensor data
-    /*for(char y = 0; y < 6; y++)
+    for(char y = 0; y < 6; y++)
     {
       SerPri(Sensor_Data_Raw[y]);
       comma();
     }
-    SerPriln("");*/
+    SerPriln("");
     break;
   case 'S': // Send all flight data
     SerPri(timer-timer_old);

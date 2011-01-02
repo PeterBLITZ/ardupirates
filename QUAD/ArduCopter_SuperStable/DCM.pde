@@ -98,9 +98,15 @@ void Accel_adjust(void)
 
 void Matrix_update(void)
 {
+#ifdef USE_WII
+  Gyro_Vector[0]=Gyro_Vector[0]*0.3+0.7*Gyro_Scaled_X(Sensor_Input[GYRO_ROLL]); //gyro x roll
+  Gyro_Vector[1]=Gyro_Vector[1]*0.3+0.7*Gyro_Scaled_Y(Sensor_Input[GYRO_PITCH]);//gyro y pitch
+  Gyro_Vector[2]=Gyro_Vector[2]*0.3+0.7*Gyro_Scaled_Z(Sensor_Input[GYRO_YAW]);  //gyro Z yaw
+#else
   Gyro_Vector[0]=Gyro_Scaled_X(Sensor_Input[GYRO_ROLL]); //gyro x roll
   Gyro_Vector[1]=Gyro_Scaled_Y(Sensor_Input[GYRO_PITCH]);//gyro y pitch
   Gyro_Vector[2]=Gyro_Scaled_Z(Sensor_Input[GYRO_YAW]);  //gyro Z yaw
+#endif
   
   // Low pass filter on accelerometer data (to filter vibrations)
   Accel_Vector[0]=Accel_Vector[0]*0.6 + (float)Sensor_Input[ACCEL_X]*0.4; // acc x

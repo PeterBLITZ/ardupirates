@@ -1,6 +1,8 @@
 // Test code to Write and Read packets from DataFlash log memory
 // Packets : Attitude, Raw sensor data, Radio and GPS
 
+#ifdef USE_DATAFLASH
+
 #define HEAD_BYTE1 0xA3
 #define HEAD_BYTE2 0x95
 #define END_BYTE   0xBA
@@ -264,4 +266,4 @@ void Log_Read(int start_page, int end_page)
   SerPriln(packet_count);
 }
 
-
+#endif

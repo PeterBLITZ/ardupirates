@@ -25,8 +25,10 @@ void Position_control(long lat_dest, long lon_dest)
   long Lon_diff;
   long Lat_diff;
 
+#ifdef IsGPS
   Lon_diff = lon_dest - GPS.Longitude;
   Lat_diff = lat_dest - GPS.Lattitude;
+#endif
   
   // ROLL
   //Optimization : cos(yaw) = DCM_Matrix[0][0] ;  sin(yaw) = DCM_Matrix[1][0] 
