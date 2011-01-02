@@ -41,7 +41,7 @@
 // DIP3 down (0n) = Stable Mode.
 
 
- // AUTOPILOT MODE (only works on Stable mode)
+ // AUTOPILOT MODE (only works in Stable mode)
  AUX2 OFF && AUX1 OFF = Position & Altitude Hold (AP_mode = 5)
  AUX2 ON  && AUX1 OFF = Stable Mode (Heading Hold only) (AP_mode = 2)
  AUX2 ON  && AUX1 ON  = Altitude Hold only (AP_mode = 3)
@@ -259,10 +259,17 @@
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_LEFT
 
-
 #endif
 
+/**********************************************/
+// PID TUNING WITH YOUR RADIO
 
+//PID Tuning using the flightmode 3 position channel in Radio.  You should have at least a 7 channel radio.
+//Normally Aux1 will be your 3 position flightmode channel.  Your radio also have to be in Acro (plane) mode.
+//Select below if you want to use this function
+//#define Use_PID_Tuning
+
+/**********************************************/
 
 
 /* ************************************************************ */
@@ -406,6 +413,9 @@ void loop()
 #endif
 #if AIRFRAME == HELI
       heli_read_radio();
+#endif
+#ifdef Use_PID_Tuning  
+      PID_Tuning();  // See Functions.
 #endif
     }
 

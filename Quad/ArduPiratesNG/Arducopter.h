@@ -340,6 +340,10 @@ int Sonar_Counter=0;
 byte AP_mode = 0;  
 //byte cam_mode = 0;  // moved to general settings, 31-10-10, jp
 
+//  PID Tuning
+byte Plus = 0;
+byte Minus = 0;
+
 // Mode LED timers and variables, used to blink LED_Green
 byte gled_status = HIGH;
 long gled_timer;
