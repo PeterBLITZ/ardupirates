@@ -382,20 +382,24 @@ void sendSerialTelemetry() {
     SerPriln();
     break;
   case 'T': // Spare
-    if (AP_mode == AP_NORMAL_MODE) 
-      SerPriln("AP Mode = Normal Mode");
-    else if (AP_mode == AP_AUTOMATIC_MODE)
-      SerPriln("AP Mode = Automatic Mode");
-    if (flightMode == STABLE_MODE)
+    if (AP_mode == AP_NORMAL_STABLE_MODE) 
+      SerPriln("AP Mode = Normal Stable Mode");
+    else if (AP_mode == AP_ALTITUDE_HOLD)
+      SerPriln("AP Mode = Altitude Hold Mode");
+    else if (AP_mode == AP_GPS_HOLD)
+      SerPriln("AP Mode = GPS Hold Mode");
+    else if (AP_mode == AP_ALT_GPS_HOLD)
+      SerPriln("AP Mode = GPS & Altitude Hold Mode");
+    if (flightMode == FM_STABLE_MODE)
       SerPriln("Flight Mode = Stable Mode");
-    else if (flightMode == ACRO_MODE)
+    else if (flightMode == FM_ACRO_MODE)
       SerPriln("Flight Mode = Acrobatic Mode");
     SerPri("Flight orientation: ");
     if(SW_DIP1) {
-      SerPrln("x mode");
+      SerPrln("x mode (Applicable to Quad only)");
     } 
     else {
-      SerPrln("+ mode");
+      SerPrln("+ mode (Applicable to Quad only)");
     }
     #if AIRFRAME == QUAD  
       SerPriln("Airframe = Quad");

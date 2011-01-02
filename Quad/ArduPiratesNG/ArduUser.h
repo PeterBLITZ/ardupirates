@@ -130,11 +130,17 @@ TODO:
 /*************************************************************/
 // General definitions
 //Modes
-#define STABLE_MODE 0
-#define ACRO_MODE 1
-#define AP_NORMAL_MODE 0       // AP disabled => manual flight
-#define AP_AUTOMATIC_MODE 1    // AP Enabled  => Automatic mode (GPS position hold)
-
+//#define STABLE_MODE 0
+//#define ACRO_MODE 1
+//#define AP_NORMAL_MODE 0       // AP disabled => manual flight
+//#define AP_AUTOMATIC_MODE 1    // AP Enabled  => Automatic mode (GPS position hold)
+#define FM_ACRO_MODE           0  // DIP3 up (off) = Acrobatic Mode
+#define FM_STABLE_MODE         1  // DIP3 down (on) = Stable Mode.
+#define AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
+#define AP_ALTITUDE_HOLD       3  // Just Altitude Hold
+#define AP_GPS_HOLD            4  // Just GPS Hold
+#define AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
+#define AP_WAYPOINT            6  // Waypoint Navigation...NOT USED YET
 //Axis
 #define ROLL 0
 #define PITCH 1

@@ -33,6 +33,20 @@
 /*   APM_BMP085 : BMP085 barometer library                                */
 /*   AP_Compass : HMC5843 compass library [optional]                     */
 /*   GPS_MTK or GPS_UBLOX or GPS_NMEA : GPS library    [optional]         */
+
+/**** Switch Functions *****
+// FLIGHT MODE
+//  This is determine by DIP Switch 3. 
+// DIP3 up (off) = Acrobatic Mode 
+// DIP3 down (0n) = Stable Mode.
+
+
+ // AUTOPILOT MODE (only works on Stable mode)
+ AUX2 OFF && AUX1 OFF = Position & Altitude Hold (AP_mode = 5)
+ AUX2 ON  && AUX1 OFF = Stable Mode (Heading Hold only) (AP_mode = 2)
+ AUX2 ON  && AUX1 ON  = Altitude Hold only (AP_mode = 3)
+ AUX2 OFF && AUX1 ON  = Position Hold only (AP_mode = 4)
+
 /* ********************************************************************** */
 
 /* ************************************************************ */
@@ -148,7 +162,7 @@
 //                                          F = Front motor.  
 
 
-// To change between flight orientations just use DIP switch for that. DIP1 up (off) = X, DIP1 down (on)= +
+// To change between flight orientations just use DIP switch for that. DIP1 up (off) = X-mode, DIP1 down (on)= + mode
 // Double check in configurator - Serial command "T" enter.
 // remember after changing DIP switch you must reboot APM.
 
@@ -158,7 +172,7 @@
 //  Just change AIRFRAME to HEXA in ArduUser.h
 
 // Frame build condiguration
-//Hexa Diamond Mode - 6 Motor system in diamond shape
+//Hexa Mode - 6 Motor system
 
 //           F CW 0 
 //          ....FRONT....                // 0 = Motor
@@ -380,9 +394,9 @@ void loop()
     }
 
     // Attitude control
-    if(flightMode == STABLE_MODE) {    // STABLE Mode
+    if(flightMode == FM_STABLE_MODE) {    // STABLE Mode
       gled_speed = 1200;
-      if (AP_mode == AP_NORMAL_MODE) {   // Normal mode
+      if (AP_mode == AP_NORMAL_STABLE_MODE) {   // Normal mode
 #if AIRFRAME == QUAD
         Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
 #endif        
@@ -425,7 +439,7 @@ void loop()
 #endif
 
     // Autopilot mode functions - GPS Hold, Altitude Hold + object avoidance
-    if (AP_mode == AP_AUTOMATIC_MODE)
+    if (AP_mode == AP_GPS_HOLD || AP_ALT_GPS_HOLD)
     {
       digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
       if (target_position) 
@@ -458,7 +472,9 @@ void loop()
         command_gps_pitch=0;
         Reset_I_terms_navigation();  // Reset I terms (in Navigation.pde)
       }
-      
+    }
+    else if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_ALT_GPS_HOLD)
+    {
       // Barometer Altitude control
       #ifdef UseBMP
       if( Baro_new_data )   // New altitude data?

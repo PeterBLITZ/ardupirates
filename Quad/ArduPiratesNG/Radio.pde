@@ -47,6 +47,9 @@ void read_radio()
     ch_yaw = channel_filter(APM_RC.InputCh(CH_RUDDER) * ch_yaw_slope + ch_yaw_offset, ch_yaw);
     ch_aux = APM_RC.InputCh(CH_5) * ch_aux_slope + ch_aux_offset;
     ch_aux2 = APM_RC.InputCh(CH_6) * ch_aux2_slope + ch_aux2_offset;   
+//  Use this channel if you have a 7 or more Channel Radio.
+//  Can be used for PID tuning (see FUNCTIONS) or Camera 3 position tilt.
+    ch_flightmode = APM_RC.InputCh(CH_7);  // flight mode 3-position switch.
     
     // special checks for throttle
     tempThrottle = APM_RC.InputCh(CH_THROTTLE);
@@ -76,12 +79,29 @@ void read_radio()
     ch_throttle = channel_filter(tempThrottle, ch_throttle);
         
     // Flight mode
-    if(ch_aux2 > 1300) 
-      flightMode = ACRO_MODE;  // Force to Acro mode from radio
-    else
-      flightMode = STABLE_MODE;  // Stable mode (default)
+//  This is determine by DIP Switch 3. 
+// DIP3 up (off) = Acrobatic Mode, DIP3 down (0n) = Stable Mode.
+
+//    if(ch_aux2 > 1300) 
+//      flightMode = ACRO_MODE;  // Force to Acro mode from radio
+//    else
+//      flightMode = STABLE_MODE;  // Stable mode (default)
+//
 
     // Autopilot mode (only works on Stable mode)
+    if (flightMode == FM_STABLE_MODE)
+    {
+      if (ch_aux2 < 1250 && ch_aux > 1800)
+        AP_mode = AP_NORMAL_STABLE_MODE  ;      // Stable mode (Heading Hold only)
+      else if (ch_aux < 1250 && ch_aux2 > 1800)
+        AP_mode = AP_GPS_HOLD;      // Position Hold (GPS position control)
+      else if (ch_aux < 1250 && ch_aux2 < 1250)
+        AP_mode = AP_ALTITUDE_HOLD;  // Super Stable Mode (Altitude hold mode)
+      else 
+        AP_mode = AP_ALT_GPS_HOLD;     //Position & Altitude hold mode (GPS position control & Altitude control)
+    } 
+
+/*
     if (flightMode == STABLE_MODE)
       {
       if(ch_aux < 1300)
@@ -89,8 +109,8 @@ void read_radio()
       else 
         AP_mode = AP_NORMAL_MODE;   // Normal mode
       }
-      
-    if (flightMode==STABLE_MODE)  // IN STABLE MODE we convert stick positions to absoulte angles
+*/      
+    if (flightMode == FM_STABLE_MODE)  // IN STABLE MODE we convert stick positions to absoulte angles
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
 //      #ifdef FLIGHT_MODE_X
