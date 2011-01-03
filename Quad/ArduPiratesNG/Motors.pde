@@ -42,7 +42,7 @@ void motor_output()
   byte throttle_mode=0;
  
   throttle = ch_throttle;
-  #if defined(UseBMP) || defined(IsRANGEFINDER)
+  #if defined(UseBMP) || defined(IsRANGEFINDER) || defined(IsSONAR)
   if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_ALT_GPS_HOLD)
   {
     throttle = ch_throttle_altitude_hold;

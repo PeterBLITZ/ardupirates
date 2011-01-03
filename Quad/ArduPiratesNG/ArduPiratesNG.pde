@@ -74,9 +74,10 @@
 //#define IsCAM       // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
 
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
-#define UseBMP       // Use pressure sensor
+#define UseBMP         // Use pressure sensor
 //#define BATTERY_EVENT 1   // (boolean) 0 = don't read battery, 1 = read battery voltage (only if you have it _wired_ up!)
-//#define IsRANGEFINDER // are we using a Sonar for altitude hold?  use this or "UseBMP" not both!
+//#define IsSONAR        // are we using a Sonar for altitude hold?  use this or "UseBMP" not both!
+//#define IsRANGEFINDER  // are we using range finders for obstacle avoidance?
 
 #define CONFIGURATOR
 
@@ -312,7 +313,16 @@
 AP_ADC_ADS7844		adc;
 APM_BMP085_Class	APM_BMP085;
 AP_Compass_HMC5843	AP_Compass;
-AP_RangeFinder_MaxsonarXL  AP_RangeFinder_down;  // Other possible sonar is AP_RangeFinder_MaxsonarLV
+#ifdef IsSONAR
+AP_RangeFinder_MaxsonarXL  AP_RangeFinder_down;  // Default sonar for altitude hold
+//AP_RangeFinder_MaxsonarLV  AP_RangeFinder_down;  // Alternative sonar is AP_RangeFinder_MaxsonarLV
+#endif
+#ifdef IsRANGEFINDER
+AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontRight;
+AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backRight;
+AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backLeft;
+AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontLeft;
+#endif
 
 /* ************************************************************ */
 /* ************* MAIN PROGRAM - DECLARATIONS ****************** */
@@ -376,6 +386,8 @@ void setup() {
 // * slow rate loop (10Hz)
 // magnetometer
 // barometer (20Hz)
+// sonar (20Hz)
+// obstacle avoidance (20Hz)
 // external command/telemetry
 // Battery monitor
 
@@ -468,22 +480,24 @@ void loop()
     if (AP_mode == AP_GPS_HOLD || AP_ALT_GPS_HOLD)
     {
       digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
+
+      // Do GPS Position hold (lattitude & longitude)
       if (target_position) 
       {
         #ifdef IsGPS
         if (GPS.NewData)     // New GPS info?
         {
           if (GPS.Fix)
-            {
+          {
             read_GPS_data();    // In Navigation.pde
-            Position_control(target_lattitude,target_longitude);     // Call GPS position hold routine
-            //Position_control_v2(target_lattitude,target_longitude);     // V2 of GPS Position holdCall GPS position hold routine
-            }
+            //Position_control(target_lattitude,target_longitude);     // Call GPS position hold routine
+            Position_control_v2(target_lattitude,target_longitude);     // V2 of GPS Position holdCall GPS position hold routine
+          }
           else
-            {
+          {
             command_gps_roll=0;
             command_gps_pitch=0;
-            }
+          }
         }
         #endif
       } else {  // First time we enter in GPS position hold we capture the target position as the actual position
@@ -501,48 +515,105 @@ void loop()
     }
     else if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_ALT_GPS_HOLD)
     {
+     // Switch on altitude control if we have a barometer or Sonar
+      #if defined(UseBMP) || defined(IsSONAR)
+      if( altitude_control_method == ALTITUDE_CONTROL_NONE ) 
+      {
+          // by default turn on altitude hold using barometer
+          #ifdef UseBMP
+          altitude_control_method = ALTITUDE_CONTROL_BARO;  
+          target_baro_altitude = press_baro_altitude;  
+          baro_altitude_I = 0;  // don't carry over any I values from previous times user may have switched on altitude control
+          #endif
+          
+          // use sonar if it's available
+          #ifdef IsSONAR
+          if( sonar_status == SONAR_STATUS_OK ) 
+          {
+            altitude_control_method = ALTITUDE_CONTROL_SONAR;
+            target_sonar_altitude = press_sonar_altitude;
+          }
+          sonar_altitude_I = 0;  // don't carry over any I values from previous times user may have switched on altitude control          
+          #endif
+          
+          // capture current throttle to use as base for altitude control
+          initial_throttle = ch_throttle;
+          ch_throttle_altitude_hold = ch_throttle;      
+      }
+ 
+      // Sonar Altitude Control
+      #ifdef IsSONAR 
+      if( sonar_new_data ) // if new sonar data has arrived
+      {
+        // Allow switching between sonar and barometer
+        #if defined(UseBMP)
+        
+        // if SONAR become invalid switch to barometer
+        if( altitude_control_method == ALTITUDE_CONTROL_SONAR && sonar_status == SONAR_STATUS_BAD  )
+        {
+          // next target barometer altitude to current barometer altitude + user's desired change over last sonar altitude (i.e. keeps up the momentum)
+          altitude_control_method = ALTITUDE_CONTROL_BARO;
+          target_baro_altitude = press_baro_altitude + constrain((target_sonar_altitude - press_sonar_altitude),-50,50);
+        }
+   
+        // if SONAR becomes valid switch to sonar control
+        if( altitude_control_method == ALTITUDE_CONTROL_BARO && sonar_status == SONAR_STATUS_OK  )
+        {
+          altitude_control_method = ALTITUDE_CONTROL_SONAR;
+          if( target_sonar_altitude == 0 ) {  // if target sonar altitude hasn't been intialised before..
+            target_sonar_altitude = press_sonar_altitude + constrain((target_baro_altitude - press_baro_altitude),-50,50);  // maybe this should just use the user's last valid target sonar altitude         
+          }
+          // ensure target altitude is reasonable
+          target_sonar_altitude = constrain(target_sonar_altitude,AP_RangeFinder_down.min_distance*3,sonar_threshold);
+        }      
+        #endif  // defined(UseBMP)
+      
+        // main Sonar control
+        if( altitude_control_method == ALTITUDE_CONTROL_SONAR )
+        {
+          if( sonar_status == SONAR_STATUS_OK ) {
+            ch_throttle_altitude_hold = Altitude_control_Sonar(press_sonar_altitude,target_sonar_altitude);  // calculate throttle to maintain altitude
+          } else {
+            // if sonar_altitude becomes invalid we return control to user temporarily
+            ch_throttle_altitude_hold = ch_throttle;
+          }            
+  
+          // modify the target altitude if user moves stick more than 100 up or down
+          if( abs(ch_throttle-initial_throttle)>100 ) 
+          {
+            target_sonar_altitude += (ch_throttle-initial_throttle)/25;
+            if( target_sonar_altitude < AP_RangeFinder_down.min_distance*3 )
+                target_sonar_altitude = AP_RangeFinder_down.min_distance*3;
+            #if !defined(UseBMP)   // limit the upper altitude if no barometer used
+            if( target_sonar_altitude > sonar_threshold)
+                target_sonar_altitude = sonar_threshold;
+            #endif     
+          }
+        }
+        sonar_new_data = 0;  // record that we've consumed the sonar data
+      }  // new sonar data
+      #endif // #ifdef IsSONAR
+      
       // Barometer Altitude control
       #ifdef UseBMP
-      if( Baro_new_data )   // New altitude data?
+      if( baro_new_data && altitude_control_method == ALTITUDE_CONTROL_BARO )   // New altitude data?
       {
-        // if it's the first time we're entering baro hold, grab some initial values
-        if( target_baro_altitude == 0 ) {
-            target_baro_altitude = press_alt;
-            Initial_Throttle = ch_throttle;
-            ch_throttle_altitude_hold = ch_throttle;
-            altitude_I = 0;
-        }
-        ch_throttle_altitude_hold = Altitude_control_baro(press_alt,target_baro_altitude);   // calculate throttle to maintain altitude
-        Baro_new_data=0;  // record that we have consumed the new data
+        ch_throttle_altitude_hold = Altitude_control_baro(press_baro_altitude,target_baro_altitude);   // calculate throttle to maintain altitude
+        baro_new_data=0;  // record that we have consumed the new data
         
         // modify the target altitude if user moves stick more than 100 up or down
-        if (abs(ch_throttle-Initial_Throttle)>100)
-          target_baro_altitude += (ch_throttle-Initial_Throttle)/25;  // Change in stick position => altitude ascend/descend rate control
+        if (abs(ch_throttle-initial_throttle)>100) 
+        {
+          target_baro_altitude += (ch_throttle-initial_throttle)/25;  // Change in stick position => altitude ascend/descend rate control
+        }
       }
       #endif
+      #endif // defined(UseBMP) || defined(IsSONAR)
       
-      // Sonar Altitude control + object avoidance
-      #ifdef IsRANGEFINDER // Do we have Range Finders connected?
-      if( RF_new_data )
-      {       
-        if( sonar_altitude_valid ) {
-          // if it's the first time we're entering sonar altitude hold, grab some initial values
-          if( target_sonar_altitude == 0 ) {
-              target_sonar_altitude = press_alt;
-              Initial_Throttle = ch_throttle;
-              ch_throttle_altitude_hold = ch_throttle;
-          }
-          ch_throttle_altitude_hold = Altitude_control_Sonar(press_alt,target_sonar_altitude);  // calculate throttle to maintain altitude
-
-          // modify the target altitude if user moves stick more than 100 up or down
-          if (abs(ch_throttle-Initial_Throttle)>100) { // Change in stick position => altitude ascend/descend rate control
-            target_sonar_altitude += (ch_throttle-Initial_Throttle)/25;
-            target_sonar_altitude = constrain(target_sonar_altitude,AP_RangeFinder_down.min_distance*2,AP_RangeFinder_down.max_distance*0.8);
-          }
-        }else{
-            // if sonar_altitude becomes invalid we return control to user
-            ch_throttle_altitude_hold = ch_throttle;
-        }
+      // Object avoidance
+      #ifdef IsRANGEFINDER
+      if( RF_new_data ) 
+      {
         Obstacle_avoidance(RF_SAFETY_ZONE);  // main obstacle avoidance function
         RF_new_data = 0;  // record that we have consumed the rangefinder data
       }
@@ -550,9 +621,11 @@ void loop()
     }else{
       digitalWrite(LED_Yellow,LOW);
       target_position=0;
-      target_baro_altitude=0;
-      target_sonar_altitude=0;
-    }
+      if( altitude_control_method != ALTITUDE_CONTROL_NONE )
+      {
+        altitude_control_method = ALTITUDE_CONTROL_NONE;  // turn off altitude control
+      }
+    } // if (AP_mode == AP_AUTOMATIC_MODE)
   }
 
   // Medium loop (about 60Hz) 
@@ -566,6 +639,12 @@ void loop()
     // Send output commands to heli swashplate...
     heli_moveSwashPlate();
 #endif
+
+#ifdef IsSONAR
+    // read altitude from Sonar at 60Hz but only process every 3rd value (=20hz)
+    read_Sonar();    
+#endif
+
     // Each of the six cases executes at 10Hz
     switch (medium_loopCounter){
     case 0:   // Magnetometer reading (10Hz)
@@ -583,8 +662,11 @@ void loop()
 #ifdef UseBMP
       if (APM_BMP085.Read()){
         read_baro();
-        Baro_new_data = 1;
+        baro_new_data = 1;
       }
+#endif
+#ifdef IsSONAR
+      sonar_new_data = 1;  // process sonar values at 20Hz     
 #endif
 #ifdef IsRANGEFINDER
       read_RF_Sensors();
@@ -608,8 +690,11 @@ void loop()
 #ifdef UseBMP
       if (APM_BMP085.Read()){
         read_baro();
-        Baro_new_data = 1;
+        baro_new_data = 1;
       }
+#endif
+#ifdef IsSONAR
+      sonar_new_data = 1;  // process sonar values at 20Hz     
 #endif
 #ifdef IsRANGEFINDER
       read_RF_Sensors();
