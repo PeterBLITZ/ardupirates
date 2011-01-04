@@ -42,10 +42,10 @@
 
 
  // AUTOPILOT MODE (only works in Stable mode)
- AUX2 OFF && AUX1 OFF = Position & Altitude Hold (AP_mode = 5) Yellow & Red LEDs both ON (GPS Not Fix - RED LED Flashing)
+ AUX2 OFF && AUX1 OFF = Position & Altitude Hold (AP_mode = 5) Yellow & Red LEDs both ON (GPS Not Logged - RED LED Flashing)
  AUX2 ON  && AUX1 OFF = Stable Mode (Heading Hold only) (AP_mode = 2) Yellow & Red LEDs both OFF
  AUX2 ON  && AUX1 ON  = Altitude Hold only (AP_mode = 3) Yellow LED ON and RED LED OFF
- AUX2 OFF && AUX1 ON  = Position Hold only (AP_mode = 4) Yellow LED OFF and RED LED ON (GPS Not Fix - RED LED Flashing)
+ AUX2 OFF && AUX1 ON  = Position Hold only (AP_mode = 4) Yellow LED OFF and RED LED ON (GPS Not Logged - RED LED Flashing)
 // Remember In Configurator MODE(channel) is AUX2
 
 /* ********************************************************************** */
@@ -75,9 +75,9 @@
 //#define IsCAM       // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
 
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
-#define UseBMP         // Use pressure sensor
+#define UseBMP         // Use pressure sensor for altitude hold?
 //#define BATTERY_EVENT 1   // (boolean) 0 = don't read battery, 1 = read battery voltage (only if you have it _wired_ up!)
-//#define IsSONAR        // are we using a Sonar for altitude hold?  use this or "UseBMP" not both!
+//#define IsSONAR        // are we using a Sonar for altitude hold?
 //#define IsRANGEFINDER  // are we using range finders for obstacle avoidance?
 
 #define CONFIGURATOR
@@ -478,7 +478,7 @@ void loop()
 #endif
 
     // Autopilot mode functions - GPS Hold, Altitude Hold + object avoidance
-    if (AP_mode == AP_GPS_HOLD || AP_ALT_GPS_HOLD)
+    if (AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD)
     {
 //      digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
 
@@ -517,22 +517,25 @@ void loop()
     if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_ALT_GPS_HOLD)
     {
      // Switch on altitude control if we have a barometer or Sonar
-      #if defined(UseBMP) || defined(IsSONAR)
+      #if (defined(UseBMP) || defined(IsSONAR))
       if( altitude_control_method == ALTITUDE_CONTROL_NONE ) 
       {
           // by default turn on altitude hold using barometer
           #ifdef UseBMP
-          altitude_control_method = ALTITUDE_CONTROL_BARO;  
-          target_baro_altitude = press_baro_altitude;  
-          baro_altitude_I = 0;  // don't carry over any I values from previous times user may have switched on altitude control
+          if( press_baro_altitude != 0 ) 
+          {
+            altitude_control_method = ALTITUDE_CONTROL_BARO;  
+            target_baro_altitude = press_baro_altitude;  
+            baro_altitude_I = 0;  // don't carry over any I values from previous times user may have switched on altitude control
+          }
           #endif
           
           // use sonar if it's available
           #ifdef IsSONAR
-          if( sonar_status == SONAR_STATUS_OK ) 
+          if( sonar_status == SONAR_STATUS_OK && press_sonar_altitude != 0 ) 
           {
             altitude_control_method = ALTITUDE_CONTROL_SONAR;
-            target_sonar_altitude = press_sonar_altitude;
+            target_sonar_altitude = constrain(press_sonar_altitude,AP_RangeFinder_down.min_distance*3,sonar_threshold);
           }
           sonar_altitude_I = 0;  // don't carry over any I values from previous times user may have switched on altitude control          
           #endif
@@ -547,28 +550,28 @@ void loop()
       if( sonar_new_data ) // if new sonar data has arrived
       {
         // Allow switching between sonar and barometer
-        #if defined(UseBMP)
+        #ifdef UseBMP
         
         // if SONAR become invalid switch to barometer
-        if( altitude_control_method == ALTITUDE_CONTROL_SONAR && sonar_status == SONAR_STATUS_BAD  )
+        if( altitude_control_method == ALTITUDE_CONTROL_SONAR && sonar_valid_count <= -3  )
         {
           // next target barometer altitude to current barometer altitude + user's desired change over last sonar altitude (i.e. keeps up the momentum)
           altitude_control_method = ALTITUDE_CONTROL_BARO;
-          target_baro_altitude = press_baro_altitude + constrain((target_sonar_altitude - press_sonar_altitude),-50,50);
+          target_baro_altitude = press_baro_altitude;// + constrain((target_sonar_altitude - press_sonar_altitude),-50,50);
         }
    
         // if SONAR becomes valid switch to sonar control
-        if( altitude_control_method == ALTITUDE_CONTROL_BARO && sonar_status == SONAR_STATUS_OK  )
+        if( altitude_control_method == ALTITUDE_CONTROL_BARO && sonar_valid_count >= 3  )
         {
           altitude_control_method = ALTITUDE_CONTROL_SONAR;
           if( target_sonar_altitude == 0 ) {  // if target sonar altitude hasn't been intialised before..
-            target_sonar_altitude = press_sonar_altitude + constrain((target_baro_altitude - press_baro_altitude),-50,50);  // maybe this should just use the user's last valid target sonar altitude         
+            target_sonar_altitude = press_sonar_altitude;// + constrain((target_baro_altitude - press_baro_altitude),-50,50);  // maybe this should just use the user's last valid target sonar altitude         
           }
           // ensure target altitude is reasonable
           target_sonar_altitude = constrain(target_sonar_altitude,AP_RangeFinder_down.min_distance*3,sonar_threshold);
         }      
         #endif  // defined(UseBMP)
-      
+       
         // main Sonar control
         if( altitude_control_method == ALTITUDE_CONTROL_SONAR )
         {
@@ -643,11 +646,6 @@ void loop()
     heli_moveSwashPlate();
 #endif
 
-#ifdef IsSONAR
-    // read altitude from Sonar at 60Hz but only process every 3rd value (=20hz)
-    read_Sonar();    
-#endif
-
     // Each of the six cases executes at 10Hz
     switch (medium_loopCounter){
     case 0:   // Magnetometer reading (10Hz)
@@ -669,6 +667,7 @@ void loop()
       }
 #endif
 #ifdef IsSONAR
+      read_Sonar(); 
       sonar_new_data = 1;  // process sonar values at 20Hz     
 #endif
 #ifdef IsRANGEFINDER
@@ -697,6 +696,7 @@ void loop()
       }
 #endif
 #ifdef IsSONAR
+      read_Sonar(); 
       sonar_new_data = 1;  // process sonar values at 20Hz     
 #endif
 #ifdef IsRANGEFINDER
