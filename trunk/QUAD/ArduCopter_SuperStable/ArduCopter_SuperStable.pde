@@ -1116,32 +1116,49 @@ void loop(){
       digitalWrite(FR_LED, HIGH);    // AM-Mode
 #endif
 
+#ifdef Tri
+        rightMotor = constrain(ch_throttle - control_roll - 0.66*control_pitch, minThrottle, 2000);
+        leftMotor  = constrain(ch_throttle + control_roll - 0.66*control_pitch, minThrottle, 2000);
+        frontMotor = constrain(1500 + control_yaw * 2                         , minThrottle, 2000); //Servo
+        backMotor  = constrain(ch_throttle                + 1.33*control_pitch, minThrottle, 2000);
+#endif
+
 #ifdef Quad
    // Quadcopter mix
 #ifdef FLIGHT_MODE_+
-        rightMotor = constrain(ch_throttle - control_roll + control_yaw, minThrottle, 2000);
-        leftMotor = constrain(ch_throttle + control_roll + control_yaw, minThrottle, 2000);
-        frontMotor = constrain(ch_throttle + control_pitch - control_yaw, minThrottle, 2000);
-        backMotor = constrain(ch_throttle - control_pitch - control_yaw, minThrottle, 2000);
+        rightMotor = constrain(ch_throttle - control_roll                 + control_yaw, minThrottle, 2000);
+        leftMotor  = constrain(ch_throttle + control_roll                 + control_yaw, minThrottle, 2000);
+        frontMotor = constrain(ch_throttle                + control_pitch - control_yaw, minThrottle, 2000);
+        backMotor  = constrain(ch_throttle                - control_pitch - control_yaw, minThrottle, 2000);
 #endif
 #ifdef FLIGHT_MODE_X
         rightMotor = constrain(ch_throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
-        leftMotor = constrain(ch_throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
+        leftMotor  = constrain(ch_throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
         frontMotor = constrain(ch_throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
-        backMotor = constrain(ch_throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
+        backMotor  = constrain(ch_throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
 #endif
 #endif
 
 #ifdef Hexa
    // Hexacopter mix
-        LeftCWMotor = constrain(ch_throttle + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCWMotor  = constrain(ch_throttle +       control_roll                         - control_yaw, minThrottle, 2000); // Left Motor CW
         LeftCCWMotor = constrain(ch_throttle + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
         RightCWMotor = constrain(ch_throttle - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-        RightCCWMotor = constrain(ch_throttle - control_roll + control_yaw, minThrottle, 2000); // Right Motor CCW
-        BackCWMotor = constrain(ch_throttle - (0.44*control_roll) - control_pitch - control_yaw, minThrottle, 2000);  // Back Motor CW
-        BackCCWMotor = constrain(ch_throttle + (0.44*control_roll) - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
+        RightCCWMotor= constrain(ch_throttle -       control_roll                         + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor  = constrain(ch_throttle - (0.44*control_roll) -       control_pitch  - control_yaw, minThrottle, 2000); // Back Motor CW
+        BackCCWMotor = constrain(ch_throttle + (0.44*control_roll) -       control_pitch  + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif   
-  
+
+#ifdef Y6
+   // Hexacopter Y6 mix
+        LeftCWMotor  = constrain(ch_throttle + control_roll - (0.66 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor = constrain(ch_throttle + control_roll - (0.66 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor = constrain(ch_throttle - control_roll - (0.66 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor= constrain(ch_throttle - control_roll - (0.66 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor  = constrain(ch_throttle                + (1.33 * control_pitch) - control_yaw, minThrottle, 2000); // Back Motor CW
+        BackCCWMotor = constrain(ch_throttle                + (1.33 * control_pitch) + control_yaw, minThrottle, 2000); // Back Motor CCW
+#endif   
+
     }
     if (motorArmed == 0) {
       
@@ -1150,6 +1167,13 @@ void loop(){
 #endif
     
       digitalWrite(LED_Green,HIGH); // Ready LED on
+
+#ifdef Tri
+      rightMotor = MIN_THROTTLE;
+      leftMotor = MIN_THROTTLE;
+      frontMotor = 1500;
+      backMotor = MIN_THROTTLE;
+#endif
 
 #ifdef Quad
       rightMotor = MIN_THROTTLE;
@@ -1167,6 +1191,15 @@ void loop(){
       BackCCWMotor = MIN_THROTTLE;
 #endif
 
+#ifdef Y6
+      LeftCWMotor = MIN_THROTTLE;
+      LeftCCWMotor = MIN_THROTTLE;
+      RightCWMotor = MIN_THROTTLE;
+      RightCCWMotor = MIN_THROTTLE;
+      BackCWMotor = MIN_THROTTLE;
+      BackCCWMotor = MIN_THROTTLE;
+#endif
+
       roll_I = 0;     // reset I terms of PID controls
       pitch_I = 0;
       yaw_I = 0; 
@@ -1174,6 +1207,13 @@ void loop(){
       command_rx_yaw = ToDeg(yaw);
     }
     
+#ifdef Tri
+    APM_RC.OutputCh(0, rightMotor);   // Right motor
+    APM_RC.OutputCh(1, leftMotor);    // Left motor
+    APM_RC.OutputCh(2, frontMotor);   // Servo
+    APM_RC.OutputCh(3, backMotor);    // Back motor   
+#endif
+
 #ifdef Quad
     APM_RC.OutputCh(0, rightMotor);   // Right motor
     APM_RC.OutputCh(1, leftMotor);    // Left motor
@@ -1182,12 +1222,21 @@ void loop(){
 #endif
 
 #ifdef Hexa
-    APM_RC.OutputCh(0, LeftCWMotor);    // Left Motor CW
-    APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
-    APM_RC.OutputCh(2, RightCWMotor);   // Right Motor CW
-    APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
+    APM_RC.OutputCh(0, LeftCWMotor);   // Left Motor CW
+    APM_RC.OutputCh(1, LeftCCWMotor);  // Left Motor CCW
+    APM_RC.OutputCh(2, RightCWMotor);  // Right Motor CW
+    APM_RC.OutputCh(3, RightCCWMotor); // Right Motor CCW    
     APM_RC.OutputCh(6, BackCWMotor);   // Back Motor CW
-    APM_RC.OutputCh(7, BackCCWMotor);   // Back Motor CCW    
+    APM_RC.OutputCh(7, BackCCWMotor);  // Back Motor CCW    
+#endif
+
+#ifdef Y6
+    APM_RC.OutputCh(0, LeftCWMotor);   // Left Motor CW
+    APM_RC.OutputCh(1, LeftCCWMotor);  // Left Motor CCW
+    APM_RC.OutputCh(2, RightCWMotor);  // Right Motor CW
+    APM_RC.OutputCh(3, RightCCWMotor); // Right Motor CCW    
+    APM_RC.OutputCh(6, BackCWMotor);   // Back Motor CW
+    APM_RC.OutputCh(7, BackCCWMotor);  // Back Motor CCW    
 #endif
 
     // Camera Stabilization
