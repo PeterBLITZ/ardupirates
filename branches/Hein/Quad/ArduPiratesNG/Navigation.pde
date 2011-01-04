@@ -45,10 +45,10 @@ void read_GPS_data()
   Log_Write_GPS(GPS.Time, GPS.Lattitude, GPS.Longitude, GPS.Altitude, GPS.Altitude, GPS.Ground_Speed, GPS.Ground_Course, GPS.Fix, GPS.NumSats);
 
   //if (GPS.Fix >= 2)
-  if (GPS.Fix)
-    digitalWrite(LED_Red,HIGH);  // GPS Fix => RED LED
-  else
-    digitalWrite(LED_Red,LOW);
+//  if (GPS.Fix)
+//    digitalWrite(LED_Red,HIGH);  // GPS Fix => RED LED
+//  else
+//    digitalWrite(LED_Red,LOW);
 #endif
 }
 

@@ -92,13 +92,31 @@ void read_radio()
     if (flightMode == FM_STABLE_MODE)
     {
       if (ch_aux2 < 1250 && ch_aux > 1800)
+      {
         AP_mode = AP_NORMAL_STABLE_MODE  ;      // Stable mode (Heading Hold only)
+        digitalWrite(LED_Yellow,LOW);      // Yellow LED OFF : Alititude Hold OFF
+        digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS Position Hold OFF
+      }
       else if (ch_aux < 1250 && ch_aux2 > 1800)
+      {
         AP_mode = AP_GPS_HOLD;      // Position Hold (GPS position control)
+        digitalWrite(LED_Yellow,LOW);      // Yellow LED OFF : Alititude Hold OFF
+        if (GPS.Fix)
+          digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS Position Hold ON
+      }
       else if (ch_aux < 1250 && ch_aux2 < 1250)
+      {
         AP_mode = AP_ALTITUDE_HOLD;  // Super Stable Mode (Altitude hold mode)
+        digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : Alititude Hold ON
+        digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS Position Hold OFF
+      }
       else 
+      {
         AP_mode = AP_ALT_GPS_HOLD;     //Position & Altitude hold mode (GPS position control & Altitude control)
+        digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : Alititude Hold ON
+        if (GPS.Fix)
+          digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS Position Hold ON
+      }
     } 
 
 /*
@@ -110,7 +128,7 @@ void read_radio()
         AP_mode = AP_NORMAL_MODE;   // Normal mode
       }
 */      
-    if (flightMode == FM_STABLE_MODE)  // IN STABLE MODE we convert stick positions to absoulte angles
+    if (flightMode == FM_STABLE_MODE)  // IN STABLE MODE we convert stick positions to absolute angles
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
 #ifdef QUAD
