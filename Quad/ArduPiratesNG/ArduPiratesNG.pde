@@ -8,7 +8,7 @@
  Author(s): ArduCopter Team
  Ted Carancho (AeroQuad), Jose Julio, Jordi Muñoz,
  Jani Hirvinen, Ken McEwans, Roberto Navoni,          
- Sandro Benigno, Chris Anderson
+ Sandro Benigno, Chris Anderson, Hein
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -28,24 +28,24 @@
 /* Mounting position : RC connectors pointing backwards                   */
 /* This code use this libraries :                                         */
 /*   APM_RC : Radio library (with InstantPWM)                             */
-/*   AP_ADC : External ADC library                                       */
+/*   AP_ADC : External ADC library                                        */
 /*   DataFlash : DataFlash log library                                    */
 /*   APM_BMP085 : BMP085 barometer library                                */
-/*   AP_Compass : HMC5843 compass library [optional]                     */
+/*   AP_Compass : HMC5843 compass library [optional]                      */
 /*   GPS_MTK or GPS_UBLOX or GPS_NMEA : GPS library    [optional]         */
 
 /**** Switch Functions *****
 // FLIGHT MODE
 //  This is determine by DIP Switch 3. 
-// DIP3 up (off) = Acrobatic Mode 
-// DIP3 down (0n) = Stable Mode.
+// DIP3 up (off) = Acrobatic Mode.  Yellow LED is Flashing. 
+// DIP3 down (0n) = Stable Mode.  AUTOPILOT MODE LEDs status lights become applicable.  See below.
 
 
  // AUTOPILOT MODE (only works in Stable mode)
- AUX2 OFF && AUX1 OFF = Position & Altitude Hold (AP_mode = 5)
- AUX2 ON  && AUX1 OFF = Stable Mode (Heading Hold only) (AP_mode = 2)
- AUX2 ON  && AUX1 ON  = Altitude Hold only (AP_mode = 3)
- AUX2 OFF && AUX1 ON  = Position Hold only (AP_mode = 4)
+ AUX2 OFF && AUX1 OFF = Position & Altitude Hold (AP_mode = 5) Yellow & Red LEDs both ON (GPS Not Fix - RED LED Flashing)
+ AUX2 ON  && AUX1 OFF = Stable Mode (Heading Hold only) (AP_mode = 2) Yellow & Red LEDs both OFF
+ AUX2 ON  && AUX1 ON  = Altitude Hold only (AP_mode = 3) Yellow LED ON and RED LED OFF
+ AUX2 OFF && AUX1 ON  = Position Hold only (AP_mode = 4) Yellow LED OFF and RED LED ON (GPS Not Fix - RED LED Flashing)
 
 /* ********************************************************************** */
 
@@ -479,7 +479,7 @@ void loop()
     // Autopilot mode functions - GPS Hold, Altitude Hold + object avoidance
     if (AP_mode == AP_GPS_HOLD || AP_ALT_GPS_HOLD)
     {
-      digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
+//      digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
 
       // Do GPS Position hold (lattitude & longitude)
       if (target_position) 
@@ -619,7 +619,7 @@ void loop()
       }
       #endif
     }else{
-      digitalWrite(LED_Yellow,LOW);
+//      digitalWrite(LED_Yellow,LOW);
       target_position=0;
       if( altitude_control_method != ALTITUDE_CONTROL_NONE )
       {
@@ -715,6 +715,11 @@ void loop()
     gled_timer = millis();
     if(gled_status == HIGH) { 
       digitalWrite(LED_Green, LOW);
+      if (flightMode == FM_ACRO_MODE)
+        digitalWrite(LED_Yellow, LOW);
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.Fix);      // Position Hold (GPS position control)
+        digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS not FIX
+              
 #ifdef IsAM      
       digitalWrite(RE_LED, LOW);
 #endif
@@ -723,6 +728,11 @@ void loop()
     } 
     else {
       digitalWrite(LED_Green, HIGH);
+      if (flightMode == FM_ACRO_MODE)
+        digitalWrite(LED_Yellow, HIGH);
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.Fix);      // Position Hold (GPS position control)
+        digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS not FIX
+
 #ifdef IsAM
       if(motorArmed) digitalWrite(RE_LED, HIGH);
 #endif
