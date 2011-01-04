@@ -37,8 +37,8 @@
 /**** Switch Functions *****
 // FLIGHT MODE
 //  This is determine by DIP Switch 3. 
-// DIP3 up (off) = Acrobatic Mode.  Yellow LED is Flashing. 
-// DIP3 down (0n) = Stable Mode.  AUTOPILOT MODE LEDs status lights become applicable.  See below.
+// DIP3 down (On) = Acrobatic Mode.  Yellow LED is Flashing. 
+// DIP3 up (Off) = Stable Mode.  AUTOPILOT MODE LEDs status lights become applicable.  See below.
 
 
  // AUTOPILOT MODE (only works in Stable mode)
@@ -207,8 +207,8 @@
 #ifdef IsMAG
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
-#define MAGOFFSET -76,22.5,-55.5  // Hein's Quad calibration settings.  You have to determine your own.
-//#define MAGOFFSET -70,55.5,-61.5  // Hein's Hexa calibration settings.  You have to determine your own.
+//#define MAGOFFSET -76,22.5,-55.5  // Hein's Quad calibration settings.  You have to determine your own.
+#define MAGOFFSET -70,55.5,-61.5  // Hein's Hexa calibration settings.  You have to determine your own.
 
 // MAGCALIBRATION is the correction angle in degrees (can be + or -). You must calibrating your magnetometer to show magnetic north correctly.
 // After calibration you will have to determine the declination value between Magnetic north and true north, see following link
@@ -221,8 +221,8 @@
 // value until you have a 0 dergrees reading in the configurator's artificial horizon. 
 // Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
 
-#define MAGCALIBRATION -21.65      //  Quad Hein, South Africa, Centurion.  You have to determine your own.
-//#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
+//#define MAGCALIBRATION -21.65      //  Quad Hein, South Africa, Centurion.  You have to determine your own.
+#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
 
 // orientations for DIYDrones magnetometer
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD
@@ -233,7 +233,7 @@
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD      // Hein Hexa
+#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD      // Hein Hexa
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -251,7 +251,7 @@
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
-#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD       //Hein quad
+//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD       //Hein quad
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -717,7 +717,7 @@ void loop()
       digitalWrite(LED_Green, LOW);
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, LOW);
-      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.Fix);      // Position Hold (GPS position control)
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.Fix)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS not FIX
               
 #ifdef IsAM      
@@ -730,7 +730,7 @@ void loop()
       digitalWrite(LED_Green, HIGH);
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, HIGH);
-      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.Fix);      // Position Hold (GPS position control)
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.Fix)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS not FIX
 
 #ifdef IsAM

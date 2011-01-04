@@ -343,8 +343,12 @@ float sonar_altitude_D;
 float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold for filter
 
 
-// AP_mode : 1=> Position hold  0=>Stabilization assist mode (normal mode)
-byte AP_mode = 0;  
+//AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
+//AP_ALTITUDE_HOLD       3  // Just Altitude Hold
+//AP_GPS_HOLD            4  // Just GPS Hold
+//AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
+//AP_WAYPOINT            6 // AP_mode : 1=> Position hold  2=>Stabilization assist mode (normal mode)
+byte AP_mode = 2;  //Default Normal Stable Mode.
 //byte cam_mode = 0;  // moved to general settings, 31-10-10, jp
 
 //  PID Tuning

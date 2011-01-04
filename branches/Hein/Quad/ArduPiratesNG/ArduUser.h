@@ -140,7 +140,8 @@ TODO:
 #define AP_ALTITUDE_HOLD       3  // Just Altitude Hold
 #define AP_GPS_HOLD            4  // Just GPS Hold
 #define AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
-#define AP_WAYPOINT            6  // Waypoint Navigation...NOT USED YET
+//#define AP_WAYPOINT            6  // Waypoint Navigation...NOT USED YET
+
 //Axis
 #define ROLL 0
 #define PITCH 1
