@@ -46,6 +46,7 @@
  AUX2 ON  && AUX1 OFF = Stable Mode (Heading Hold only) (AP_mode = 2) Yellow & Red LEDs both OFF
  AUX2 ON  && AUX1 ON  = Altitude Hold only (AP_mode = 3) Yellow LED ON and RED LED OFF
  AUX2 OFF && AUX1 ON  = Position Hold only (AP_mode = 4) Yellow LED OFF and RED LED ON (GPS Not Fix - RED LED Flashing)
+// Remember In Configurator MODE(channel) is AUX2
 
 /* ********************************************************************** */
 
@@ -513,7 +514,7 @@ void loop()
         Reset_I_terms_navigation();  // Reset I terms (in Navigation.pde)
       }
     }
-    else if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_ALT_GPS_HOLD)
+    if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_ALT_GPS_HOLD)
     {
      // Switch on altitude control if we have a barometer or Sonar
       #if defined(UseBMP) || defined(IsSONAR)
@@ -618,7 +619,9 @@ void loop()
         RF_new_data = 0;  // record that we have consumed the rangefinder data
       }
       #endif
-    }else{
+    }
+    if (AP_mode == AP_NORMAL_STABLE_MODE)
+    {
 //      digitalWrite(LED_Yellow,LOW);
       target_position=0;
       if( altitude_control_method != ALTITUDE_CONTROL_NONE )
