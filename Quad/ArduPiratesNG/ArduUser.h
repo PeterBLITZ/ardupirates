@@ -117,7 +117,7 @@ TODO:
 
 #define CAM_CENT  1500          // Camera center
 #define CAM_SMOOTHING 1000      // Camera movement smoothing on pitch axis
-#define CAM_SMOOTHING_ROLL -400 // Camera movement smoothing on roll axis
+#define CAM_SMOOTHING_ROLL 1000 // Camera movement smoothing on roll axis
 
 #define CAM_TILT_OUT   4        // OUTx pin for Tilt servo
 #define CAM_ROLL_OUT   5        // OUTx pin for Roll servo

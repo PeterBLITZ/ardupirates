@@ -54,13 +54,24 @@ TODO:
 #ifdef IsCAM
 void camera_output() {
 
-  // cam_mode = 1;                        // for debugging 
+  cam_mode = 2;                        // for debugging 
   // Camera stabilization jump tables
   // SW_DIP1 is a multplier, settings  
+#if AIRFRAME == QUAD
+#ifdef FLIGHT_MODE_X_45Degree
   switch ((SW_DIP1 * 4) + cam_mode + (BATTLOW * 10)) {
     // Cases 1 & 4 are stabilization for + Mode flying setup
     // Cases 5 & 8 are stabilization for x Mode flying setup
-    
+#endif
+#ifdef FLIGHT_MODE_X
+  switch (cam_mode + (BATTLOW * 10)) {
+    // Cases 1 & 4 are stabilization for X Mode flying setup
+#endif
+#endif
+#if AIRFRAME == HEXA
+  switch (cam_mode + (BATTLOW * 10)) {
+    // Cases 1 & 4 are stabilization for HEXA Mode flying setup
+#endif
     // Modes 3/4 + 7/8 needs still proper scaling on yaw movement
     // Scaling needs physical test flying with FPV cameras on, 30-10-10 jp
 

@@ -123,13 +123,11 @@ void APM_Init() {
   }
 
 
-  flightOrientation = SW_DIP1;    // DIP1 up (off) = X-mode, DIP1 down (on)= + mode
-  flightMode = SW_DIP3;           // DIP3 up (off) = Acrobatic Mode, DIP3 down (0n) = Stable Mode.
+  flightOrientation = SW_DIP1;    // DIP1 up (OFF)  = X-mode,         DIP1 down (ON) = + mode
+  flightMode = SW_DIP3;           // DIP3 down (ON) = Acrobatic Mode, DIP3 up (OFF)  = Stable Mode.
 
-  // readUserConfig moved to up to ensure min throttle is read from eeprom 
-  //readUserConfig();               // Load user configurable items from EEPROM 
-
-  // Safety measure for Channel mids
+ 
+   // Safety measure for Channel mids
   if(roll_mid < 1400 || roll_mid > 1600) roll_mid = 1500;
   if(pitch_mid < 1400 || pitch_mid > 1600) pitch_mid = 1500;
   if(yaw_mid < 1400 || yaw_mid > 1600) yaw_mid = 1500;

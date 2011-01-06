@@ -48,7 +48,7 @@
  AUX2 ON  && AUX1 ON  = Position & Altitude Hold (AP_mode = 5) Yellow & Red LEDs both ON (GPS Not Logged - RED LED Flashing)
 // Remember In Configurator MODE(channel) is AUX2
 
-/* ********************************************************************** */
+/* ************************************************************ */
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - MODULES ******************** */
@@ -73,6 +73,7 @@
 #define IsMAG       // Do we have a Magnetometer connected, if have remember to activate it from Configurator
 //#define IsAM        // Do we have motormount LED's. AM = Atraction Mode
 //#define IsCAM       // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
+                    // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
 
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP         // Use pressure sensor for altitude hold?
@@ -121,7 +122,7 @@
 
 // Serial data, do we have FTDI cable or Xbee on Telemetry port as our primary command link
 // If we are using normal FTDI/USB port as our telemetry/configuration, keep next line disabled
-#define SerXbee
+//#define SerXbee
 
 // Telemetry port speed, default is 115200
 //#define SerBau  19200
