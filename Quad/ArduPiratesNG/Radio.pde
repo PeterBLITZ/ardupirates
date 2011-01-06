@@ -78,44 +78,39 @@ void read_radio()
     // normal throttle filtering.  Note: Transmiter calibration not used on throttle
     ch_throttle = channel_filter(tempThrottle, ch_throttle);
         
-    // Flight mode
-//  This is determine by DIP Switch 3. 
-// DIP3 up (off) = Acrobatic Mode, DIP3 down (0n) = Stable Mode.
-
-//    if(ch_aux2 > 1300) 
-//      flightMode = ACRO_MODE;  // Force to Acro mode from radio
-//    else
-//      flightMode = STABLE_MODE;  // Stable mode (default)
-//
+// FLIGHT MODE
+//  This is determine by DIP Switch 3. // When switching over you have to reboot APM.
+// DIP3 down (On)  = Acrobatic Mode.  Yellow LED is Flashing. 
+// DIP3 up   (Off) = Stable Mode.  AUTOPILOT MODE LEDs status lights become applicable.  See below.
 
     // Autopilot mode (only works on Stable mode)
     if (flightMode == FM_STABLE_MODE)
     {
-      if (ch_aux2 < 1250 && ch_aux > 1800)
+      if (ch_aux2 > 1800 && ch_aux > 1800)
       {
         AP_mode = AP_NORMAL_STABLE_MODE  ;      // Stable mode (Heading Hold only)
-        digitalWrite(LED_Yellow,LOW);      // Yellow LED OFF : Alititude Hold OFF
-        digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS Position Hold OFF
+        digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
+        digitalWrite(LED_Red,LOW);              // Red LED OFF : GPS Position Hold OFF
       }
-      else if (ch_aux < 1250 && ch_aux2 > 1800)
+      else if (ch_aux2 > 1800 && ch_aux < 1250)
       {
-        AP_mode = AP_GPS_HOLD;      // Position Hold (GPS position control)
-        digitalWrite(LED_Yellow,LOW);      // Yellow LED OFF : Alititude Hold OFF
+        AP_mode = AP_ALTITUDE_HOLD;             // Super Stable Mode (Altitude hold mode)
+        digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
+        digitalWrite(LED_Red,LOW);              // Red LED OFF : GPS Position Hold OFF
+      }
+      else if (ch_aux2 < 1250 && ch_aux > 1800)
+      {
+        AP_mode = AP_GPS_HOLD;                  // Position Hold (GPS position control)
+        digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
         if (GPS.Fix)
-          digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS Position Hold ON
-      }
-      else if (ch_aux < 1250 && ch_aux2 < 1250)
-      {
-        AP_mode = AP_ALTITUDE_HOLD;  // Super Stable Mode (Altitude hold mode)
-        digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : Alititude Hold ON
-        digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS Position Hold OFF
+          digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
       }
       else 
       {
-        AP_mode = AP_ALT_GPS_HOLD;     //Position & Altitude hold mode (GPS position control & Altitude control)
-        digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : Alititude Hold ON
+        AP_mode = AP_ALT_GPS_HOLD;              //Position & Altitude hold mode (GPS position control & Altitude control)
+        digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
         if (GPS.Fix)
-          digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS Position Hold ON
+          digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
       }
     } 
 
