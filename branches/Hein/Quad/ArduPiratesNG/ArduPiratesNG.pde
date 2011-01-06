@@ -36,16 +36,16 @@
 
 /**** Switch Functions *****
 // FLIGHT MODE
-//  This is determine by DIP Switch 3. 
+//  This is determine by DIP Switch 3. // When switching over you have to reboot APM.
 // DIP3 down (On) = Acrobatic Mode.  Yellow LED is Flashing. 
 // DIP3 up (Off) = Stable Mode.  AUTOPILOT MODE LEDs status lights become applicable.  See below.
 
 
  // AUTOPILOT MODE (only works in Stable mode)
- AUX2 OFF && AUX1 OFF = Position & Altitude Hold (AP_mode = 5) Yellow & Red LEDs both ON (GPS Not Logged - RED LED Flashing)
- AUX2 ON  && AUX1 OFF = Stable Mode (Heading Hold only) (AP_mode = 2) Yellow & Red LEDs both OFF
- AUX2 ON  && AUX1 ON  = Altitude Hold only (AP_mode = 3) Yellow LED ON and RED LED OFF
- AUX2 OFF && AUX1 ON  = Position Hold only (AP_mode = 4) Yellow LED OFF and RED LED ON (GPS Not Logged - RED LED Flashing)
+ AUX2 OFF && AUX1 OFF = Stable Mode              (AP_mode = 2) Yellow & Red LEDs both OFF
+ AUX2 OFF && AUX1 ON  = Altitude Hold only       (AP_mode = 3) Yellow LED ON and RED LED OFF
+ AUX2 ON  && AUX1 OFF = Position Hold only       (AP_mode = 4) Yellow LED OFF and RED LED ON (GPS Not Logged - RED LED Flashing)
+ AUX2 ON  && AUX1 ON  = Position & Altitude Hold (AP_mode = 5) Yellow & Red LEDs both ON (GPS Not Logged - RED LED Flashing)
 // Remember In Configurator MODE(channel) is AUX2
 
 /* ********************************************************************** */
