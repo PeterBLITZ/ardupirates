@@ -67,7 +67,9 @@ void calibrateSensors(void) {
     Read_adc_raw();   // Read sensors
     for(gyro = GYROZ; gyro <= GYROY; gyro++)   
       aux_float[gyro] = aux_float[gyro] * 0.8 + AN[gyro] * 0.2;     // Filtering  
+    #if LOG_SEN
     Log_Write_Sensor(AN[0], AN[1], AN[2], AN[3], AN[4], AN[5], 0);
+    #endif
 
     delay(5);
 

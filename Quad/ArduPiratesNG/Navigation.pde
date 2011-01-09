@@ -42,8 +42,9 @@ void read_GPS_data()
   GPS.NewData=0;    // We Reset the flag...
 
   // Write GPS data to DataFlash log
+  #if LOG_GPS
   Log_Write_GPS(GPS.Time, GPS.Lattitude, GPS.Longitude, GPS.Altitude, GPS.Altitude, GPS.Ground_Speed, GPS.Ground_Course, GPS.Fix, GPS.NumSats);
-
+  #endif
   //if (GPS.Fix >= 2)
 //  if (GPS.Fix)
 //    digitalWrite(LED_Red,HIGH);  // GPS Fix => RED LED
@@ -132,8 +133,9 @@ void Position_control_v2(long lat_dest, long lon_dest)
 
   command_gps_roll = KP_GPS_ROLL * gps_err_roll + KD_GPS_ROLL * gps_roll_D + KI_GPS_ROLL * gps_roll_I;
   command_gps_roll = constrain(command_gps_roll, -GPS_MAX_ANGLE, GPS_MAX_ANGLE); // Limit max command
+  #if LOG_PID
   Log_Write_PID(1,KP_GPS_ROLL*gps_err_roll,KI_GPS_ROLL*gps_roll_I,KD_GPS_ROLL*gps_roll_D,command_gps_roll);
-
+  #endif
   // PITCH
   gps_err_pitch = (-gps_err_lat * DCM_Matrix[0][0] - gps_err_lon * DCM_Matrix[1][0]);
   gps_pitch_I = (-gps_lat_I * DCM_Matrix[0][0] - gps_lon_I * DCM_Matrix[1][0]);
@@ -141,8 +143,9 @@ void Position_control_v2(long lat_dest, long lon_dest)
 
   command_gps_pitch = KP_GPS_PITCH * gps_err_pitch + KD_GPS_PITCH * gps_pitch_D + KI_GPS_PITCH * gps_pitch_I;
   command_gps_pitch = constrain(command_gps_pitch, -GPS_MAX_ANGLE, GPS_MAX_ANGLE); // Limit max command
+  #if LOG_PID
   Log_Write_PID(2,KP_GPS_PITCH*gps_err_pitch,KI_GPS_PITCH*gps_pitch_I,KD_GPS_PITCH*gps_pitch_D,command_gps_pitch);
-  
+  #endif
 #endif  
 }
 
@@ -175,7 +178,9 @@ int Altitude_control_baro(int altitude, int target_altitude)
   baro_altitude_D = (float)(err_altitude-err_altitude_old)/0.05;  // 20Hz  
   command_altitude = KP_ALTITUDE*err_altitude + KD_ALTITUDE*baro_altitude_D + KI_ALTITUDE*baro_altitude_I;
   command_altitude = initial_throttle + constrain(command_altitude,-ALTITUDE_CONTROL_BARO_OUTPUT_MIN,ALTITUDE_CONTROL_BARO_OUTPUT_MAX);
+  #if LOG_PID
   Log_Write_PID(5,KP_ALTITUDE*err_altitude,KI_ALTITUDE*baro_altitude_I,KD_ALTITUDE*baro_altitude_D,command_altitude);  
+  #endif
   return command_altitude;
 }
 
@@ -197,7 +202,9 @@ int Altitude_control_Sonar(int altitude, int target_altitude)
   sonar_altitude_D = (float)(err_altitude-err_altitude_old)/GdT_SONAR_ALTITUDE;  
   command_altitude = KP_SONAR_ALTITUDE*err_altitude + KI_SONAR_ALTITUDE*sonar_altitude_I + KD_SONAR_ALTITUDE*sonar_altitude_D ;
   command_altitude = initial_throttle + constrain(command_altitude,-ALTITUDE_CONTROL_SONAR_OUTPUT_MIN,ALTITUDE_CONTROL_SONAR_OUTPUT_MAX);
+  #if LOG_PID
   Log_Write_PID(4,KP_SONAR_ALTITUDE*err_altitude,KI_SONAR_ALTITUDE*sonar_altitude_I,KD_SONAR_ALTITUDE*sonar_altitude_D,command_altitude);
+  #endif
   return command_altitude;
 }
 

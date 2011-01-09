@@ -439,16 +439,19 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 								
 /* ******************************************************** */
 /* Logging Stuff	- These should be 1 (on) or 0 (off) */
+//only GPS, SEN, RANGEFINDER, PID, and RADIO are currently available
 
-#define LOG_ATTITUDE 1	        // Logs basic attitude info
+#define LOG_ATTITUDE 0	        // Logs basic attitude info
 #define LOG_GPS 1		// Logs GPS info
-#define LOG_PM 1		// Logs IMU performance monitoring info£
+#define LOG_PM 0		// Logs IMU performance monitoring info£
 #define LOG_CTUN 0		// Logs control loop tuning info
 #define LOG_NTUN 0		// Logs navigation loop tuning info
-#define LOG_MODE 1		// Logs mode changes
+#define LOG_MODE 0		// Logs mode changes
 #define LOG_RAW 0		// Logs raw accel/gyro data
 #define LOG_SEN 1               // Logs sensor data
-#define LOG_RANGEFINDER 0       // Logs data from range finders
+#define LOG_RANGEFINDER 1       // Logs data from range finders
+#define LOG_PID 1               // Logs navigation loop PID values (GPS, Altitude)
+#define LOG_RADIO 1             // Logs radio values
 
 //  GCS Message ID's
 #define MSG_ACKNOWLEDGE 0x00
