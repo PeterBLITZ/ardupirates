@@ -68,12 +68,13 @@
 //  Modules Config
 // --------------------------
 
-#define IsGPS       // Do we have a GPS connected
-#define IsNEWMTEK   // Do we have MTEK with new firmware
-#define IsMAG       // Do we have a Magnetometer connected, if have remember to activate it from Configurator
-//#define IsAM        // Do we have motormount LED's. AM = Atraction Mode
-//#define IsCAM       // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
-                    // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
+#define IsGPS            // Do we have a GPS connected
+#define IsNEWMTEK        // Do we have MTEK with new firmware
+#define IsMAG            // Do we have a Magnetometer connected, if have remember to activate it from Configurator
+//#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
+//#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
+                         // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
+//#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold.  NOT IN USE YET.                  
 
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP         // Use pressure sensor for altitude hold?
@@ -177,8 +178,8 @@
 
 // To change between flight orientations just use DIP switch for that. DIP1 up (off) = X-mode, DIP1 down (on)= + mode
 // When selecting Flight_Mode_X choice one of the two options below.
-#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above.
-//#define FLIGHT_MODE_X_45Degree   // (APM-front pointing towards front motor).  See layout above.
+//#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above.
+#define FLIGHT_MODE_X_45Degree   // (APM-front pointing towards front motor).  See layout above.  Default.
 
 // Double check in configurator - Serial command "T" enter.
 // remember after changing DIP switch you must reboot APM.
@@ -476,6 +477,9 @@ void loop()
 #ifdef IsCAM
   // Do we have cameras stabilization connected and in use?
   if(!SW_DIP2) camera_output();
+#ifdef UseCamTrigger
+    CamTrigger();
+#endif
 #endif
 
     // Autopilot mode functions - GPS Hold, Altitude Hold + object avoidance
