@@ -356,6 +356,15 @@ byte AP_mode = 2;  //Default Normal Stable Mode.
 byte Plus = 0;
 byte Minus = 0;
 
+// Camera Trigger
+int Focus_counter = 0;
+int Trigger_counter = 0;
+int PictureCapture_counter = 0;
+byte Focus_status = 1;
+byte Trigger_status = 0;
+byte PictureCapture_status = 0;
+
+
 // Mode LED timers and variables, used to blink LED_Green
 byte gled_status = HIGH;
 long gled_timer;

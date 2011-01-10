@@ -62,19 +62,19 @@ void motor_output()
 #if AIRFRAME == QUAD
     // Quadcopter mix
     if(flightOrientation) {
+#ifdef FLIGHT_MODE_X_45Degree
+          // For X mode - (APM-front pointing towards front motor)
+          rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
+          leftMotor = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
+          frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
+          backMotor = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
+#endif
 #ifdef FLIGHT_MODE_X      
           // For X mode - APM front between front and right motor 
           rightMotor = constrain(throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
           leftMotor = constrain(throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
           frontMotor = constrain(throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
           backMotor = constrain(throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
-#endif
-          // For X mode - (APM-front pointing towards front motor)
-#ifdef FLIGHT_MODE_X_45Degree
-          rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
-          leftMotor = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
-          frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
-          backMotor = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
 #endif
         } else {
           // For + mode 
