@@ -74,7 +74,7 @@
 //#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
 //#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
                          // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
-//#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold.  NOT IN USE YET.                  
+//#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.  NOT IN USE YET.                  
 
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP         // Use pressure sensor for altitude hold?
@@ -156,7 +156,7 @@
 // FLIGHT_MODE_X    // 2x Options (see below).
 // 
 //  FLIGHT_MODE_X (APM-front between Front and Right motor).
-//   F  CW  0....Front....0 CCW  R        // 0 = Motor
+//   F  CW  0....Front....0 CCW  R        // 0 = Motors
 //          ......***......               // *** = APM (APM-front between Front and Right motor)
 //          ......***......               // ***
 //          ......***......               // *** 
@@ -166,10 +166,10 @@
 //                                          F = Front motor.  
 
 //  FLIGHT_MODE_X_45Degree (APM-front pointing towards front motor).
-//   F  CW  0....Front....0 CCW  R        // 0 = Motor
+//   F  CW  0....Front....0 CCW  R        // 0 = Motors
 //          ...****........               // ****  = APM (APM-front pointing towards front motor)
 //          ......****.....               //    **** 
-//          .........****..               //      ****
+//          .........****..               //       ****
 //   L CCW  0....Back.....0  CW  B          L = Left motor, 
 //                                          R = Right motor, 
 //                                          B = Back motor,
@@ -193,7 +193,7 @@
 //Hexa Mode - 6 Motor system
 
 //           F CW 0 
-//          ....FRONT....                // 0 = Motor
+//          ....FRONT....                // 0 = Motors
 //    L CCW 0....***....0 CCW R
 //          .....***.....                // *** = APM 
 //    L CW  0....***....0 CW  R          // ***
