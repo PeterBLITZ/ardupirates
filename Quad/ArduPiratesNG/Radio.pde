@@ -49,8 +49,9 @@ void read_radio()
     ch_aux2 = APM_RC.InputCh(CH_6) * ch_aux2_slope + ch_aux2_offset;   //This is the MODE Channel in Configurator.
 //  Use this channel if you have a 7 or more Channel Radio.
 //  Can be used for PID tuning (see FUNCTIONS) or Camera 3 position tilt (pitch).
+#ifdef Use_PID_Tuning
     ch_flightmode = APM_RC.InputCh(CH_7);  // flight mode 3-position switch.
-    
+#endif    
     // special checks for throttle
     tempThrottle = APM_RC.InputCh(CH_THROTTLE);
 
@@ -59,9 +60,12 @@ void read_radio()
         if( motorArmed == 1 ) {
             if( ch_throttle > MIN_THROTTLE + 100 ) { // if throttle is now over MIN..
                 // if throttle has increased suddenly, disarm motors 
-                if( (tempThrottle - ch_throttle) > SAFETY_MAX_THROTTLE_INCREASE  ) {     
+                if((tempThrottle - ch_throttle) > SAFETY_MAX_THROTTLE_INCREASE && safetyOff == 0) {     
                     motorArmed = 0;
-                }else{ // if it hasn't increased too quickly turn off the safety
+                }else if (tempThrottle > SAFETY_HOVER_THROTTLE){ // if it hasn't increased too quickly turn off the safety
+                    motorSafety = 0;
+                    safetyOff = 1;
+                }else{  
                     motorSafety = 0;
                 }
             }
@@ -72,9 +76,12 @@ void read_radio()
             motorSafety = 1;
             Safety_counter = 0;
         }
-    }else{  // throttle is over MIN so make sure to reset Safety_counter
-         Safety_counter = 0;
-    } 
+    }else if(motorSafety == 0 && tempThrottle > SAFETY_HOVER_THROTTLE){  // throttle is over MIN so make sure to reset Safety_counter
+       Safety_counter = 0;
+       safetyOff = 1;
+    }else {
+       Safety_counter = 0;
+    }   
     // normal throttle filtering.  Note: Transmiter calibration not used on throttle
     ch_throttle = channel_filter(tempThrottle, ch_throttle);
         
@@ -188,6 +195,7 @@ void read_radio()
         if (Disarming_counter > DISARM_DELAY){
           motorArmed = 0;
           minThrottle = MIN_THROTTLE;
+          safetyOff = 0;
         }
         else
           Disarming_counter++;
