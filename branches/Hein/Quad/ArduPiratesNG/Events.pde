@@ -132,30 +132,41 @@ void camera_output() {
 void CamTrigger() {
 
   if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD){ 
-    if (Focus_status)
+    if (Focus_status){
       APM_RC.OutputCh(CH_9, CAM_FOCUS);           // Servo put camera in focus status
-    if (Focus_counter > 400){                            // Focus Counter = 2 Seconds.
-      Focus_status = 0;
-      Focus_counter = 0;
-      Trigger_status = 1;
-    }else
-      ++Focus_counter;
-    if (Trigger_status)
+      if (Focus_counter > 400){                            // Focus Counter = 2 Seconds.
+        Focus_status = 0;
+        Focus_counter = 0;
+        Trigger_status = 1;
+      }else
+        ++Focus_counter;
+    }
+    if (Trigger_status){
       APM_RC.OutputCh(CH_9, CAM_TRIGGER);          // Servo put camera in Trigger status
-    if (Trigger_counter > 400){                         //  Trigger Counter = 2 Seconds.
-      Trigger_status = 0;
-      Trigger_counter = 0;
-      PictureCapture_status = 1;
-    }else
-      ++Trigger_counter;
-    if (PictureCapture_status)
+      if (Trigger_counter > 400){                         //  Trigger Counter = 2 Seconds.
+        Trigger_status = 0;
+        Trigger_counter = 0;
+        PictureCapture_status = 1;
+      }else
+        ++Trigger_counter;
+    }
+    if (PictureCapture_status){
       APM_RC.OutputCh(CH_9, CAM_RELEASE);          // Servo removed from camera Trigger Button
-    if (PictureCapture_counter > 600){                  // Picture Capture Counter = 3 Seconds 
-      PictureCapture_status = 0;
-      PictureCapture_counter = 0;
-      Focus_status = 1;
-    }else
-      ++PictureCapture_counter;  
+      if (PictureCapture_counter > 600){                  // Picture Capture Counter = 3 Seconds 
+        PictureCapture_status = 0;
+        PictureCapture_counter = 0;
+        Focus_status = 1;
+      }else
+        ++PictureCapture_counter;  
+    }
+  }else {
+    APM_RC.OutputCh(CH_9, CAM_RELEASE);          // Servo removed from camera Trigger Button
+    Focus_status = 1;
+    Trigger_status = 0;
+    PictureCapture_status = 0;
+    Focus_counter = 0;
+    Trigger_counter = 0;
+    PictureCapture_counter = 0;
   }
 }
 #endif
