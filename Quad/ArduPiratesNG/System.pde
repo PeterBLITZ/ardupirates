@@ -233,6 +233,10 @@ void APM_Init() {
   digitalWrite(LE_LED, HIGH); 
 #endif
 
+// Camera Trigger
+#ifdef UseCamTrigger
+  APM_RC.OutputCh(CH_9, CAM_RELEASE);          // Servo removed from camera Trigger Button
+#endif
 }
 
 

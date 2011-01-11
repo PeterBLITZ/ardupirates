@@ -64,7 +64,7 @@ void read_radio()
                     motorArmed = 0;
                 }else if (tempThrottle > SAFETY_HOVER_THROTTLE){ // if it hasn't increased too quickly turn off the safety
                     motorSafety = 0;
-                    safetyOff = 1;
+                    safetyOff = 1;                               // throttle is over Safety Hover Throttle we switch off Safety.
                 }else{  
                     motorSafety = 0;
                 }
@@ -76,12 +76,14 @@ void read_radio()
             motorSafety = 1;
             Safety_counter = 0;
         }
-    }else if(motorSafety == 0 && tempThrottle > SAFETY_HOVER_THROTTLE){  // throttle is over MIN so make sure to reset Safety_counter
-       Safety_counter = 0;
-       safetyOff = 1;
-    }else {
+     }else {
        Safety_counter = 0;
     }   
+    if(motorSafety == 0 && tempThrottle > SAFETY_HOVER_THROTTLE){  // throttle is over MIN so make sure to reset Safety_counter
+       Safety_counter = 0;
+       safetyOff = 1;                                              // throttle is over Safety Hover Throttle we switch off Safety.
+    }   
+   
     // normal throttle filtering.  Note: Transmiter calibration not used on throttle
     ch_throttle = channel_filter(tempThrottle, ch_throttle);
         
