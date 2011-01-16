@@ -394,7 +394,7 @@ void setup() {
 #endif 
 
 
-  delay(20);
+  delay(10);
   digitalWrite(LED_Green,HIGH);     // Ready to go...  
 }
 
