@@ -625,24 +625,26 @@ void sendSerialTelemetry() {
 #ifdef IsGPS
   case '4':  // Jani's debugs
 //  Log_Write_GPS(GPS.time, GPS.latitude, GPS.longitude, GPS.altitude, GPS.altitude, GPS.ground_speed, GPS.ground_course, GPS.fix, GPS.num_sats);
-		Serial.print("gps:");
-		Serial.print(" Lat:");
-		Serial.print((float)gps.latitude / T7, DEC);
-		Serial.print(" Lon:");
-		Serial.print((float)gps.longitude / T7, DEC);
-		Serial.print(" Alt:");
-		Serial.print((float)gps.altitude / 100.0, DEC);
-		Serial.print(" GSP:");
-		Serial.print(gps.ground_speed / 100.0);
-		Serial.print(" COG:");
-		Serial.print(gps.ground_course / 100.0, DEC);
-		Serial.print(" SAT:");
-		Serial.print(gps.num_sats, DEC);
-		Serial.print(" FIX:");
-		Serial.print(gps.fix, DEC);
-		Serial.print(" TIM:");
-		Serial.print(gps.time, DEC);
-		Serial.println();
+      		SerPri("gps:");
+      		SerPri(" Lat:");
+      		SerPri((float)GPS.latitude / T7, DEC);
+      		SerPri(" Lon:");
+      		SerPri((float)GPS.longitude / T7, DEC);
+      		SerPri(" Alt:");
+      		SerPri((float)GPS.altitude / 100.0, DEC);
+      		SerPri(" GSP:");
+      		SerPri(GPS.ground_speed / 100.0);
+      		SerPri(" COG:");
+      		SerPri(GPS.ground_course / 100.0, DEC);
+      		SerPri(" SAT:");
+      		SerPri(GPS.num_sats, DEC);
+      		SerPri(" FIX:");
+      		SerPri(GPS.fix, DEC);
+      		SerPri(" TIM:");
+      		SerPri(GPS.time, DEC);
+                SerPri(" GCF:");
+                SerPri(GEOG_CORRECTION_FACTOR);
+      		SerPriln();
     break;
 #endif    
   case '.': // Modify GPS settings, print directly to GPS Port
