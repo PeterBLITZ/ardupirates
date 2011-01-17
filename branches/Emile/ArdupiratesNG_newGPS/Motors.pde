@@ -39,6 +39,7 @@
 void motor_output()
 {
   int throttle;
+  int half_control_roll_plus_pitch, half_control_roll_minus_pitch;
   byte throttle_mode=0;
  
   throttle = ch_throttle;
@@ -71,10 +72,14 @@ void motor_output()
 #endif
 #ifdef FLIGHT_MODE_X      
           // For X mode - APM front between front and right motor 
-          rightMotor = constrain(throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
-          leftMotor = constrain(throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
-          frontMotor = constrain(throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
-          backMotor = constrain(throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
+          half_control_roll_plus_pitch = (control_roll + control_pitch) / 2;
+          half_control_roll_minus_pitch = (control_roll - control_pitch) / 2;
+
+
+          rightMotor = constrain(throttle - half_control_roll_plus_pitch + control_yaw, minThrottle, 2000); // Right motor
+          leftMotor = constrain(throttle + half_control_roll_minus_pitch + control_yaw, minThrottle, 2000);  // Left motor
+          frontMotor = constrain(throttle + half_control_roll_plus_pitch - control_yaw, minThrottle, 2000); // Front motor
+          backMotor = constrain(throttle - half_control_roll_minus_pitch - control_yaw, minThrottle, 2000);  // Back motor
 #endif
         } else {
           // For + mode 
