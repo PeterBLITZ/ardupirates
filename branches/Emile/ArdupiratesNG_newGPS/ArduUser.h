@@ -49,7 +49,7 @@ TODO:
 #define ARM_DELAY 50      // how long you need to keep rudder to max right for arming motors (units*0.02, 50=1second)
 #define DISARM_DELAY 25   // how long you need to keep rudder to max left for disarming motors
 #define SAFETY_DELAY 25   // how long you need to keep throttle to min before safety activates and does not allow sudden throttle increases
-#define SAFETY_MAX_THROTTLE_INCREASE 100  // how much of jump in throttle (within a single cycle, 5ms) will cause motors to disarm
+#define SAFETY_MAX_THROTTLE_INCREASE 1000  // how much of jump in throttle (within a single cycle, 5ms) will cause motors to disarm
 #define SAFETY_HOVER_THROTTLE 1300  // When we reach Hover Throttle Safely we switch of Safety Feature  
 
 /*************************************************************/
@@ -71,15 +71,6 @@ TODO:
 #define RI_LED AN10  // Mega PH4 pin, OUT5
 #define LE_LED AN8  // Mega PH5 pin, OUT4
 */
-
-// GPS type codes - use the names, not the numbers
-#define GPS_PROTOCOL_NONE	-1
-#define GPS_PROTOCOL_NMEA	0
-#define GPS_PROTOCOL_SIRF	1
-#define GPS_PROTOCOL_UBLOX	2
-#define GPS_PROTOCOL_IMU	3
-#define GPS_PROTOCOL_MTK	4
-#define GPS_PROTOCOL_MTK16	6
 
 /*************************************************************/
 // Special patterns for future use

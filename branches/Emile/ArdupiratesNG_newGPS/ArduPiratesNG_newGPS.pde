@@ -49,6 +49,25 @@
 // Remember In Configurator MODE(channel) is AUX2
 
 /* ************************************************************ */
+/* **************** MAIN PROGRAM - INCLUDES ******************* */
+/* ************************************************************ */
+#include <avr/io.h>
+#include <avr/eeprom.h>
+#include <avr/pgmspace.h>
+#include <math.h>
+#include <APM_RC.h> 		// ArduPilot Mega RC Library
+#include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
+#include <APM_BMP085.h> 	// ArduPilot Mega BMP085 Library 
+#include <DataFlash.h>		// ArduPilot Mega Flash Memory Library
+#include <AP_Compass.h>	        // ArduPilot Mega Magnetometer Library
+#include <Wire.h>               // I2C Communication library
+#include <EEPROM.h>             // EEPROM 
+#include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
+#include <AP_GPS.h>			// ArduPilot GPS library
+
+#include "Arducopter.h"
+#include "ArduUser.h"
+/* ************************************************************ */
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - MODULES ******************** */
@@ -68,14 +87,37 @@
 //  Modules Config
 // --------------------------
 
+///////////////////////////////////////
+// GPS Selection
 #define IsGPS            // Do we have a GPS connected
-//define IsNEWMTEK        // Do we have MTEK with new firmware
+
+#ifdef IsGPS
+  //Pleas uncomment your GPS Protocol based on your device even if you do not have a GPS!!
+  //You have to also uncomment line below the #define
+  
+    //#define GPS_PROTOCOL GPS_PROTOCOL_NONE	// No GPS attached!!
+    //	      
+    //#define GPS_PROTOCOL GPS_PROTOCOL_NMEA	// Standard NMEA GPS.      NOT SUPPORTED (yet?)
+    //    AP_GPS_NMEA		GPS(&Serial1);
+    //#define GPS_PROTOCOL GPS_PROTOCOL_IMU	// X-Plane interface or ArduPilot IMU.
+    //    AP_GPS_IMU		GPS(&Serial);	
+    //#define GPS_PROTOCOL GPS_PROTOCOL_MTK	// MediaTek-based GPS running the DIYDrones firmware 1.4
+    //    AP_GPS_MTK		GPS(&Serial1);
+    #define GPS_PROTOCOL GPS_PROTOCOL_MTK16	// MediaTek-based GPS running the DIYDrones firmware 1.6
+          AP_GPS_MTK16          	GPS(&Serial1);
+    //#define GPS_PROTOCOL GPS_PROTOCOL_UBLOX	// UBLOX GPS
+    //    AP_GPS_UBLOX          	GPS(&Serial1);
+    //#define GPS_PROTOCOL GPS_PROTOCOL_SIRF	// SiRF-based GPS in Binary mode.  NOT TESTED
+    //    AP_GPS_SIRF		GPS(&Serial1);
+#endif
+// End GPS Selection
+////////////////////////////////////////////
+
 //#define IsMAG            // Do we have a Magnetometer connected, if have remember to activate it from Configurator
 //#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
 //#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
-                         // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
+                        // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
 //#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.  NOT IN USE YET.                  
-
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP         // Use pressure sensor for altitude hold?
 //#define BATTERY_EVENT 1   // (boolean) 0 = don't read battery, 1 = read battery voltage (only if you have it _wired_ up!)
@@ -106,9 +148,7 @@
 //#define MOTORTYPE UART     // UART style ESC's controlling motors
 
 
-
-
-////////////////////
+/////////////////////////////////////////
 // Serial ports & speeds
 
 // Serial data, do we have FTDI cable or Xbee on Telemetry port as our primary command link
@@ -128,7 +168,6 @@
 //#define GpsBau  38400
 //#define GpsBau  57600
 //#define GpsBau  115200
-
 
 /* ************************************************* */
 // Radio modes
@@ -263,73 +302,7 @@
 //Select below if you want to use this function
 //#define Use_PID_Tuning
 
-///////////////////////////////////////
-// GPS Selection
-#define GPS_PROTOCOL GPS_PROTOCOL_MTK16
-//#define GPSDEVICE GPSDEV_DIYMTEK    // For DIY Drones MediaTek
-//#define GPSDEVICE  GPSDEV_DIYUBLOX   // For DIY Drones uBlox GPS
-//#define GPSDEVICE  GPSDEV_FPUBLOX    // For Fah Pah Special ArduCopter GPS
-//#define GPSDEVICE  GPSDEV_NMEA       // For general NMEA compatible GPSEs
-//#dedine GPSDEVICE  GPSDEV_IMU        // For IMU Simulations only
-
-
 /**********************************************/
-
-
-/* ************************************************************ */
-/* **************** MAIN PROGRAM - INCLUDES ******************* */
-/* ************************************************************ */
-
-//#include <FastSerial.h>
-#include <avr/io.h>
-#include <avr/eeprom.h>
-#include <avr/pgmspace.h>
-#include <math.h>
-#include <APM_RC.h> 		// ArduPilot Mega RC Library
-#include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
-#include <APM_BMP085.h> 	// ArduPilot Mega BMP085 Library 
-#include <DataFlash.h>		// ArduPilot Mega Flash Memory Library
-#include <AP_Compass.h>	        // ArduPilot Mega Magnetometer Library
-#include <Wire.h>               // I2C Communication library
-#include <EEPROM.h>             // EEPROM 
-#include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
-#include <AP_GPS.h>
-#include "Arducopter.h"
-#include "ArduUser.h"
-
-//FastSerialPort1(Serial1);
-
-//#ifdef IsGPS
-  // GPS selection
-//  #if   GPS_PROTOCOL == GPS_PROTOCOL_NMEA
-//  AP_GPS_NMEA		GPS(&Serial1);
-//  #elif GPS_PROTOCOL == GPS_PROTOCOL_SIRF
-//  AP_GPS_SIRF		GPS(&Serial1);
-//  #elif GPS_PROTOCOL == GPS_PROTOCOL_UBLOX
-//  AP_GPS_UBLOX	        GPS(&Serial1);
-//  #elif GPS_PROTOCOL == GPS_PROTOCOL_IMU
-//  AP_GPS_IMU		GPS(&Serial);	// note, console port
-//  #elif GPS_PROTOCOL == GPS_PROTOCOL_MTK
-//  AP_GPS_MTK		GPS(&Serial1);
-//  #elif GPS_PROTOCOL == GPS_PROTOCOL_MTK16
-//  AP_GPS_MTK16	        GPS(&Serial1);
-//  #elif GPS_PROTOCOL == GPS_PROTOCOL_NONE
-//  AP_GPS_NONE		GPS(NULL);
-//  #endif
-//#endif
-
-//#ifdef IsGPS
-// GPS library (Include only one library)
-//#include <AP_GPS_MTK16.h>
-AP_GPS_MTK16 GPS(&Serial1);
-#define T6 1000000
-#define T7 10000000
-//#include <AP_GPS.h>
-//#include <GPS_MTK.h>            // ArduPilot MTK GPS Library
-//#include <GPS_IMU.h>            // ArduPilot IMU/SIM GPS Library
-//#include <GPS_UBLOX.h>  // ArduPilot Ublox GPS Library
-//#include <GPS_NMEA.h>   // ArduPilot NMEA GPS library
-//#endif
 
 #if AIRFRAME == HELI
 #include "Heli.h"
@@ -364,6 +337,14 @@ unsigned long currentTimeMicros = 0, previousTimeMicros = 0;  // current and pre
 unsigned long mainLoop = 0;
 unsigned long mediumLoop = 0;
 unsigned long slowLoop = 0;
+
+// 3D Location vectors
+// -------------------
+struct Location home;                   // home location
+struct Location current_loc;            // current location
+long 	target_altitude;		// used for
+long 	offset_altitude;		// used for
+boolean	home_is_set = false;            // Flag for if we have gps lock and have set the home location
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */

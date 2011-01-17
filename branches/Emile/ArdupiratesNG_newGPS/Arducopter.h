@@ -34,7 +34,7 @@ TODO:
 * ************************************************************** */
 
 #include "WProgram.h"
-
+#include <stdint.h>
 
 /* ************************************************************** */
 /* APM Hardware definitions */
@@ -275,6 +275,16 @@ float yaw_D;
 float err_yaw;
 float heading_I=0;  // used only by heli
 
+//@{
+struct Location {
+	uint8_t		id;				///< command id
+	uint8_t		p1;				///< param 1
+	int32_t		alt;				///< param 2 - Altitude in centimeters (meters * 100)
+	int32_t		lat;				///< param 3 - Lattitude * 10**7
+	int32_t		lng;				///< param 4 - Longitude * 10**7
+};
+//@}
+
 //Position control
 long target_longitude;
 long target_latitude;
@@ -510,12 +520,16 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 					// SEVERITY_CRITICAL
 
 // Different GPS devices, 
-
-#define GPSDEV_DIYMTEK  1
-#define GPSDEV_DIYUBLOX 2
-#define GPSDEV_FPUBLOX  3
-#define GPSDEV_IMU      4
-#define GPSDEV_NMEA     5
+// GPS type codes - use the names, not the numbers
+#define GPS_PROTOCOL_NONE	-1
+#define GPS_PROTOCOL_NMEA	0
+#define GPS_PROTOCOL_SIRF	1
+#define GPS_PROTOCOL_UBLOX	2
+#define GPS_PROTOCOL_IMU	3
+#define GPS_PROTOCOL_MTK	4
+#define GPS_PROTOCOL_MTK16	6
+#define T6 1000000
+#define T7 10000000
 
 // Radio Modes, mainly just Mode2 
 #define MODE1           1 
