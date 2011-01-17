@@ -97,21 +97,9 @@ void APM_Init() {
   adc.Init();            // APM ADC library initialization
   DataFlash.Init();          // DataFlash log initialization
 
-  delay(1000);
-//#ifdef IsGPS  
+#ifdef IsGPS  
   GPS.init();                // GPS Initialization
-  FullBlink(50,20);
-//#ifdef IsNEWMTEK  
-//  delay(250);
-//
-//  // DIY Drones MTEK GPS needs binary sentences activated if you upgraded to latest firmware.
-//  // If your GPS shows solid blue but LED C (Red) does not go on, your GPS is on NMEA mode
-//  Serial1.print("$PMTK220,200*2C\r\n");          // 5Hz update rate
-//  delay(200);
-//  Serial1.print("$PGCMD,16,0,0,0,0,0*6A\r\n"); 
-//
-//#endif
-//#endif
+#endif
 
   // Read DIP Switches and other important values. DIP switches needs special functions to 
   // read due they are not defined as normal pins like other GPIO's are. 
@@ -126,11 +114,9 @@ void APM_Init() {
     // Btw.. We never return from this....
   }
 
-
   flightOrientation = SW_DIP1;    // DIP1 up (OFF)  = X-mode,         DIP1 down (ON) = + mode
   flightMode = SW_DIP3;           // DIP3 down (ON) = Acrobatic Mode, DIP3 up (OFF)  = Stable Mode.
 
- 
    // Safety measure for Channel mids
   if(roll_mid < 1400 || roll_mid > 1600) roll_mid = 1500;
   if(pitch_mid < 1400 || pitch_mid > 1600) pitch_mid = 1500;
