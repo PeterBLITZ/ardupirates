@@ -8,8 +8,11 @@
  Author(s): ArduCopter Team
  Ted Carancho (AeroQuad), Jose Julio, Jordi Muñoz,
  Jani Hirvinen, Ken McEwans, Roberto Navoni,          
- Sandro Benigno, Chris Anderson, Hein
- 
+ Sandro Benigno, Chris Anderson
+
+ Author(s) : ArduPirates deveopment team                                  
+          Philipp Maloney, Norbert, Hein, Igor.  
+          
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -74,7 +77,7 @@
 //#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
 //#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
                          // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
-//#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.  NOT IN USE YET.                  
+//#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.                  
 
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP         // Use pressure sensor for altitude hold?
@@ -476,10 +479,12 @@ void loop()
 
 #ifdef IsCAM
   // Do we have cameras stabilization connected and in use?
-  if(!SW_DIP2) camera_output();
+  if(!SW_DIP2){ 
+    camera_output();
 #ifdef UseCamTrigger
     CamTrigger();
 #endif
+  }
 #endif
 
     // Autopilot mode functions - GPS Hold, Altitude Hold + object avoidance
@@ -725,7 +730,7 @@ void loop()
       digitalWrite(LED_Green, LOW);
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, LOW);
-      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.Fix)      // Position Hold (GPS position control)
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && GPS.Fix < 1)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS not FIX
               
 #ifdef IsAM      
@@ -738,7 +743,7 @@ void loop()
       digitalWrite(LED_Green, HIGH);
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, HIGH);
-      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.Fix)      // Position Hold (GPS position control)
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && GPS.Fix < 1)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS not FIX
 
 #ifdef IsAM
