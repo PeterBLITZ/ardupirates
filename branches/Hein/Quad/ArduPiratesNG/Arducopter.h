@@ -348,7 +348,8 @@ float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized a
 //AP_ALTITUDE_HOLD       3  // Just Altitude Hold
 //AP_GPS_HOLD            4  // Just GPS Hold
 //AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
-//AP_WAYPOINT            6 // AP_mode : 1=> Position hold  2=>Stabilization assist mode (normal mode)
+//AP_WAYPOINT            6  // NOT IN USE
+
 byte AP_mode = 2;  //Default Normal Stable Mode.
 //byte cam_mode = 0;  // moved to general settings, 31-10-10, jp
 
@@ -409,7 +410,7 @@ int BackCCWMotor;
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed
 byte  motorSafety = 1;                             // 0 = safety off, 1 = on.  When On, sudden increases in throttle not allowed
 int   minThrottle = 0;
-byte  safetyOff = 0;                              // During normal Flight motor Safety is switched off.
+byte  safetyOff = 0;                              // During normal Flight, the motor Safety feature is switched off.
 boolean flightOrientation = 0;                    // 0 = +, 1 = x this is read from DIP1 switch during system bootup
 
 // Serial communication

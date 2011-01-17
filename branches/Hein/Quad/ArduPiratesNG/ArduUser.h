@@ -123,9 +123,11 @@ TODO:
 #define CAM_SMOOTHING 1000      // Camera movement smoothing on pitch axis
 #define CAM_SMOOTHING_ROLL 1000 // Camera movement smoothing on roll axis
 
-#define CAM_FOCUS 1500          // Camera trigger Servo Focus position
-#define CAM_TRIGGER 1700        // Camera trigger Servo Trigger position 
-#define CAM_RELEASE 1000        // Camera trigger Servo Release Trigger Button position
+#define CAM_FOCUS 1710          // Camera trigger Servo Focus position
+//int CAM_FOCUs = 1770;
+//int CAM_TRIGGEr = 1800;
+#define CAM_TRIGGER 1780        // Camera trigger Servo Trigger position 
+#define CAM_RELEASE 1500        // Camera trigger Servo Release Trigger Button position
 
 #define CAM_TILT_OUT   4        // OUTx pin for Tilt servo
 #define CAM_ROLL_OUT   5        // OUTx pin for Roll servo

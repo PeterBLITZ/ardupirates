@@ -111,14 +111,14 @@ void read_radio()
       {
         AP_mode = AP_GPS_HOLD;                  // Position Hold (GPS position control)
         digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
-        if (GPS.Fix)
+        if (GPS.Fix > 0)
           digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
       }
       else 
       {
         AP_mode = AP_ALT_GPS_HOLD;              //Position & Altitude hold mode (GPS position control & Altitude control)
         digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
-        if (GPS.Fix)
+        if (GPS.Fix > 0)
           digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
       }
     } 

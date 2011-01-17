@@ -410,6 +410,8 @@ void sendSerialTelemetry() {
     #if AIRFRAME == HELI  
       SerPriln("Airframe = Heli");
     #endif
+//    SerPri("Focus Servo = ");
+//    SerPriln(CAM_FOCUs);
     
 //    SerPri("AP Mode = ");
 //    if (AP_mode == F_MODE_ACROBATIC) 
