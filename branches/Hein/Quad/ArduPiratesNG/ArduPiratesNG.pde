@@ -11,7 +11,7 @@
  Sandro Benigno, Chris Anderson
 
  Author(s) : ArduPirates deveopment team                                  
-          Philipp Maloney, Norbert, Hein, Igor.  
+          Philipp Maloney, Norbert, Hein, Igor, Emile  
           
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -86,15 +86,6 @@
 //#define IsRANGEFINDER  // are we using range finders for obstacle avoidance?
 
 #define CONFIGURATOR
-
-///////////////////////////////////////
-// GPS Selection
-
-#define GPSDEVICE GPSDEV_DIYMTEK    // For DIY Drones MediaTek
-//#define GPSDEVICE  GPSDEV_DIYUBLOX   // For DIY Drones uBlox GPS
-//#define GPSDEVICE  GPSDEV_FPUBLOX    // For Fah Pah Special ArduCopter GPS
-//#define GPSDEVICE  GPSDEV_NMEA       // For general NMEA compatible GPSEs
-//#dedine GPSDEVICE  GPSDEV_IMU        // For IMU Simulations only
 
 
 ////////////////////////////////////////
@@ -283,7 +274,6 @@
 /* **************** MAIN PROGRAM - INCLUDES ******************* */
 /* ************************************************************ */
 
-//#include <AP_GPS.h>
 #include <avr/io.h>
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
@@ -296,16 +286,30 @@
 #include <Wire.h>               // I2C Communication library
 #include <EEPROM.h>             // EEPROM 
 #include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
-//#include <AP_GPS.h>
+#include <AP_GPS.h>
 #include "Arducopter.h"
 #include "ArduUser.h"
 
 #ifdef IsGPS
-// GPS library (Include only one library)
-#include <GPS_MTK.h>            // ArduPilot MTK GPS Library
-//#include <GPS_IMU.h>            // ArduPilot IMU/SIM GPS Library
-//#include <GPS_UBLOX.h>  // ArduPilot Ublox GPS Library
-//#include <GPS_NMEA.h>   // ArduPilot NMEA GPS library
+// GPS selection
+  //Pleas uncomment your GPS Protocol based on your device even if you do not have a GPS!!
+  //You have to also uncomment line below the #define
+  
+    //#define GPS_PROTOCOL GPS_PROTOCOL_NONE	// No GPS attached!!
+    //	      
+    //#define GPS_PROTOCOL GPS_PROTOCOL_NMEA	// Standard NMEA GPS.      NOT SUPPORTED (yet?)
+    //    AP_GPS_NMEA		gps(&Serial1);
+    //#define GPS_PROTOCOL GPS_PROTOCOL_IMU	// X-Plane interface or ArduPilot IMU.
+    //    AP_GPS_IMU		gps(&Serial);	
+    #define GPS_PROTOCOL GPS_PROTOCOL_MTK	// MediaTek-based GPS running the DIYDrones firmware 1.4
+        AP_GPS_MTK		gps(&Serial1);
+    //#define GPS_PROTOCOL GPS_PROTOCOL_MTK16	// MediaTek-based GPS running the DIYDrones firmware 1.6
+    //    AP_GPS_MTK16        	gps(&Serial1);
+    //#define GPS_PROTOCOL GPS_PROTOCOL_UBLOX	// UBLOX GPS
+    //    AP_GPS_UBLOX         	gps(&Serial1);
+    //#define GPS_PROTOCOL GPS_PROTOCOL_SIRF	// SiRF-based GPS in Binary mode.  NOT TESTED
+    //    AP_GPS_SIRF		gps(&Serial1);
+
 #endif
 
 #if AIRFRAME == HELI
@@ -496,9 +500,10 @@ void loop()
       if (target_position) 
       {
         #ifdef IsGPS
-        if (GPS.NewData)     // New GPS info?
+        gps.update();
+        if (gps.new_data)     // New GPS info?
         {
-          if (GPS.Fix)
+          if (gps.fix)
           {
             read_GPS_data();    // In Navigation.pde
             //Position_control(target_lattitude,target_longitude);     // Call GPS position hold routine
@@ -513,9 +518,9 @@ void loop()
         #endif
       } else {  // First time we enter in GPS position hold we capture the target position as the actual position
         #ifdef IsGPS
-        if (GPS.Fix){   // We need a GPS Fix to capture the actual position...
-          target_lattitude = GPS.Lattitude;
-          target_longitude = GPS.Longitude;
+        if (gps.fix){   // We need a GPS Fix to capture the actual position...
+          target_lattitude = gps.latitude;
+          target_longitude = gps.longitude;
           target_position=1;
         }
         #endif
@@ -648,7 +653,7 @@ void loop()
   if ((currentTime-mediumLoop)>=17){
     mediumLoop = currentTime;
 #ifdef IsGPS
-    GPS.Read();     // Read GPS data 
+    gps.read();     // Read GPS data 
 #endif
     
 #if AIRFRAME == HELI    
@@ -730,7 +735,7 @@ void loop()
       digitalWrite(LED_Green, LOW);
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, LOW);
-      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && GPS.Fix < 1)      // Position Hold (GPS position control)
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && gps.fix < 1)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS not FIX
               
 #ifdef IsAM      
@@ -743,7 +748,7 @@ void loop()
       digitalWrite(LED_Green, HIGH);
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, HIGH);
-      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && GPS.Fix < 1)      // Position Hold (GPS position control)
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && gps.fix < 1)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS not FIX
 
 #ifdef IsAM

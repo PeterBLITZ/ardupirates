@@ -209,21 +209,21 @@ void debug_subsystem()
 		
 		if (GPS.NewData){
 			Serial.print("Lat:");
-			Serial.print(GPS.Lattitude, DEC);
+			Serial.print(gps.lattitude, DEC);
 			Serial.print(" Lon:");
-			Serial.print(GPS.Longitude, DEC);
+			Serial.print(gps.longitude, DEC);
 			Serial.print(" Alt:");
-			Serial.print(GPS.Altitude / 100, DEC);
+			Serial.print(gps.altitude / 100, DEC);
 			Serial.print("m, gs: ");
-			Serial.print(GPS.Ground_Speed / 100, DEC);
+			Serial.print(gps.ground_speed / 100, DEC);
 			Serial.print(" COG:");
-			Serial.print(GPS.Ground_Course / 1000l);
+			Serial.print(gps.ground_course / 1000l);
 			Serial.print(" SAT:");
-			Serial.print(GPS.NumSats, DEC);
+			Serial.print(gps.num_sats, DEC);
 			Serial.print(" FIX:");
-			Serial.print(GPS.Fix, DEC);
+			Serial.print(gps.fix, DEC);
 			Serial.print(" TIM:");
-			Serial.print(GPS.Time);
+			Serial.print(gps.time);
 			Serial.println();
 		}
 	}

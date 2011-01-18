@@ -39,14 +39,14 @@ void read_GPS_data()
   GPS_timer_old=GPS_timer;   // Update GPS timer
   GPS_timer = millis();
   GPS_Dt = (GPS_timer-GPS_timer_old)*0.001;   // GPS_Dt
-  GPS.NewData=0;    // We Reset the flag...
+  gps.new_data=0;    // We Reset the flag...
 
   // Write GPS data to DataFlash log
   #if LOG_GPS
-  Log_Write_GPS(GPS.Time, GPS.Lattitude, GPS.Longitude, GPS.Altitude, GPS.Altitude, GPS.Ground_Speed, GPS.Ground_Course, GPS.Fix, GPS.NumSats);
+  Log_Write_GPS(gps.time, gps.latitude, gps.longitude, gps.altitude, gps.altitude, gps.ground_speed, gps.ground_course, gps.fix, gps.num_sats);
   #endif
-  //if (GPS.Fix >= 2)
-//  if (GPS.Fix)
+  //if (gps.fix >= 2)
+//  if (gps.fix)
 //    digitalWrite(LED_Red,HIGH);  // GPS Fix => RED LED
 //  else
 //    digitalWrite(LED_Red,LOW);
@@ -60,12 +60,12 @@ void Position_control(long lat_dest, long lon_dest)
   long Lon_diff;
   long Lat_diff;
 
-  Lon_diff = lon_dest - GPS.Longitude;
-  Lat_diff = lat_dest - GPS.Lattitude;
+  Lon_diff = lon_dest - gps.longitude;
+  Lat_diff = lat_dest - gps.latitude;
 
   //If we have not calculated GEOG_CORRECTION_FACTOR we calculate it here as cos(lattitude)
   if (GEOG_CORRECTION_FACTOR==0)
-    GEOG_CORRECTION_FACTOR = cos(ToRad(GPS.Lattitude/10000000.0));
+    GEOG_CORRECTION_FACTOR = cos(ToRad(gps.latitude/10000000.0));
 
   // ROLL
   //Optimization : cos(yaw) = DCM_Matrix[0][0] ;  sin(yaw) = DCM_Matrix[1][0]   [This simplification is valid for low roll angles]
@@ -104,15 +104,15 @@ void Position_control_v2(long lat_dest, long lon_dest)
 #ifdef IsGPS
   //If we have not calculated GEOG_CORRECTION_FACTOR we calculate it here as cos(lattitude)
   if (GEOG_CORRECTION_FACTOR==0)
-    GEOG_CORRECTION_FACTOR = cos(ToRad(GPS.Lattitude/10000000.0));
+    GEOG_CORRECTION_FACTOR = cos(ToRad(gps.latitude/10000000.0));
     
   // store old lat & lon diff for d term?
   gps_err_lon_old = gps_err_lon;
   gps_err_lat_old = gps_err_lat;
   
   // calculate distance from target - for P term
-  gps_err_lon = (float)(lon_dest - GPS.Longitude) * GEOG_CORRECTION_FACTOR;
-  gps_err_lat = lat_dest - GPS.Lattitude;
+  gps_err_lon = (float)(lon_dest - gps.longitude) * GEOG_CORRECTION_FACTOR;
+  gps_err_lat = lat_dest - gps.latitude;
   
   // add distance to I term
   gps_lon_I += gps_err_lon;
