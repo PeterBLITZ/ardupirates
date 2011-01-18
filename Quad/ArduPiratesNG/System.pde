@@ -95,7 +95,7 @@ void APM_Init() {
   DataFlash.Init();          // DataFlash log initialization
 
 #ifdef IsGPS  
-  GPS.Init();                // GPS Initialization
+  gps.init();                // GPS Initialization
 
 #ifdef IsNEWMTEK  
   delay(250);

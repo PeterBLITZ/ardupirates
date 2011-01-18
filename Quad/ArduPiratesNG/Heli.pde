@@ -254,19 +254,44 @@ void heli_read_radio()
     ch_throttle = 1000 + (ch_collective * 10);     
     
     // hardcode flight mode
-    flightMode = STABLE_MODE;
+    flightMode = FM_STABLE_MODE;
     
-    // Autopilot mode (only works on Stable mode) 
-    if (flightMode == STABLE_MODE) { 
-      if(ch_aux < 1300) { 
-        AP_mode == AP_AUTOMATIC_MODE; // Automatic mode : GPS position hold mode + altitude hold 
-        //SerPrln("autopilot ON!");
-      }else{
-        AP_mode = AP_NORMAL_MODE; // Normal mode
-        //SerPrln("autopilot OFF!");
-      }  
-    }
-    
+// FLIGHT MODE
+//  This is determine by DIP Switch 3. // When switching over you have to reboot APM.
+// DIP3 down (On)  = Acrobatic Mode.  Yellow LED is Flashing. 
+// DIP3 up   (Off) = Stable Mode.  AUTOPILOT MODE LEDs status lights become applicable.  See below.
+
+    // Autopilot mode (only works on Stable mode)
+    if (flightMode == FM_STABLE_MODE)
+    {
+      if (ch_aux2 > 1800 && ch_aux > 1800)
+      {
+        AP_mode = AP_NORMAL_STABLE_MODE  ;      // Stable mode (Heading Hold only)
+        digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
+        digitalWrite(LED_Red,LOW);              // Red LED OFF : GPS Position Hold OFF
+      }
+      else if (ch_aux2 > 1800 && ch_aux < 1250)
+      {
+        AP_mode = AP_ALTITUDE_HOLD;             // Super Stable Mode (Altitude hold mode)
+        digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
+        digitalWrite(LED_Red,LOW);              // Red LED OFF : GPS Position Hold OFF
+      }
+      else if (ch_aux2 < 1250 && ch_aux > 1800)
+      {
+        AP_mode = AP_GPS_HOLD;                  // Position Hold (GPS position control)
+        digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
+        if (gps.fix > 0)
+          digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
+      }
+      else 
+      {
+        AP_mode = AP_ALT_GPS_HOLD;              //Position & Altitude hold mode (GPS position control & Altitude control)
+        digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
+        if (gps.fix > 0)
+          digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
+      }
+    } 
+}    
 /**********************************************************************/
 // output to swash plate based on control variables
 // Uses these global variables:

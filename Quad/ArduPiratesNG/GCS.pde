@@ -626,23 +626,23 @@ void sendSerialTelemetry() {
     break;
 #ifdef IsGPS
   case '4':  // Jani's debugs
-//  Log_Write_GPS(GPS.Time, GPS.Lattitude, GPS.Longitude, GPS.Altitude, GPS.Altitude, GPS.Ground_Speed, GPS.Ground_Course, GPS.Fix, GPS.NumSats);
+//  Log_Write_GPS(GPS.Time, GPS.Lattitude, GPS.Longitude, GPS.Altitude, GPS.Altitude, GPS.Ground_Speed, GPS.Ground_Course, gps.fix, GPS.NumSats);
 
-    SerPri(GPS.Time);
+    SerPri(gps.time);
     tab();
-    SerPri(GPS.Lattitude);
+    SerPri(gps.latitude);
     tab();
-    SerPri(GPS.Longitude);
+    SerPri(gps.longitude);
     tab();
-    SerPri(GPS.Altitude);
+    SerPri(gps.altitude);
     tab();
-    SerPri(GPS.Ground_Speed);
+    SerPri(gps.ground_speed);
     tab();
-    SerPri(GPS.Ground_Course);
+    SerPri(gps.ground_course);
     tab();
-    SerPri(GPS.Fix);
+    SerPri(gps.fix);
     tab();
-    SerPri(GPS.NumSats);
+    SerPri(gps.num_sats);
 
     tab();
     SerPriln();
