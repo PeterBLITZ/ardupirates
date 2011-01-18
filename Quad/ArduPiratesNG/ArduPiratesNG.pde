@@ -71,8 +71,7 @@
 //  Modules Config
 // --------------------------
 
-#define IsGPS            // Do we have a GPS connected
-#define IsNEWMTEK        // Do we have MTEK with new firmware
+#define IsGPS            // Do we have a GPS connected.  See ArduUser for different GPS Selections.
 #define IsMAG            // Do we have a Magnetometer connected, if have remember to activate it from Configurator
 //#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
 //#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
@@ -88,29 +87,6 @@
 #define CONFIGURATOR
 
 
-////////////////////////////////////////
-// Frame / Motor / ESC definitions
-
-// Introducing new frame / Motor / ESC definitions for future expansion. Currently these are not in 
-// use but they need to be here so implementation work can continue.
-
-                             // New frame model definitions. (not in use yet, 28-11-10 jp)
-//#define FRAME_MODEL QUAD     // Quad frame model 
-//#define FRAME_MODEL HEXA     // Quad frame model 
-//#define FRAME_MODEL OCTO     // Quad frame model 
-
-
-                             // New motor definition for different frame type (not in use yet, 28-11-10 jp)
-#define MAX_MOTORS  4        // Are we using more motors than 4, possible choises are 4, 6, 8
-                             // This has to be on main .pde to get included on all other header etc files
-
-                             // Not in use yet, 28-11-10 jp
-#define MOTORTYPE  PWM       // Traditional PWM ESC's controlling motors
-//#define MOTORTYPE  I2C     // I2C style ESC's controlling motors
-//#define MOTORTYPE UART     // UART style ESC's controlling motors
-
-
-
 
 ////////////////////
 // Serial ports & speeds
@@ -124,22 +100,6 @@
 //#define SerBau  38400
 //#define SerBau  57600
 #define SerBau  115200
-
-
-// For future use, for now don't activate any!
-// Serial1 speed for GPS, mostly 38.4k, done from libraries
-//#define GpsBau  19200
-//#define GpsBau  38400
-//#define GpsBau  57600
-//#define GpsBau  115200
-
-
-/* ************************************************* */
-// Radio modes
-#define RADIOMODE  MODE2    // Most users have this eg: left stick: Throttle/Rudder, right stick: Elevator/Aileron
-//#define RADIOMODE  MODE1  // Only if you are sure that you have Mode 1 radio. 
-
-// NOTE! MODE1 is not working yet, we need to have input from users to be sure of channel orders.  03-11-10, jp
 
 
 /* ************************************************* */
@@ -170,10 +130,10 @@
 //                                          F = Front motor.  
 
 
-// To change between flight orientations just use DIP switch for that. DIP1 up (off) = X-mode, DIP1 down (on)= + mode
+// To change between flight orientations just use DIP switch for that. DIP1 up (off) = X-mode(45Degree), DIP1 down (on)= + mode
 // When selecting Flight_Mode_X choice one of the two options below.
-//#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above.
-#define FLIGHT_MODE_X_45Degree   // (APM-front pointing towards front motor).  See layout above.  Default.
+//#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above. Dip1 is not applicable
+#define FLIGHT_MODE_X_45Degree   // (APM-front pointing towards front motor).  See layout above.  Default.  We can switch between + and X mode 
 
 // Double check in configurator - Serial command "T" enter.
 // remember after changing DIP switch you must reboot APM.
@@ -290,27 +250,6 @@
 #include "Arducopter.h"
 #include "ArduUser.h"
 
-#ifdef IsGPS
-// GPS selection
-  //Pleas uncomment your GPS Protocol based on your device even if you do not have a GPS!!
-  //You have to also uncomment line below the #define
-  
-    //#define GPS_PROTOCOL GPS_PROTOCOL_NONE	// No GPS attached!!
-    //	      
-    //#define GPS_PROTOCOL GPS_PROTOCOL_NMEA	// Standard NMEA GPS.      NOT SUPPORTED (yet?)
-    //    AP_GPS_NMEA		gps(&Serial1);
-    //#define GPS_PROTOCOL GPS_PROTOCOL_IMU	// X-Plane interface or ArduPilot IMU.
-    //    AP_GPS_IMU		gps(&Serial);	
-    #define GPS_PROTOCOL GPS_PROTOCOL_MTK	// MediaTek-based GPS running the DIYDrones firmware 1.4
-        AP_GPS_MTK		gps(&Serial1);
-    //#define GPS_PROTOCOL GPS_PROTOCOL_MTK16	// MediaTek-based GPS running the DIYDrones firmware 1.6
-    //    AP_GPS_MTK16        	gps(&Serial1);
-    //#define GPS_PROTOCOL GPS_PROTOCOL_UBLOX	// UBLOX GPS
-    //    AP_GPS_UBLOX         	gps(&Serial1);
-    //#define GPS_PROTOCOL GPS_PROTOCOL_SIRF	// SiRF-based GPS in Binary mode.  NOT TESTED
-    //    AP_GPS_SIRF		gps(&Serial1);
-
-#endif
 
 #if AIRFRAME == HELI
 #include "Heli.h"

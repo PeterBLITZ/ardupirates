@@ -511,12 +511,23 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 					// SEVERITY_CRITICAL
 
 // Different GPS devices, 
-
-#define GPSDEV_DIYMTEK  1
-#define GPSDEV_DIYUBLOX 2
-#define GPSDEV_FPUBLOX  3
-#define GPSDEV_IMU      4
-#define GPSDEV_NMEA     5
+#ifdef IsGPS
+#if   GPS_PROTOCOL == GPS_PROTOCOL_NMEA
+AP_GPS_NMEA		gps(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_SIRF
+AP_GPS_SIRF		gps(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_UBLOX
+AP_GPS_UBLOX	        gps(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_IMU
+AP_GPS_IMU		gps(&Serial);	// note, console port
+#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK
+AP_GPS_MTK		gps(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_NONE
+AP_GPS_NONE		gps(NULL);
+#else
+# error Must define GPS_PROTOCOL in your ArduUser file.
+#endif  
+#endif
 
 // Radio Modes, mainly just Mode2 
 #define MODE1           1 
