@@ -93,18 +93,15 @@ void APM_Init() {
 
   adc.Init();            // APM ADC library initialization
   DataFlash.Init();          // DataFlash log initialization
-
+  
 #ifdef IsGPS  
   gps.init();                // GPS Initialization
 
-#ifdef IsNEWMTEK  
+#if ((GPS_PROTOCOL == GPS_PROTOCOL_MTK) || (GPS_PROTOCOL == GPS_PROTOCOL_MTK16))
+
   delay(250);
 
-  // DIY Drones MTEK GPS needs binary sentences activated if you upgraded to latest firmware.
-  // If your GPS shows solid blue but LED C (Red) does not go on, your GPS is on NMEA mode
   Serial1.print("$PMTK220,200*2C\r\n");          // 5Hz update rate
-  delay(200);
-  Serial1.print("$PGCMD,16,0,0,0,0,0*6A\r\n"); 
 
 #endif
 #endif
