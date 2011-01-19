@@ -1,3 +1,5 @@
+#SideBar
+
 #summary Table of Content for sidebar
 
 = AruPirates Wiki=
