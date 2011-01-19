@@ -1,6 +1,6 @@
 #summary Table of Content for sidebar
 
-= AruPirate Wiki=
+= AruPirates Wiki=
 
  * [ArduCopterInformation]
  * [UsingWiiSensors]
