@@ -394,13 +394,21 @@ void sendSerialTelemetry() {
       SerPriln("Flight Mode = Stable Mode");
     else if (flightMode == FM_ACRO_MODE)
       SerPriln("Flight Mode = Acrobatic Mode");
+#if AIRFRAME == QUAD  
+#ifdef FLIGHT_MODE_X_45Degree
     SerPri("Flight orientation: ");
     if(SW_DIP1) {
-      SerPrln("x mode (Applicable to Quad only)");
+      SerPrln("x mode_45Degree (APM front pointing towards Front motor)");
     } 
     else {
-      SerPrln("+ mode (Applicable to Quad only)");
+      SerPrln("+ mode");
     }
+#endif    
+#ifdef FLIGHT_MODE_X
+    SerPri("Flight orientation: ");
+    SerPrln("x mode (APM front between Front and Right motor) DIP1 not applicable");
+#endif
+#endif
     #if AIRFRAME == QUAD  
       SerPriln("Airframe = Quad");
     #endif
