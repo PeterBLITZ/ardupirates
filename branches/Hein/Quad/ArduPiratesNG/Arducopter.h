@@ -108,6 +108,7 @@ TODO:
 
 FastSerialPort0(Serial);
 FastSerialPort1(Serial1);
+FastSerialPort3(Serial3);
 
 
 #ifdef SerXbee               // Xbee/Telemetry port 
