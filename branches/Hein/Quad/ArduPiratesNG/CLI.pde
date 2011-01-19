@@ -585,14 +585,25 @@ void Show_Settings() {
   SerPri("Camera mode: ");
   SerPrln(cam_mode, DEC);
 
+#if AIRFRAME == QUAD  
+#ifdef FLIGHT_MODE_X_45Degree
   SerPri("Flight orientation: ");
   if(SW_DIP1) {
-    SerPrln("x mode");
+    SerPrln("x mode_45Degree (APM front pointing towards Front motor)");
   } 
   else {
     SerPrln("+ mode");
   }
-  
+#endif 
+#ifdef FLIGHT_MODE_X
+  SerPri("Flight orientation: ");
+  SerPrln("x mode (APM front between Front and Right motor) DIP1 not applicable");
+#endif
+#endif
+#if AIRFRAME == HEXA  
+  SerPriln("Airframe = Hexa");
+#endif
+
   Show_SonarAndObstacleAvoidance_PIDs();
 
   SerPrln();
