@@ -94,16 +94,13 @@ void APM_Init() {
   adc.Init();            // APM ADC library initialization
   DataFlash.Init();          // DataFlash log initialization
   
+
+//  GPS Setup
 #ifdef IsGPS  
+  Serial1.begin(38400);
+  delay(20);
   gps.init();                // GPS Initialization
-
-#if ((GPS_PROTOCOL == GPS_PROTOCOL_MTK) || (GPS_PROTOCOL == GPS_PROTOCOL_MTK16))
-
-  delay(250);
-
-  Serial1.print("$PMTK220,200*2C\r\n");          // 5Hz update rate
-
-#endif
+  delay(1000);
 #endif
 
   // Read DIP Switches and other important values. DIP switches needs special functions to 

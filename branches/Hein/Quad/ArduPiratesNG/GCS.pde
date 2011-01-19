@@ -410,18 +410,30 @@ void sendSerialTelemetry() {
     #if AIRFRAME == HELI  
       SerPriln("Airframe = Heli");
     #endif
+    if (gps.new_data){
+      SerPri("gps:");
+      SerPri(" Lat:");
+      SerPri((float)gps.latitude / 10000000, DEC);
+      SerPri(" Lon:");
+      SerPri((float)gps.longitude / 10000000, DEC);
+      SerPri(" Alt:");
+      SerPri((float)gps.altitude / 100.0, DEC);
+      SerPri(" GSP:");
+      SerPri(gps.ground_speed / 100.0);
+      SerPri(" COG:");
+      SerPri(gps.ground_course / 100.0, DEC);
+      SerPri(" SAT:");
+      SerPri(gps.num_sats, DEC);
+      SerPri(" FIX:");
+      SerPri(gps.fix, DEC);
+      SerPri(" TIM:");
+      SerPri(gps.time, DEC);
+      SerPriln();
+      gps.new_data = 0; // We have readed the data
+    }
 //    SerPri("Focus Servo = ");
 //    SerPriln(CAM_FOCUs);
     
-//    SerPri("AP Mode = ");
-//    if (AP_mode == F_MODE_ACROBATIC) 
-//      SerPriln("Acrobatic");
-//    else if (AP_mode == F_MODE_STABLE)
-//      SerPriln("Stable mode");
-//    else if (AP_mode == F_MODE_SUPER_STABLE)
-//      SerPriln("Super Stable Mode");
-//    else if (AP_mode == F_MODE_ABS_HOLD)
-//      SerPriln("Position & Altitude Hold");
 //    SerPri("Current Sonar Valude = ");
 //    SerPriln(Sonar_value);
 //    SerPri("Target Sonar Altitude = ");
