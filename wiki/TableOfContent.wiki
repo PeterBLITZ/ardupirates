@@ -1,0 +1,12 @@
+#summary One-sentence summary of this page.
+
+= AruPirates Wiki=
+
+ * [ArduCopterInformation]
+ * [UsingWiiSensors]
+ * [Waypoint_Nav_Description]
+ * [BatteryAlarmHowto]
+ * [StabilizedCameraMount]   
+ * [ThePiratesCofin]   
+ * [PIDSettings]
+ * [UbloxGPSTutorial]
