@@ -106,6 +106,10 @@ TODO:
 #define SERIAL2_BAUD 115200
 #define SERIAL3_BAUD 115200
 
+FastSerialPort0(Serial);
+FastSerialPort1(Serial1);
+
+
 #ifdef SerXbee               // Xbee/Telemetry port 
 //#define SerBau  115200      // Baud setting moved close next to port selection
 #define SerPri  Serial3.print

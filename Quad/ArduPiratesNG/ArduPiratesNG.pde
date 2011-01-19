@@ -237,6 +237,7 @@
 #include <avr/io.h>
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
+#include <FastSerial.h>
 #include <math.h>
 #include <APM_RC.h> 		// ArduPilot Mega RC Library
 #include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
@@ -439,7 +440,6 @@ void loop()
       if (target_position) 
       {
         #ifdef IsGPS
-        gps.update();
         if (gps.new_data)     // New GPS info?
         {
           if (gps.fix)
@@ -585,14 +585,14 @@ void loop()
       {
         altitude_control_method = ALTITUDE_CONTROL_NONE;  // turn off altitude control
       }
-    } // if (AP_mode == AP_AUTOMATIC_MODE)
+    } 
   }
 
   // Medium loop (about 60Hz) 
   if ((currentTime-mediumLoop)>=17){
     mediumLoop = currentTime;
 #ifdef IsGPS
-    gps.read();     // Read GPS data 
+    gps.update();   // Read GPS data
 #endif
     
 #if AIRFRAME == HELI    
