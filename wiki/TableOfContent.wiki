@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Table of Content for sidebar
 
 = AruPirate Wiki=
 
