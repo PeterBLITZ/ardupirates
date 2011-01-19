@@ -522,6 +522,8 @@ AP_GPS_UBLOX	        gps(&Serial1);
 AP_GPS_IMU		gps(&Serial);	// note, console port
 #elif GPS_PROTOCOL == GPS_PROTOCOL_MTK
 AP_GPS_MTK		gps(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK16
+AP_GPS_MTK16		gps(&Serial1);
 #elif GPS_PROTOCOL == GPS_PROTOCOL_NONE
 AP_GPS_NONE		gps(NULL);
 #else
