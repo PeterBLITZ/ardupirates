@@ -1,4 +1,4 @@
-#SideBar
+
 
 #summary Table of Content for sidebar
 
