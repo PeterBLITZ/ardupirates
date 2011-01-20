@@ -157,8 +157,8 @@ int SENSOR_SIGN[]={
 #define ON 1
 #define OFF 0
 #define CH_ON 1800			//defines channel standard values for ON
-#define CH_MID_L 1400		//defines channel standard values for MIDDLE LOW
-#define CH_MID_H 1600		//defines channel standard values for MIDDLE HIGH
+#define CH_MID_L 1300		//defines channel standard values for MIDDLE LOW
+#define CH_MID_H 1700		//defines channel standard values for MIDDLE HIGH
 #define CH_OFF 1250			//defines channel standard values for OFF
 
 // ADC : Voltage reference 3.3v / 12bits(4096 steps) => 0.8mV/ADC step

@@ -73,7 +73,7 @@
 
 #define IsGPS            // Do we have a GPS connected.  See ArduUser for different GPS Selections.
 #define IsMAG            // Do we have a Magnetometer connected, if have remember to activate it from Configurator
-#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
+//#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
 //#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
                          // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
 //#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.                  
@@ -243,7 +243,7 @@
 #include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
 #include <APM_BMP085.h> 	// ArduPilot Mega BMP085 Library 
 #include <DataFlash.h>		// ArduPilot Mega Flash Memory Library
-#include <AP_Compass.h>	        // ArduPilot Mega Magnetometer Library
+#include <AP_Compass_HMC5843.h>	        // ArduPilot Mega Magnetometer Library
 #include <Wire.h>               // I2C Communication library
 #include <EEPROM.h>             // EEPROM 
 #include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)

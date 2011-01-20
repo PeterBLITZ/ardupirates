@@ -294,9 +294,9 @@ void navigate()
 		return;
 	}
 	
-	//if(next_WP.lat == 0){
-	//	return;
-	//}
+	if(next_WP.lat == 0){
+		return;
+	}
 	
 	// waypoint distance from plane
 	// ----------------------------
@@ -317,7 +317,7 @@ void navigate()
 	// -------------------------------------------
 	nav_bearing = target_bearing;
 
-        calc_bearing_error();
+    //calc_bearing_error();
 	// control mode specific updates to nav_bearing
 	// --------------------------------------------
 	//update_navigation();
