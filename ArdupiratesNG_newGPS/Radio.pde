@@ -95,33 +95,33 @@ void read_radio()
     // Autopilot mode (only works on Stable mode)
     if (flightMode == FM_STABLE_MODE)
     {
-      if (ch_aux2 > CH_ON && ch_aux > CH_ON)
+      if (ch_aux2 < CH_OFF && ch_aux < CH_OFF)
       {
         AP_mode = AP_NORMAL_STABLE_MODE  ;      // Stable mode (Heading Hold only)
         digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
         digitalWrite(LED_Red,LOW);              // Red LED OFF : GPS Position Hold OFF
       }
-      else if (ch_aux2 > CH_ON && ch_aux < CH_OFF)
+      else if (ch_aux2 < CH_OFF && ch_aux > CH_ON)
       {
         AP_mode = AP_ALTITUDE_HOLD;             // Super Stable Mode (Altitude hold mode)
         digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
         digitalWrite(LED_Red,LOW);              // Red LED OFF : GPS Position Hold OFF
       }
-      else if (ch_aux2 < CH_OFF && ch_aux > CH_ON)
+      else if (ch_aux2 > CH_ON && ch_aux < CH_OFF)
       {
         AP_mode = AP_GPS_HOLD;                  // Position Hold (GPS position control)
         digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
         if (GPS.fix > 0)
           digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
       }
-      else if (ch_aux2 < CH_OFF && ch_aux < CH_OFF)
+      else if (ch_aux2 > CH_ON && ch_aux > CH_ON)
       {
         AP_mode = AP_ALT_GPS_HOLD;              //Position & Altitude hold mode (GPS position control & Altitude control)
         digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
         if (GPS.fix > 0)
           digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
       }
-	  else if ( (ch_aux2 < CH_MID_H && ch_aux2 > CH_MID_L ) && ch_aux < CH_OFF) //TEST for three position CH6 switch
+	  else if ( (ch_aux2 < CH_MID_H && ch_aux2 > CH_MID_L ) && ch_aux > CH_ON) //TEST for three position CH6 switch
       {
         AP_mode = AP_RTL;              // RTL with Atitude Hold ON
         digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
