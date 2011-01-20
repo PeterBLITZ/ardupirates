@@ -46,10 +46,10 @@ void read_GPS_data()
   Log_Write_GPS(GPS.time, GPS.latitude, GPS.longitude, GPS.altitude, GPS.altitude, GPS.ground_speed, GPS.ground_course, GPS.fix, GPS.num_sats);
   #endif
   //if (GPS.fix >= 2)
-  if (GPS.fix)
-    digitalWrite(LED_Red,HIGH);  // GPS Fix => RED LED
-  else
-    digitalWrite(LED_Red,LOW);
+//  if (GPS.Fix)
+//    digitalWrite(LED_Red,HIGH);  // GPS Fix => RED LED
+//  else
+//    digitalWrite(LED_Red,LOW);
 #endif
 }
 
@@ -283,4 +283,82 @@ void Obstacle_avoidance(int safeDistance)
   command_RF_throttle = 0;
 }
 #endif
+
+void navigate()
+{
+	// do not navigate with corrupt data
+	// ---------------------------------
+	if (GPS.fix == 0)
+	{
+		GPS.new_data = false;
+		return;
+	}
+	
+	//if(next_WP.lat == 0){
+	//	return;
+	//}
+	
+	// waypoint distance from plane
+	// ----------------------------
+	GPS_wp_distance = getDistance(&current_loc, &next_WP);
+
+	if (GPS_wp_distance < 0){
+		//send_message(SEVERITY_HIGH,"<navigate> WP error - distance < 0");
+		Serial.println("error");
+		//print_current_waypoints();
+		return;
+	}
+
+	// target_bearing is where we should be heading 
+	// --------------------------------------------
+	target_bearing 	= get_bearing(&current_loc, &next_WP);
+
+	// nav_bearing will includes xtrack correction
+	// -------------------------------------------
+	nav_bearing = target_bearing;
+
+        calc_bearing_error();
+	// control mode specific updates to nav_bearing
+	// --------------------------------------------
+	//update_navigation();
+	
+	// calc pitch and roll to target
+	// -----------------------------
+	//calc_nav();
+
+}
+
+long get_bearing(struct Location *loc1, struct Location *loc2)
+{
+	long off_x = loc2->lng - loc1->lng;
+	long off_y = (loc2->lat - loc1->lat) * scaleLongUp;
+	long bearing =  9000 + atan2(-off_y, off_x) * 5729.57795;
+	if (bearing < 0) bearing += 36000;
+	return bearing;
+}
+void calc_bearing_error()
+{
+	if(MAGNETOMETER == 1) {
+	bearing_error = nav_bearing - AP_Compass.heading;
+	} else {
+		bearing_error = nav_bearing - GPS.ground_course;
+	}
+	bearing_error = wrap_180(bearing_error);
+}
+long wrap_180(long error)
+{
+	if (error > 18000)	error -= 36000;
+	if (error < -18000)	error += 36000;
+	return error;
+}
+long getDistance(struct Location *loc1, struct Location *loc2)
+{
+	if(loc1->lat == 0 || loc1->lng == 0) 
+		return -1;
+	if(loc2->lat == 0 || loc2->lng == 0) 
+		return -1;
+	float dlat 		= (float)(loc2->lat - loc1->lat);
+	float dlong		= ((float)(loc2->lng - loc1->lng)) * scaleLongDown;
+	return sqrt(sq(dlat) + sq(dlong)) * .01113195;
+}
 

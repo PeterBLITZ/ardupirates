@@ -51,9 +51,6 @@ void APM_Init() {
   APMPinMode(DDRL,6,INPUT);   // DIP3, (PL6)
   APMPinMode(DDRL,7,INPUT);   // DIP4, (PL7), Furthest DIP from sliding SW2 switch
 
-#if GPS_PROTOCOL != GPS_PROTOCOL_IMU
-	Serial1.begin(38400);
-#endif
 
   /* ********************************************************* */
   ///////////////////////////////////////////////////////// 
@@ -96,9 +93,14 @@ void APM_Init() {
 
   adc.Init();            // APM ADC library initialization
   DataFlash.Init();          // DataFlash log initialization
+  
 
+//  GPS Setup
 #ifdef IsGPS  
+  Serial1.begin(38400);
+  delay(20);
   GPS.init();                // GPS Initialization
+  delay(1000);
 #endif
 
   // Read DIP Switches and other important values. DIP switches needs special functions to 
@@ -114,9 +116,11 @@ void APM_Init() {
     // Btw.. We never return from this....
   }
 
+
   flightOrientation = SW_DIP1;    // DIP1 up (OFF)  = X-mode,         DIP1 down (ON) = + mode
   flightMode = SW_DIP3;           // DIP3 down (ON) = Acrobatic Mode, DIP3 up (OFF)  = Stable Mode.
 
+ 
    // Safety measure for Channel mids
   if(roll_mid < 1400 || roll_mid > 1600) roll_mid = 1500;
   if(pitch_mid < 1400 || pitch_mid > 1600) pitch_mid = 1500;

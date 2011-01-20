@@ -219,8 +219,10 @@ void PID_Tuning()  {
 //                KI_QUAD_YAW += 0.01;
 //                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
 
-                STABLE_MODE_KP_RATE += 0.05;                                        // default
-                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);          // default
+//                  CAM_FOCUs += 10; 
+
+//                STABLE_MODE_KP_RATE += 0.05;                                        // default
+//                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);          // default
 
 //                STABLE_MODE_KP_RATE_YAW += 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
@@ -271,8 +273,10 @@ void PID_Tuning()  {
 //                KI_QUAD_YAW -= 0.01;
 //                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
 
-                STABLE_MODE_KP_RATE -= 0.05;                                        // default
-                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);          // default
+//                  CAM_FOCUs -= 10; 
+
+//                STABLE_MODE_KP_RATE -= 0.05;                                        // default
+//                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);          // default
 
 //                STABLE_MODE_KP_RATE_YAW -= 0.1;
 //                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);

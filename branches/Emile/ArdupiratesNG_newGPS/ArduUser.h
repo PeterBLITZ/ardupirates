@@ -31,7 +31,21 @@ ChangeLog:
 TODO:
 
 
-* ************************************************************** */
+
+/*************************************************************/
+// GPS Protocol
+
+  //Please uncomment your GPS Protocol based on your device even if you do not have a GPS!!
+#ifdef IsGPS  
+//#define GPS_PROTOCOL GPS_PROTOCOL_NONE	// No GPS attached!!
+//#define GPS_PROTOCOL GPS_PROTOCOL_NMEA	// Standard NMEA GPS.      NOT SUPPORTED (yet?)
+//#define GPS_PROTOCOL GPS_PROTOCOL_IMU	        // X-Plane interface or ArduPilot IMU.
+//#define GPS_PROTOCOL GPS_PROTOCOL_MTK	        // MediaTek-based GPS running the DIYDrones firmware 1.4
+#define GPS_PROTOCOL GPS_PROTOCOL_MTK16	        // MediaTek-based GPS running the DIYDrones firmware 1.6
+//#define GPS_PROTOCOL GPS_PROTOCOL_UBLOX	// UBLOX GPS
+//#define GPS_PROTOCOL GPS_PROTOCOL_SIRF	// SiRF-based GPS in Binary mode.  NOT TESTED
+#endif
+
 
 /*************************************************************/
 // Airframe
@@ -49,7 +63,7 @@ TODO:
 #define ARM_DELAY 50      // how long you need to keep rudder to max right for arming motors (units*0.02, 50=1second)
 #define DISARM_DELAY 25   // how long you need to keep rudder to max left for disarming motors
 #define SAFETY_DELAY 25   // how long you need to keep throttle to min before safety activates and does not allow sudden throttle increases
-#define SAFETY_MAX_THROTTLE_INCREASE 1000  // how much of jump in throttle (within a single cycle, 5ms) will cause motors to disarm
+#define SAFETY_MAX_THROTTLE_INCREASE 100  // how much of jump in throttle (within a single cycle, 5ms) will cause motors to disarm
 #define SAFETY_HOVER_THROTTLE 1300  // When we reach Hover Throttle Safely we switch of Safety Feature  
 
 /*************************************************************/
@@ -71,6 +85,7 @@ TODO:
 #define RI_LED AN10  // Mega PH4 pin, OUT5
 #define LE_LED AN8  // Mega PH5 pin, OUT4
 */
+
 
 /*************************************************************/
 // Special patterns for future use
@@ -122,9 +137,11 @@ TODO:
 #define CAM_SMOOTHING 1000      // Camera movement smoothing on pitch axis
 #define CAM_SMOOTHING_ROLL 1000 // Camera movement smoothing on roll axis
 
-#define CAM_FOCUS 1500          // Camera trigger Servo Focus position
-#define CAM_TRIGGER 1700        // Camera trigger Servo Trigger position 
-#define CAM_RELEASE 1000        // Camera trigger Servo Release Trigger Button position
+#define CAM_FOCUS 1710          // Camera trigger Servo Focus position
+//int CAM_FOCUs = 1770;
+//int CAM_TRIGGEr = 1800;
+#define CAM_TRIGGER 1780        // Camera trigger Servo Trigger position 
+#define CAM_RELEASE 1500        // Camera trigger Servo Release Trigger Button position
 
 #define CAM_TILT_OUT   4        // OUTx pin for Tilt servo
 #define CAM_ROLL_OUT   5        // OUTx pin for Roll servo
@@ -147,6 +164,7 @@ TODO:
 #define AP_ALTITUDE_HOLD       3  // Just Altitude Hold
 #define AP_GPS_HOLD            4  // Just GPS Hold
 #define AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
+#define AP_RTL		       6  // TEST DO NOT USE
 //#define AP_WAYPOINT            6  // Waypoint Navigation...NOT USED YET
 
 //Axis

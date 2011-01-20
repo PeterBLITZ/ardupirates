@@ -102,9 +102,13 @@ TODO:
 /* ************************************************** */
 /* Serial port definitions */
 #define SERIAL0_BAUD 38400      // this is the main USB out 38400 57600 115200
-#define SERIAL1_BAUD 38400
+#define SERIAL1_BAUD 115200
 #define SERIAL2_BAUD 115200
 #define SERIAL3_BAUD 115200
+
+FastSerialPort0(Serial);
+FastSerialPort1(Serial1);
+
 
 #ifdef SerXbee               // Xbee/Telemetry port 
 //#define SerBau  115200      // Baud setting moved close next to port selection
@@ -152,7 +156,10 @@ int SENSOR_SIGN[]={
 #define FALSE 0
 #define ON 1
 #define OFF 0
-
+#define CH_ON 1800			//defines channel standard values for ON
+#define CH_MID_L 1400		//defines channel standard values for MIDDLE LOW
+#define CH_MID_H 1600		//defines channel standard values for MIDDLE HIGH
+#define CH_OFF 1250			//defines channel standard values for OFF
 
 // ADC : Voltage reference 3.3v / 12bits(4096 steps) => 0.8mV/ADC step
 // ADXL335 Sensitivity(from datasheet) => 330mV/g, 0.8mV/ADC step => 330/0.8 = 412
@@ -285,6 +292,11 @@ struct Location {
 };
 //@}
 
+//RTL test
+float command_rtl_yaw;
+float rtl_heading;
+float rtl_yaw_error;
+
 //Position control
 long target_longitude;
 long target_latitude;
@@ -358,7 +370,8 @@ float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized a
 //AP_ALTITUDE_HOLD       3  // Just Altitude Hold
 //AP_GPS_HOLD            4  // Just GPS Hold
 //AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
-//AP_WAYPOINT            6 // AP_mode : 1=> Position hold  2=>Stabilization assist mode (normal mode)
+//AP_WAYPOINT            6  // NOT IN USE
+
 byte AP_mode = 2;  //Default Normal Stable Mode.
 //byte cam_mode = 0;  // moved to general settings, 31-10-10, jp
 
@@ -379,6 +392,11 @@ byte PictureCapture_status = 0;
 byte gled_status = HIGH;
 long gled_timer;
 int gled_speed;
+
+// Mode LED timers and variables, used to blink all leds (TRTL)
+byte all_led_status = LOW;
+long all_led_timer;
+int all_led_speed;
 
 long cli_timer;
 byte cli_status = LOW;
@@ -419,7 +437,7 @@ int BackCCWMotor;
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed
 byte  motorSafety = 1;                             // 0 = safety off, 1 = on.  When On, sudden increases in throttle not allowed
 int   minThrottle = 0;
-byte  safetyOff = 0;                              // During normal Flight motor Safety is switched off.
+byte  safetyOff = 0;                              // During normal Flight, the motor Safety feature is switched off.
 boolean flightOrientation = 0;                    // 0 = +, 1 = x this is read from DIP1 switch during system bootup
 
 // Serial communication
@@ -520,14 +538,26 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 					// SEVERITY_CRITICAL
 
 // Different GPS devices, 
-// GPS type codes - use the names, not the numbers
-#define GPS_PROTOCOL_NONE	-1
-#define GPS_PROTOCOL_NMEA	0
-#define GPS_PROTOCOL_SIRF	1
-#define GPS_PROTOCOL_UBLOX	2
-#define GPS_PROTOCOL_IMU	3
-#define GPS_PROTOCOL_MTK	4
-#define GPS_PROTOCOL_MTK16	6
+#ifdef IsGPS
+#if   GPS_PROTOCOL == GPS_PROTOCOL_NMEA
+AP_GPS_NMEA		GPS(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_SIRF
+AP_GPS_SIRF		GPS(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_UBLOX
+AP_GPS_UBLOX	        GPS(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_IMU
+AP_GPS_IMU		GPS(&Serial);	// note, console port
+#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK
+AP_GPS_MTK		GPS(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK16
+AP_GPS_MTK16		GPS(&Serial1);
+#elif GPS_PROTOCOL == GPS_PROTOCOL_NONE
+AP_GPS_NONE		GPS(NULL);
+#else
+# error Must define GPS_PROTOCOL in your ArduUser file.
+#endif  
+#endif
+
 #define T6 1000000
 #define T7 10000000
 
@@ -665,7 +695,7 @@ void defaultUserConfig() {
   Kp_YAW                     = 1.0;
   Ki_YAW                     = 0.00002;
   GEOG_CORRECTION_FACTOR     = 0.0;      // will be automatically calculated
-  MAGNETOMETER               = 0;
+  MAGNETOMETER               = 1;
   Kp_RateRoll                = 1.95;
   Ki_RateRoll                = 0.0;
   Kd_RateRoll                = 0.0;
