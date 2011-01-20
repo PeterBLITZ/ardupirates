@@ -1,6 +1,3 @@
-
-#summary Table of Content for sidebar
-
 = ArduPirates Wiki=
 
  * [ArduCopterInformation]
