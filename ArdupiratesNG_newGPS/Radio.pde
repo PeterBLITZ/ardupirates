@@ -95,35 +95,38 @@ void read_radio()
     // Autopilot mode (only works on Stable mode)
     if (flightMode == FM_STABLE_MODE)
     {
-      if (ch_aux2 > 1800 && ch_aux > 1800)
+      if (ch_aux2 > CH_ON && ch_aux > CH_ON)
       {
         AP_mode = AP_NORMAL_STABLE_MODE  ;      // Stable mode (Heading Hold only)
         digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
         digitalWrite(LED_Red,LOW);              // Red LED OFF : GPS Position Hold OFF
       }
-      else if (ch_aux2 > 1800 && ch_aux < 1250)
+      else if (ch_aux2 > CH_ON && ch_aux < CH_OFF)
       {
         AP_mode = AP_ALTITUDE_HOLD;             // Super Stable Mode (Altitude hold mode)
         digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
         digitalWrite(LED_Red,LOW);              // Red LED OFF : GPS Position Hold OFF
       }
-      else if (ch_aux2 < 1250 && ch_aux > 1800)
+      else if (ch_aux2 < CH_OFF && ch_aux > CH_ON)
       {
         AP_mode = AP_GPS_HOLD;                  // Position Hold (GPS position control)
         digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
-#ifdef IsGPS
-        if (GPS.fix)
+        if (GPS.fix > 0)
           digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
-#endif
       }
-      else 
+      else if (ch_aux2 < CH_OFF && ch_aux < CH_OFF)
       {
         AP_mode = AP_ALT_GPS_HOLD;              //Position & Altitude hold mode (GPS position control & Altitude control)
         digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
-#ifdef IsGPS
-        if (GPS.fix)
+        if (GPS.fix > 0)
           digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
-#endif
+      }
+	  else if ( (ch_aux2 < CH_MID_H && ch_aux2 > CH_MID_L ) && ch_aux < CH_OFF) //TEST for three position CH6 switch
+      {
+        AP_mode = AP_RTL;              // RTL with Atitude Hold ON
+        digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
+        if (GPS.fix > 0)
+          digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
       }
     } 
 
@@ -140,19 +143,16 @@ void read_radio()
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
 #ifdef QUAD
-      if(flightOrientation) {
+
 #ifdef FLIGHT_MODE_X_45Degree
+      if(flightOrientation) {
+//      FLIGHT_MODE_X_45Degree
         // For X mode - (APM-front pointing towards front motor)
         float aux_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
         float aux_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
         command_rx_roll = aux_roll - aux_pitch;
         command_rx_pitch = aux_roll + aux_pitch;
         // For X mode - APM front between front and right motor 
-#endif
-#ifdef FLIGHT_MODE_X
-        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
-        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
-#endif
       } 
       else 
       {
@@ -160,6 +160,12 @@ void read_radio()
         command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
       }
 #endif
+#ifdef FLIGHT_MODE_X
+        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
+        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
+#endif
+#endif
+
 #ifdef HEXA
         command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
         command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;

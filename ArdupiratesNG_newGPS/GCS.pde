@@ -394,6 +394,8 @@ void sendSerialTelemetry() {
       SerPriln("Flight Mode = Stable Mode");
     else if (flightMode == FM_ACRO_MODE)
       SerPriln("Flight Mode = Acrobatic Mode");
+    else if (flightMode == AP_RTL)
+      SerPriln("AP Mode = RTL");  
     SerPri("Flight orientation: ");
     if(SW_DIP1) {
       SerPrln("x mode (Applicable to Quad only)");
@@ -410,16 +412,45 @@ void sendSerialTelemetry() {
     #if AIRFRAME == HELI  
       SerPriln("Airframe = Heli");
     #endif
+    if (GPS.new_data){
+      SerPri("gps:");
+      SerPri(" Lat:");
+      SerPri((float)GPS.latitude / 10000000, DEC);
+      SerPri(" Lon:");
+      SerPri((float)GPS.longitude / 10000000, DEC);
+//      SerPri(" Alt:");
+//      SerPri((float)GPS.altitude / 100.0, DEC);
+//      SerPri(" GSP:");
+//      SerPri(GPS.ground_speed / 100.0);
+//      SerPri(" COG:");
+//      SerPri(GPS.ground_course / 100.0, DEC);
+//      SerPri(" SAT:");
+//      SerPri(GPS.num_sats, DEC);
+//      SerPri(" FIX:");
+//      SerPri(GPS.fix, DEC);
+//      SerPri(" TIM:");
+//      SerPri(GPS.time, DEC);
+      SerPriln();
+      GPS.new_data = 0; // We have readed the data
+    }
+    SerPri("HomeLatLon: ");
+    SerPri(home.lat);
+    SerPri(home.lng);
+    SerPri("currentLoc: ");
+    SerPri(current_loc.lat);
+    SerPri(current_loc.lng);
+    SerPri("B_Error: ");
+    SerPri(bearing_error);
+    SerPri("TargetB: ");
+    SerPri(target_bearing);
+    SerPri("Compass Bearing");
+    SerPri(AP_Compass.heading);
+    SerPri("wp_distance: ");
+    SerPri(GPS_wp_distance);    
+
+//    SerPri("Focus Servo = ");
+//    SerPriln(CAM_FOCUs);
     
-//    SerPri("AP Mode = ");
-//    if (AP_mode == F_MODE_ACROBATIC) 
-//      SerPriln("Acrobatic");
-//    else if (AP_mode == F_MODE_STABLE)
-//      SerPriln("Stable mode");
-//    else if (AP_mode == F_MODE_SUPER_STABLE)
-//      SerPriln("Super Stable Mode");
-//    else if (AP_mode == F_MODE_ABS_HOLD)
-//      SerPriln("Position & Altitude Hold");
 //    SerPri("Current Sonar Valude = ");
 //    SerPriln(Sonar_value);
 //    SerPri("Target Sonar Altitude = ");

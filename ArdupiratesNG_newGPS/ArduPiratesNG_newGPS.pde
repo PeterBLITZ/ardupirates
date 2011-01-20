@@ -8,8 +8,11 @@
  Author(s): ArduCopter Team
  Ted Carancho (AeroQuad), Jose Julio, Jordi Muñoz,
  Jani Hirvinen, Ken McEwans, Roberto Navoni,          
- Sandro Benigno, Chris Anderson, Hein
- 
+ Sandro Benigno, Chris Anderson
+
+ Author(s) : ArduPirates deveopment team                                  
+          Philipp Maloney, Norbert, Hein, Igor, Emile  
+          
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -49,25 +52,6 @@
 // Remember In Configurator MODE(channel) is AUX2
 
 /* ************************************************************ */
-/* **************** MAIN PROGRAM - INCLUDES ******************* */
-/* ************************************************************ */
-#include <avr/io.h>
-#include <avr/eeprom.h>
-#include <avr/pgmspace.h>
-#include <math.h>
-#include <APM_RC.h> 		// ArduPilot Mega RC Library
-#include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
-#include <APM_BMP085.h> 	// ArduPilot Mega BMP085 Library 
-#include <DataFlash.h>		// ArduPilot Mega Flash Memory Library
-#include <AP_Compass.h>	        // ArduPilot Mega Magnetometer Library
-#include <Wire.h>               // I2C Communication library
-#include <EEPROM.h>             // EEPROM 
-#include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
-#include <AP_GPS.h>			// ArduPilot GPS library
-
-#include "Arducopter.h"
-#include "ArduUser.h"
-/* ************************************************************ */
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - MODULES ******************** */
@@ -87,37 +71,13 @@
 //  Modules Config
 // --------------------------
 
-///////////////////////////////////////
-// GPS Selection
-#define IsGPS            // Do we have a GPS connected
-
-#ifdef IsGPS
-  //Pleas uncomment your GPS Protocol based on your device even if you do not have a GPS!!
-  //You have to also uncomment line below the #define
-  
-    //#define GPS_PROTOCOL GPS_PROTOCOL_NONE	// No GPS attached!!
-    //	      
-    //#define GPS_PROTOCOL GPS_PROTOCOL_NMEA	// Standard NMEA GPS.      NOT SUPPORTED (yet?)
-    //    AP_GPS_NMEA		GPS(&Serial1);
-    //#define GPS_PROTOCOL GPS_PROTOCOL_IMU	// X-Plane interface or ArduPilot IMU.
-    //    AP_GPS_IMU		GPS(&Serial);	
-    //#define GPS_PROTOCOL GPS_PROTOCOL_MTK	// MediaTek-based GPS running the DIYDrones firmware 1.4
-    //    AP_GPS_MTK		GPS(&Serial1);
-    #define GPS_PROTOCOL GPS_PROTOCOL_MTK16	// MediaTek-based GPS running the DIYDrones firmware 1.6
-          AP_GPS_MTK16          	GPS(&Serial1);
-    //#define GPS_PROTOCOL GPS_PROTOCOL_UBLOX	// UBLOX GPS
-    //    AP_GPS_UBLOX          	GPS(&Serial1);
-    //#define GPS_PROTOCOL GPS_PROTOCOL_SIRF	// SiRF-based GPS in Binary mode.  NOT TESTED
-    //    AP_GPS_SIRF		GPS(&Serial1);
-#endif
-// End GPS Selection
-////////////////////////////////////////////
-
-//#define IsMAG            // Do we have a Magnetometer connected, if have remember to activate it from Configurator
-//#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
+#define IsGPS            // Do we have a GPS connected.  See ArduUser for different GPS Selections.
+#define IsMAG            // Do we have a Magnetometer connected, if have remember to activate it from Configurator
+#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
 //#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
-                        // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
-//#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.  NOT IN USE YET.                  
+                         // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
+//#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.                  
+
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP         // Use pressure sensor for altitude hold?
 //#define BATTERY_EVENT 1   // (boolean) 0 = don't read battery, 1 = read battery voltage (only if you have it _wired_ up!)
@@ -126,29 +86,9 @@
 
 #define CONFIGURATOR
 
-////////////////////////////////////////
-// Frame / Motor / ESC definitions
-
-// Introducing new frame / Motor / ESC definitions for future expansion. Currently these are not in 
-// use but they need to be here so implementation work can continue.
-
-                             // New frame model definitions. (not in use yet, 28-11-10 jp)
-//#define FRAME_MODEL QUAD     // Quad frame model 
-//#define FRAME_MODEL HEXA     // Quad frame model 
-//#define FRAME_MODEL OCTO     // Quad frame model 
 
 
-                             // New motor definition for different frame type (not in use yet, 28-11-10 jp)
-#define MAX_MOTORS  4        // Are we using more motors than 4, possible choises are 4, 6, 8
-                             // This has to be on main .pde to get included on all other header etc files
-
-                             // Not in use yet, 28-11-10 jp
-#define MOTORTYPE  PWM       // Traditional PWM ESC's controlling motors
-//#define MOTORTYPE  I2C     // I2C style ESC's controlling motors
-//#define MOTORTYPE UART     // UART style ESC's controlling motors
-
-
-/////////////////////////////////////////
+////////////////////
 // Serial ports & speeds
 
 // Serial data, do we have FTDI cable or Xbee on Telemetry port as our primary command link
@@ -160,21 +100,6 @@
 //#define SerBau  38400
 //#define SerBau  57600
 #define SerBau  115200
-
-
-// For future use, for now don't activate any!
-// Serial1 speed for GPS, mostly 38.4k, done from libraries
-//#define GpsBau  19200
-//#define GpsBau  38400
-//#define GpsBau  57600
-//#define GpsBau  115200
-
-/* ************************************************* */
-// Radio modes
-#define RADIOMODE  MODE2    // Most users have this eg: left stick: Throttle/Rudder, right stick: Elevator/Aileron
-//#define RADIOMODE  MODE1  // Only if you are sure that you have Mode 1 radio. 
-
-// NOTE! MODE1 is not working yet, we need to have input from users to be sure of channel orders.  03-11-10, jp
 
 
 /* ************************************************* */
@@ -205,10 +130,10 @@
 //                                          F = Front motor.  
 
 
-// To change between flight orientations just use DIP switch for that. DIP1 up (off) = X-mode, DIP1 down (on)= + mode
+// To change between flight orientations just use DIP switch for that. DIP1 up (off) = X-mode(45Degree), DIP1 down (on)= + mode
 // When selecting Flight_Mode_X choice one of the two options below.
-#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above.
-//define FLIGHT_MODE_X_45Degree   // (APM-front pointing towards front motor).  See layout above.  Default.
+//#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above. Dip1 is not applicable
+#define FLIGHT_MODE_X_45Degree   // (APM-front pointing towards front motor).  See layout above.  Default.  We can switch between + and X mode 
 
 // Double check in configurator - Serial command "T" enter.
 // remember after changing DIP switch you must reboot APM.
@@ -254,7 +179,7 @@
 // Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
 
 //#define MAGCALIBRATION -21.65      //  Quad Hein, South Africa, Centurion.  You have to determine your own.
-#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
+#define MAGCALIBRATION  1.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
 
 // orientations for DIYDrones magnetometer
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD
@@ -304,6 +229,29 @@
 
 /**********************************************/
 
+
+/* ************************************************************ */
+/* **************** MAIN PROGRAM - INCLUDES ******************* */
+/* ************************************************************ */
+
+#include <avr/io.h>
+#include <avr/eeprom.h>
+#include <avr/pgmspace.h>
+#include <FastSerial.h>
+#include <math.h>
+#include <APM_RC.h> 		// ArduPilot Mega RC Library
+#include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
+#include <APM_BMP085.h> 	// ArduPilot Mega BMP085 Library 
+#include <DataFlash.h>		// ArduPilot Mega Flash Memory Library
+#include <AP_Compass.h>	        // ArduPilot Mega Magnetometer Library
+#include <Wire.h>               // I2C Communication library
+#include <EEPROM.h>             // EEPROM 
+#include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
+#include <AP_GPS.h>
+#include "Arducopter.h"
+#include "ArduUser.h"
+
+
 #if AIRFRAME == HELI
 #include "Heli.h"
 #endif
@@ -342,9 +290,39 @@ unsigned long slowLoop = 0;
 // -------------------
 struct Location home;                   // home location
 struct Location current_loc;            // current location
+struct Location next_WP;                // next Waypoint to navigate;
 long 	target_altitude;		// used for
 long 	offset_altitude;		// used for
+long    ground_alt;
 boolean	home_is_set = false;            // Flag for if we have gps lock and have set the home location
+
+// GPS variables
+// -------------
+byte 	ground_start_count	= 5;			// have we achieved first lock and set Home?
+const 	float t7			= 10000000.0;	// used to scale GPS values for EEPROM storage
+float 	scaleLongUp			= 1;			// used to reverse longtitude scaling
+float 	scaleLongDown 		= 1;			// used to reverse longtitude scaling
+boolean GPS_light			= false;		// status of the GPS light
+
+// Location & Navigation 
+// ---------------------
+byte 	wp_radius			= 3;			// meters
+long	nav_bearing;						// deg * 100 : 0 to 360 current desired bearing to navigate
+long 	target_bearing;						// deg * 100 : 0 to 360 location of the plane to the target
+long 	crosstrack_bearing;					// deg * 100 : 0 to 360 desired angle of plane to target
+
+// Location Errors
+// ---------------
+long 	bearing_error;						// deg * 100 : 0 to 36000 
+
+// Waypoints
+// ---------
+long 	GPS_wp_distance;					// meters - distance between plane and next waypoint
+long 	wp_distance;						// meters - distance between plane and next waypoint
+long 	wp_totalDistance;					// meters - distance between old and next waypoint
+byte 	wp_total;							// # of Commands total including way
+byte 	wp_index;							// Current active command index
+byte 	next_wp_index;						// Current active command index
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */
@@ -454,6 +432,17 @@ void loop()
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll,command_rx_pitch,command_rx_collective,command_rx_yaw);
 #endif
+	  } else if (AP_mode == AP_RTL){
+         all_led_speed = 1200;
+#if AIRFRAME == QUAD
+        Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rtl_yaw);
+#endif        
+#if AIRFRAME == HEXA
+        Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rtl_yaw);
+#endif       
+#if AIRFRAME == HELI
+        heli_attitude_control(command_rx_roll,command_rx_pitch,command_rx_collective,command_rtl_yaw);
+#endif		
       }else{                        // Automatic mode : GPS position hold mode
 #if AIRFRAME == QUAD      
         Attitude_control_v3(command_rx_roll+command_gps_roll+command_RF_roll,command_rx_pitch+command_gps_pitch+command_RF_pitch,command_rx_yaw);
@@ -483,10 +472,12 @@ void loop()
 
 #ifdef IsCAM
   // Do we have cameras stabilization connected and in use?
-  if(!SW_DIP2) camera_output();
+  if(!SW_DIP2){ 
+    camera_output();
 #ifdef UseCamTrigger
     CamTrigger();
 #endif
+  }
 #endif
 
     // Autopilot mode functions - GPS Hold, Altitude Hold + object avoidance
@@ -497,9 +488,9 @@ void loop()
       // Do GPS Position hold (latitude & longitude)
       if (target_position) 
       {
-        #ifdef IsGPS
+#ifdef IsGPS
         if (GPS.new_data)     // New GPS info?
-        {
+          {
           if (GPS.fix)
           {
             read_GPS_data();    // In Navigation.pde
@@ -512,7 +503,7 @@ void loop()
             command_gps_pitch=0;
           }
         }
-        #endif
+#endif
       } else {  // First time we enter in GPS position hold we capture the target position as the actual position
         #ifdef IsGPS
         if (GPS.fix){   // We need a GPS Fix to capture the actual position...
@@ -635,6 +626,17 @@ void loop()
       }
       #endif
     }
+	if (AP_mode == AP_RTL)
+	{
+		if(home_is_set)
+		{
+			if(GPS.fix)
+			{
+				//yaw_control_RTL(home.lat, home.lng);
+                          navigate();
+                        }
+		}
+	}
     if (AP_mode == AP_NORMAL_STABLE_MODE)
     {
 //      digitalWrite(LED_Yellow,LOW);
@@ -643,15 +645,12 @@ void loop()
       {
         altitude_control_method = ALTITUDE_CONTROL_NONE;  // turn off altitude control
       }
-    } // if (AP_mode == AP_AUTOMATIC_MODE)
+    } 
   }
 
   // Medium loop (about 60Hz) 
   if ((currentTime-mediumLoop)>=17){
     mediumLoop = currentTime;
-#ifdef IsGPS
-    GPS.update();     // Read GPS data 
-#endif
     
 #if AIRFRAME == HELI    
     // Send output commands to heli swashplate...
@@ -663,6 +662,9 @@ void loop()
     case 0:   // Magnetometer reading (10Hz)
       medium_loopCounter++;
       slowLoop++;
+#ifdef IsGPS
+	  update_GPS();     // Read GPS data 
+#endif
 #ifdef IsMAG
       if (MAGNETOMETER == 1) {
         AP_Compass.read();     // Read magnetometer
@@ -723,6 +725,11 @@ void loop()
 #endif
       break;	
     }
+    // stuff that happens at 60 hz
+    // ---------------------------
+	
+    // use Yaw to find our bearing error
+    calc_bearing_error();
   }
 
   // AM and Mode status LED lights
@@ -733,12 +740,12 @@ void loop()
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, LOW);
 #ifdef IsGPS
-      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.fix)      // Position Hold (GPS position control)
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && GPS.fix < 1)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS not FIX
 #endif
 
 #ifdef IsAM      
-      digitalWrite(RE_LED, LOW);
+      digitalWrite(RELAY, LOW);
 #endif
       gled_status = LOW;
 //      SerPrln("L");
@@ -748,17 +755,123 @@ void loop()
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, HIGH);
 #ifdef IsGPS
-      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && !GPS.fix)      // Position Hold (GPS position control)
+      if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && GPS.fix < 1)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS not FIX
 #endif
 
 #ifdef IsAM
-      if(motorArmed) digitalWrite(RE_LED, HIGH);
+      if(motorArmed) digitalWrite(RELAY, HIGH);
 #endif
       gled_status = HIGH;
     } 
   }
+  if(flightMode == AP_RTL)
+  {
+    if(millis() - all_led_timer > all_led_speed) {
+    all_led_timer = millis();
+    if(all_led_status == LOW)
+    {
+       digitalWrite(LED_Yellow, HIGH);
+       digitalWrite(LED_Green, HIGH);
+       digitalWrite(LED_Red, HIGH);
+       all_led_status == HIGH;  
+     }
+   else
+     {
+       all_led_status == LOW;
+     }
+   }
+  }
 
 }
 
+void update_GPS(){
 
+    GPS.update();     // Read GPS data 
+	
+	if (GPS.new_data && GPS.fix) {
+		//send_message(MSG_LOCATION);
+
+		// for performance
+		// ---------------
+		//gps_fix_count++;
+		
+		if(ground_start_count > 1){
+			ground_start_count--;
+		
+		} else if (ground_start_count == 1) {
+		
+			// We countdown N number of good GPS fixes
+			// so that the altitude is more accurate
+			// -------------------------------------
+			if (current_loc.lat == 0) {
+				Serial.println("!! bad loc");
+				ground_start_count = 5;
+				
+			} else {
+
+				//if (log_bitmask & MASK_LOG_CMD)
+				//	Log_Write_Startup(TYPE_GROUNDSTART_MSG);
+				
+				init_home();
+				// init altitude
+				current_loc.alt = GPS.altitude;
+				ground_start_count = 0;
+			}
+		}
+
+		/* disabled for now
+		// baro_offset is an integrator for the gps altitude error 
+		baro_offset 	+= altitude_gain * (float)(GPS.altitude - current_loc.alt);
+		*/
+		
+		current_loc.lng = GPS.longitude;	// Lon * 10 * *7
+		current_loc.lat = GPS.latitude;		// Lat * 10 * *7
+		
+		//COGX = cos(ToRad(GPS.ground_course / 100.0));
+		//COGY = sin(ToRad(GPS.ground_course / 100.0));
+
+      }
+}
+
+// run this at setup on the ground
+// -------------------------------
+void init_home()
+{
+	Serial.println("MSG: init home");
+
+	// Extra read just in case
+	// -----------------------
+	//GPS.Read();
+
+	// block until we get a good fix
+	// -----------------------------
+	while (!GPS.new_data || !GPS.fix) {
+		GPS.update();
+	}
+	//home.id 	= CMD_WAYPOINT;
+	home.lng 	= GPS.longitude;				// Lon * 10**7
+	home.lat 	= GPS.latitude;				// Lat * 10**7
+	home.alt 	= GPS.altitude;
+	home_is_set = true;
+
+        //TEST
+        /*
+        home.lng = 9180919;
+        home.lat = 45469225;
+        */
+
+	// ground altitude in centimeters for pressure alt calculations
+	// ------------------------------------------------------------
+	ground_alt 			= GPS.altitude;
+	//pressure_altitude 	= GPS.altitude;  // Set initial value for filter
+	//save_EEPROM_pressure();
+
+	// Save Home to EEPROM
+	// -------------------
+	//set_wp_with_index(home, 0);
+
+	// Save prev loc
+	// -------------
+	//prev_WP = home;
+}
