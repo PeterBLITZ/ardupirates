@@ -106,9 +106,9 @@ TODO:
 #define SERIAL2_BAUD 115200
 #define SERIAL3_BAUD 115200
 
-FastSerialPort0(Serial);
-FastSerialPort1(Serial1);
-FastSerialPort3(Serial3);
+//FastSerialPort0(Serial);
+//FastSerialPort1(Serial1);
+//FastSerialPort3(Serial3);
 
 
 #ifdef SerXbee               // Xbee/Telemetry port 
