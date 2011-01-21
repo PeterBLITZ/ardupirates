@@ -137,9 +137,9 @@ void read_radio()
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
 #ifdef QUAD
 
-#ifdef FLIGHT_MODE_X_45Degree
+#ifndef FLIGHT_MODE_X
       if(flightOrientation) {
-//      FLIGHT_MODE_X_45Degree
+        //FLIGHT_MODE_X_45Degree
         // For X mode - (APM-front pointing towards front motor)
         float aux_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
         float aux_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;

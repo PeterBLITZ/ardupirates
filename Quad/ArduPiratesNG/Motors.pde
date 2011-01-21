@@ -62,9 +62,9 @@ void motor_output()
 #if AIRFRAME == QUAD
     // Quadcopter mix
 
-#ifdef FLIGHT_MODE_X_45Degree
+#ifndef FLIGHT_MODE_X
     if(flightOrientation) {
-//        FLIGHT_MODE_X_45Degree
+          //FLIGHT_MODE_X_45Degree
           // For X mode - (APM-front pointing towards front motor)
           rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
           leftMotor = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
@@ -85,8 +85,8 @@ void motor_output()
           frontMotor = constrain(throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
           backMotor = constrain(throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
 #endif
-
 #endif 
+
 #if AIRFRAME == HEXA
    // Hexacopter mix
         LeftCWMotor = constrain(throttle + control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW

@@ -76,7 +76,7 @@
 //#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
 //#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
                          // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
-//#define UseCamTrigger  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.                  
+//#define UseCamShutter  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.                  
 
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP         // Use pressure sensor for altitude hold?
@@ -104,11 +104,38 @@
 
 /* ************************************************* */
 //    PWM - QUAD COPTER SETUP                       //
-
+//
 // Frame build condiguration
-// FLIGHT_MODE_+    // Traditional "one arm as nose" frame configuration
-// FLIGHT_MODE_X    // 2x Options (see below).
-// 
+//
+//  Just change AIRFRAME to QUAD in ArduUser.h
+//
+// To change between flight orientations just use DIP_1 switch for that. DIP_1 up (off) = X-mode(45Degree), DIP_1 down (on)= + mode
+//
+//  FLIGHT_MODE_X_45Degree (APM-front pointing towards front motor). DIP_1 up (off) = X-mode(45Degree)
+//   F  CW  0....Front....0 CCW  R        // 0 = Motors
+//          ...****........               // ****  = APM (APM-front pointing towards front motor)
+//          ......****.....               //    **** 
+//          .........****..               //       ****
+//   L CCW  0....Back.....0  CW  B          L = Left motor, 
+//                                          R = Right motor, 
+//                                          B = Back motor,
+//                                          F = Front motor.  
+//
+//
+//  FLIGHT_MODE_+         (APM_front pointing towards front motor). DIP down (on) = + Mode
+//           F CW 0 
+//          ....FRONT.....                // 0 = Motors
+//          .....***......                // *** = APM 
+//   L CCW 0.....***.....0 CCW R          // *** 
+//          .....***......                // ***  
+//          .....BACK.....                 
+//          B CW  0                  F = Front motor, L = Left motor, R = Right motor, B = Back motor.
+//
+//  
+// When selecting Flight_Mode_X (APM-front between Front and Right motor).  (Pirates X-mode version). 
+// Just uncommend the line below.
+//#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above. DIP_1 is not applicable
+//
 //  FLIGHT_MODE_X (APM-front between Front and Right motor).
 //   F  CW  0....Front....0 CCW  R        // 0 = Motors
 //          ......***......               // *** = APM (APM-front between Front and Right motor)
@@ -118,34 +145,16 @@
 //                                          R = Right motor, 
 //                                          B = Back motor,
 //                                          F = Front motor.  
-
-//  FLIGHT_MODE_X_45Degree (APM-front pointing towards front motor).
-//   F  CW  0....Front....0 CCW  R        // 0 = Motors
-//          ...****........               // ****  = APM (APM-front pointing towards front motor)
-//          ......****.....               //    **** 
-//          .........****..               //       ****
-//   L CCW  0....Back.....0  CW  B          L = Left motor, 
-//                                          R = Right motor, 
-//                                          B = Back motor,
-//                                          F = Front motor.  
-
-
-// To change between flight orientations just use DIP switch for that. DIP1 up (off) = X-mode(45Degree), DIP1 down (on)= + mode
-// When selecting Flight_Mode_X choice one of the two options below.
-//#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above. Dip1 is not applicable
-#define FLIGHT_MODE_X_45Degree   // (APM-front pointing towards front motor).  See layout above.  Default.  We can switch between + and X mode 
-
-// Double check in configurator - Serial command "T" enter.
-// remember after changing DIP switch you must reboot APM.
+//
 
 /**********************************************/
 //    PWM - HEXA COPTER SETUP   
 //
 //  Just change AIRFRAME to HEXA in ArduUser.h
-
+//
 // Frame build condiguration
 //Hexa Mode - 6 Motor system
-
+//
 //           F CW 0 
 //          ....FRONT....                // 0 = Motors
 //    L CCW 0....***....0 CCW R
@@ -237,7 +246,7 @@
 #include <avr/io.h>
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
-#include <FastSerial.h>
+//#include <FastSerial.h>
 #include <math.h>
 #include <APM_RC.h> 		// ArduPilot Mega RC Library
 #include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
@@ -413,7 +422,7 @@ void loop()
   // Do we have cameras stabilization connected and in use?
   if(!SW_DIP2){ 
     camera_output();
-#ifdef UseCamTrigger
+#ifdef UseCamShutter
     CamTrigger();
 #endif
   }

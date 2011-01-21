@@ -127,8 +127,8 @@ void camera_output() {
 #endif
 
 /* **************************************************** */
-// Camera Trigger
-#ifdef UseCamTrigger
+// Camera Shutter Triggering using a Servo.
+#ifdef UseCamShutter
 void CamTrigger() {
 
   if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD){ 

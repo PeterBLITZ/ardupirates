@@ -53,7 +53,7 @@ TODO:
 #define HELI 1
 #define HEXA 2
 
-// Note: do not change AIRFRAME to HELI and then load it into a QUAD or you will end up with your engines going to 50% during the initialisation sequence
+// Note: do not change AIRFRAME to HELI and then load it into a QUAD or HEXA you will end up with your engines going to 50% during the initialisation sequence
 #define AIRFRAME QUAD
 
 /*************************************************************/
@@ -138,8 +138,6 @@ TODO:
 #define CAM_SMOOTHING_ROLL 1000 // Camera movement smoothing on roll axis
 
 #define CAM_FOCUS 1710          // Camera trigger Servo Focus position
-//int CAM_FOCUs = 1770;
-//int CAM_TRIGGEr = 1800;
 #define CAM_TRIGGER 1780        // Camera trigger Servo Trigger position 
 #define CAM_RELEASE 1500        // Camera trigger Servo Release Trigger Button position
 
@@ -154,10 +152,6 @@ TODO:
 /*************************************************************/
 // General definitions
 //Modes
-//#define STABLE_MODE 0
-//#define ACRO_MODE 1
-//#define AP_NORMAL_MODE 0       // AP disabled => manual flight
-//#define AP_AUTOMATIC_MODE 1    // AP Enabled  => Automatic mode (GPS position hold)
 #define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
 #define FM_STABLE_MODE         1  // DIP3 up   (OFF) = Stable Mode.
 #define AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
