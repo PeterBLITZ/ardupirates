@@ -110,6 +110,8 @@
 //  Just change AIRFRAME to QUAD in ArduUser.h
 //
 // To change between flight orientations just use DIP_1 switch for that. DIP_1 up (off) = X-mode(45Degree), DIP_1 down (on)= + mode
+// remember after changing DIP switch you must reboot APM.
+//
 //
 //  FLIGHT_MODE_X_45Degree (APM-front pointing towards front motor). DIP_1 up (off) = X-mode(45Degree)
 //   F  CW  0....Front....0 CCW  R        // 0 = Motors
@@ -146,7 +148,7 @@
 //                                          B = Back motor,
 //                                          F = Front motor.  
 //
-
+//
 /**********************************************/
 //    PWM - HEXA COPTER SETUP   
 //
@@ -162,10 +164,9 @@
 //    L CW  0....***....0 CW  R          // ***
 //          .....BACK....                // *** 
 //          B CCW 0                  F = Front motor, L = Left motors, R = Right motors, B = Back motor.
-
+//
 // Double check in configurator - Serial command "T" enter.
-// remember after changing DIP switch you must reboot APM.
-
+//
 /**********************************************/
 
 //  Magnetometer Setup
