@@ -58,7 +58,7 @@ void camera_output() {
   // Camera stabilization jump tables
   // SW_DIP1 is a multplier, settings  
 #if AIRFRAME == QUAD
-#ifdef FLIGHT_MODE_X_45Degree
+#ifndef FLIGHT_MODE_X
   switch ((SW_DIP1 * 4) + cam_mode + (BATTLOW * 10)) {
     // Cases 1 & 4 are stabilization for + Mode flying setup
     // Cases 5 & 8 are stabilization for x Mode flying setup
