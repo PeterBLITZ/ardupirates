@@ -37,208 +37,113 @@
 /*   AP_Compass : HMC5843 compass library [optional]                      */
 /*   GPS_MTK or GPS_UBLOX or GPS_NMEA : GPS library    [optional]         */
 
-/**** Switch Functions *****
-// FLIGHT MODE
-//  This is determine by DIP Switch 3. // When switching over you have to reboot APM.
-// DIP3 down (On) = Acrobatic Mode.  Yellow LED is Flashing. 
-// DIP3 up (Off) = Stable Mode.  AUTOPILOT MODE LEDs status lights become applicable.  See below.
 
+/*
 
- // AUTOPILOT MODE (only works in Stable mode)
- AUX2 OFF && AUX1 OFF = Stable Mode              (AP_mode = 2) Yellow & Red LEDs both OFF
- AUX2 OFF && AUX1 ON  = Altitude Hold only       (AP_mode = 3) Yellow LED ON and RED LED OFF
- AUX2 ON  && AUX1 OFF = Position Hold only       (AP_mode = 4) Yellow LED OFF and RED LED ON (GPS Not Logged - RED LED Flashing)
- AUX2 ON  && AUX1 ON  = Position & Altitude Hold (AP_mode = 5) Yellow & Red LEDs both ON (GPS Not Logged - RED LED Flashing)
-// Remember In Configurator MODE(channel) is AUX2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-/* ************************************************************ */
+WARNING: This file now only contains program logic. You need not edit
+         this file to change any settings for your multicopter.
+         Any configuration is done in config.h.
+         
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+*/
 
 /* ************************************************************ */
-/* **************** MAIN PROGRAM - MODULES ******************** */
+/* **************** MAIN PROGRAM - DEFINES ******************** */
 /* ************************************************************ */
+#include "config.h" // [kidogo] Moved all user configurable settings 
+                      // to config.h, formerly ArduUser.h
+                      
+/*************************************************************/
+// [kidogo] Moved the below settings out of ArduUser.h to here
+// since these settings should not be edited by the user
+/*************************************************************/
 
-/* ************************************************************ */
-// User MODULES
+
+/*************************************************************/
+// General definitions
 //
-// Please check your modules settings for every new software downloads you have.
-// Also check repository / ArduCopter wiki pages for ChangeLogs and software notes
-//
-// Comment out with // modules that you are not using
-//
-// Do check ArduUser.h settings file too !!
-//
-///////////////////////////////////////
-//  Modules Config
-// --------------------------
+// Airframe
+#define QUAD 0
+#define HELI 1
+#define HEXA 2
 
-#define IsGPS            // Do we have a GPS connected.  See ArduUser for different GPS Selections.
-#define IsMAG            // Do we have a Magnetometer connected, if have remember to activate it from Configurator
-//#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
-#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
-                         // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
-#define UseCamShutter  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.                  
+//Modes
+#define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
+#define FM_STABLE_MODE         1  // DIP3 up   (OFF) = Stable Mode.
+#define AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
+#define AP_ALTITUDE_HOLD       3  // Just Altitude Hold
+#define AP_GPS_HOLD            4  // Just GPS Hold
+#define AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
+//#define AP_WAYPOINT            6  // Waypoint Navigation...NOT USED YET
 
-//#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
-#define UseBMP         // Use pressure sensor for altitude hold?
-//#define BATTERY_EVENT 1   // (boolean) 0 = don't read battery, 1 = read battery voltage (only if you have it _wired_ up!)
-//#define IsSONAR        // are we using a Sonar for altitude hold?
-//#define IsRANGEFINDER  // are we using range finders for obstacle avoidance?
+// Radio related definitions
+#define CH_ROLL 0
+#define CH_PITCH 1
+#define CH_THROTTLE 2
+#define CH_RUDDER 3
+#define CH_1 0
+#define CH_2 1
+#define CH_3 2
+#define CH_4 3
+#define CH_5 4
+#define CH_6 5
+#define CH_7 6
+#define CH_8 7
+#define CH_9 8    // PL3
+#define CH_10 9   // PB5
+#define CH_11 10  // PE3
 
-#define CONFIGURATOR
+//Axis
+#define ROLL 0
+#define PITCH 1
+#define YAW 2
+#define XAXIS 0
+#define YAXIS 1
+#define ZAXIS 2
+
+#define GYROZ 0
+#define GYROX 1
+#define GYROY 2
+#define ACCELX 3
+#define ACCELY 4
+#define ACCELZ 5
+#define LASTSENSOR 6
 
 
+/* AM PIN Definitions */
+/* Will be moved in future to AN extension ports */
+/* due need to have PWM pins free for sonars and servos */
 
-////////////////////
-// Serial ports & speeds
+#define FR_LED 3  // Mega PE4 pin, OUT7
+#define RE_LED 2  // Mega PE5 pin, OUT6
+#define RI_LED 7  // Mega PH4 pin, OUT5
+#define LE_LED 8  // Mega PH5 pin, OUT4
 
-// Serial data, do we have FTDI cable or Xbee on Telemetry port as our primary command link
-// If we are using normal FTDI/USB port as our telemetry/configuration, keep next line disabled
-#define SerXbee
+/*
+#define FR_LED AN12  // Mega PE4 pin, OUT7
+#define RE_LED AN14  // Mega PE5 pin, OUT6
+#define RI_LED AN10  // Mega PH4 pin, OUT5
+#define LE_LED AN8  // Mega PH5 pin, OUT4
+*/
 
-// Telemetry port speed, default is 115200
-//#define SerBau  19200
-//#define SerBau  38400
-//#define SerBau  57600
-#define SerBau  115200
+/*************************************************************/
+// Special patterns for future use
 
+/*
+#define POFF  L1\0x00\0x00\0x05
+#define PALL  L1\0xFF\0xFF\0x05
 
-/* ************************************************* */
-//    PWM - QUAD COPTER SETUP                       //
-//
-// Frame build condiguration
-//
-//  Just change AIRFRAME to QUAD in ArduUser.h
-//
-// To change between flight orientations just use DIP_1 switch for that. DIP_1 up (off) = X-mode(45Degree), DIP_1 down (on)= + mode
-// remember after changing DIP switch you must reboot APM.
-//
-//
-//  FLIGHT_MODE_X_45Degree (APM-front pointing towards front motor). DIP_1 up (off) = X-mode(45Degree)
-//   F  CW  0....Front....0 CCW  R        // 0 = Motors
-//          ...****........               // ****  = APM (APM-front pointing towards front motor)
-//          ......****.....               //    **** 
-//          .........****..               //       ****
-//   L CCW  0....Back.....0  CW  B          L = Left motor, 
-//                                          R = Right motor, 
-//                                          B = Back motor,
-//                                          F = Front motor.  
-//
-//
-//  FLIGHT_MODE_+         (APM_front pointing towards front motor). DIP down (on) = + Mode
-//           F CW 0 
-//          ....FRONT.....                // 0 = Motors
-//          .....***......                // *** = APM 
-//   L CCW 0.....***.....0 CCW R          // *** 
-//          .....***......                // ***  
-//          .....BACK.....                 
-//          B CW  0                  F = Front motor, L = Left motor, R = Right motor, B = Back motor.
-//
-//  
-// When selecting Flight_Mode_X (APM-front between Front and Right motor).  (Pirates X-mode version). 
-// Just uncommend the line below.
-//#define FLIGHT_MODE_X            // (APM-front between Front and Right motor).  See layout above. DIP_1 is not applicable
-//
-//  FLIGHT_MODE_X (APM-front between Front and Right motor).
-//   F  CW  0....Front....0 CCW  R        // 0 = Motors
-//          ......***......               // *** = APM (APM-front between Front and Right motor)
-//          ......***......               // ***
-//          ......***......               // *** 
-//   L CCW  0....Back.....0  CW  B          L = Left motor, 
-//                                          R = Right motor, 
-//                                          B = Back motor,
-//                                          F = Front motor.  
-//
-//
-/**********************************************/
-//    PWM - HEXA COPTER SETUP   
-//
-//  Just change AIRFRAME to HEXA in ArduUser.h
-//
-// Frame build condiguration
-//Hexa Mode - 6 Motor system
-//
-//           F CW 0 
-//          ....FRONT....                // 0 = Motors
-//    L CCW 0....***....0 CCW R
-//          .....***.....                // *** = APM 
-//    L CW  0....***....0 CW  R          // ***
-//          .....BACK....                // *** 
-//          B CCW 0                  F = Front motor, L = Left motors, R = Right motors, B = Back motor.
-//
-// Double check in configurator - Serial command "T" enter.
-//
-/**********************************************/
+#define GPS_AM_PAT1 L\0x00\0x00\0x05
+#define GPS_AM_PAT2 L\0xFF\0xFF\0x05
+#define GPS_AM_PAT3 L\0xF0\0xF0\0x05
+*/
 
-//  Magnetometer Setup
+/* AM PIN Definitions - END */
 
-#ifdef IsMAG
-// To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
-// you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
-#define MAGOFFSET -76,22.5,-55.5  // Hein's Quad calibration settings.  You have to determine your own.
-//#define MAGOFFSET -70,55.5,-61.5  // Hein's Hexa calibration settings.  You have to determine your own.
-
-// MAGCALIBRATION is the correction angle in degrees (can be + or -). You must calibrating your magnetometer to show magnetic north correctly.
-// After calibration you will have to determine the declination value between Magnetic north and true north, see following link
-// http://code.google.com/p/arducopter/wiki/Quad_Magnetos under additional settings. Both values have to be incorporated
-// You can check Declination to your location from http://www.magnetic-declination.com/
-// Example:  Magnetic north calibration show -1.2 degrees offset and declination (true north) is -5.6 then the MAGCALIBRATION should be -6.8.
-// Your GPS readings is based on true north.
-// For Magnetic north calibration make sure that your Magnetometer is truly showing 0 degress when your ArduQuad is looking to the North.
-// Use a real compass (! not your iPhone) to point your ArduQuad to the magnetic north and then adjust this 
-// value until you have a 0 dergrees reading in the configurator's artificial horizon. 
-// Once you have achieved this fine tune in the configurator's serial monitor by pressing "T" (capital t).
-
-#define MAGCALIBRATION -21.65      //  Quad Hein, South Africa, Centurion.  You have to determine your own.
-//#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
-
-// orientations for DIYDrones magnetometer
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD_RIGHT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_RIGHT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK_RIGHT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_LEFT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD      // Hein Hexa
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_BACK
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_BACK_LEFT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_LEFT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_LEFT
-
-// orientations for Sparkfun magnetometer
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_RIGHT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_RIGHT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_RIGHT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
-#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD       //Hein quad
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_LEFT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_LEFT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_LEFT
-
-#endif
-
-/**********************************************/
-// PID TUNING WITH YOUR RADIO
-
-//PID Tuning using the flightmode 3 position channel in Radio.  You should have at least a 7 channel radio.
-//Normally Aux1 will be your 3 position flightmode channel.  Your radio also have to be in Acro (plane) mode.
-//Select below if you want to use this function
-#define Use_PID_Tuning
-
-/**********************************************/
-
+// [kidogo] End of imported settings from ArduUser.h
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - INCLUDES ******************* */
@@ -259,15 +164,13 @@
 #include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
 #include <AP_GPS.h>
 #include "Arducopter.h"
-#include "ArduUser.h"
-
 
 #if AIRFRAME == HELI
 #include "Heli.h"
 #endif
 
 /* Software version */
-#define VER 1.54    // Current software version (only numeric values)
+#define VER 1.54    // Current software version (only numeric values) ** [kidogo] Should we update this version at some point ?
 
 // Sensors - declare one global instance
 AP_ADC_ADS7844		adc;
