@@ -342,6 +342,18 @@ void PID_Tuning()  {
            CAM_CENT += 10;
            SerPrln(CAM_CENT);
          }
+         if (Camera_Focus_adj){
+           CAM_FOCUS += 10;
+           SerPrln(CAM_FOCUS);
+         }
+         if (Camera_Trigger_adj){
+           CAM_TRIGGER += 10;
+           SerPrln(CAM_TRIGGER);
+         }
+         if (Camera_Release_adj){
+           CAM_RELEASE += 10;
+           SerPrln(CAM_RELEASE);
+         }
          Plus = 0;
          Minus = 0;
        }else if (Minus == 1) {
@@ -482,6 +494,18 @@ void PID_Tuning()  {
          if (Camera_Roll_Centre_adj){
            CAM_CENT -= 10;
            SerPrln(CAM_CENT);
+         }
+         if (Camera_Focus_adj){
+           CAM_FOCUS -= 10;
+           SerPrln(CAM_FOCUS);
+         }
+         if (Camera_Trigger_adj){
+           CAM_TRIGGER -= 10;
+           SerPrln(CAM_TRIGGER);
+         }
+         if (Camera_Release_adj){
+           CAM_RELEASE -= 10;
+           SerPrln(CAM_RELEASE);
          }
          Plus = 0;
          Minus = 0;
