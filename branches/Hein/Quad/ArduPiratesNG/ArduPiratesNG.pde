@@ -74,9 +74,9 @@
 #define IsGPS            // Do we have a GPS connected.  See ArduUser for different GPS Selections.
 #define IsMAG            // Do we have a Magnetometer connected, if have remember to activate it from Configurator
 //#define IsAM           // Do we have motormount LED's. AM = Atraction Mode
-//#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
+#define IsCAM          // Do we have camera stabilization in use, If you activate, check OUTPUT pins from ArduUser.h
                          // DIP2 down (ON) = Camera Stabilization enabled, DIP2 up (OFF) = Camera Stabilization disabled.
-//#define UseCamShutter  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.                  
+#define UseCamShutter  // Do we want to use CH9 (Pin PL3) for camera trigger during GPS Hold or Altitude Hold.                  
 
 //#define UseAirspeed  // Quads don't use AirSpeed... Legacy, jp 19-10-10
 #define UseBMP         // Use pressure sensor for altitude hold?
@@ -93,7 +93,7 @@
 
 // Serial data, do we have FTDI cable or Xbee on Telemetry port as our primary command link
 // If we are using normal FTDI/USB port as our telemetry/configuration, keep next line disabled
-//#define SerXbee
+#define SerXbee
 
 // Telemetry port speed, default is 115200
 //#define SerBau  19200
@@ -235,7 +235,7 @@
 //PID Tuning using the flightmode 3 position channel in Radio.  You should have at least a 7 channel radio.
 //Normally Aux1 will be your 3 position flightmode channel.  Your radio also have to be in Acro (plane) mode.
 //Select below if you want to use this function
-//#define Use_PID_Tuning
+#define Use_PID_Tuning
 
 /**********************************************/
 
