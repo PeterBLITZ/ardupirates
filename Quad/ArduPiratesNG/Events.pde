@@ -134,7 +134,7 @@ else
 #ifdef UseCamShutter
 void CamTrigger() {
 
-  if ((AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && ON_PID == 0){ 
+  if (AP_mode == AP_ALTITUDE_HOLD || AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD){ 
     if (Focus_status){
       APM_RC.OutputCh(CH_9, CAM_FOCUS);           // Servo put camera in focus status
       if (Focus_counter > 400){                            // Focus Counter = 2 Seconds.
