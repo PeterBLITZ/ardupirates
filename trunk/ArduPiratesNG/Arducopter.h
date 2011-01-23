@@ -375,6 +375,9 @@ byte Minus = 0;
 byte Camera_Smooth_Roll_adj = 0;
 byte Camera_Smooth_Pitch_adj = 0;
 byte Camera_Roll_Centre_adj = 0;
+byte Camera_Focus_adj = 0;
+byte Camera_Trigger_adj = 0;
+byte Camera_Release_adj = 0;
 
 // Camera Trigger
 int Focus_counter = 0;
