@@ -51,7 +51,7 @@ WARNING: This file now only contains program logic. You need not edit
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - DEFINES ******************** */
 /* ************************************************************ */
-#include "config.h" // [kidogo] Moved all user configurable settings 
+#include "Config.h" // [kidogo] Moved all user configurable settings 
                       // to config.h, formerly ArduUser.h
                       
 /* ************************************************************ */
