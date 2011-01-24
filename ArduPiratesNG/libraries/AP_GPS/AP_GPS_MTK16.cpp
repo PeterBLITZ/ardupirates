@@ -124,7 +124,7 @@ restart:
 			hdop			= _buffer.msg.hdop;
 			
 			// XXX docs say this is UTC, but our clients expect msToW
-			time			= _buffer.msg.utc_time;
+			time			= _buffer.msg.utc_time; 
 
 			parsed = true;
 		}
