@@ -51,7 +51,7 @@ void APM_Init() {
   APMPinMode(DDRL,6,INPUT);   // DIP3, (PL6)
   APMPinMode(DDRL,7,INPUT);   // DIP4, (PL7), Furthest DIP from sliding SW2 switch
 
-
+ 
   /* ********************************************************* */
   ///////////////////////////////////////////////////////// 
   // Normal Initialization sequence starts from here.
