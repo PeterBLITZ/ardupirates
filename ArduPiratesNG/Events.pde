@@ -53,8 +53,11 @@ TODO:
 
 #ifdef IsCAM
 void camera_output() {
-
-  cam_mode = 2;                        // for debugging 
+if (ON_PID == 0)          // PID Tuning must be OFF.
+  cam_mode = 2;   
+else
+  cam_mode = 1;
+  // for debugging 
   // Camera stabilization jump tables
   // SW_DIP1 is a multplier, settings  
 #if AIRFRAME == QUAD
