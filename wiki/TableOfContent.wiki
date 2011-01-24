@@ -2,12 +2,13 @@
 
  * [Getting_started Getting started]
   * [What_I_need What I Need?]
+ * [PIDSettings PID Settings]
+ * [UbloxGPSTutorial Ublox GPS Tutorial] 
+ * [ArduCopterInformation ArduCopter Information]
  * [Miscellaneous_informations]
-  * [ArduCopterInformation ArduCopter Information]
   * [UsingWiiSensors Using Wii Sensors]
   * [Waypoint_Nav_Description Waypoint Navigation]
   * [BatteryAlarmHowto Battery Alarm]
   * [StabilizedCameraMount Camera mount]   
   * [ThePiratesCofin The Pirates Cofin]   
-  * [PIDSettings PID Settings]
-  * [UbloxGPSTutorial Ublox GPS Tutorial]
+ 
