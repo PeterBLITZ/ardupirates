@@ -6,9 +6,8 @@
  * [UbloxGPSTutorial Ublox GPS Tutorial] 
  * [ArduCopterInformation ArduCopter Information]
  * [Miscellaneous_informations]
-  * [UsingWiiSensors Using Wii Sensors]
   * [Waypoint_Nav_Description Waypoint Navigation]
   * [BatteryAlarmHowto Battery Alarm]
   * [StabilizedCameraMount Camera mount]   
   * [ThePiratesCofin The Pirates Cofin]   
- 
+  * [UsingWiiSensors Using Wii Sensors]
