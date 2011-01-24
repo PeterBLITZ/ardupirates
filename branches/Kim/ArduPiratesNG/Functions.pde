@@ -186,8 +186,10 @@ void LEDAllOFF() {
 //  Use this function for PID tuning using your flightmode 3-position switch on the radio.
 //  You will need at least a 7 channel radio.  Radio must be in Acro (plane) mode.
 //  Select only one set of parameters below.  See default selection below.
+#if defined(SerXbee) && defined(Use_PID_Tuning)
 void PID_Tuning()  {
 // Tuning PID values using only 3 position channel switch (Flight Mode).
+   if (ON_PID){
      if (ch_flightmode >= 1800) 
      {
        Plus = 1;
@@ -195,121 +197,319 @@ void PID_Tuning()  {
      } 
      else if (ch_flightmode <= 1200) 
      {
-          Plus = 0;
-          Minus = 1;
+       Plus = 0;
+       Minus = 1;
      } 
      else if (ch_flightmode >= 1400 && ch_flightmode <= 1600) 
      {
-             if (Plus == 1){
-//                KP_GPS_ROLL += 0.001;
-//                writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
-
-//                KP_GPS_PITCH += 0.001;
-//                writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
-
-//                KI_GPS_ROLL += 0.0001;
-//                writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
-
-//                KI_GPS_PITCH += 0.0001;
-//                writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
-
-//                KP_QUAD_YAW += 0.1;
-//                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
-
-//                KI_QUAD_YAW += 0.01;
-//                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
-
-//                  CAM_FOCUs += 10; 
-
-                STABLE_MODE_KP_RATE += 0.05;                                        // default
-                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);          // default
-
-//                STABLE_MODE_KP_RATE_YAW += 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
-
-//                STABLE_MODE_KP_RATE_ROLL += 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
-
-//                STABLE_MODE_KP_RATE_PITCH += 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
-
-//                Kp_RateRoll += 0.1;
-//                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
-
-//                Kp_RatePitch += 0.1;
-//                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
-
-//                KP_ALTITUDE += 0.1;
-//                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
-
-//                KI_ALTITUDE += 0.3;
-//                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
-
-//                KD_ALTITUDE += 0.3;
-//                writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
-
-//                Magoffset1 += 1;
-//                writeEEPROM(Magoffset1_ADR);
-//                APM_Compass.SetOffsets(Magoffset1);    
-
-                Plus = 0;
-                Minus = 0;
-             } else if (Minus == 1) {
-//                KP_GPS_ROLL -= 0.001;
-//                writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
-
-//                KP_GPS_PITCH -= 0.001;
-//                writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
-
-//                KI_GPS_ROLL -= 0.0001;
-//                writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
-
-//                KI_GPS_PITCH -= 0.0001;
-//                writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
-
-//                KP_QUAD_YAW -= 0.1;
-//                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
-
-//                KI_QUAD_YAW -= 0.01;
-//                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
-
-//                  CAM_FOCUs -= 10; 
-
-                STABLE_MODE_KP_RATE -= 0.05;                                        // default
-                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);          // default
-
-//                STABLE_MODE_KP_RATE_YAW -= 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
-
-//                STABLE_MODE_KP_RATE_ROLL -= 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
-
-//                STABLE_MODE_KP_RATE_PITCH -= 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
-
-//                Kp_RateRoll -= 0.1;
-//                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
-
-//                Kp_RatePitch -= 0.1;
-//                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
-
-//                KP_ALTITUDE -= 0.1;
-//                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
-
-//                KI_ALTITUDE -= 0.3;
-//                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
-
-//                KD_ALTITUDE -= 0.3;
-//                writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
-
-//                Magoffset1 -= 1;
-//                writeEEPROM(Magoffset1_ADR);
-//                APM_Compass.SetOffsets(Magoffset1);    
-
-                Plus = 0;
-                Minus = 0;
+       if (Plus == 1){
+         if (Pitch_Roll_PID){
+           if (flightMode == FM_ACRO_MODE){
+             if (P_PID){
+               Kp_RateRoll += 0.2;
+               writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
+               Kp_RatePitch += 0.2;
+               writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
              }
+             if (I_PID){
+               Ki_RateRoll += 0.01;
+               writeEEPROM(Ki_RateRoll, KI_RATEROLL_ADR);
+               Ki_RatePitch += 0.01;
+               writeEEPROM(Ki_RatePitch, KI_RATEPITCH_ADR);
+             }
+             if (D_PID){
+               Kd_RateRoll += 0.1;
+               writeEEPROM(Kd_RateRoll, KD_RATEROLL_ADR);
+               Kd_RatePitch += 0.1;
+               writeEEPROM(Kd_RatePitch, KD_RATEPITCH_ADR);
+             }
+           }else{
+             if (P_PID){
+               KP_QUAD_ROLL += 0.2;                                          
+               writeEEPROM(KP_QUAD_ROLL, KP_QUAD_ROLL_ADR);      
+               KP_QUAD_PITCH += 0.2;                                         
+               writeEEPROM(KP_QUAD_PITCH, KP_QUAD_PITCH_ADR);
+             }
+             if (I_PID){
+               KI_QUAD_ROLL += 0.01;                                          
+               writeEEPROM(KI_QUAD_ROLL, KI_QUAD_ROLL_ADR);      
+               KI_QUAD_PITCH += 0.01;                                         
+               writeEEPROM(KI_QUAD_PITCH, KI_QUAD_PITCH_ADR);
+             }
+             if (D_PID){
+               STABLE_MODE_KP_RATE_ROLL += 0.2;                                          
+               writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);      
+               STABLE_MODE_KP_RATE_PITCH += 0.2;                                         
+               writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+             }
+           }
+         }
+         if (Yaw_PID){
+           if (flightMode == FM_ACRO_MODE){
+             if (P_PID){
+               Kp_RateYaw += 0.2;
+               writeEEPROM(Kp_RateYaw, KP_RATEYAW_ADR);
+             }
+             if (I_PID){
+               Ki_RateYaw += 0.01;
+               writeEEPROM(Ki_RateYaw, KI_RATEYAW_ADR);
+             }
+             if (D_PID){
+               Kd_RateYaw += 0.2;
+               writeEEPROM(Kd_RateYaw, KD_RATEYAW_ADR);
+             }
+           }else{
+             if (P_PID){
+               KP_QUAD_YAW += 0.2;                                         
+               writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);      
+             }
+             if (I_PID){
+               KI_QUAD_YAW += 0.01;                                         
+               writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);      
+             }
+             if (D_PID){
+               STABLE_MODE_KP_RATE_YAW += 0.2;                                        
+               writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
+             }
+           }   
+         }
+         if (Baro_PID){
+           if (P_PID){
+             KP_ALTITUDE += 0.005;
+             writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+           }
+           if (I_PID){
+             KI_ALTITUDE += 0.005;
+             writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
+           }
+           if (D_PID){
+             KD_ALTITUDE += 0.005;
+             writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
+           }
+         }
+         if (Sonar_PID){
+           if (P_PID){
+             KP_SONAR_ALTITUDE += 0.05;
+             writeEEPROM(KP_SONAR_ALTITUDE, KP_SONAR_ALTITUDE_ADR);
+           }
+           if (I_PID){
+             KI_SONAR_ALTITUDE += 0.05;
+             writeEEPROM(KI_SONAR_ALTITUDE, KI_SONAR_ALTITUDE_ADR);
+           }
+           if (D_PID){
+             KD_SONAR_ALTITUDE += 0.05;
+             writeEEPROM(KD_SONAR_ALTITUDE, KD_SONAR_ALTITUDE_ADR);
+           }
+         }
+         if (GPS_PID){
+           if (P_PID){
+             KP_GPS_ROLL += 0.002;
+             writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
+             KP_GPS_PITCH += 0.001;
+             writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
+           }
+           if (I_PID){
+             KI_GPS_ROLL += 0.0002;
+             writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
+             KI_GPS_PITCH += 0.0002;
+             writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
+           }
+           if (D_PID){
+             KD_GPS_ROLL += 0.002;
+             writeEEPROM(KD_GPS_ROLL, KD_GPS_ROLL_ADR);
+             KD_GPS_PITCH += 0.001;
+             writeEEPROM(KD_GPS_PITCH, KD_GPS_PITCH_ADR);
+           }
+         }
+         if (ACC_offset_x_adj){
+           acc_offset_x += 1;
+           writeEEPROM(acc_offset_x, acc_offset_x_ADR);
+         }
+         if (ACC_offset_y_adj){
+           acc_offset_y += 1;
+           writeEEPROM(acc_offset_y, acc_offset_y_ADR);
+         }
+         if (Camera_Smooth_Roll_adj){
+           CAM_SMOOTHING_ROLL += 10;
+           SerPrln(CAM_SMOOTHING_ROLL);
+         }
+         if (Camera_Smooth_Pitch_adj){
+           CAM_SMOOTHING += 10;
+           SerPrln(CAM_SMOOTHING);
+         }
+         if (Camera_Roll_Centre_adj){
+           CAM_CENT += 10;
+           SerPrln(CAM_CENT);
+         }
+         if (Camera_Focus_adj){
+           CAM_FOCUS += 10;
+           SerPrln(CAM_FOCUS);
+         }
+         if (Camera_Trigger_adj){
+           CAM_TRIGGER += 10;
+           SerPrln(CAM_TRIGGER);
+         }
+         if (Camera_Release_adj){
+           CAM_RELEASE += 10;
+           SerPrln(CAM_RELEASE);
+         }
+         Plus = 0;
+         Minus = 0;
+       }else if (Minus == 1) {
+         if (Pitch_Roll_PID){
+           if (flightMode == FM_ACRO_MODE){
+             if (P_PID){
+               Kp_RateRoll -= 0.2;
+               writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
+               Kp_RatePitch -= 0.2;
+               writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
+             }
+             if (I_PID){
+               Ki_RateRoll -= 0.01;
+               writeEEPROM(Ki_RateRoll, KI_RATEROLL_ADR);
+               Ki_RatePitch -= 0.01;
+               writeEEPROM(Ki_RatePitch, KI_RATEPITCH_ADR);
+             }
+             if (D_PID){
+               Kd_RateRoll -= 0.1;
+               writeEEPROM(Kd_RateRoll, KD_RATEROLL_ADR);
+               Kd_RatePitch -= 0.1;
+               writeEEPROM(Kd_RatePitch, KD_RATEPITCH_ADR);
+             }
+           }else{
+             if (P_PID){
+               KP_QUAD_ROLL -= 0.2;                                          
+               writeEEPROM(KP_QUAD_ROLL, KP_QUAD_ROLL_ADR);      
+               KP_QUAD_PITCH -= 0.2;                                         
+               writeEEPROM(KP_QUAD_PITCH, KP_QUAD_PITCH_ADR);
+             }
+             if (I_PID){
+               KI_QUAD_ROLL -= 0.01;                                          
+               writeEEPROM(KI_QUAD_ROLL, KI_QUAD_ROLL_ADR);      
+               KI_QUAD_PITCH -= 0.01;                                         
+               writeEEPROM(KI_QUAD_PITCH, KI_QUAD_PITCH_ADR);
+             }
+             if (D_PID){
+               STABLE_MODE_KP_RATE_ROLL -= 0.2;                                          
+               writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);      
+               STABLE_MODE_KP_RATE_PITCH -= 0.2;                                         
+               writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+             }
+           }
+         }
+         if (Yaw_PID){
+           if (flightMode == FM_ACRO_MODE){
+             if (P_PID){
+               Kp_RateYaw -= 0.2;
+               writeEEPROM(Kp_RateYaw, KP_RATEYAW_ADR);
+             }
+             if (I_PID){
+               Ki_RateYaw -= 0.01;
+               writeEEPROM(Ki_RateYaw, KI_RATEYAW_ADR);
+             }
+             if (D_PID){
+               Kd_RateYaw -= 0.2;
+               writeEEPROM(Kd_RateYaw, KD_RATEYAW_ADR);
+             }
+           }else{
+             if (P_PID){
+               KP_QUAD_YAW -= 0.2;                                         
+               writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);      
+             }
+             if (I_PID){
+               KI_QUAD_YAW -= 0.01;                                         
+               writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);      
+             }
+             if (D_PID){
+               STABLE_MODE_KP_RATE_YAW -= 0.2;                                        
+               writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
+             }
+           }   
+         }
+         if (Baro_PID){
+           if (P_PID){
+             KP_ALTITUDE -= 0.005;
+             writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
+           }
+           if (I_PID){
+             KI_ALTITUDE -= 0.005;
+             writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
+           }
+           if (D_PID){
+             KD_ALTITUDE -= 0.005;
+             writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
+           }
+         }
+         if (Sonar_PID){
+           if (P_PID){
+             KP_SONAR_ALTITUDE -= 0.05;
+             writeEEPROM(KP_SONAR_ALTITUDE, KP_SONAR_ALTITUDE_ADR);
+           }
+           if (I_PID){
+             KI_SONAR_ALTITUDE -= 0.05;
+             writeEEPROM(KI_SONAR_ALTITUDE, KI_SONAR_ALTITUDE_ADR);
+           }
+           if (D_PID){
+             KD_SONAR_ALTITUDE -= 0.05;
+             writeEEPROM(KD_SONAR_ALTITUDE, KD_SONAR_ALTITUDE_ADR);
+           }
+         }
+         if (GPS_PID){
+           if (P_PID){
+             KP_GPS_ROLL -= 0.002;
+             writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
+             KP_GPS_PITCH -= 0.001;
+             writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
+           }
+           if (I_PID){
+             KI_GPS_ROLL -= 0.0002;
+             writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
+             KI_GPS_PITCH -= 0.0002;
+             writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
+           }
+           if (D_PID){
+             KD_GPS_ROLL -= 0.002;
+             writeEEPROM(KD_GPS_ROLL, KD_GPS_ROLL_ADR);
+             KD_GPS_PITCH -= 0.001;
+             writeEEPROM(KD_GPS_PITCH, KD_GPS_PITCH_ADR);
+           }
+         }
+         if (ACC_offset_x_adj){
+           acc_offset_x -= 1;
+           writeEEPROM(acc_offset_x, acc_offset_x_ADR);
+         }
+         if (ACC_offset_y_adj){
+           acc_offset_y -= 1;
+           writeEEPROM(acc_offset_y, acc_offset_y_ADR);
+         }
+         if (Camera_Smooth_Roll_adj){
+           CAM_SMOOTHING_ROLL -= 10;
+           SerPrln(CAM_SMOOTHING_ROLL);
+         }
+         if (Camera_Smooth_Pitch_adj){
+           CAM_SMOOTHING -= 10;
+           SerPrln(CAM_SMOOTHING);
+         }
+         if (Camera_Roll_Centre_adj){
+           CAM_CENT -= 10;
+           SerPrln(CAM_CENT);
+         }
+         if (Camera_Focus_adj){
+           CAM_FOCUS -= 10;
+           SerPrln(CAM_FOCUS);
+         }
+         if (Camera_Trigger_adj){
+           CAM_TRIGGER -= 10;
+           SerPrln(CAM_TRIGGER);
+         }
+         if (Camera_Release_adj){
+           CAM_RELEASE -= 10;
+           SerPrln(CAM_RELEASE);
+         }
+         Plus = 0;
+         Minus = 0;
+       }
      }
+   }  
 }
-
-
+#endif

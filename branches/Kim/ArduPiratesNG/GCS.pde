@@ -1,14 +1,23 @@
-/*
+/******************************************************************************
  www.ArduCopter.com - www.DIYDrones.com
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
- 
+
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : GCS.pde
- Version  : v1.0, Aug 27, 2010
+ Version  : v1.1, Jan 24, 2011
  Author(s): ArduCopter Team
- Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
- Jani Hirvinen, Ken McEwans, Roberto Navoni,          
- Sandro Benigno, Chris Anderson
+             Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
+             Jani Hirvinen, Ken McEwans, Roberto Navoni,
+             Sandro Benigno, Chris Anderson
+ Author(s): ArduPirates development team
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -668,6 +677,321 @@ void sendSerialTelemetry() {
     SerPriln();
     break;
 #endif    
+#if defined(SerXbee) && defined(Use_PID_Tuning)
+  case 'o': // Switch PID tuning ON
+    ON_PID = 1;    
+    SerPrln("PID Tuning ON, Pitch & Roll set, P of PID set"); 
+    Pitch_Roll_PID = 1;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    P_PID = 1;
+    I_PID = 0;
+    D_PID = 0;
+    queryType = 'X';
+    break;
+  case 'f': // Switch PID tuning OFF
+    ON_PID = 0;    
+    SerPrln("PID Tuning OFF"); 
+    queryType = 'X';
+    break;
+  case 'r': // Switch to Pitch and Roll, PID tuning
+    Pitch_Roll_PID = 1;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    P_PID = 1;
+    I_PID = 0;
+    D_PID = 0;
+    SerPrln("Pitch and Roll, PID Tuning, P of PID set");
+    queryType = 'X';
+    break;
+  case 'w': // Yaw PID tuning
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 1;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    P_PID = 1;
+    I_PID = 0;
+    D_PID = 0;
+    SerPrln("Yaw, PID Tuning, P of PID set");
+    queryType = 'X';
+    break;
+  case 'b': // Baro PID tuning
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 1;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    P_PID = 1;
+    I_PID = 0;
+    D_PID = 0;
+    SerPrln("Baro, PID Tuning, P of PID set");
+    queryType = 'X';
+    break;
+  case 's': // Sonar PID tuning
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 1;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    P_PID = 1;
+    I_PID = 0;
+    D_PID = 0;
+    SerPrln("Sonar, PID Tuning, P of PID set");
+    queryType = 'X';
+    break;
+  case 'g': // GPS PID tuning
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 1;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    P_PID = 1;
+    I_PID = 0;
+    D_PID = 0;
+    SerPrln("GPS, PID Tuning, P of PID set");
+    queryType = 'X';
+    break;
+  case 'p': // P factor of PID tuning
+    P_PID = 1;
+    I_PID = 0;
+    D_PID = 0;
+    SerPrln("P factor of  PID set");
+    queryType = 'X';
+    break;
+  case 'i': // I factor of PID tuning
+    P_PID = 0;
+    I_PID = 1;
+    D_PID = 0;
+    SerPrln("I factor of  PID set");
+    queryType = 'X';
+    break;
+  case 'd': // D factor of PID tuning
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 1;
+    SerPrln("D factor of  PID set");
+    queryType = 'X';
+    break;
+  case 'x': // Accelerometer Roll Offset Tuning
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 0;
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 1;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    SerPrln("Accelerometer Roll Offset Tuning");
+    queryType = 'X';
+    break;
+  case 'y': // Accelerometer Pitch Offset Tuning
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 0;
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 1;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    SerPrln("Accelerometer Pitch Offset Tuning");
+    queryType = 'X';
+    break;
+  case 'a': // Camera Smooth Pitch
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 0;
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 1;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    SerPri("Camera Smooth Pitch");
+    SerPrln(CAM_SMOOTHING);
+    queryType = 'X';
+    break;
+  case 'e': // Camera Smooth Roll
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 0;
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0;    
+    Camera_Smooth_Roll_adj = 1;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    SerPri("Camera Smooth Roll");
+    SerPrln(CAM_SMOOTHING_ROLL);
+    queryType = 'X';
+    break;
+  case 'c': // Camera Roll Centre
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 0;
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0; 
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 1;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    SerPri("Camera Roll Centre");
+    SerPrln(CAM_CENT);
+    queryType = 'X';
+    break;
+  case 'h': // Camera Focus Position - using servo
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 0;
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0; 
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 1;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 0;    
+    SerPri("Camera Focus Position - using servo");
+    SerPrln(CAM_FOCUS);
+    queryType = 'X';
+    break;
+  case 't': // Camera Trigger Position - using servo
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 0;
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0; 
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 1;
+    Camera_Release_adj = 0;    
+    SerPri("Camera Trigger Position - using servo");
+    SerPrln(CAM_TRIGGER);
+    queryType = 'X';
+    break;
+  case 'j': // Camera Release Position - using servo
+    P_PID = 0;
+    I_PID = 0;
+    D_PID = 0;
+    Pitch_Roll_PID = 0;
+    Yaw_PID = 0;
+    Baro_PID = 0;
+    Sonar_PID = 0;
+    GPS_PID = 0;
+    ACC_offset_x_adj = 0;    
+    ACC_offset_y_adj = 0; 
+    Camera_Smooth_Roll_adj = 0;
+    Camera_Smooth_Pitch_adj = 0;
+    Camera_Roll_Centre_adj = 0;  
+    Camera_Focus_adj = 0;
+    Camera_Trigger_adj = 0;
+    Camera_Release_adj = 1;    
+    SerPri("Camera Release Position - using servo");
+    SerPrln(CAM_RELEASE);
+    queryType = 'X';
+    break;
+#endif
   case '.': // Modify GPS settings, print directly to GPS Port
     Serial1.print("$PGCMD,16,0,0,0,0,0*6A\r\n");
     break;
