@@ -668,8 +668,7 @@ void sendSerialTelemetry() {
     SerPriln();
     break;
 #endif    
-#ifdef SerXbee
-#ifdef Use_PID_Tuning
+#if defined(SerXbee) && defined(Use_PID_Tuning)
   case 'o': // Switch PID tuning ON
     ON_PID = 1;    
     SerPrln("PID Tuning ON, Pitch & Roll set, P of PID set"); 
@@ -983,7 +982,6 @@ void sendSerialTelemetry() {
     SerPrln(CAM_RELEASE);
     queryType = 'X';
     break;
-#endif
 #endif
   case '.': // Modify GPS settings, print directly to GPS Port
     Serial1.print("$PGCMD,16,0,0,0,0,0*6A\r\n");
