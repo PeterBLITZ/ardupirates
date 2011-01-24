@@ -35,6 +35,94 @@ TODO:
 
 #include "WProgram.h"
 
+/*************************************************************/
+// [kidogo] Moved the below settings out of ArduUser.h to here
+// since these settings should not be edited by the user
+/*************************************************************/
+
+
+/*************************************************************/
+// General definitions
+//
+// Airframe
+#define QUAD 0
+#define HELI 1
+#define HEXA 2
+
+//Modes
+#define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
+#define FM_STABLE_MODE         1  // DIP3 up   (OFF) = Stable Mode.
+#define AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
+#define AP_ALTITUDE_HOLD       3  // Just Altitude Hold
+#define AP_GPS_HOLD            4  // Just GPS Hold
+#define AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
+//#define AP_WAYPOINT            6  // Waypoint Navigation...NOT USED YET
+
+// Radio related definitions
+#define CH_ROLL 0
+#define CH_PITCH 1
+#define CH_THROTTLE 2
+#define CH_RUDDER 3
+#define CH_1 0
+#define CH_2 1
+#define CH_3 2
+#define CH_4 3
+#define CH_5 4
+#define CH_6 5
+#define CH_7 6
+#define CH_8 7
+#define CH_9 8    // PL3
+#define CH_10 9   // PB5
+#define CH_11 10  // PE3
+
+//Axis
+#define ROLL 0
+#define PITCH 1
+#define YAW 2
+#define XAXIS 0
+#define YAXIS 1
+#define ZAXIS 2
+
+#define GYROZ 0
+#define GYROX 1
+#define GYROY 2
+#define ACCELX 3
+#define ACCELY 4
+#define ACCELZ 5
+#define LASTSENSOR 6
+
+
+/* AM PIN Definitions */
+/* Will be moved in future to AN extension ports */
+/* due need to have PWM pins free for sonars and servos */
+
+#define FR_LED 3  // Mega PE4 pin, OUT7
+#define RE_LED 2  // Mega PE5 pin, OUT6
+#define RI_LED 7  // Mega PH4 pin, OUT5
+#define LE_LED 8  // Mega PH5 pin, OUT4
+
+/*
+#define FR_LED AN12  // Mega PE4 pin, OUT7
+#define RE_LED AN14  // Mega PE5 pin, OUT6
+#define RI_LED AN10  // Mega PH4 pin, OUT5
+#define LE_LED AN8  // Mega PH5 pin, OUT4
+*/
+
+/*************************************************************/
+// Special patterns for future use
+
+/*
+#define POFF  L1\0x00\0x00\0x05
+#define PALL  L1\0xFF\0xFF\0x05
+
+#define GPS_AM_PAT1 L\0x00\0x00\0x05
+#define GPS_AM_PAT2 L\0xFF\0xFF\0x05
+#define GPS_AM_PAT3 L\0xF0\0xF0\0x05
+*/
+
+/* AM PIN Definitions - END */
+
+// [kidogo] End of imported settings from ArduUser.h
 
 /* ************************************************************** */
 /* APM Hardware definitions */
