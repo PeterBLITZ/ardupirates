@@ -1,6 +1,7 @@
 = ArduPirates Wiki=
 
  * [Getting_started Getting started]
+  * [What_I_need What I Need?]
  * [ArduCopterInformation ArduCopter Information]
  * [UsingWiiSensors Using Wii Sensors]
  * [Waypoint_Nav_Description Waypoint Navigation]
