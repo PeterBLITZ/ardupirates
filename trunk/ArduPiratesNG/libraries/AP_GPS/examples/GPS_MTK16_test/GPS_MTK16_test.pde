@@ -49,6 +49,8 @@ void loop()
 		Serial.print(gps.fix, DEC);
 		Serial.print(" TIM:");
 		Serial.print(gps.time, DEC);
+		Serial.print(" HDOP:");
+		Serial.print((float)gps.time / 100.0, DEC);
 		Serial.println();
 		gps.new_data = 0; // We have readed the data
 		}
