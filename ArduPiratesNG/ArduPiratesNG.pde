@@ -195,7 +195,7 @@ void loop()
 #if AIRFRAME == HELI
       heli_read_radio();
 #endif
-#ifdef Use_PID_Tuning  
+#if defined(SerXbee) && defined(Use_PID_Tuning)  
       PID_Tuning();  // See Functions.
 #endif
     }

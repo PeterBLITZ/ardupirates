@@ -68,7 +68,6 @@ TODO:
 
 If you have a quadcopter, uncomment this next line ! */
 #define AIRFRAME QUAD
-
 /*
 - ---------------------------------------------------------------------------- -
    QUAD COPTER AIRFRAME SETUP (PWM) (4 motors)
@@ -78,8 +77,8 @@ If you have a quadcopter, uncomment this next line ! */
 +---------------+------------+-------------------------------------------------+
 | DIP1 Position | Mode       | Remarks                                         |
 +---------------+------------+-------------------------------------------------+
-| ON (down)     | +	         | Use only DIP Switch 1 to change mode            |
-| OFF (up)      | X          |                                                 |
+| ON (down)     | +	         | formerly  FLIGHT_MODE_+                         |
+| OFF (up)      | X          | formerly  FLIGHT_MODE_X_45Degree                |
 +---------------+------------+------------+------------------------------------+
 
     =------------------------------------=
@@ -148,8 +147,9 @@ If you have a quadcopter, uncomment this next line ! */
 
    To choose FLIGHT_MODE_X, just uncommend the line below.
                                                                               */
-//#define FLIGHT_MODE_X
+#define FLIGHT_MODE_X
 
+/* --------------------------------------------------------------------------- */
 
 /* 
 - ---------------------------------------------------------------------------- -
@@ -299,9 +299,7 @@ If you have a quadcopter, uncomment this next line ! */
    Configurator !
    If you are using the magnetometers, please set it up using the section below.
                                                                               */
-
 #ifdef IsMAG
-
 /*
    SET MAGOFFSETS:
    To get Magneto offsets, switch to CLI mode and run offset calibration.
@@ -336,7 +334,6 @@ If you have a quadcopter, uncomment this next line ! */
    pressing "T" (capital t).
                                                                               */
 #define MAGCALIBRATION -21.65 
-
 
 /* SET MAGNETOMETER ORIENTATION:
    Next, you'll have to define how your magnetometer is mounted to your
@@ -395,7 +392,6 @@ If you have a quadcopter, uncomment this next line ! */
    If you do not wish to use a particular function (or if you do not have the
    hardware to support it, disable it by inserting a double slash (//) at the
    beginning of the line
-
 
 - ---------------------------------------------------------------------------- -
    Function for: Motormount LED's or Attraction Mode
@@ -543,6 +539,7 @@ Don't change this.        */
 - ---------------------------------------------------------------------------- -
 
    To enable PID tuning, uncomment the below line.
+   !You also have to uncomment #define SerXbee otherwise it will not work!
    PID tuning uses your 3 position switch on your radio, the same you use to
    select the flightmode. You will need a radio with at least 7 channels.
    Your Aux1 will be your 3 position channel, and your radio has to be in acro
