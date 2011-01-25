@@ -37,6 +37,7 @@ ChangeLog:
                     ArduUser.h to config.h
 2011/24/01 kidogo;  Changed commenting style for improved readability.
 2011/25/01 kidogo;  Added MAGOFFSET define back in after it was lost.
+2011/25/01 kidogo;  Emile pointed out that MAGOFFSET is obsolete. Removed.
 
 
 * **************************************************************************** *
@@ -307,9 +308,10 @@ If you have a quadcopter, uncomment this next line ! */
    During calibration you need to roll/bank/tilt/yaw/shake etc your ArduCopter.
    Here is a video explaining such procedure:
    http://www.youtube.com/watch?v=-hm7wPb0ZEw
-                                                                              */
-#define MAGOFFSET -76,22.5,-55.5  // Example. Fill in your own.
 
+   IMPORTANT: The earlier MAGOFFSET setting in this file is now obsolete. Only
+              way to define MAGOFFSET is via CLI.
+                                                                              */
 
 /*
    SET MAGCALIBRATION:
