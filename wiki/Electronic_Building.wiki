@@ -4,3 +4,11 @@ It's time to assemble the APM Board with the IMU Shield/Oilpan.
 You chan check [http://code.google.com/p/arducopter/wiki/Quad_GettingStarted here] for assembling instructions and watch this video:
 
 <wiki:video url="http://www.youtube.com/watch?v=WKEHTNk2cYI"/>
+
+Here are the instructions for optional sensors:
+
+ * [http://code.google.com/p/arducopter/wiki/Quad_Magnetos Magnetometers]
+ * [http://code.google.com/p/arducopter/wiki/Quad_GPS GPS]
+ * [http://code.google.com/p/arducopter/wiki/Quad_Sonar Sonar]
+
+and finally, [http://code.google.com/p/arducopter/wiki/Quad_Radio how to connect your RC]
