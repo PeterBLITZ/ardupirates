@@ -3,6 +3,7 @@
  * [Getting_started Getting started]
   * [What_I_need What I Need?]
  * [Building]
+  * [Frame]
  * [PIDSettings PID Settings]
  * [UbloxGPSTutorial Ublox GPS Tutorial] 
  * [ArduCopterInformation ArduCopter Information]
