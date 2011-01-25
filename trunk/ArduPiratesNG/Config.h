@@ -244,11 +244,12 @@ If you have a quadcopter, uncomment this next line ! */
 - ---------------------------------------------------------------------------- -
    Sensor(s) for: Altitude detection
 - ---------------------------------------------------------------------------- -
-   TIP: Choose either UseBMP (default) or IsSONAR but not both !
+   TIP: Both can be used at the same time. It will automatically switch to BMP    
+   if copter is above sonar's MAX range
 - ---------------------------------------------------------------------------- -
                                                                               */
-#define UseBMP             // Use pressure sensor for altitude hold (default) ?
-//#define IsSONAR          // or are we using a Sonar for altitude hold?
+#define UseBMP             // Use pressure sensor for altitude hold
+//#define IsSONAR          // Use a Sonar for low altitude hold?
 
 /*
 - ---------------------------------------------------------------------------- -
