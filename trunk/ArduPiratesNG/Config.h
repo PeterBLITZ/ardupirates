@@ -448,6 +448,13 @@ If you have a quadcopter, uncomment this next line ! */
 
 #define CAM_TILT_CH  CH_7       // Channel for radio knob to control tilt
 
+int CAM_SMOOTHING = 1000;         // Camera movement smoothing on pitch axis
+int CAM_SMOOTHING_ROLL = 1140;    // Camera movement smoothing on roll axis
+int CAM_CENT = 1570;              // Camera center
+int CAM_FOCUS = 1710;             // Camera trigger Servo Focus position
+int CAM_TRIGGER = 1780;           // Camera trigger Servo Trigger position 
+int CAM_RELEASE = 1500;           // Camera trigger Servo Release Trigger Button position
+
 /*
 - ---------------------------------------------------------------------------- -
    Function for: Battery voltage monitoring

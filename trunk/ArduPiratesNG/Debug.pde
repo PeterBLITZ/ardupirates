@@ -205,11 +205,11 @@ void debug_subsystem()
 		// ------------------------------------
 		//update_GPS_light();
 		
-		GPS.Read();
+		gps.update();
 		
-		if (GPS.NewData){
+		if (gps.new_data){
 			Serial.print("Lat:");
-			Serial.print(gps.lattitude, DEC);
+			Serial.print(gps.latitude, DEC);
 			Serial.print(" Lon:");
 			Serial.print(gps.longitude, DEC);
 			Serial.print(" Alt:");
@@ -224,6 +224,8 @@ void debug_subsystem()
 			Serial.print(gps.fix, DEC);
 			Serial.print(" TIM:");
 			Serial.print(gps.time);
+			Serial.print(" HDOP:");
+			Serial.print(gps.hdop / 100, DEC;
 			Serial.println();
 		}
 	}

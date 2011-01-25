@@ -246,7 +246,7 @@ void loop()
     {
 //      digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
 
-      // Do GPS Position hold (lattitude & longitude)
+      // Do GPS Position hold (latitude & longitude)
       if (target_position) 
       {
         #ifdef IsGPS
@@ -255,8 +255,8 @@ void loop()
           if (gps.fix)
           {
             read_GPS_data();    // In Navigation.pde
-            //Position_control(target_lattitude,target_longitude);     // Call GPS position hold routine
-            Position_control_v2(target_lattitude,target_longitude);     // V2 of GPS Position holdCall GPS position hold routine
+            //Position_control(target_latitude,target_longitude);     // Call GPS position hold routine
+            Position_control_v2(target_latitude,target_longitude);     // V2 of GPS Position holdCall GPS position hold routine
           }
           else
           {
@@ -268,7 +268,7 @@ void loop()
       } else {  // First time we enter in GPS position hold we capture the target position as the actual position
         #ifdef IsGPS
         if (gps.fix){   // We need a GPS Fix to capture the actual position...
-          target_lattitude = gps.latitude;
+          target_latitude = gps.latitude;
           target_longitude = gps.longitude;
           target_position=1;
         }
@@ -484,9 +484,11 @@ void loop()
       digitalWrite(LED_Green, LOW);
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, LOW);
+#ifdef IsGPS
       if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && gps.fix < 1)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,LOW);      // Red LED OFF : GPS not FIX
-              
+#endif
+
 #ifdef IsAM      
       digitalWrite(RE_LED, LOW);
 #endif
@@ -497,8 +499,10 @@ void loop()
       digitalWrite(LED_Green, HIGH);
       if (flightMode == FM_ACRO_MODE)
         digitalWrite(LED_Yellow, HIGH);
+#ifdef IsGPS
       if ((AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD) && gps.fix < 1)      // Position Hold (GPS position control)
         digitalWrite(LED_Red,HIGH);      // Red LED ON : GPS not FIX
+#endif
 
 #ifdef IsAM
       if(motorArmed) digitalWrite(RE_LED, HIGH);
