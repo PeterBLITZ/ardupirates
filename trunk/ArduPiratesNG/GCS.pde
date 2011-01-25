@@ -668,7 +668,7 @@ void sendSerialTelemetry() {
     SerPriln();
     break;
 #endif    
-#if defined(SerXbee) && defined(Use_PID_Tuning)
+#if (defined(SerXbee) && defined(Use_PID_Tuning))
   case 'o': // Switch PID tuning ON
     ON_PID = 1;    
     SerPrln("PID Tuning ON, Pitch & Roll set, P of PID set"); 
