@@ -63,7 +63,7 @@ void Position_control(long lat_dest, long lon_dest)
   Lon_diff = lon_dest - gps.longitude;
   Lat_diff = lat_dest - gps.latitude;
 
-  //If we have not calculated GEOG_CORRECTION_FACTOR we calculate it here as cos(lattitude)
+  //If we have not calculated GEOG_CORRECTION_FACTOR we calculate it here as cos(latitude)
   if (GEOG_CORRECTION_FACTOR==0)
     GEOG_CORRECTION_FACTOR = cos(ToRad(gps.latitude/10000000.0));
 
@@ -102,7 +102,7 @@ void Position_control(long lat_dest, long lon_dest)
 void Position_control_v2(long lat_dest, long lon_dest)
 {
 #ifdef IsGPS
-  //If we have not calculated GEOG_CORRECTION_FACTOR we calculate it here as cos(lattitude)
+  //If we have not calculated GEOG_CORRECTION_FACTOR we calculate it here as cos(latitude)
   if (GEOG_CORRECTION_FACTOR==0)
     GEOG_CORRECTION_FACTOR = cos(ToRad(gps.latitude/10000000.0));
     

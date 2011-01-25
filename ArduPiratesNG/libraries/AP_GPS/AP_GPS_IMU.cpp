@@ -17,7 +17,7 @@
 		update() : Call this funcion as often as you want to ensure you read the incomming gps data
 		
 	Properties:
-		lattitude : lattitude * 10000000 (long value)
+		latitude : latitude * 10000000 (long value)
 		longitude : longitude * 10000000 (long value)
 		altitude :	altitude * 100 (meters) (long value)
 		ground_speed : Speed (m/s) * 100 (long value)

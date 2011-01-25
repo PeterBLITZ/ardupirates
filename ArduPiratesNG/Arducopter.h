@@ -370,7 +370,7 @@ float heading_I=0;  // used only by heli
 
 //Position control
 long target_longitude;
-long target_lattitude;
+long target_latitude;
 byte target_position;
 float gps_err_roll;
 float gps_err_roll_old;
@@ -740,15 +740,6 @@ float RF_SAFETY_ZONE;  // object avoidance will move away from objects within th
 float KP_SONAR_ALTITUDE;
 float KI_SONAR_ALTITUDE;
 float KD_SONAR_ALTITUDE;
-
-// Camera related settings
-
-int CAM_SMOOTHING = 1000;         // Camera movement smoothing on pitch axis
-int CAM_SMOOTHING_ROLL = 1140;    // Camera movement smoothing on roll axis
-int CAM_CENT = 1570;              // Camera center
-int CAM_FOCUS = 1710;             // Camera trigger Servo Focus position
-int CAM_TRIGGER = 1780;           // Camera trigger Servo Trigger position 
-int CAM_RELEASE = 1500;           // Camera trigger Servo Release Trigger Button position
 
 // This function call contains the default values that are set to the ArduCopter
 // when a "Default EEPROM Value" command is sent through serial interface
