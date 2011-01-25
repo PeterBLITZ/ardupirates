@@ -741,6 +741,15 @@ float KP_SONAR_ALTITUDE;
 float KI_SONAR_ALTITUDE;
 float KD_SONAR_ALTITUDE;
 
+// Camera related settings
+
+int CAM_SMOOTHING = 1000;         // Camera movement smoothing on pitch axis
+int CAM_SMOOTHING_ROLL = 1140;    // Camera movement smoothing on roll axis
+int CAM_CENT = 1570;              // Camera center
+int CAM_FOCUS = 1710;             // Camera trigger Servo Focus position
+int CAM_TRIGGER = 1780;           // Camera trigger Servo Trigger position 
+int CAM_RELEASE = 1500;           // Camera trigger Servo Release Trigger Button position
+
 // This function call contains the default values that are set to the ArduCopter
 // when a "Default EEPROM Value" command is sent through serial interface
 void defaultUserConfig() {
@@ -819,6 +828,12 @@ void defaultUserConfig() {
   KP_SONAR_ALTITUDE          = 0.8;
   KI_SONAR_ALTITUDE          = 0.3;
   KD_SONAR_ALTITUDE          = 0.7;
+  CAM_SMOOTHING              = 1000;   // Camera movement smoothing on pitch axis
+  CAM_SMOOTHING_ROLL         = 1140;   // Camera movement smoothing on roll axis
+  CAM_CENT                   = 1570;   // Camera center
+  CAM_FOCUS                  = 1710;   // Camera trigger Servo Focus position
+  CAM_TRIGGER                = 1780;   // Camera trigger Servo Trigger position 
+  CAM_RELEASE                = 1500;   // Camera trigger Servo Release position
 }
 
 // EEPROM storage addresses
@@ -897,6 +912,12 @@ void defaultUserConfig() {
 #define KP_SONAR_ALTITUDE_ADR  288
 #define KI_SONAR_ALTITUDE_ADR  292
 #define KD_SONAR_ALTITUDE_ADR  296
+#define CAM_SMOOTHING_ADR      300   // Camera movement smoothing on pitch axis
+#define CAM_SMOOTHING_ROLL_ADR 304   // Camera movement smoothing on roll axis
+#define CAM_CENT_ADR           308   // Camera center
+#define CAM_FOCUS_ADR          312   // Camera trigger Servo Focus position
+#define CAM_TRIGGER_ADR        316   // Camera trigger Servo Trigger position 
+#define CAM_RELEASE_ADR        320   // Camera trigger Servo Release position
 
 //#define eeprom_counter_ADR     238  // hmm should i move these?!? , 31-10-10, jp
 //#define eeprom_checker_ADR     240  // this too... , 31-10-10, jp

@@ -331,28 +331,28 @@ void PID_Tuning()  {
          }
          if (Camera_Smooth_Roll_adj){
            CAM_SMOOTHING_ROLL += 10;
-           SerPrln(CAM_SMOOTHING_ROLL);
+           writeEEPROM(CAM_SMOOTHING_ROLL, CAM_SMOOTHING_ROLL_ADR); 
          }
          if (Camera_Smooth_Pitch_adj){
            CAM_SMOOTHING += 10;
-           SerPrln(CAM_SMOOTHING);
+           writeEEPROM(CAM_SMOOTHING, CAM_SMOOTHING_ADR);   
          }
          if (Camera_Roll_Centre_adj){
            CAM_CENT += 10;
-           SerPrln(CAM_CENT);
+           writeEEPROM(CAM_CENT, CAM_CENT_ADR);   
          }
          if (Camera_Focus_adj){
            CAM_FOCUS += 10;
-           SerPrln(CAM_FOCUS);
+           writeEEPROM(CAM_FOCUS, CAM_FOCUS_ADR);          
          }
          if (Camera_Trigger_adj){
            CAM_TRIGGER += 10;
-           SerPrln(CAM_TRIGGER);
+           writeEEPROM(CAM_TRIGGER, CAM_TRIGGER_ADR);        
          }
          if (Camera_Release_adj){
            CAM_RELEASE += 10;
-           SerPrln(CAM_RELEASE);
-         }
+           writeEEPROM(CAM_RELEASE, CAM_RELEASE_ADR);  
+         }    
          Plus = 0;
          Minus = 0;
        }else if (Minus == 1) {
@@ -484,27 +484,27 @@ void PID_Tuning()  {
          }
          if (Camera_Smooth_Roll_adj){
            CAM_SMOOTHING_ROLL -= 10;
-           SerPrln(CAM_SMOOTHING_ROLL);
+           writeEEPROM(CAM_SMOOTHING_ROLL, CAM_SMOOTHING_ROLL_ADR); 
          }
          if (Camera_Smooth_Pitch_adj){
            CAM_SMOOTHING -= 10;
-           SerPrln(CAM_SMOOTHING);
+           writeEEPROM(CAM_SMOOTHING, CAM_SMOOTHING_ADR);   
          }
          if (Camera_Roll_Centre_adj){
            CAM_CENT -= 10;
-           SerPrln(CAM_CENT);
+           writeEEPROM(CAM_CENT, CAM_CENT_ADR);   
          }
          if (Camera_Focus_adj){
            CAM_FOCUS -= 10;
-           SerPrln(CAM_FOCUS);
+           writeEEPROM(CAM_FOCUS, CAM_FOCUS_ADR);          
          }
          if (Camera_Trigger_adj){
            CAM_TRIGGER -= 10;
-           SerPrln(CAM_TRIGGER);
+           writeEEPROM(CAM_TRIGGER, CAM_TRIGGER_ADR);        
          }
          if (Camera_Release_adj){
            CAM_RELEASE -= 10;
-           SerPrln(CAM_RELEASE);
+           writeEEPROM(CAM_RELEASE, CAM_RELEASE_ADR);      
          }
          Plus = 0;
          Minus = 0;

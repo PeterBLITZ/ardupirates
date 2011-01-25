@@ -435,15 +435,6 @@ If you have a quadcopter, uncomment this next line ! */
    Camera related settings - check these only if you are planning on using
    camera stabilization.
                                                                               */
-#define CAM_CENT  1500          // Camera center
-#define CAM_SMOOTHING 1000      // Camera movement smoothing on pitch axis
-#define CAM_SMOOTHING_ROLL 1000 // Camera movement smoothing on roll axis
-
-#define CAM_FOCUS 1710          // Camera trigger Servo Focus position
-#define CAM_TRIGGER 1780        // Camera trigger Servo Trigger position
-#define CAM_RELEASE 1500        // Camera trigger Servo Release Trigger Button
-                                // position
-
 #define CAM_TILT_OUT   4        // OUTx pin for Tilt servo
 #define CAM_ROLL_OUT   5        // OUTx pin for Roll servo
 #define CAM_YAW_OUT    5        // OUTx pin for Yaw servo (often same as Roll)
