@@ -1,0 +1,5 @@
+= Frame=
+
+First thing is to choose your frame setup. Do you want a quad-, an hexa- or an octocopter?
+
+You can find [http://code.google.com/p/arducopter/wiki/Quad_Frame_Assembly here] an example of the ArduCopter Quad, with a step-by-step building instruction.
