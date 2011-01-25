@@ -36,6 +36,7 @@ ChangeLog:
 2011/22/01 kidogo;  moved all user configurable settings from main .pde file and
                     ArduUser.h to config.h
 2011/24/01 kidogo;  Changed commenting style for improved readability.
+2011/25/01 kidogo;  Added MAGOFFSET define back in after it was lost.
 
 
 * **************************************************************************** *
@@ -151,7 +152,7 @@ If you have a quadcopter, uncomment this next line ! */
 
 /* --------------------------------------------------------------------------- */
 
-/* 
+/*
 - ---------------------------------------------------------------------------- -
    HEXA COPTER AIRFRAME SETUP (PWM) (6 motors)
 - ---------------------------------------------------------------------------- -
@@ -173,7 +174,7 @@ If you have a quadcopter, uncomment this next line ! */
    To make absolutely sure you are running the hexa flight mode, connect with
    the Configurator and use the serial monitor in the Configurator to send the
    command "T". It will tell you which flight mode is configured.
-   
+
    If you have a hexacopter, uncomment this next line !                                 */
 //#define AIRFRAME HEXA
 
@@ -304,9 +305,12 @@ If you have a quadcopter, uncomment this next line ! */
    SET MAGOFFSETS:
    To get Magneto offsets, switch to CLI mode and run offset calibration.
    During calibration you need to roll/bank/tilt/yaw/shake etc your ArduCopter.
-   Here is a video explaining such procedure: 
+   Here is a video explaining such procedure:
    http://www.youtube.com/watch?v=-hm7wPb0ZEw
                                                                               */
+#define MAGOFFSET -76,22.5,-55.5  // Example. Fill in your own.
+
+
 /*
    SET MAGCALIBRATION:
    MAGCALIBRATION is the correction angle in degrees (can be + or -). You must
@@ -333,7 +337,7 @@ If you have a quadcopter, uncomment this next line ! */
    Once you have achieved this fine tune in the Configurator's serial monitor by
    pressing "T" (capital t).
                                                                               */
-#define MAGCALIBRATION -21.65 
+#define MAGCALIBRATION -21.65
 
 /* SET MAGNETOMETER ORIENTATION:
    Next, you'll have to define how your magnetometer is mounted to your
@@ -456,7 +460,7 @@ If you have a quadcopter, uncomment this next line ! */
 //#define BATTERY_EVENT 1  // (boolean) 0 = don't read battery, 1 = read battery
                            // voltage (only if you have it _wired_ up!)
 
-/* Do we have configurator? 
+/* Do we have configurator?
 Don't change this.        */
 #define CONFIGURATOR
 
