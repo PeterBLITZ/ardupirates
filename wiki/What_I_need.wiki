@@ -2,8 +2,10 @@
 
  ==Electronic==
  _First of all, you need an Electronic Brain to control your PirateShip._
+[http://ardupilot-mega.googlecode.com/svn/ArduPilotMegaImages/IMU1.jpg]
+ 
 
- Parts list:
+Parts list:
 
  * Ardu Pilot Mega (flight controller)
 
