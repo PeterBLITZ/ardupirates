@@ -5,8 +5,8 @@
 ----
 ==== Hardware ====
  *  [Building]
-  *  [Frame]
-  *  [Electronic_Building Electronic Soldering]
+  *   [Frame]
+  *   [Electronic_Building Electronic Soldering]
 ----
 ==== Software ====
  * [Softwares_Building Installing the softwares]
