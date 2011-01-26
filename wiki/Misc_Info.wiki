@@ -1,6 +1,3 @@
 = Introduction =
 
   * [ArduCopterInformation ArduCopter Information]
-  * [Waypoint_Nav_Description Waypoint Navigation]  
-  * [UsingWiiSensors Using Wii Sensors]
-  * [UbloxGPSTutorial Ublox GPS Tutorial]
