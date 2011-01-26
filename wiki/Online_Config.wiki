@@ -21,7 +21,7 @@ Select your options:
  * informations about telemetry [http://code.google.com/p/ardupilot-mega/wiki/Wireless here]
 [http://lh4.ggpht.com/_SLFLtGv2hms/TUBMP8yk9uI/AAAAAAAAA9M/urr0HoljIO0/s800/config04.PNG.jpg]
 
- * informations about PID tuning during flight are here
+ * informations about PID tuning during flight are [PID_tuning_Inflight here]
 [http://lh4.ggpht.com/_SLFLtGv2hms/TUBMQPRPkbI/AAAAAAAAA9Q/vG5cqNhQx2Y/s800/config05.PNG.jpg]
 
 After choosing all your settings and options, click on "Validate Options" and then "Generate Code"
