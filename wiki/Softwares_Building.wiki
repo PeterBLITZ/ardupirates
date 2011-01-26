@@ -1,0 +1,40 @@
+= Softwares = 
+
+* WARNING  This page is under construction, informations are partially wrong! *
+
+Different softwares are required to load the code into your board and to configure your multicopter.
+
+
+== USB to Serial Driver ==
+
+The connection between PC and APM can be done through an USB cable or a [http://store.diydrones.com/FTDI_Cable_3_3V_p/ttl-232r-3v3.htm FTDI cable].
+
+If you are using an earlier version of Windows than Windows 7, you will need [http://www.ftdichip.com/Drivers/VCP.htm drivers] for the USB-to-serial port of the shield. 
+
+
+== Kinderkram's Installer and ArduCopter Quad Updater ==
+
+Always in mind to make the whole software stuff easier and faster, here comes the latest release of Kinderkram's ArduCopter Installer & Updater Software.
+
+He decided to split the installation and the update process. 
+
+You'll need to download these 2 files:
+
+ * [http://www.board-portal.de/ArduCopter/KinderKram-ArduCopter-Installer.exe The Kinderkram Quad Installer]
+[http://www.board-portal.de/ArduCopter/Kinderkram-Arducopter-installer.jpg]
+ * [http://www.board-portal.de/ArduCopter/Arducopter-Updater.exe The Arducopter Quad Updater]
+[http://www.board-portal.de/ArduCopter/arducopter%20updater.jpg]
+
+The recent version 1.0 contains
+ * Arducopter sketches & libraries from the public alpha 1.0
+ * Arduino 0021
+ * Configurator 1.1 (Important: Install it to C:\Arducopter\ArducopterConfigurator)
+[http://www.board-portal.de/ArduCopter/media/images/configurator-directory.jpg]
+
+After the installation in C:\Arducopter you can easily upgrade the Configurator to version 1.22 manually. Just press the "Update" button.
+If you bump into any problems, have a look into C:\Arducopter\sketches\Arducopter. If there's a Arducopter_alpha_RC1.pde - delete it!
+And please check if all settings apply to your setup, i.e. COM-Ports , Baudrates etc.
+
+Always download new updates from server to C:\Arducopter\Updates
+
+* IMPORTANT * This will install the ArduCopter RC2 code, which is different of the ArduPiratesNG. ArduCopter RC2 is the latest ArduCopter Team code. ArduPiratesNG is the lastest code of both ArduPirates Team and ArduCopter Team. See [http://diydrones.ning.com/profiles/blogs/arducopter-ng-taken-over-by here] for more informations.
