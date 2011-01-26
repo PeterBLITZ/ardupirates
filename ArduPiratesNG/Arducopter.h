@@ -283,7 +283,6 @@ int AN[6]; //array that store the 6 ADC channels
 int AN_OFFSET[6]; //Array that store the Offset of the gyros and accelerometers
 int gyro_temp;
 
-
 float G_Dt=0.02;                  // Integration time for the gyros (DCM algorithm)
 float Accel_Vector[3]= {0, 0, 0}; // Store the acceleration in a vector
 float Accel_Vector_unfiltered[3]= {0, 0, 0}; // Store the acceleration in a vector
@@ -429,13 +428,8 @@ float sonar_altitude_D;
 #define AIRSPEED_PIN 1		// Need to correct value
 #define BATTERY_PIN 1		// Need to correct value
 #define RELAY_PIN 47
-#define LOW_VOLTAGE	11.4    // Pack voltage at which to trigger alarm
-#define INPUT_VOLTAGE 5.2	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery 
-                                // level readings. (you need a multimeter to measure and set this of course)
-#define VOLT_DIV_RATIO 1.0	//  Voltage divider ratio set with thru-hole resistor (see manual)
 
 float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold for filter
-
 
 //AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
 //AP_ALTITUDE_HOLD       3  // Just Altitude Hold
