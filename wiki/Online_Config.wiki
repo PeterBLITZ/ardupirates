@@ -16,7 +16,7 @@ Select your options:
 
 [http://lh6.ggpht.com/_SLFLtGv2hms/TUBMPhAv1EI/AAAAAAAAA9I/BntVMdNZrpQ/s800/config03.PNG.jpg]
 
- * informations about the camera shutter here
+ * informations about the camera shutter [Cam_Shutter here]
  * informations about the battery alarm here
  * informations about telemetry here
 [http://lh4.ggpht.com/_SLFLtGv2hms/TUBMP8yk9uI/AAAAAAAAA9M/urr0HoljIO0/s800/config04.PNG.jpg]
