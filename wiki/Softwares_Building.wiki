@@ -1,7 +1,5 @@
 = Softwares installation = 
 
-* WARNING  This page is under construction, informations are partially wrong! *
-
 Different softwares are required to load the code into your board and to configure your multicopter. Read all the links before installing.
 
 
