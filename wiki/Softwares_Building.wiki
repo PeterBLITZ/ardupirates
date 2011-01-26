@@ -10,3 +10,5 @@ Different softwares are required to load the code into your board and to configu
 * [Kinderkram_instal_update Kinderkram's Installer and ArduCopter Quad Updater]
 
 * [Tortoise Tortoise SVN]
+
+* [Online_Config Online Universal Ardu Configurator]
