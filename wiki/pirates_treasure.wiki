@@ -1,4 +1,7 @@
 = pirates treasure =
 
   * [StabilizedCameraMount Camera mount]   
-  * [ThePiratesCofin The Pirates Cofin] 
+  * [ThePiratesCofin The Pirates Cofin]
+  * [Waypoint_Nav_Description Waypoint Navigation]  
+  * [UsingWiiSensors Using Wii Sensors]
+  * [UbloxGPSTutorial Ublox GPS Tutorial]
