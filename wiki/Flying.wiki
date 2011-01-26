@@ -2,6 +2,7 @@
 
 There is some things to do before take-off, so read the links below.
 
+ * [Mode_Switch Flight Mode]
  * [http://code.google.com/p/arducopter/wiki/Quad_Testing Pre-flight]
  * [PIDSettings Setting PID]
  * [http://code.google.com/p/arducopter/wiki/NGTest Flight Test Process]
