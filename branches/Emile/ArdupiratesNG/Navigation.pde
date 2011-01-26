@@ -53,6 +53,85 @@ void read_GPS_data()
 #endif
 }
 
+void update_GPS(){
+
+	if (gps.new_data && gps.fix) {
+
+	// for performance
+	// ---------------
+	//gps_fix_count++;
+	
+	GPS_timer_old=GPS_timer;   // Update GPS timer
+	GPS_timer = millis();
+	GPS_Dt = (GPS_timer-GPS_timer_old)*0.001;   // GPS_Dt
+
+	if(ground_start_count > 1){
+		ground_start_count--;
+		
+	} 
+	else if (ground_start_count == 1) {	
+		// We countdown N number of good GPS fixes
+		// so that the altitude is more accurate
+		// -------------------------------------
+		if (current_loc.lat == 0) {
+			Serial.println("!! bad loc");
+			ground_start_count = 5;
+		} else {
+			init_home();
+			// init altitude
+			current_loc.alt = gps.altitude;
+			ground_start_count = 0;
+		}
+	}
+
+	/* disabled for now
+	// baro_offset is an integrator for the gps altitude error 
+	baro_offset 	+= altitude_gain * (float)(GPS.altitude - current_loc.alt);
+	*/
+	current_loc.lng = gps.longitude;	// Lon * 10 * *7
+	current_loc.lat = gps.latitude;		// Lat * 10 * *7
+	
+	//COGX = cos(ToRad(GPS.ground_course / 100.0));
+	//COGY = sin(ToRad(GPS.ground_course / 100.0));
+	
+	gps.new_data = 0; // We Reset the flag...
+	}
+}
+
+// run this at setup on the ground
+// -------------------------------
+void init_home()
+{
+	Serial.println("MSG: init home");
+
+	// Extra read just in case
+	// -----------------------
+	//GPS.Read();
+
+	// block until we get a good fix
+	// -----------------------------
+	while (!gps.new_data || !gps.fix) {
+		gps.update();
+	}
+	//home_loc.id 	= CMD_WAYPOINT;
+	home_loc.lng 	= gps.longitude;				// Lon * 10**7
+	home_loc.lat 	= gps.latitude;				// Lat * 10**7
+	home_loc.alt 	= gps.altitude;
+	home_is_set = true;
+
+        //TEST
+        //,
+        //home_loc.lng = 91261790;
+        //home_loc.lat = 454444310;
+        //
+
+	// ground altitude in centimeters for pressure alt calculations
+	// ------------------------------------------------------------
+	ground_alt 			= gps.altitude;
+	//pressure_altitude 	= GPS.altitude;  // Set initial value for filter
+	//save_EEPROM_pressure();
+}
+
 /* GPS based Position control */
 void Position_control(long lat_dest, long lon_dest)
 {

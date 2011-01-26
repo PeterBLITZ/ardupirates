@@ -249,7 +249,7 @@ If you have a quadcopter, uncomment this next line ! */
 - ---------------------------------------------------------------------------- -
                                                                               */
 #define UseBMP             // Use pressure sensor for altitude hold
-//#define IsSONAR          // Use a Sonar for low altitude hold?
+#define IsSONAR          // Use a Sonar for low altitude hold?
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -281,8 +281,8 @@ If you have a quadcopter, uncomment this next line ! */
 //#define GPS_PROTOCOL GPS_PROTOCOL_NONE	// No GPS attached!!
 //#define GPS_PROTOCOL GPS_PROTOCOL_NMEA	// Standard NMEA GPS(NOT SUPPORTED!)
 //#define GPS_PROTOCOL GPS_PROTOCOL_IMU	    // X-Plane interface/ArduPilot IMU.
-#define GPS_PROTOCOL GPS_PROTOCOL_MTK	  // MediaTek GPS - DIYDrones 1.4
-//#define GPS_PROTOCOL GPS_PROTOCOL_MTK16	// MediaTek GPS - DIYDrones 1.6
+//#define GPS_PROTOCOL GPS_PROTOCOL_MTK	  // MediaTek GPS - DIYDrones 1.4
+#define GPS_PROTOCOL GPS_PROTOCOL_MTK16	// MediaTek GPS - DIYDrones 1.6
 //#define GPS_PROTOCOL GPS_PROTOCOL_UBLOX	// UBLOX GPS
 //#define GPS_PROTOCOL GPS_PROTOCOL_SIRF	// SiRF-based GPS in Binary mode.
 #endif
@@ -340,7 +340,7 @@ If you have a quadcopter, uncomment this next line ! */
    Once you have achieved this fine tune in the Configurator's serial monitor by
    pressing "T" (capital t).
                                                                               */
-#define MAGCALIBRATION -21.65
+#define MAGCALIBRATION 1.65
 
 /* SET MAGNETOMETER ORIENTATION:
    Next, you'll have to define how your magnetometer is mounted to your
@@ -429,11 +429,11 @@ If you have a quadcopter, uncomment this next line ! */
    need to use the Configurator and send the K command. Refer to the Wiki for
    more info on the Configurator and this specific command.
                                                                               */
-#define IsCAM              // Do we have camera stabilization in use, If you
+//#define IsCAM              // Do we have camera stabilization in use, If you
                            // activate, check OUTPUT pins from ArduUser.h
                            // DIP2 down (ON) = Camera Stabilization enabled,
                            // DIP2 up (OFF) = Camera Stabilization disabled.
-#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
+//#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
                            // during GPS Hold or Altitude Hold.
 
 
@@ -550,7 +550,7 @@ Don't change this.        */
    Your Aux1 will be your 3 position channel, and your radio has to be in acro
    (plane) mode.
                                                                               */
-#define Use_PID_Tuning
+//#define Use_PID_Tuning
 
 
 /*

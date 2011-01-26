@@ -63,6 +63,7 @@ WARNING: This file now only contains program logic. You need not edit
 #include <avr/pgmspace.h>
 //#include <FastSerial.h>
 #include <math.h>
+//#include <AP_Common.h>
 #include <APM_RC.h> 		// ArduPilot Mega RC Library
 #include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
 #include <APM_BMP085.h> 	// ArduPilot Mega BMP085 Library 
@@ -73,6 +74,7 @@ WARNING: This file now only contains program logic. You need not edit
 #include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
 #include <AP_GPS.h>
 #include "Arducopter.h"
+
 
 #if AIRFRAME == HELI
 #include "Heli.h"
@@ -107,6 +109,45 @@ unsigned long currentTimeMicros = 0, previousTimeMicros = 0;  // current and pre
 unsigned long mainLoop = 0;
 unsigned long mediumLoop = 0;
 unsigned long slowLoop = 0;
+
+// 3D Location vectors
+// -------------------
+struct Location home_loc;                   // home location
+struct Location current_loc;            // current location
+struct Location next_WP;                // next Waypoint to navigate;
+long 	target_altitude;		// used for
+long 	offset_altitude;		// used for
+long    ground_alt;
+boolean	home_is_set = false;            // Flag for if we have gps lock and have set the home location
+
+// GPS variables
+// -------------
+byte 	ground_start_count	= 5;			// have we achieved first lock and set Home?
+const 	float t7			= 10000000.0;	// used to scale GPS values for EEPROM storage
+float 	scaleLongUp			= 1;			// used to reverse longtitude scaling
+float 	scaleLongDown 		= 1;			// used to reverse longtitude scaling
+boolean GPS_light			= false;		// status of the GPS light
+
+// Location & Navigation 
+// ---------------------
+byte 	wp_radius			= 3;			// meters
+long	nav_bearing;						// deg * 100 : 0 to 360 current desired bearing to navigate
+long 	target_bearing;						// deg * 100 : 0 to 360 location of the plane to the target
+long 	crosstrack_bearing;					// deg * 100 : 0 to 360 desired angle of plane to target
+
+// Location Errors
+// ---------------
+long 	bearing_error;						// deg * 100 : 0 to 36000 
+
+// Waypoints
+// ---------
+long 	GPS_wp_distance;					// meters - distance between plane and next waypoint
+float 	GPS_wp_distance2;					// meters - distance between plane and next waypoint
+long 	wp_distance;						// meters - distance between plane and next waypoint
+long 	wp_totalDistance;					// meters - distance between old and next waypoint
+byte 	wp_total;							// # of Commands total including way
+byte 	wp_index;							// Current active command index
+byte 	next_wp_index;						// Current active command index
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */
@@ -512,5 +553,4 @@ void loop()
   }
 
 }
-
 
