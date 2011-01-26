@@ -8,7 +8,7 @@
   * [Softwares_Building Installing the softwares]
   * [Code_Loading Loading the code]
   * [configuring your setup]
- *  [Before flight]
+ *  [Flying]
   *  [PIDSettings PID Settings] 
  * [Miscellaneous_informations]
   * [ArduCopterInformation ArduCopter Information]
