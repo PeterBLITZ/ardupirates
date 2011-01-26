@@ -1,0 +1,31 @@
+== Tortoise SVN ==
+[http://www.board-portal.de/ArduCopter/media/images/tortoise-svn-pics/tortoisesvn_logo.jpg]
+
+This little program allows you to download the ArduPiratesNG code and Libraries.
+
+* Here's an How-To: *
+
+Download the current version of TortoiseSVN (17MB):
+[http://tortoisesvn.net/downloads]
+
+[http://www.board-portal.de/ArduCopter/media/images/tortoise-svn-pics/tortoise-installer.jpg]
+
+When done create a new folder. Name it something like "ArduPirates" (The example is simply using "New Folder" - name it at will).
+Right click on that folder and select "SVN Checkout".
+
+[http://www.board-portal.de/ArduCopter/media/images/tortoise-svn-pics/tortoise-right-click.jpg]
+
+
+Put in this path to the trunk:
+http://ardupirates.googlecode.com/svn/trunk/ArduPiratesNG
+
+[http://www.board-portal.de/ArduCopter/media/images/tortoise-svn-pics/tortoise-ckeckout-path.jpg]
+
+Click on OK. I'll take some minutes to download alle the code from the trunk.
+In the end you should get a success message:
+
+[http://www.board-portal.de/ArduCopter/media/images/tortoise-svn-pics/tortoise-checkout-results.jpg]
+
+Your New Folder should be displayed like that:
+
+[http://www.board-portal.de/ArduCopter/media/images/tortoise-svn-pics/new-folder-checkout.jpg]
