@@ -5,6 +5,7 @@
  * [Building]
   * [Frame]
   * [Electronic_Building Electronic Soldering]
+  * [Softwares_Building Softwares]
  * [PIDSettings PID Settings]
  * [UbloxGPSTutorial Ublox GPS Tutorial] 
  * [ArduCopterInformation ArduCopter Information]
