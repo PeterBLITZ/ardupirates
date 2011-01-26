@@ -2,17 +2,12 @@
 
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
-
  * [Building]
   * [Frame]
   * [Electronic_Building Electronic Soldering]
-----
-==== Software ====
-[Softwares_Building Installing the softwares]
-[Code_Loading Loading the code]
-[configuring your setup]
-----
-==== Flying ====
+  * [Softwares_Building Installing the softwares]
+  * [Code_Loading Loading the code]
+  * [configuring your setup]
  * [Before flight]
   * [PIDSettings PID Settings]
  * [UbloxGPSTutorial Ublox GPS Tutorial] 
