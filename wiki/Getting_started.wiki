@@ -1,5 +1,7 @@
 = Getting started =
 
+== The whole Wiki is under construction, please take those informations carefully! ==
+
 The ArduPirates project focuses on speeding up development on [http://code.google.com/p/arducopter/wiki/ArduCopter_Quad ArduCopter] especially by integrating self controlling mechanisms without any commercial interests or targets.
  
 The base of this project is Hein's Code which is an exit of the "official" ArduCopter Code coming from http://code.google.com/p/arducopter/. 
