@@ -1,7 +1,7 @@
 = ArduPirates Wiki=
 
- *[Getting_started Getting started]
-  * [What_I_need What I Need?]
+ *  [Getting_started Getting started]
+  *  [What_I_need What I Need?]
 ----
 ==== Hardware ====
  * [Building]
