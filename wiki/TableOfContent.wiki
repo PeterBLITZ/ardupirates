@@ -2,24 +2,18 @@
 
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
-
 ----
-
 ==== Hardware ====
+[Building]
 
- *  [Building]
+[Frame]
 
-  *   [Frame]
-
-  *   [Electronic_Building Electronic Soldering]
-
+[Electronic_Building Electronic Soldering]
 ----
-
 ==== Software ====
-
- *  [Softwares_Building Installing the softwares]
- *  [Code_Loading Loading the code]
- *  [configuring your setup]
+[Softwares_Building Installing the softwares]
+[Code_Loading Loading the code]
+[configuring your setup]
 ----
 ==== Flying ====
  * [Before flight]
