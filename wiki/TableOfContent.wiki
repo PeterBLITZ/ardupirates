@@ -2,7 +2,8 @@
 
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
- * [Building]
+---- 
+* [Building]
   * [Frame]
   * [Electronic_Building Electronic Soldering]
   * [Softwares_Building Installing the softwares]
