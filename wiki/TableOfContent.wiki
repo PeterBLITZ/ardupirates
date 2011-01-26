@@ -8,11 +8,9 @@
   * [Softwares_Building Installing the softwares]
   * [Code_Loading Loading the code]
   * [configuring your setup]
- * [Before flight]
-  * [PIDSettings PID Settings]
+ *  [Before flight]
+  *  [PIDSettings PID Settings]
  * [UbloxGPSTutorial Ublox GPS Tutorial] 
-----
-==== Miscellaneous informations ====
  * [Miscellaneous_informations]
   * [ArduCopterInformation ArduCopter Information]
   * [Waypoint_Nav_Description Waypoint Navigation]
