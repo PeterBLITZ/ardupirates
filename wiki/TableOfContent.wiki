@@ -4,9 +4,9 @@
   *  [What_I_need What I Need?]
 ----
 ==== Hardware ====
- * [Building]
-  * [Frame]
-  * [Electronic_Building Electronic Soldering]
+ *  [Building]
+  *  [Frame]
+  *  [Electronic_Building Electronic Soldering]
 ----
 ==== Software ====
  * [Softwares_Building Installing the softwares]
