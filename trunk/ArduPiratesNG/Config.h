@@ -467,12 +467,20 @@ int CAM_RELEASE = 1500;           // Camera trigger Servo Release Trigger Button
    ArduCopter Wiki for more information on this subject:
    http://code.google.com/p/ardupirates/wiki/BatteryAlarmHowto
                                                                               */
-//#define BATTERY_EVENT 1  // (boolean) 0 = don't read battery, 1 = read battery
-                           // voltage (only if you have it _wired_ up!)
+//#define BATTERY_EVENT 1  		// (boolean) 0 = don't read battery, 1 = read battery
+								// voltage (only if you have it _wired_ up!)
+#define LOW_VOLTAGE		11.4	// Pack voltage at which to trigger alarm
+#define INPUT_VOLTAGE 	5.2		// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery 
+								// level readings. (you need a multimeter to measure and set this of course)
+#define VOLT_DIV_RATIO 	1.0		//  Voltage divider ratio set with thru-hole resistor (see manual)
 
+/*
+- ---------------------------------------------------------------------------- -
 /* Do we have configurator?
 Don't change this.        */
 #define CONFIGURATOR
+- ---------------------------------------------------------------------------- -
+*/
 
 /*
 = ============================================================================ =
