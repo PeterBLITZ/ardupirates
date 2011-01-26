@@ -2,10 +2,10 @@
 
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
- * [Building]
+ * [Building Building the hardware]
   * [Frame]
   * [Electronic_Building Electronic Soldering]
-  * [Softwares_Building Installing the softwares]
+ * [Softwares_Building Installing the softwares]
   * [Code_Loading Loading the code]
   * [configuring your setup]
  *  [Flying]
