@@ -7,16 +7,6 @@ Different softwares are required to load the code into your board and to configu
 
 * [USB_Serial USB to Serial Driver]
 
-*[Kinderkram_instal_update Kinderkram's Installer and ArduCopter Quad Updater]
-== Turtoise SVN ==
-[http://www.board-portal.de/ArduCopter/media/images/tortoise-svn-pics/tortoisesvn_logo.jpg]
+* [Kinderkram_instal_update Kinderkram's Installer and ArduCopter Quad Updater]
 
-This little program allows you to download the ArduPiratesNG code and Libraries.
-
-* Here's a short How-To: *
-
-After the installation of Tortoise SVN ([http://tortoisesvn.net/downloads])
-
- # SKETCHES: right-click on the C:\Arducopter\sketches\Arducopter folder. As "URL of Repository" put in http://ardupirates.googlecode.com/svn/trunk/ArduPiratesNG When you click "OK" all previous files will be overwritten.
- # LIBRARIES: right-click on the C:\Arducopter\arduino\libraries folder.  "URL of Repository" put in http://ardupirates.googlecode.com/svn/trunk/ArduPiratesNG/libraries
- # CONFIGURATOR: right-click on the C:\Arducopter\ArducopterConfigurator folder. As "URL of Repository" put in http://arducopter.googlecode.com/svn/trunk/Configurator/Builds/ArduCopterConfigurator/Executable
+* [Tortoise Tortoise SVN]
