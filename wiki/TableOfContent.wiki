@@ -7,7 +7,7 @@
   * [Electronic_Building Electronic Soldering]
  * [Softwares_Building Installing the softwares]
   * [Code_Loading Loading the code]
-  * [configuring your setup]
+  * [Configuring configuring your setup]
  *  [Flying]
   *  [PIDSettings PID Settings] 
  * [Miscellaneous_informations]
