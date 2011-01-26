@@ -1,8 +1,8 @@
-= Softwares = 
+= Softwares installation = 
 
 * WARNING  This page is under construction, informations are partially wrong! *
 
-Different softwares are required to load the code into your board and to configure your multicopter.
+Different softwares are required to load the code into your board and to configure your multicopter. Read the whole page before installing.
 
 
 == USB to Serial Driver ==
@@ -37,4 +37,21 @@ And please check if all settings apply to your setup, i.e. COM-Ports , Baudrates
 
 Always download new updates from server to C:\Arducopter\Updates
 
-* IMPORTANT * This will install the ArduCopter RC2 code, which is different of the ArduPiratesNG. ArduCopter RC2 is the latest ArduCopter Team code. ArduPiratesNG is the lastest code of both ArduPirates Team and ArduCopter Team. See [http://diydrones.ning.com/profiles/blogs/arducopter-ng-taken-over-by here] for more informations.
+You can download installation instructions as PDF [http://www.board-portal.de/ArduCopter/installation-instructions.pdf here] (65KB):
+
+
+
+* IMPORTANT * This will install the ArduCopter RC2 code, which is different of the ArduPiratesNG. ArduCopter RC2 is the latest ArduCopter Team code. ArduPiratesNG is the lastest code of both ArduPirates Team and ArduCopter Team. See [http://diydrones.ning.com/profiles/blogs/arducopter-ng-taken-over-by here] for more informations. To use ArduPiratesNG code and Libraries, follow the next step "Turtoise SVN".
+
+== Turtoise SVN ==
+[http://www.board-portal.de/ArduCopter/media/images/tortoise-svn-pics/tortoisesvn_logo.jpg]
+
+This little program allows you to download the ArduPiratesNG code and Libraries.
+
+* Here's a short How-To: *
+
+After the installation of Tortoise SVN ([http://tortoisesvn.net/downloads])
+
+ # SKETCHES: right-click on the C:\Arducopter\sketches\Arducopter folder. As "URL of Repository" put in http://ardupirates.googlecode.com/svn/trunk/ArduPiratesNG When you click "OK" all previous files will be overwritten.
+ # LIBRARIES: right-click on the C:\Arducopter\arduino\libraries folder.  "URL of Repository" put in http://ardupirates.googlecode.com/svn/trunk/ArduPiratesNG/libraries
+ # CONFIGURATOR: right-click on the C:\Arducopter\ArducopterConfigurator folder. As "URL of Repository" put in http://arducopter.googlecode.com/svn/trunk/Configurator/Builds/ArduCopterConfigurator/Executable
