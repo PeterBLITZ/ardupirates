@@ -2,7 +2,7 @@
 
 * WARNING  This page is under construction, informations are partially wrong! *
 
-Different softwares are required to load the code into your board and to configure your multicopter. Read the whole page before installing.
+Different softwares are required to load the code into your board and to configure your multicopter. Read all the links before installing.
 
 
 * [USB_Serial USB to Serial Driver]
