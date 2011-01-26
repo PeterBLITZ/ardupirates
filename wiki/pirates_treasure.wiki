@@ -1,1 +1,4 @@
 = pirates treasure =
+
+  * [StabilizedCameraMount Camera mount]   
+  * [ThePiratesCofin The Pirates Cofin] 
