@@ -1,0 +1,12 @@
+= Configuring your setup =
+
+=== Configurator ===
+To configure your setup, first thing is to run the Configurator.
+Read here the [http://code.google.com/p/arducopter/wiki/Quad_ConfiguratorTool how to].
+
+=== Command Line Interface (CLI) ===
+
+If you are planning to use a GPS, you have to set up the magnetometers with the CLI.
+Here is an [http://code.google.com/p/arducopter/wiki/CLI how-to]
+
+Those steps are a First-time setup and have to be done again only if you change something in the code.
