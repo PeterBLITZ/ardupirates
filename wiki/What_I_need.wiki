@@ -26,6 +26,7 @@ Parts list:
 
  _See [http://code.google.com/p/arducopter/wiki/ArduCopter_Electronics here] for more details._
 
+If you want to use a Ublock GPS instead of MediaTek, you should read this [UbloxGPSTutorial how-to]
   ==Frame==
  there is a lot different frames in online stores, and you can build your custom one. One of the Pirates Team members, Jakub, is selling some nice frames [http://quadframe.com here], and you may find others in [http://www.ardupirates.com/index.php?option=com_virtuemart&Itemid=1 the ArduPirateShop]
 
