@@ -10,7 +10,7 @@
   * [Configuring configuring your setup]
  *  [Flying]
   *  [PIDSettings PID Settings] 
- * [Miscellaneous_informations]
+ * [Misc_Info Miscellaneous_informations]
   * [ArduCopterInformation ArduCopter Information]
   * [Waypoint_Nav_Description Waypoint Navigation]
   * [StabilizedCameraMount Camera mount]   
