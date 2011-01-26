@@ -5,6 +5,7 @@
  * [Building Building the hardware]
   * [Frame]
   * [Electronic_Building Electronic Soldering]
+  * [ESC Calibrating your ESC's]
  * [Softwares_Building Installing the softwares]
   * [Code_Loading Loading the code]
   * [Configuring configuring your setup]
