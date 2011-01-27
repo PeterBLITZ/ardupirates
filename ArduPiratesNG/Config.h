@@ -479,8 +479,9 @@ int CAM_RELEASE = 1500;           // Camera trigger Servo Release Trigger Button
 /* Do we have configurator?
 Don't change this.        */
 #define CONFIGURATOR
+/*
 - ---------------------------------------------------------------------------- -
-*/
+																				*/
 
 /*
 = ============================================================================ =
