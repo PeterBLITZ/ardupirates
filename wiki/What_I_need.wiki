@@ -4,14 +4,7 @@
  
   === [Frame_Need Frame] ===
  
- ==Motors, ESC's and Propellers==
- [http://www.rcgroups.com/forums/showthread.php?t=1097355 Jesolin's Mega Index] is a really interesting source of informations about multicopters, and you will find all you need to make your setup!
-
- A great resource for informations on motors is Old Man Mike's regularly updated thread:
- 
- [http://www.rcgroups.com/forums/showthread.php?t=1006721]
-
-[http://www.af9y.com/ColorSummary8.jpg]
+  ==Motors, ESC's and Propellers==
 
  ==Radio and Battery==
  You can use your own Tx and Rx system, the ArduPilot Mega Board is working with quite all systems.
