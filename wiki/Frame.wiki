@@ -8,4 +8,4 @@ First thing is to choose your frame setup. Do you want a quad-, an hexa- or an o
 
 [http://static.rcgroups.net/forums/attachments/3/3/7/5/6/a3585056-141-_MG_1129.jpg]
 
-You can find [http://code.google.com/p/arducopter/wiki/Quad_Frame_Assembly here] an example of the ArduCopter Quad, with a step-by-step building instruction.
+*You can find [http://code.google.com/p/arducopter/wiki/Quad_Frame_Assembly here] the ArduCopter Quad's build, with a step-by-step instruction.*
