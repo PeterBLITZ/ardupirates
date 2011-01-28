@@ -1,6 +1,6 @@
 = Online Universal Ardu Configurator =
 
-This is a really useful tool, that create a config.h file with all your personal settings. You will find it [http://www.danisaez.com/ardupirates/config/oluapc.php here].
+This is a really useful tool, that create a config.h file with all your personal settings. You will find it [http://ardupirates.net/config/ here].
 
 Select your platform:
 
