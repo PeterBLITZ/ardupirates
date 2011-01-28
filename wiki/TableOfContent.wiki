@@ -2,6 +2,7 @@
 
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
+    * [Electro_Need Electronic]
  * ----
  * *Hardware*
  * [Building Building the hardware]
