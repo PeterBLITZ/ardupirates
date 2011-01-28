@@ -3,14 +3,18 @@
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
  * ----
- * *!Hardware*
+ * *Hardware*
  * [Building Building the hardware]
   * [Frame]
   * [Electronic_Building Electronic Soldering]
   * [ESC Calibrating your ESC's]
+ * ----
+ * *Softwares*
  * [Softwares_Building Installing the softwares]
   * [Code_Loading Loading the code]
   * [Configuring configuring your setup]
+ * ----
+ * *Flying*
  *  [Flying]
  * [pirates_treasure pirates treasure]
   * [StabilizedCameraMount Camera mount]
