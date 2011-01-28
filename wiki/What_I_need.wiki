@@ -1,37 +1,9 @@
 = What I need? =
 
- ==Electronic==
- First of all, you need an Electronic Brain to control your PirateShip.
-
- [http://arducopter.googlecode.com/svn/images/ACQ_Electros.jpg]
+  === [Electro_Need Electronic] ===
  
-The minimum required parts are:
-
- * *[http://store.diydrones.com/product_p/br-ardupilot-02.htm Ardu Pilot Mega]* (flight controller)
-
- * *[http://store.diydrones.com/product_p/br-0012-01.htm ArduPilot Mega IMU Shield/OilPan]* (sensor board)
-
- * *[http://store.diydrones.com/product_p/pr-0003-03-5cm.htm Servo cable]* (6pcs. needed to connect your rx)
-
-The next parts are required if you are planning to use a GPS. You will need it to use the Position Hold flight mode.
-
- * *Magnetometer & Cable*: Use either
-  * the DIYDrones one ([http://store.diydrones.com/HMC5843_Triple_Axis_Magnetometer_p/br-hmc5843-01.htm HMC5843 - Triple Axis Magnetometer Rev 1.2])
-  * or  the Sparkfun one ([http://www.sparkfun.com/products/9371 Triple Axis Magnetometer Breakout - HMC5843])
-
- * *GPS & Cable*: Use either
-   * the [http://store.diydrones.com/MediaTek_MT3329_GPS_10Hz_Adapter_Basic_p/mt3329-02.htm MediaTek one]
-   * or the [http://store.diydrones.com/GS407_U_Blox5_GPS_4Hz_p/spk-gps-gs407.htm UBlox one]
-
- * *Xbee for wireless communication*
-
-
- _See [http://code.google.com/p/arducopter/wiki/ArduCopter_Electronics here] for more details._
-
-If you want to use a Ublock GPS instead of MediaTek, you should read this [UbloxGPSTutorial how-to]
-  ==Frame==
- there is a lot different frames in online stores, and you can build your custom one. One of the Pirates Team members, Jakub, is selling some nice frames [http://quadframe.com here], and you may find others in [http://www.ardupirates.com/index.php?option=com_virtuemart&Itemid=1 the ArduPirateShop]
-
+  === Frame ===
+ 
  ==Motors, ESC's and Propellers==
  [http://www.rcgroups.com/forums/showthread.php?t=1097355 Jesolin's Mega Index] is a really interesting source of informations about multicopters, and you will find all you need to make your setup!
 
