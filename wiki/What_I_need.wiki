@@ -2,7 +2,7 @@
 
   === [Electro_Need Electronic] ===
  
-  === Frame ===
+  === [Frame_Need Frame] ===
  
  ==Motors, ESC's and Propellers==
  [http://www.rcgroups.com/forums/showthread.php?t=1097355 Jesolin's Mega Index] is a really interesting source of informations about multicopters, and you will find all you need to make your setup!
