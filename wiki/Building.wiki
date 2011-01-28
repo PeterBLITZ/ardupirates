@@ -3,5 +3,6 @@
 You will find a building description in the next pages.
 
  * [Frame]
+ * [APM_IMU Soldering and connecting APM / IMU shield]
  * [Electronic_Building Electronic Soldering]
  * [ESC Calibrating your ESC's]
