@@ -3,3 +3,9 @@
 === What means ArduPirates _NG_ ? ===
 
 NG means New Generation. A lot of changes have been done in ArduPiratesNG code, and it's really a new step.
+
+=== What are the differences between ArduPirates' SuperStable Code v1.X and ArduPiratesNG Code? ===
+
+SuperStable code is an exit of the ArduCopter first release, also known as ArduCopter RC1. All developpments, as GPS hold, Altitude hold, SuperStable mode, Camera stabilisation etc. were started from there.
+
+ArduPiratesNG is the latest version and will be the Official Release for both ArduPirates Team and ArduCopter Team.
