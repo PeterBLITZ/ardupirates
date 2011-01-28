@@ -5,6 +5,7 @@
     * [Electro_Need Electronic]
     * [Frame_Need Frame]
     * [Propulsion_Need Motors, ESC's and Propellers]
+    * [Radio_Need Radio and Battery]
  * ----
  * *Hardware*
  * [Building Building the hardware]
