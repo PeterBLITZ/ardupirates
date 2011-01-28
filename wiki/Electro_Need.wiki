@@ -20,9 +20,10 @@ The next parts are required if you are planning to use a GPS. You will need it t
  * *GPS & Cable*: Use either
    * the [http://store.diydrones.com/MediaTek_MT3329_GPS_10Hz_Adapter_Basic_p/mt3329-02.htm MediaTek one]
    * or the [http://store.diydrones.com/GS407_U_Blox5_GPS_4Hz_p/spk-gps-gs407.htm UBlox one]
+   * [http://store.diydrones.com/EM_406_uBlox_Adaptor_Cable_15_cm_p/ca-0001-04.htm Cable]
+
 
  * *[http://www.sparkfun.com/search/results?term=xbee&what=products Xbee] for wireless communication*
 
 You can purchase most parts from the [http://store.diydrones.com DIYDrones store], [https://www.aeroquadstore.com AeroQuad store], [http://www.sparkfun.com Sparkfun] in the USA, [http://store.fahpah.com/ Phi Fun Shop] in Asia, [http://www.coolcomponents.co.uk/catalog/ Coolcomponents] in the UK or [http://lipoly.de/ Lipoly] in Germany (if available). 
  
-
