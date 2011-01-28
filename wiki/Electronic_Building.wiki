@@ -1,8 +1,2 @@
-= Electronic =
-
-Here are the instructions for optional sensors:
-
- * [http://code.google.com/p/arducopter/wiki/Quad_GPS GPS]
- * [http://code.google.com/p/arducopter/wiki/Quad_Sonar Sonar]
 
 and finally, [http://code.google.com/p/arducopter/wiki/Quad_Radio how to connect your RC]
