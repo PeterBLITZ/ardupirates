@@ -4,6 +4,7 @@
   *  [What_I_need What I Need?]
     * [Electro_Need Electronic]
     * [Frame_Need Frame]
+    * [Propulsion_Need Motors, ESC's and Propellers]
  * ----
  * *Hardware*
  * [Building Building the hardware]
