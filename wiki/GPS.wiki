@@ -2,7 +2,7 @@
 
 ([http://code.google.com/p/arducopter/wiki/Quad_GPS ArduCopter's source])
 
-!ArduPirates fully supports GPS modules for position hold (Note: you will also need a magnetometer.) These two modules are recommended:
+!ArduCopter / ArduPiratesNG fully supports GPS modules for position hold (Note: you will also need a magnetometer.) These two modules are recommended:
 
 === MediaTek GPS module ===
 
