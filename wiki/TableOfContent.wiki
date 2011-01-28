@@ -3,6 +3,7 @@
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
     * [Electro_Need Electronic]
+    * [Frame_Need Frame]
  * ----
  * *Hardware*
  * [Building Building the hardware]
