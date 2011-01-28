@@ -2,7 +2,6 @@
 
 Here are the instructions for optional sensors:
 
- * [http://code.google.com/p/arducopter/wiki/Quad_Magnetos Magnetometers]
  * [http://code.google.com/p/arducopter/wiki/Quad_GPS GPS]
  * [http://code.google.com/p/arducopter/wiki/Quad_Sonar Sonar]
 
