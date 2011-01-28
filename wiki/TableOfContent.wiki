@@ -13,7 +13,7 @@
   * [APM_IMU Soldering and connecting APM / IMU shield]
   * [Magnetos Magnetometer]
   * [GPS]
-  * Sonar
+  * [Sonar]
   * [Electronic_Building Electronic Soldering]
   * [ESC Calibrating your ESC's]
  * ----
