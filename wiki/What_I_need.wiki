@@ -1,12 +1,9 @@
-= What I need? =
+=What I need?=
 
-  === [Electro_Need Electronic] ===
+===[Electro_Need Electronic]===
  
-  === [Frame_Need Frame] ===
+===[Frame_Need Frame]===
  
-  ==Motors, ESC's and Propellers==
+===[Propulsion_Need Motors, ESC's and Propellers]===
 
- ==Radio and Battery==
- You can use your own Tx and Rx system, the ArduPilot Mega Board is working with quite all systems.
-
- Most of multicopters are working with Lipo batteries, in 3S (11,1V) or 4S (14,8V). You can choose your own setup, depending on your motors and ESC's abilities.
+===Radio and Battery===
