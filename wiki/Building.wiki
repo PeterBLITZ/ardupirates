@@ -6,5 +6,6 @@ You will find a building description in the next pages.
  * [APM_IMU Soldering and connecting APM / IMU shield]
  * [Magnetos Magnetometers]
  * [GPS]
+ * [Sonar]
  * [Electronic_Building Electronic Soldering]
  * [ESC Calibrating your ESC's]
