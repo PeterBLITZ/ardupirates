@@ -10,7 +10,13 @@ Launch Arduino
 
 [http://lh4.ggpht.com/_SLFLtGv2hms/TUB5jXQSvzI/AAAAAAAAA9k/Ibea0YwxtC8/s800/arduino.PNG.jpg]
 
+Go to -> File -> Preferences and set the location for your sketches. (Choose the folder that resides above the "ArduCopter-firmware" folder.)
+
 Go to -> Tools -> Board and choose the "Arduino Mega (ATmega1280)" as your board.
+
+Go to -> Tools -> Serial Port and choose the port that was previously set up after you installed the USB Serial Driver (usually COM3)
+
+Go to -> Tools -> Serial Monitor and set the port speed to 115200 baud
 
 Then go to -> File -> Sketchebook -> Sketches -> ArduPiratesNG
 
