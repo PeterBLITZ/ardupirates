@@ -735,6 +735,15 @@ float KP_SONAR_ALTITUDE;
 float KI_SONAR_ALTITUDE;
 float KD_SONAR_ALTITUDE;
 
+// Camera related settings
+
+int CAM_SMOOTHING;      // Camera movement smoothing on pitch axis
+int CAM_SMOOTHING_ROLL; // Camera movement smoothing on roll axis
+int CAM_CENT;           // Camera center
+int CAM_FOCUS;          // Camera trigger Servo Focus position
+int CAM_TRIGGER;        // Camera trigger Servo Trigger position 
+int CAM_RELEASE;        // Camera trigger Servo Release Trigger Button position
+
 // This function call contains the default values that are set to the ArduCopter
 // when a "Default EEPROM Value" command is sent through serial interface
 void defaultUserConfig() {
