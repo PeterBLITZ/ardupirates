@@ -7,6 +7,8 @@ You can watch this animated build video:
 
 *Here is a step-by-step how-to* ([http://code.google.com/p/arducopter/wiki/Quad_GettingStarted ArduCopter's source])
 
+Note:you can find [http://arducopter.googlecode.com/files/Setting-up_ArduCopter_Electronics_v_002.pdf here] a printable quick-guide from  the ArduCopter Team.
+
 You will need to assemble the !ArduPilot Mega _(APM)_ and the IMU Sensor Board _(APM Shield/Oilpan)_.
 
 You will also need the following:
