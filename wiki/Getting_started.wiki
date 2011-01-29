@@ -8,11 +8,7 @@ The base of this project is Hein's Code which is an exit of the "official" [http
 
 First project was the Arducopter Super Stable Code by Hein and Phil with GPS Hold.
 
-Then, the further development of the "official" Arducopter NG code was taken over by the Pirates.
-
-!ArduPirates are now teaming up and joining forces with the Arducopter Team.
-
-Read DIYDrones founder Chris Anderson's blog announcement [http://diydrones.ning.com/profiles/b...-taken-over-by here]
+Then, the further development of the "official" Arducopter NG code was taken over by the Pirates. !ArduPirates are now teaming up and joining forces with the Arducopter Team. Read DIYDrones founder Chris Anderson's blog announcement [http://diydrones.ning.com/profiles/b...-taken-over-by here]
 
 *What the Pirates have to offer:*
 
@@ -28,3 +24,6 @@ Please check the links in this wiki, they are pointing on some DIYDrones ArduCop
 ----
 
 ==Information==
+
+*_ ArduPiratesNG is the latest version and will be the Official Release for both ArduPirates? Team and ArduCopter? Team. The code will be released soon, stay tuned!_*
+ 
