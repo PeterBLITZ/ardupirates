@@ -7,5 +7,5 @@ You will find a building description in the next pages.
  * [Magnetos Magnetometers]
  * [GPS]
  * [Sonar]
- * [Electronic_Building Electronic Soldering]
+ * [RC Connecting your RC]
  * [ESC Calibrating your ESC's]
