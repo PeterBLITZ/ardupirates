@@ -1,6 +1,6 @@
 == Sonar ==
 
-[(http://code.google.com/p/arducopter/wiki/Quad_Sonar ArduCopter's source])
+([http://code.google.com/p/arducopter/wiki/Quad_Sonar ArduCopter's source])
 
 ArduPiratesNG supports the !MaxSonar line of sonars for low level altitude hold and in the future collision avoidance.
 
