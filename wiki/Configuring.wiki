@@ -10,3 +10,7 @@ If you are planning to use a GPS, you have to set up the magnetometers with the 
 Here is an [http://code.google.com/p/arducopter/wiki/CLI how-to]
 
 Those steps are a First-time setup and have to be done again only if you change something in the code.
+
+Here's a Jani's video tutorial:
+
+<wiki:video url="http://www.youtube.com/watch?v=-hm7wPb0ZEw"/>
