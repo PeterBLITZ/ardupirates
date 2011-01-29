@@ -14,7 +14,7 @@
   * [Magnetos Magnetometer]
   * [GPS]
   * [Sonar]
-  * [RC]
+  * [RC Connecting your RC]
   * [ESC Calibrating your ESC's]
  * ----
  * *Softwares*
