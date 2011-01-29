@@ -2,17 +2,17 @@
 
 == The whole Wiki is under construction, please take those informations carefully! ==
 
-The ArduPirates project focuses on speeding up development on [http://code.google.com/p/arducopter/wiki/ArduCopter_Quad ArduCopter] especially by integrating self controlling mechanisms without any commercial interests or targets.
+The !ArduPirates project focuses on speeding up development on [http://code.google.com/p/arducopter/wiki/ArduCopter_Quad ArduCopter] especially by integrating self controlling mechanisms without any commercial interests or targets.
  
-The base of this project is Hein's Code which is an exit of the "official" ArduCopter Code coming from http://code.google.com/p/arducopter/. 
+The base of this project is Hein's Code which is an exit of the "official" [http://code.google.com/p/arducopter/ ArduCopter Code]. 
 
 First project was the Arducopter Super Stable Code by Hein and Phil with GPS Hold.
 
-Then, the further development of the "official" Arducopter NG code was taken over by the Pirates! 
-ArduPirates are now teaming up and joining forces with the Arducopter Team.
+Then, the further development of the "official" Arducopter NG code was taken over by the Pirates.
 
-Read DIYDrones founder Chris Anderson's blog announcement here:
-http://diydrones.ning.com/profiles/b...-taken-over-by
+!ArduPirates are now teaming up and joining forces with the Arducopter Team.
+
+Read DIYDrones founder Chris Anderson's blog announcement [http://diydrones.ning.com/profiles/b...-taken-over-by here]
 
 *What the Pirates have to offer:*
 
@@ -24,3 +24,7 @@ http://diydrones.ning.com/profiles/b...-taken-over-by
 Even more: Hein's code applies to Hexa builds. Octocopters are on the way thanks to Peter Seddon.
 
 Please check the links in this wiki, they are pointing on some DIYDrones ArduCopter’s wiki which could help you.
+
+----
+
+==Information==
