@@ -14,7 +14,7 @@
   * [Magnetos Magnetometer]
   * [GPS]
   * [Sonar]
-  * [Electronic_Building Electronic Soldering]
+  * [RC]
   * [ESC Calibrating your ESC's]
  * ----
  * *Softwares*
