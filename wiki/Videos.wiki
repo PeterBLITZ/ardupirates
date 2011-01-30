@@ -1,0 +1,13 @@
+= Some Pirates' videos =
+
+<wiki:video url="http://www.youtube.com/watch?v=AI_wxg-TxUs&feature=player_embedded"/> <wiki:video url="http://www.youtube.com/watch?v=ytWSZPs0cAM&feature=player_embedded"/>
+
+<wiki:video url="http://www.youtube.com/watch?v=Wit4tqS9c2k&feature=player_embedded"/> <wiki:video url="http://www.youtube.com/watch?v=PhBe4keCX68&feature=player_embedded/>
+
+<wiki:video url="http://www.youtube.com/watch?v=RvsAE7tW_Kk&feature=player_embedded"/> <wiki:video url="http://www.youtube.com/watch?v=gHHe1mXzjhs&feature=player_embedded"/>
+
+<wiki:video url="http://www.youtube.com/watch?v=qsHd8Mzk9OI&feature=player_embedded"/> 
+
+==More vids on the Vimeo Video Group for Arducopter Pilots:==
+
+http://vimeo.com/groups/acp
