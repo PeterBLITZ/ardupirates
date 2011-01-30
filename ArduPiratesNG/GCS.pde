@@ -418,7 +418,6 @@ void sendSerialTelemetry() {
     #if AIRFRAME == HELI  
       SerPriln("Airframe = Heli");
     #endif
-//    gps.update();
     if (gps.new_data){
       SerPri("gps:");
       SerPri(" Lat:");
