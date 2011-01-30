@@ -418,6 +418,7 @@ void sendSerialTelemetry() {
     #if AIRFRAME == HELI  
       SerPriln("Airframe = Heli");
     #endif
+//    gps.update();
     if (gps.new_data){
       SerPri("gps:");
       SerPri(" Lat:");
@@ -438,6 +439,12 @@ void sendSerialTelemetry() {
       SerPri(gps.time, DEC);
       SerPriln();
       gps.new_data = 0; // We have readed the data
+    }else {
+      SerPri("no new gps data:");
+      SerPri(" Lat:");
+      SerPri((float)gps.latitude / 10000000, DEC);
+      SerPri(" Lon:");
+      SerPri((float)gps.longitude / 10000000, DEC);
     }
 //    SerPri("Focus Servo = ");
 //    SerPriln(CAM_FOCUs);
