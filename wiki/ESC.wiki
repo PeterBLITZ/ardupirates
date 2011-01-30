@@ -41,7 +41,7 @@ You'll see that there are typically three wires of different colors coming out o
 
 *X Configuration*
 
- ||*APM 1.0*||*APM 1.4*||
+||*APM 1.0*||*APM 1.4*||
 ||OUT0 = Right motor (CCW)||OUT1 = Right motor (CCW)||
 ||OUT1 = Left motor (CCW)||OUT2 = Left motor (CCW)||
 ||OUT2 = Front motor (CW)||OUT3 = Front motor (CW)||
