@@ -44,8 +44,10 @@ ChangeLog:
 TODO:
 
 * **************************************************************************** *
+*/
+#include <AP_GPS.h>
 
-
+/*
 - ---------------------------------------------------------------------------- -
    H O W   T O   U S E   T H I S   F I L E :
 - ---------------------------------------------------------------------------- -
@@ -69,7 +71,7 @@ TODO:
    (HEXA). The first airframe has four motors, the second has six.
 
 If you have a quadcopter, uncomment this next line ! */
-#define AIRFRAME QUAD
+//#define AIRFRAME QUAD
 /*
 - ---------------------------------------------------------------------------- -
    QUAD COPTER AIRFRAME SETUP (PWM) (4 motors)
@@ -149,7 +151,7 @@ If you have a quadcopter, uncomment this next line ! */
 
    To choose FLIGHT_MODE_X, just uncommend the line below.
                                                                               */
-#define FLIGHT_MODE_X
+//#define FLIGHT_MODE_X
 
 /* --------------------------------------------------------------------------- */
 
@@ -177,7 +179,7 @@ If you have a quadcopter, uncomment this next line ! */
    command "T". It will tell you which flight mode is configured.
 
    If you have a hexacopter, uncomment this next line !                                 */
-//#define AIRFRAME HEXA
+#define AIRFRAME HEXA
 
 /*
 = ============================================================================ =
@@ -276,16 +278,17 @@ If you have a quadcopter, uncomment this next line ! */
    If you use a GPS, please uncomment your GPS Protocol based on your GPS device
    even if you do not have a GPS!!
                                                                               */
-
 #ifdef IsGPS
-//#define GPS_PROTOCOL GPS_PROTOCOL_NONE	// No GPS attached!!
-//#define GPS_PROTOCOL GPS_PROTOCOL_NMEA	// Standard NMEA GPS(NOT SUPPORTED!)
-//#define GPS_PROTOCOL GPS_PROTOCOL_IMU	    // X-Plane interface/ArduPilot IMU.
-#define GPS_PROTOCOL GPS_PROTOCOL_MTK	  // MediaTek GPS - DIYDrones 1.4
-//#define GPS_PROTOCOL GPS_PROTOCOL_MTK16	// MediaTek GPS - DIYDrones 1.6
-//#define GPS_PROTOCOL GPS_PROTOCOL_UBLOX	// UBLOX GPS
-//#define GPS_PROTOCOL GPS_PROTOCOL_SIRF	// SiRF-based GPS in Binary mode.
+//AP_GPS_NMEA		gps(&Serial1);  // Standard NMEA GPS.      NOT SUPPORTED (yet?)
+//AP_GPS_SIRF		gps(&Serial1);  // SiRF-based GPS in Binary mode.  NOT TESTED
+//AP_GPS_UBLOX	        gps(&Serial1);  // UBLOX GPS
+//AP_GPS_IMU		gps(&Serial);	// X-Plane interface or ArduPilot IMU.// note, console port
+AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.4
+//AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.6
+//AP_GPS_NONE		gps(NULL);      // No GPS attached!!
 #endif
+
+
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -340,7 +343,8 @@ If you have a quadcopter, uncomment this next line ! */
    Once you have achieved this fine tune in the Configurator's serial monitor by
    pressing "T" (capital t).
                                                                               */
-#define MAGCALIBRATION -21.65
+//#define MAGCALIBRATION -21.65
+#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
 
 /* SET MAGNETOMETER ORIENTATION:
    Next, you'll have to define how your magnetometer is mounted to your
@@ -350,7 +354,7 @@ If you have a quadcopter, uncomment this next line ! */
    Remember to uncomment only one single line !
 
    DIY Drones magnetometer;                                                   */
-#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD
+//#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK_RIGHT
@@ -358,7 +362,7 @@ If you have a quadcopter, uncomment this next line ! */
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
-//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
+#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -520,7 +524,7 @@ Don't change this.        */
    command link. If we are using normal FTDI/USB port as our telemetry/
    configuration, keep next line disabled.
                                                                               */
-//#define SerXbee
+#define SerXbee
 
 /*
    Telemetry port speed, default is 115200

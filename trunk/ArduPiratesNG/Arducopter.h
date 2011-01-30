@@ -35,6 +35,7 @@ TODO:
 
 #include "WProgram.h"
 
+
 /*************************************************************/
 // [kidogo] Moved the below settings out of ArduUser.h to here
 // since these settings should not be edited by the user
@@ -194,9 +195,9 @@ TODO:
 #define SERIAL2_BAUD 115200
 #define SERIAL3_BAUD 115200
 
-//FastSerialPort0(Serial);
-//FastSerialPort1(Serial1);
-//FastSerialPort3(Serial3);
+FastSerialPort0(Serial);		// FTDI/console
+FastSerialPort1(Serial1);		// GPS port (except for GPS_PROTOCOL_IMU)
+FastSerialPort3(Serial3);		// Telemetry port (optional, Standard and ArduPilot protocols only)
 
 
 #ifdef SerXbee               // Xbee/Telemetry port 
@@ -614,26 +615,7 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 					// SEVERITY_HIGH
 					// SEVERITY_CRITICAL
 
-// Different GPS devices, 
-#ifdef IsGPS
-#if   GPS_PROTOCOL == GPS_PROTOCOL_NMEA
-AP_GPS_NMEA		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_SIRF
-AP_GPS_SIRF		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_UBLOX
-AP_GPS_UBLOX	        gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_IMU
-AP_GPS_IMU		gps(&Serial);	// note, console port
-#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK
-AP_GPS_MTK		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK16
-AP_GPS_MTK16		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_NONE
-AP_GPS_NONE		gps(NULL);
-#else
-# error Must define GPS_PROTOCOL in your ArduUser file.
-#endif  
-#endif
+
 
 // Radio Modes, mainly just Mode2 
 #define MODE1           1 
