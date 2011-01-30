@@ -12,6 +12,8 @@ USB to Serial Driver allows you to create a serial port (necessary for communica
 
 Those tools will install *Arduino*, with which you will upload the code to the APM, *Configurator*, which is an "easy-configuration-tool", and finally copy the *code* from the server to your PC.
 
+*You will ever find the latest working version of the code in the [http://code.google.com/p/ardupirates/downloads/list Download Section].* First install the Kinderkram's Installer and Updater, then download the latest code and finally place the files in the right folders.
+
 == [Tortoise Tortoise SVN]==
 
 This tool will allows you to access and download the code directly from the source (Trunk). The different codes stored there are usually in developpment/test release, so use them at your own risk...
