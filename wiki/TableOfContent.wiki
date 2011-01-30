@@ -2,10 +2,10 @@
 
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
-    * [Electro_Need Electronic]
-    * [Frame_Need Frame]
-    * [Propulsion_Need Motors, ESC's and Propellers]
-    * [Radio_Need Radio and Battery]
+   * [Electro_Need Electronic]
+   * [Frame_Need Frame]
+   * [Propulsion_Need Motors, ESC's and Propellers]
+   * [Radio_Need Radio and Battery]
  * ----
  * *Hardware*
  * [Building Building the hardware]
@@ -25,11 +25,14 @@
  * ----
  * *Flying*
  *  [Flying]
+ * ----
+ * *Pirates Treasure*
  * [pirates_treasure pirates treasure]
-  * [StabilizedCameraMount Camera mount]
-  * [ThePiratesCofin The Pirates Cofin]
-  * [Waypoint_Nav_Description Waypoint Navigation]      
-  * [UsingWiiSensors Using Wii Sensors]
-  * [UbloxGPSTutorial Ublox GPS Tutorial]
+   * [StabilizedCameraMount Camera mount]
+   * [ThePiratesCofin The Pirates Cofin]
+   * [Waypoint_Nav_Description Waypoint Navigation]      
+   * [UsingWiiSensors Using Wii Sensors]
+   * [UbloxGPSTutorial Ublox GPS Tutorial]
+ * [Videos]
  * [FAQ]
-  * [ArduCopterInformation ArduCopter Information]
+ * [ArduCopterInformation ArduCopter Information]
