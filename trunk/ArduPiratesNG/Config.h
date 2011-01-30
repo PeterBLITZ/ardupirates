@@ -343,8 +343,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
    Once you have achieved this fine tune in the Configurator's serial monitor by
    pressing "T" (capital t).
                                                                               */
-//#define MAGCALIBRATION -21.65
-#define MAGCALIBRATION -15.65      //  Hexa Hein, South Africa, Centurion.  You have to determine your own.
+#define MAGCALIBRATION -15.65      
 
 /* SET MAGNETOMETER ORIENTATION:
    Next, you'll have to define how your magnetometer is mounted to your
