@@ -1,8 +1,9 @@
 = Configuring your setup =
 
-=== Configurator ===
+=== [Configurator] ===
 To configure your setup, first thing is to run the Configurator.
-Read here the [http://code.google.com/p/arducopter/wiki/Quad_ConfiguratorTool how to].
+
+The Configurator only runs in Windows. If you can't run Windows, you can do the same functions with the text-oriented Command Line Interface.
 
 === Command Line Interface (CLI) ===
 
