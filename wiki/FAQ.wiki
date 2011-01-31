@@ -1,5 +1,7 @@
 = FAQ =
 
+<wiki:toc max_depth="4"/>
+
 === What means !ArduPirates _NG_ ? ===
 
 NG means New Generation. A lot of changes have been done in ArduPiratesNG code, and it's really a new step.
