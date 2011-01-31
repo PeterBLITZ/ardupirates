@@ -27,7 +27,8 @@
  * ----
  * *Flying*
  *  [Flying]
-  * [Mode_Switch]
+  * [Mode_Switch Flight modes]
+  * [Pre_Flight Pre-Flight]
  * ----
  * *Pirates Treasure*
  * [pirates_treasure pirates treasure]
