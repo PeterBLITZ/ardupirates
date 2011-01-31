@@ -5,6 +5,6 @@ There is some things to do before take-off, so read the links below.
  * [Mode_Switch Flight Modes]
  * [Pre_Flight Pre-flight]
  * [PIDSettings PID Settings]
- * [http://code.google.com/p/arducopter/wiki/NGTest Flight Test Process]
+ * [GPS_AH Position Hold & Altitude Hold]
  * [http://code.google.com/p/arducopter/wiki/Quad_Flying Flying]
  * [PID_tuning_Inflight In flight PID Tuning]
