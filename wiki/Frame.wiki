@@ -6,6 +6,8 @@ It would be necessary to think on your flight orientation preference, as it may 
 
 You can find [http://code.google.com/p/arducopter/wiki/Quad_Frame_Assembly here] the !ArduCopter Quad's build, with a step-by-step instruction.
 
+Here's [http://www.rcgroups.com/forums/showthread.php?t=1361129#post16927386 Norf's Ardupirates Hexacopter Build Log], an interesting link.
+
 [http://www.quadframe.com/assets/images/QUAD_maly_07-03.jpg]
 
 [http://www.quadframe.com/assets/images/SEXy002_01-02.jpg]
