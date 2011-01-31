@@ -29,3 +29,7 @@ First clean up everything (make copies in some other directories if you wish)
  # go to http://ardupirates.net/config/ select NG Platform, select your options and generate new config.h
  # it's quicker if you copy&paste it into the opened config.h
  # save an recompile
+
+===I can't save my Tx calibration, I get errors ===
+
+To be able to save the tx calibration, your pc must have English-US regional settings.
