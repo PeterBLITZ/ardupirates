@@ -27,6 +27,7 @@
  * ----
  * *Flying*
  *  [Flying]
+  * [Mode_Switch]
  * ----
  * *Pirates Treasure*
  * [pirates_treasure pirates treasure]
