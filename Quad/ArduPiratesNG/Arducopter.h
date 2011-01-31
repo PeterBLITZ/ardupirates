@@ -36,6 +36,95 @@ TODO:
 #include "WProgram.h"
 
 
+/*************************************************************/
+// [kidogo] Moved the below settings out of ArduUser.h to here
+// since these settings should not be edited by the user
+/*************************************************************/
+
+
+/*************************************************************/
+// General definitions
+//
+// Airframe
+#define QUAD 0
+#define HELI 1
+#define HEXA 2
+
+//Modes
+#define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
+#define FM_STABLE_MODE         1  // DIP3 up   (OFF) = Stable Mode.
+#define AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
+#define AP_ALTITUDE_HOLD       3  // Just Altitude Hold
+#define AP_GPS_HOLD            4  // Just GPS Hold
+#define AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
+//#define AP_WAYPOINT            6  // Waypoint Navigation...NOT USED YET
+
+// Radio related definitions
+#define CH_ROLL 0
+#define CH_PITCH 1
+#define CH_THROTTLE 2
+#define CH_RUDDER 3
+#define CH_1 0
+#define CH_2 1
+#define CH_3 2
+#define CH_4 3
+#define CH_5 4
+#define CH_6 5
+#define CH_7 6
+#define CH_8 7
+#define CH_9 8    // PL3
+#define CH_10 9   // PB5
+#define CH_11 10  // PE3
+
+//Axis
+#define ROLL 0
+#define PITCH 1
+#define YAW 2
+#define XAXIS 0
+#define YAXIS 1
+#define ZAXIS 2
+
+#define GYROZ 0
+#define GYROX 1
+#define GYROY 2
+#define ACCELX 3
+#define ACCELY 4
+#define ACCELZ 5
+#define LASTSENSOR 6
+
+
+/* AM PIN Definitions */
+/* Will be moved in future to AN extension ports */
+/* due need to have PWM pins free for sonars and servos */
+
+#define FR_LED 3  // Mega PE4 pin, OUT7
+#define RE_LED 2  // Mega PE5 pin, OUT6
+#define RI_LED 7  // Mega PH4 pin, OUT5
+#define LE_LED 8  // Mega PH5 pin, OUT4
+
+/*
+#define FR_LED AN12  // Mega PE4 pin, OUT7
+#define RE_LED AN14  // Mega PE5 pin, OUT6
+#define RI_LED AN10  // Mega PH4 pin, OUT5
+#define LE_LED AN8  // Mega PH5 pin, OUT4
+*/
+
+/*************************************************************/
+// Special patterns for future use
+
+/*
+#define POFF  L1\0x00\0x00\0x05
+#define PALL  L1\0xFF\0xFF\0x05
+
+#define GPS_AM_PAT1 L\0x00\0x00\0x05
+#define GPS_AM_PAT2 L\0xFF\0xFF\0x05
+#define GPS_AM_PAT3 L\0xF0\0xF0\0x05
+*/
+
+/* AM PIN Definitions - END */
+
+// [kidogo] End of imported settings from ArduUser.h
+
 /* ************************************************************** */
 /* APM Hardware definitions */
 
@@ -106,9 +195,9 @@ TODO:
 #define SERIAL2_BAUD 115200
 #define SERIAL3_BAUD 115200
 
-//FastSerialPort0(Serial);
-//FastSerialPort1(Serial1);
-//FastSerialPort3(Serial3);
+FastSerialPort0(Serial);		// FTDI/console
+FastSerialPort1(Serial1);		// GPS port (except for GPS_PROTOCOL_IMU)
+FastSerialPort3(Serial3);		// Telemetry port (optional, Standard and ArduPilot protocols only)
 
 
 #ifdef SerXbee               // Xbee/Telemetry port 
@@ -194,7 +283,6 @@ int SENSOR_SIGN[]={
 int AN[6]; //array that store the 6 ADC channels
 int AN_OFFSET[6]; //Array that store the Offset of the gyros and accelerometers
 int gyro_temp;
-
 
 float G_Dt=0.02;                  // Integration time for the gyros (DCM algorithm)
 float Accel_Vector[3]= {0, 0, 0}; // Store the acceleration in a vector
@@ -282,7 +370,7 @@ float heading_I=0;  // used only by heli
 
 //Position control
 long target_longitude;
-long target_lattitude;
+long target_latitude;
 byte target_position;
 float gps_err_roll;
 float gps_err_roll_old;
@@ -341,13 +429,8 @@ float sonar_altitude_D;
 #define AIRSPEED_PIN 1		// Need to correct value
 #define BATTERY_PIN 1		// Need to correct value
 #define RELAY_PIN 47
-#define LOW_VOLTAGE	11.4    // Pack voltage at which to trigger alarm
-#define INPUT_VOLTAGE 5.2	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery 
-                                // level readings. (you need a multimeter to measure and set this of course)
-#define VOLT_DIV_RATIO 1.0	//  Voltage divider ratio set with thru-hole resistor (see manual)
 
 float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold for filter
-
 
 //AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
 //AP_ALTITUDE_HOLD       3  // Just Altitude Hold
@@ -532,26 +615,7 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 					// SEVERITY_HIGH
 					// SEVERITY_CRITICAL
 
-// Different GPS devices, 
-#ifdef IsGPS
-#if   GPS_PROTOCOL == GPS_PROTOCOL_NMEA
-AP_GPS_NMEA		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_SIRF
-AP_GPS_SIRF		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_UBLOX
-AP_GPS_UBLOX	        gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_IMU
-AP_GPS_IMU		gps(&Serial);	// note, console port
-#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK
-AP_GPS_MTK		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK16
-AP_GPS_MTK16		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_NONE
-AP_GPS_NONE		gps(NULL);
-#else
-# error Must define GPS_PROTOCOL in your ArduUser file.
-#endif  
-#endif
+
 
 // Radio Modes, mainly just Mode2 
 #define MODE1           1 
@@ -655,12 +719,12 @@ float KD_SONAR_ALTITUDE;
 
 // Camera related settings
 
-int CAM_SMOOTHING;         // Camera movement smoothing on pitch axis
-int CAM_SMOOTHING_ROLL;    // Camera movement smoothing on roll axis
-int CAM_CENT;              // Camera center
-int CAM_FOCUS;             // Camera trigger Servo Focus position
-int CAM_TRIGGER;           // Camera trigger Servo Trigger position 
-int CAM_RELEASE;           // Camera trigger Servo Release Trigger Button position
+int CAM_SMOOTHING;      // Camera movement smoothing on pitch axis
+int CAM_SMOOTHING_ROLL; // Camera movement smoothing on roll axis
+int CAM_CENT;           // Camera center
+int CAM_FOCUS;          // Camera trigger Servo Focus position
+int CAM_TRIGGER;        // Camera trigger Servo Trigger position 
+int CAM_RELEASE;        // Camera trigger Servo Release Trigger Button position
 
 // This function call contains the default values that are set to the ArduCopter
 // when a "Default EEPROM Value" command is sent through serial interface
