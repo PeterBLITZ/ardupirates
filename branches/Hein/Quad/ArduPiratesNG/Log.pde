@@ -272,7 +272,7 @@ void Log_Write_Mode(byte mode)
 
 #if LOG_GPS
 // Write an GPS packet. Total length : 30 bytes
-void Log_Write_GPS(	long log_Time, long log_Lattitude, long log_Longitude, long log_mix_alt, long log_gps_alt, 
+void Log_Write_GPS(	long log_Time, long log_latitude, long log_longitude, long log_mix_alt, long log_gps_alt, 
 					long log_Ground_Speed, long log_Ground_Course, byte log_Fix, byte log_NumSats)
 {
 	DataFlash.WriteByte(HEAD_BYTE1);
@@ -281,8 +281,8 @@ void Log_Write_GPS(	long log_Time, long log_Lattitude, long log_Longitude, long 
 	DataFlash.WriteLong(log_Time);
 	DataFlash.WriteByte(log_Fix);
 	DataFlash.WriteByte(log_NumSats);
-	DataFlash.WriteLong(log_Lattitude);
-	DataFlash.WriteLong(log_Longitude);
+	DataFlash.WriteLong(log_latitude);
+	DataFlash.WriteLong(log_longitude);
 	DataFlash.WriteLong(log_mix_alt);
 	DataFlash.WriteLong(log_gps_alt);
 	DataFlash.WriteLong(log_Ground_Speed);
@@ -483,8 +483,8 @@ void Log_Read_GPS()
 	long log_Time;
 	byte log_Fix;
 	byte log_NumSats;
-	long log_Lattitude;
-	long log_Longitude;
+	long log_latitude;
+	long log_longitude;
 	long log_gps_alt;
 	long log_mix_alt;
 	float log_Ground_Speed;
@@ -493,8 +493,8 @@ void Log_Read_GPS()
 	log_Time = DataFlash.ReadLong();
 	log_Fix = DataFlash.ReadByte();
 	log_NumSats = DataFlash.ReadByte();
-	log_Lattitude = DataFlash.ReadLong();
-	log_Longitude = DataFlash.ReadLong();
+	log_latitude = DataFlash.ReadLong();
+	log_longitude = DataFlash.ReadLong();
 	log_mix_alt = DataFlash.ReadLong();
 	log_gps_alt = DataFlash.ReadLong();
 	log_Ground_Speed = DataFlash.ReadLong();
@@ -507,9 +507,9 @@ void Log_Read_GPS()
 	SerPri(",");
 	SerPri((int)log_NumSats);
 	SerPri(",");
-	SerPri(log_Lattitude);
+	SerPri(log_latitude);
 	SerPri(",");
-	SerPri(log_Longitude);
+	SerPri(log_longitude);
 	SerPri(",");
 	SerPri(log_mix_alt/100.0);
 	SerPri(",");

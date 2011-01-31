@@ -186,8 +186,7 @@ void LEDAllOFF() {
 //  Use this function for PID tuning using your flightmode 3-position switch on the radio.
 //  You will need at least a 7 channel radio.  Radio must be in Acro (plane) mode.
 //  Select only one set of parameters below.  See default selection below.
-#ifdef SerXbee
-#ifdef Use_PID_Tuning
+#if (defined(SerXbee) && defined(Use_PID_Tuning))
 void PID_Tuning()  {
 // Tuning PID values using only 3 position channel switch (Flight Mode).
    if (ON_PID){
@@ -352,8 +351,8 @@ void PID_Tuning()  {
          }
          if (Camera_Release_adj){
            CAM_RELEASE += 10;
-           writeEEPROM(CAM_RELEASE, CAM_RELEASE_ADR);      
-         }
+           writeEEPROM(CAM_RELEASE, CAM_RELEASE_ADR);  
+         }    
          Plus = 0;
          Minus = 0;
        }else if (Minus == 1) {
@@ -513,5 +512,4 @@ void PID_Tuning()  {
      }
    }  
 }
-#endif
 #endif

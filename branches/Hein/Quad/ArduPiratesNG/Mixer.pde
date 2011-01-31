@@ -288,9 +288,9 @@ void matrix_debug()
   //  Serial.print(err_altitude);
   //  Serial.println();
   //  Serial.print("latitude:");
-  //  Serial.print(GPS_np.Lattitude);
+  //  Serial.print(GPS_np.latitude);
   //  Serial.print(" longitude:");
-  //  Serial.print(GPS_np.Longitude);
+  //  Serial.print(GPS_np.longitude);
   Serial.print(" command gps roll:");
   Serial.print(command_gps_roll);
   Serial.print(" command gps pitch:");

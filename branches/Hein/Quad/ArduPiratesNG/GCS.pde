@@ -438,6 +438,12 @@ void sendSerialTelemetry() {
       SerPri(gps.time, DEC);
       SerPriln();
       gps.new_data = 0; // We have readed the data
+    }else {
+      SerPri("no new gps data:");
+      SerPri(" Lat:");
+      SerPri((float)gps.latitude / 10000000, DEC);
+      SerPri(" Lon:");
+      SerPri((float)gps.longitude / 10000000, DEC);
     }
 //    SerPri("Focus Servo = ");
 //    SerPriln(CAM_FOCUs);
@@ -646,7 +652,7 @@ void sendSerialTelemetry() {
     break;
 #ifdef IsGPS
   case '4':  // Jani's debugs
-//  Log_Write_GPS(GPS.Time, GPS.Lattitude, GPS.Longitude, GPS.Altitude, GPS.Altitude, GPS.Ground_Speed, GPS.Ground_Course, gps.fix, GPS.NumSats);
+//  Log_Write_GPS(GPS.Time, GPS.Latitude, GPS.Longitude, GPS.Altitude, GPS.Altitude, GPS.Ground_Speed, GPS.Ground_Course, gps.fix, GPS.NumSats);
 
     SerPri(gps.time);
     tab();
@@ -668,8 +674,7 @@ void sendSerialTelemetry() {
     SerPriln();
     break;
 #endif    
-#ifdef SerXbee
-#ifdef Use_PID_Tuning
+#if (defined(SerXbee) && defined(Use_PID_Tuning))
   case 'o': // Switch PID tuning ON
     ON_PID = 1;    
     SerPrln("PID Tuning ON, Pitch & Roll set, P of PID set"); 
@@ -983,7 +988,6 @@ void sendSerialTelemetry() {
     SerPrln(CAM_RELEASE);
     queryType = 'X';
     break;
-#endif
 #endif
   case '.': // Modify GPS settings, print directly to GPS Port
     Serial1.print("$PGCMD,16,0,0,0,0,0*6A\r\n");
