@@ -5,7 +5,7 @@
 *What is it?*
 The purpose of this tool is to allow the user to setup the !ArduCopter before it's first flight and to quickly adjust settings for desired flight characteristics. The user will be able to graphically observe correct operation of the sensors, transmitter commands and motor control of the quadrocopter. Additionally there are user programmable values such as PID control loop values and the Transmitter Factor that can be adjusted and stored to the !ArduCopter's EEPROM (static memory).
 
-*Note:* The Configurator only runs in Windows. If you can't run Windows, you can do the same functions with the text-oriented [http://code.google.com/p/arducopter/wiki/CLI Command Line Interface] described in the next section.
+*Note:* The Configurator only runs in Windows. If you can't run Windows, you can do the same functions with the text-oriented [http://code.google.com/p/ardupirates/wiki/CLI Command Line Interface].
 
 It is highly recommended to first checkout the !ArduCopter without motors connected (or powered on) with the Configurator. Another good option is to mount off the props making the quad safe yet show how it will respond in reality.
 
