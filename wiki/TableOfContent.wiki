@@ -32,6 +32,7 @@
   * [PIDSettings PID Settings]
   * [GPS_AH Position Hold & Altitude Hold]
   * [Safety_flying 3, 2, 1, ignition!]
+  * [PID_tuning_Inflight In flight PID Tuning]
  * ----
  * *Pirates Treasure*
  * [pirates_treasure pirates treasure]
