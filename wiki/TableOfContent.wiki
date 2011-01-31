@@ -29,6 +29,7 @@
  *  [Flying]
   * [Mode_Switch Flight modes]
   * [Pre_Flight Pre-Flight]
+  * [PIDSettings PID Settings]
  * ----
  * *Pirates Treasure*
  * [pirates_treasure pirates treasure]
