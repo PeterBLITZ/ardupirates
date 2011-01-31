@@ -1,0 +1,42 @@
+=Position Hold & Altitude Hold=
+
+*To test Position Hold:*
+
+ # First, it´s important that your Stable Mode is working OK
+ # You need to wait until GPS gets a lock (it´s better to wait a bit more to get more satellites)
+ # At field, before flight you could check that you can enable/disable GPS position hold with your transmitter switch. Green LED (A) is OFF  and Red LED (C) is ON when GPS position hold is enable.
+ # Start flying in Stable mode with position hold disable. When you reach the desired point enable GPS position hold. 
+
+|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Green LED (A) * || * Yellow LED (B) * || * Red LED (C) * || * Remark * ||
+|| ON || OFF || Position Hold only || 4 || OFF || ON || ON || If the Red LED is flashing, the GPS data is not being logged. ||
+
+*To test altitude hold:*
+
+# At field, before flight you could check that you can enable/disable Altitude hold with your transmitter switch. Green LED (A) is ON  and Red LED (C) is OFF when altitude hold is enable.
+ # Start flying in Stable mode with altitude hold disable. When you reach the desired point enable altitude hold.
+
+It´s important to know that the altitude hold control takes your actual Throttle position as "hovering point" so it´s important that you are not ascending/descending when you switch to GPS position/altitude hold.
+
+|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Green LED (A) * || * Yellow LED (B) * || * Red LED (C) * ||
+|| OFF || ON || Altitude Hold only || 3 || ON || ON || OFF ||
+
+*To test position hold & altitude hold togheter:*
+
+After testing separately both modes, you can enable them togheter.
+
+|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Green LED (A) * || * Yellow LED (B) * || * Red LED (C) * || * Remark * ||
+|| ON || ON || Position & Alt. Hold || 5 || ON || ON || ON || If the Red LED is flashing, the GPS data is not being logged. ||
+
+
+== What you should expect? ==
+
+The quad should stay in an around 4-5 meters "circle" around the target position
+If there are some wind, it takes some seconds to the control to compensate for this. If the wind is stronger you could see that the control could not compensate at all and you will have more error (ex 10-15 meters).
+
+Actual altitude control is a very simple solution so you could expect to be into 1-2 meters error. 
+
+You can use the stick to move the quad manually in GPS position hold mode. 
+
+If you move it manually and then you release the stick, the quad should go the initial position.
+
+In GPS hold mode, altitude is also held. In this mode, you can manually command the quad to rise or fall with the throttle stick. When you let go, it should stay where you left it.
