@@ -30,23 +30,3 @@ http://www.board-portal.de/ArduCopter/ArduCopterConfigurator_v1.1.zip
 *Download of the Configurator Update 1.22*
 
 http://www.board-portal.de/ArduCopter/Configurator-update-v1.22.zip
-
-*Download Page for Tortoise SVN:*
-
-http://tortoisesvn.net
-
-*Tutorial for Tortoise SVN:*
-
-http://www.rcgroups.com/forums/showthread.php?t=1317685
-
-*Tutorial for the UBlox GPS:*
-
-http://code.google.com/p/ardupirates/wiki/UbloxGPSTutorial#whb
-
-*Where to buy frames?*
-
-A great resource for stable and reasonably priced frames is Jakub's new frame site.
-
-http://www.quadframe.com/
-
-He offers a great amount of cnced frames for Tri, Quad and Hexa
