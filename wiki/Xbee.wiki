@@ -13,7 +13,12 @@ All Xbee modules need adapters to work with APM. You have two choices:
 
  * A DIY Drones [http://store.diydrones.com/product_p/br-0015-01.htmXtreemBee XtreamBee adapters] on the aircraft side, and a [http://www.sparkfun.com/commerce/product_info.php?products_id=8687 Sparkfun USB adapter board] on the ground/laptop side with a USB cable. 
 
- * If you already have an [http://store.diydrones.com/FTDI_Cable_3_3V_p/ttl-232r-3v3.htm FTDI cable], get two [http://store.diydrones.com/product_p/br-0015-01.htmXtreemBee DIY Drones XtreamBee adapters]. 
+ * If you already have an [http://store.diydrones.com/FTDI_Cable_3_3V_p/ttl-232r-3v3.htm FTDI cable], get two [http://store.diydrones.com/product_p/br-0015-01.htmXtreemBee DIY Drones XtreamBee adapters].
+
+*WARNING:* Pro Serie 2 does not work properly on telemetry. It is not because of APM due APM does not know anything about radio modems. It's the design on Pro 2 that is against us. Their firmware does not work properly with constant data stream. 
+ 
+
+
 
 == Setting up the Xbee modules==
 
@@ -106,4 +111,3 @@ Using the Sparkfun USB explorer board:
 
 (_Thanks to Doug Barnett for these tips_) 
  
-
