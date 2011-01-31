@@ -30,6 +30,7 @@
   * [Mode_Switch Flight modes]
   * [Pre_Flight Pre-Flight]
   * [PIDSettings PID Settings]
+  * [GPS_AH Position Hold & Altitude Hold]
  * ----
  * *Pirates Treasure*
  * [pirates_treasure pirates treasure]
