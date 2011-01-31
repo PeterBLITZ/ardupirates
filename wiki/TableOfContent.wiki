@@ -42,5 +42,7 @@
    * [UsingWiiSensors Using Wii Sensors]
    * [UbloxGPSTutorial Ublox GPS Tutorial]
  * [Videos]
+ * ----
+ * *Help*
  * [FAQ]
  * [ArduCopterInformation ArduCopter Information]
