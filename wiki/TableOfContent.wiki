@@ -21,8 +21,9 @@
  * *Softwares*
  * [Softwares_Building Installing the softwares]
   * [Code_Loading Loading the code]
-  * [Configuring configuring your setup]
-   * [Configurator using the Configurator]
+  * [Configuring Configuring your setup]
+   * [Configurator Using the Configurator]
+   * [CLI Using the CLI]
  * ----
  * *Flying*
  *  [Flying]
