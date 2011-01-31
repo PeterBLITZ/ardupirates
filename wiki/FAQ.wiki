@@ -2,6 +2,8 @@
 
 <wiki:toc max_depth="4"/>
 
+
+----
 === What means !ArduPirates _NG_ ? ===
 
 NG means New Generation. A lot of changes have been done in ArduPiratesNG code, and it's really a new step.
@@ -12,7 +14,7 @@ NG means New Generation. A lot of changes have been done in ArduPiratesNG code, 
 
 ArduPiratesNG is the latest version and will be the Official Release for both !ArduPirates Team and !ArduCopter Team.
 
-=== I can't compile the code, I got errors, what I can do? ===
+=== I can't compile the code, I get errors, what I can do? ===
 
 here's a little "how to..." to compile without errors:
 
