@@ -9,3 +9,19 @@ NG means New Generation. A lot of changes have been done in ArduPiratesNG code, 
 !SuperStable code is an exit of the !ArduCopter's first release, also known as !ArduCopter RC1. All developpments, as GPS hold, Altitude hold, !SuperStable mode, Camera stabilisation etc. were started from there.
 
 ArduPiratesNG is the latest version and will be the Official Release for both !ArduPirates Team and !ArduCopter Team.
+
+=== I can't compile the code, i got errors ===
+
+here's a little "how to..." to compile without errors:
+
+First clean up everything (make copies in some other directories if you wish)
+
+#- copy "libraries" directory from "ardupirates\trunk\ArduPiratesNG" to "arduino" directory
+#- copy libraries directory from "ardupirates\trunk\QUAD\ArduCopter_SuperStable " to arduino directory DO NOT overwrite when asked
+#- create "ArduPiratesNG" directory in the "sketches" diretory
+#- copy the files from "ardupirates\trunk\ArduPiratesNG" (not the libraries dir) to the "ArduPiratesNG" directory in "sketches" diretory
+#- in arduino open sketch "ArduPiratesNG"
+#- compile (should do without errors)
+#- go to http://ardupirates.net/config/ select NG Platform, select your options and generate new config.h
+#- it's quicker if you copy&paste it into the opened config.h
+#- save an recompile
