@@ -10,8 +10,7 @@ http://arducopter.googlecode.com/svn/images/CLI_switch.png
 
 Now open the Arduino serial monitor, setting baud rate to 115200 baud and ensuring that "Carriage Returns" are enabled. You should see a command line on the monitor:
 
-http://ardupilot-mega.googlecode.com/svn/ArduPilotMegaImages/QuadCLI.PNG
-
+https://ardupirates.googlecode.com/svn/Images/QuadCLI.PNG
 
 === Available commands ===
 
@@ -44,6 +43,26 @@ https://lh6.googleusercontent.com/_SLFLtGv2hms/TUavEmz9pKI/AAAAAAAAA_I/MGz11iHYD
  Hit 'Enter' to disarm all motors and to exit from ESC Calibration 
 
 If you are not using the official !ArduCopter ESCs, you can manually calibrate them one by one by connecting each ESC to your RC receiver's channel 3 output. Unplug your battery, move transmitter throttle stick to full, and reconnect the battery. Wait for the beeps to stop, then bring the throttle stick down to the minimum again. Repeat for all four ESCs.
+
+*f - Calibrate Camera Smoothing*
+
+ Here wou can configure the smoothing parameters to make your camera corrections follow your quad moves. 
+ You can setup corrections for *Tilt*, *Roll* and *Center* values.
+ 
+ You also need to verify that you activated the Camera Stabilization in the Online Configurator.
+ 
+https://ardupirates.googlecode.com/svn/Images/CamStab.PNG
+
+
+*g - Calibrate Camera Trigger*
+ 
+ Here you can calibrate the trigger or Shutter parameters of your camera, those are the values that will enable your camera to focus and shoot photos on demand.
+ You can setup *Focus*, *Trigger* and *Release* values.
+
+ You also need to verify that you activated the Camera Shutter in the Online Configurator.
+
+https://ardupirates.googlecode.com/svn/Images/CamStab.PNG
+
 
 *i - Initialize and calibrate Accel offsets*
 
