@@ -78,6 +78,12 @@ void RunCLI () {
       case 'i':
         CALIB_AccOffset();
         break;
+      case 'f':
+        Set_Camera_Smooth();
+        break;
+      case 'g':
+        Set_Camera_Trigger();
+        break;
       case 't':
         CALIB_Throttle();  
         break;
@@ -124,6 +130,8 @@ void Show_MainMenu() {
   SerPrln(" c - Show/Save compass offsets");
   SerPrln(" d - dump logs to serial");  
   SerPrln(" e - ESC Throttle calibration (Works with official ArduCopter ESCs)");
+  SerPrln(" f - Calibrate Camera smoothing");
+  SerPrln(" g - Calibrate Camera Trigger");
   SerPrln(" i - Initialize and calibrate Accel offsets");
   SerPrln(" m - Motor tester with AIL/ELE stick");
   SerPrln(" o - Show/Save sonar & obstacle avoidance PIDs");
@@ -134,6 +142,7 @@ void Show_MainMenu() {
   SerPrln(" ");
   SerFlu();
 }
+
 
 
 /* ************************************************************** */
@@ -584,12 +593,14 @@ void Show_Settings() {
 
   SerPri("Camera mode: ");
   SerPrln(cam_mode, DEC);
+  Show_Camera_Smooth();
+  Show_Camera_Trigger();
 
 #if AIRFRAME == QUAD  
 #ifdef FLIGHT_MODE_X_45Degree
   SerPri("Flight orientation: ");
   if(SW_DIP1) {
-    SerPrln("x mode_45Degree (APM front pointing towards Front motor)");
+    SerPrln("X mode_45Degree (APM front pointing towards Front motor)");
   } 
   else {
     SerPrln("+ mode");
@@ -597,7 +608,7 @@ void Show_Settings() {
 #endif 
 #ifdef FLIGHT_MODE_X
   SerPri("Flight orientation: ");
-  SerPrln("x mode (APM front between Front and Right motor) DIP1 not applicable");
+  SerPrln("X mode (APM front between Front and Right motor) DIP1 not applicable");
 #endif
 #endif
 #if AIRFRAME == HEXA  
@@ -606,7 +617,7 @@ void Show_Settings() {
 
   Show_SonarAndObstacleAvoidance_PIDs();
 
-  SerPrln();
+  SerPrln(); 
 }
 
 // Display obstacle avoidance pids
@@ -782,8 +793,167 @@ void WaitSerialEnter() {
 }
 
 
+void Show_Camera_Smooth()
+{
+// Display camera values
+  SerPri("Camera Smooth values (Tilt, Roll, Center): "); 
+  SerPri(CAM_SMOOTHING); cspc();
+  SerPri(CAM_SMOOTHING_ROLL); cspc();
+  SerPriln(CAM_CENT);
+}
+
+// save camera values to eeprom
+void Save_Camera_Smooth_toEEPROM() 
+{  
+  writeEEPROM(CAM_SMOOTHING     , CAM_SMOOTHING_ADR);
+  writeEEPROM(CAM_SMOOTHING_ROLL, CAM_SMOOTHING_ROLL_ADR);
+  writeEEPROM(CAM_CENT          , CAM_CENT_ADR);
+}
 
 
+void Set_Camera_Smooth()
+{
+  float tempVal;
+  int saveToEeprom = 0;
+
+  SerPrln("Camera Smooth values:");
+  Show_Camera_Smooth();
+  SerPrln();
+  // Tilt Smooth
+  SerFlu();
+  SerPri("Enter Camera Tilt Smooth Value or 0 to Skip: ");
+  while( !SerAva() );  // wait until user presses a key
+  tempVal = readFloatSerial();
+  if (tempVal != 0)
+  {
+    CAM_SMOOTHING = tempVal;
+    SerPri("Camera Tilt Smooth:: ");
+    SerPri(CAM_SMOOTHING);
+    saveToEeprom = 1;   
+  }
+  SerPrln();      
+
+    // Roll Smooth
+  SerFlu();
+  SerPri("Enter Camera Roll Smooth Value or 0 to Skip: ");
+  while( !SerAva() );  // wait until user presses a key
+  tempVal = readFloatSerial();
+  if (tempVal != 0)
+  {
+    CAM_SMOOTHING_ROLL = tempVal;
+    SerPri("Camera Roll Smooth:: ");
+    SerPri(CAM_SMOOTHING_ROLL);
+    saveToEeprom = 1;   
+  }
+  SerPrln();      
+
+    // Roll Smooth
+  SerFlu();
+  SerPri("Enter Camera Center Value or 0 to Skip: ");
+  while( !SerAva() );  // wait until user presses a key
+  tempVal = readFloatSerial();
+  if (tempVal != 0)
+  {
+    CAM_CENT = tempVal;
+    SerPri("Camera Roll Smooth:: ");
+    SerPri(CAM_CENT);
+    saveToEeprom = 1;   
+  }
+  SerPrln();     
+  
+  
+  // save to eeprom
+  if( saveToEeprom == 1 ) {
+      Show_Camera_Smooth();
+      SerPrln();
+      Save_Camera_Smooth_toEEPROM();
+      SerPrln("Saved to EEPROM");
+      SerPrln();
+  }else{
+      SerPrln("No changes. Nothing saved to EEPROM");
+      SerPrln();
+  }
+}
 
 
+void Show_Camera_Trigger()
+{
+// Display camera Trigger values
+  SerPri("Camera Trigger values (Focus, Trigger, Release): "); 
+  SerPri(CAM_FOCUS); cspc();
+  SerPri(CAM_TRIGGER); cspc();
+  SerPriln(CAM_RELEASE);
+}
 
+// save camera Trigger values to eeprom
+void Save_Camera_Trigger_toEEPROM() 
+{  
+  writeEEPROM(CAM_FOCUS  , CAM_FOCUS_ADR);
+  writeEEPROM(CAM_TRIGGER, CAM_TRIGGER_ADR);
+  writeEEPROM(CAM_RELEASE, CAM_RELEASE_ADR);
+}
+
+
+void Set_Camera_Trigger()
+{
+  float tempVal;
+  int saveToEeprom = 0;
+
+  SerPrln("Camera Trigger values:");
+  Show_Camera_Trigger();
+  SerPrln();
+  // Tilt Smooth
+  SerFlu();
+  SerPri("Enter Camera Triger Focus Value or 0 to Skip: ");
+  while( !SerAva() );  // wait until user presses a key
+  tempVal = readFloatSerial();
+  if (tempVal != 0)
+  {
+    CAM_FOCUS = tempVal;
+    SerPri("Camera Focus: ");
+    SerPri(CAM_FOCUS);
+    saveToEeprom = 1;   
+  }
+  SerPrln();      
+
+    // Roll Smooth
+  SerFlu();
+  SerPri("Enter Camera Trigger Value or 0 to Skip: ");
+  while( !SerAva() );  // wait until user presses a key
+  tempVal = readFloatSerial();
+  if (tempVal != 0)
+  {
+    CAM_TRIGGER = tempVal;
+    SerPri("Camera Trigger: ");
+    SerPri(CAM_TRIGGER);
+    saveToEeprom = 1;   
+  }
+  SerPrln();      
+
+    // Roll Smooth
+  SerFlu();
+  SerPri("Enter Camera Release Value or 0 to Skip: ");
+  while( !SerAva() );  // wait until user presses a key
+  tempVal = readFloatSerial();
+  if (tempVal != 0)
+  {
+    CAM_RELEASE = tempVal;
+    SerPri("Camera Release: ");
+    SerPri(CAM_RELEASE);
+    saveToEeprom = 1;   
+  }
+  SerPrln();     
+  
+  
+  // save to eeprom
+  if( saveToEeprom == 1 ) {
+      Show_Camera_Trigger();
+      SerPrln();
+      Save_Camera_Trigger_toEEPROM();
+      SerPrln("Saved to EEPROM");
+      SerPrln();
+  }else{
+      SerPrln("No changes. Nothing saved to EEPROM");
+      SerPrln();
+  }
+}
