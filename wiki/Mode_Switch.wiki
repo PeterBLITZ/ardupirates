@@ -13,10 +13,10 @@ The next step is to choose your FLIGHT MODE.  This is done by setting switch 3 o
 
 AUTOPILOT MODE status LEDs and MODES:
 
-|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Green LED (A) * || * Yellow LED (B) * || * Red LED (C) * || * Remark * ||
-|| OFF || OFF || Stable || 2 || ON || OFF || OFF || ||
-|| OFF || ON || Altitude Hold only || 3 || ON || ON || OFF || ||
-|| ON || OFF || Position Hold only || 4 || ON || OFF || ON || If the Red LED is flashing, the GPS data is not being logged. ||
+|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Yellow LED (B) * || * Red LED (C) * || * Remark * ||
+|| OFF || OFF || Stable || 2 || OFF || OFF || ||
+|| OFF || ON || Altitude Hold only || 3 || ON || OFF || ||
+|| ON || OFF || Position Hold only || 4 || OFF || ON || If the Red LED is flashing, the GPS data is not being logged. ||
 || ON || ON || Position & Alt. Hold || 5 || ON || ON || ON || If the Red LED is flashing, the GPS data is not being logged. ||
 
 TIP: in the Configurator, the MODE channel is what we refer to as AUX2.  
