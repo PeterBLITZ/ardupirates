@@ -2,7 +2,7 @@
 
 ([http://code.google.com/p/arducopter/wiki/Quad_ESC ArduCopter's source)]
 
-Usually all calibration will be done through the configurator. For now you can only initialize the EEPROM and calibrate your tx/rx within the version 1.21.
+Usually all calibration will be done through the configurator. For now you can only initialize the EEPROM and calibrate your tx/rx within the version 1.22.
 
 http://www.board-portal.de/Turnigy18ABasic.jpg
 
