@@ -11,7 +11,7 @@ Then, the further development of the "official" Arducopter NG code was taken ove
 ----
 ==Information==
 
-*_ ArduPiratesNG is the latest version and will be the Official Release for both ArduPirates Team and ArduCopter Team. The code will be released soon, stay tuned!_*
+*_ ArduPiratesNG is the latest version and will be the Official Release for both !ArduPirates Team and !ArduCopter Team. The code will be released soon, stay tuned!_*
 ----
 *What the Pirates have to offer:*
 
