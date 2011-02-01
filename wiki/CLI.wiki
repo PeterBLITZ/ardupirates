@@ -61,7 +61,7 @@ https://ardupirates.googlecode.com/svn/Images/CamStab.PNG
 
  You also need to verify that you activated the Camera Shutter in the Online Configurator.
 
-https://ardupirates.googlecode.com/svn/Images/CamStab.PNG
+https://ardupirates.googlecode.com/svn/Images/CamShut.PNG
 
 
 *i - Initialize and calibrate Accel offsets*
