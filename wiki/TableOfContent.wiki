@@ -1,4 +1,4 @@
-= ArduPirates Wiki=
+= !ArduPirates Wiki=
 
  *  [Getting_started Getting started]
   *  [What_I_need What I Need?]
