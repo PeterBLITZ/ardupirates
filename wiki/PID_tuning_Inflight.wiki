@@ -1,4 +1,3 @@
-
 = Inflight PID Tuning =
 
 Small Manual for PID tuning.
@@ -15,23 +14,39 @@ In configurator you will use the Serial Monitor. We will only use small letters 
 
 List of Commands. (most of them will make sense but not all)
 
-"o" - Switch PID tuning on. 
+"o" - Switch PID tuning on.
+
 "f" - Switch PID tuning off.
+
 "r" - Tuning Roll and Pitch. If you are in Acro it will tune Acro, If in Stable you will tune Stable mode.
+
 "w" - Tuning Yaw Variables.
+
 "b" - Tuning Barometric sensor.
+
 "s" - Tuning Sonar Sensor.
+
 "g" - Tuning GPS.
+
 "p" - Tuning the P_factor of PID
+
 "i" - Tuning the I_factor of PID
 "d" - Tuning the D_factor of PID
+
 "x" - Tuning the Accelerometer Roll offset
+
 "y" - Tuning the Accelerometet Pitch offset
+
 "a" - Tuning the Camera Pitch Smooth factor.
+
 "e" - Tuning the Camera Roll Smooth factor.
+
 "c" - Tuning the Camera Centre factor.
+
 "h" - Tuning the Camera Focus servo position.
+
 "t" - Tuning the Camera Trigger (Shutter) servo position.
+
 "j" - Tuning the Camera Release servo position.
 
 Example: We want to tune the Roll and pitch PID of Stable flight.
