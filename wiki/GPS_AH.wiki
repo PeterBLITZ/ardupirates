@@ -7,8 +7,8 @@
  # At field, before flight you could check that you can enable/disable GPS position hold with your transmitter switch. Green LED (A) is OFF  and Red LED (C) is ON when GPS position hold is enable.
  # Start flying in Stable mode with position hold disable. When you reach the desired point enable GPS position hold. 
 
-|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Green LED (A) * || * Yellow LED (B) * || * Red LED (C) * || * Remark * ||
-|| ON || OFF || Position Hold only || 4 || OFF || ON || ON || If the Red LED is flashing, the GPS data is not being logged. ||
+|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Yellow LED (B) * || * Red LED (C) * || * Remark * ||
+|| ON || OFF || Position Hold only || 4 || OFF || ON || If the Red LED is flashing, the GPS data is not being logged. ||
 
 *To test altitude hold:*
 
@@ -17,15 +17,15 @@
 
 It´s important to know that the altitude hold control takes your actual Throttle position as "hovering point" so it´s important that you are not ascending/descending when you switch to GPS position/altitude hold.
 
-|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Green LED (A) * || * Yellow LED (B) * || * Red LED (C) * ||
-|| OFF || ON || Altitude Hold only || 3 || ON || ON || OFF ||
+|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Yellow LED (B) * || * Red LED (C) * ||
+|| OFF || ON || Altitude Hold only || 3 || ON || OFF ||
 
 *To test position hold & altitude hold togheter:*
 
 After testing separately both modes, you can enable them togheter.
 
-|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Green LED (A) * || * Yellow LED (B) * || * Red LED (C) * || * Remark * ||
-|| ON || ON || Position & Alt. Hold || 5 || ON || ON || ON || If the Red LED is flashing, the GPS data is not being logged. ||
+|| * AUX 2 * || * AUX 1 * || * MODE * || * AP_Mode * || * Yellow LED (B) * || * Red LED (C) * || * Remark * ||
+|| ON || ON || Position & Alt. Hold || 5 || ON || ON || If the Red LED is flashing, the GPS data is not being logged. ||
 
 
 == What you should expect? ==
