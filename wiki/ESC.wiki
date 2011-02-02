@@ -35,7 +35,7 @@ You'll see that there are typically three wires of different colors coming out o
 ||OUT0 = Right motor (CCW)||OUT1 = Right motor (CCW)||
 ||OUT1 = Left motor (CCW)||OUT2 = Left motor (CCW)||
 ||OUT2 = Front motor (CW)||OUT3 = Front motor (CW)||
-||OUT3 = Rear motor (CW)||OUT3 = Rear motor (CW)||
+||OUT3 = Rear motor (CW)||OUT4 = Rear motor (CW)||
 
 
 
@@ -45,7 +45,7 @@ You'll see that there are typically three wires of different colors coming out o
 ||OUT0 = Right motor (CCW)||OUT1 = Right motor (CCW)||
 ||OUT1 = Left motor (CCW)||OUT2 = Left motor (CCW)||
 ||OUT2 = Front motor (CW)||OUT3 = Front motor (CW)||
-||OUT3 = Rear motor (CW)||OUT3 = Rear motor (CW)||
+||OUT3 = Rear motor (CW)||OUT4 = Rear motor (CW)||
 
 
 CCW = Counter-clockwise rotation (eg backwards) CS = Clockwise (eg rotating the same direction as a clock's hands)
