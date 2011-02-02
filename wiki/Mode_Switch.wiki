@@ -17,7 +17,7 @@ AUTOPILOT MODE status LEDs and MODES:
 || OFF || OFF || Stable || 2 || OFF || OFF || ||
 || OFF || ON || Altitude Hold only || 3 || ON || OFF || ||
 || ON || OFF || Position Hold only || 4 || OFF || ON || If the Red LED is flashing, the GPS data is not being logged. ||
-|| ON || ON || Position & Alt. Hold || 5 || ON || ON || ON || If the Red LED is flashing, the GPS data is not being logged. ||
+|| ON || ON || Position & Alt. Hold || 5 || ON || ON || If the Red LED is flashing, the GPS data is not being logged. ||
 
 TIP: in the Configurator, the MODE channel is what we refer to as AUX2.  
  
