@@ -26,7 +26,7 @@
 ///
 
 #include <FastSerial.h>
-#include <AP_Common.h>
+#include "../AP_Common/AP_Common.h"
 
 #include <avr/pgmspace.h>
 #include <ctype.h>
