@@ -4,7 +4,7 @@
 /// @brief	Simple GPS auto-detection logic.
 
 #include <FastSerial.h>
-#include <AP_Common.h>
+#include "../AP_Common/AP_Common.h"
 
 #include "AP_GPS.h"		// includes AP_GPS_Auto.h
 

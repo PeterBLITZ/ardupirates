@@ -5,7 +5,7 @@
 	Works with Ardupilot Mega Hardware (GPS on Serial Port1)
 */
 
-//#include <FastSerial.h>
+#include <FastSerial.h>
 #include <AP_GPS_MTK16.h>
 #include <stdio.h>
 
@@ -50,7 +50,7 @@ void loop()
 		Serial.print(" TIM:");
 		Serial.print(gps.time, DEC);
 		Serial.print(" HDOP:");
-		Serial.print((float)gps.time / 100.0, DEC);
+		Serial.print((float)gps.hdop / 100.0, 2);
 		Serial.println();
 		gps.new_data = 0; // We have readed the data
 		}
