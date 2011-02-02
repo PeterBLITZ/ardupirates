@@ -5,7 +5,7 @@
 	Works with Ardupilot Mega Hardware (GPS on Serial Port1)
 */
 
-//#include <FastSerial.h>
+#include <FastSerial.h>
 #include <AP_GPS_MTK16.h>
 #include <stdio.h>
 
