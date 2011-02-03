@@ -376,13 +376,10 @@ void sendSerialTelemetry() {
      SerPri(AP_Compass.mag_y);
      comma();
      SerPri(AP_Compass.mag_z);
-	 comma();
-	 SerPri(press_baro_altitude);
-	 comma();
-	 SerPri(
-//     comma();
-     
-    SerPriln();
+     comma();
+     SerPri(press_baro_altitude);
+	   comma();
+     SerPriln();
     break;
   case 'T': // Spare
     if (AP_mode == AP_NORMAL_STABLE_MODE) 
