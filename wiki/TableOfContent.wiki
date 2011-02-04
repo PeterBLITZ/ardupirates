@@ -1,7 +1,7 @@
 = !ArduPirates Wiki=
 
  * [Getting_started Wiki Home]
- * The Pirates
+ * [ThePirates The Pirates (Members)]
  *  [What_I_need What do I Need?]
   * [Electro_Need Electronics]
   * [Frame_Need Frame]
