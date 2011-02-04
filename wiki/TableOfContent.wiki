@@ -1,8 +1,8 @@
 = !ArduPirates Wiki=
 
  *  [Getting_started Getting started]
-  *  [What_I_need What I Need?]
-   * [Electro_Need Electronic]
+  *  [What_I_need What do I Need?]
+   * [Electro_Need Electronics]
    * [Frame_Need Frame]
    * [Propulsion_Need Motors, ESC's and Propellers]
    * [Radio_Need Radio and Battery]
@@ -19,11 +19,11 @@
   * [ESC Calibrating your ESC's]
  * ----
  * *Softwares*
- * [Softwares_Building Installing the softwares]
-  * [Code_Loading Loading the code]
-  * [Configuring Configuring your setup]
-   * [Configurator Using the Configurator]
-   * [CLI Using the CLI]
+ * [Softwares_Building Installation]
+  * [Code_Loading Uploading Code]
+ * [Configuring Configuration]
+  * [Configurator Using the Configurator]
+  * [CLI Using the CLI]
  * ----
  * *Flying*
  *  [Flying]
@@ -34,17 +34,18 @@
   * [Safety_flying 3, 2, 1, ignition!]
   * [PID_tuning_Inflight In flight PID Tuning]
  * ----
- * *Pirates Treasure*
- * [pirates_treasure pirates treasure]
-   * [StabilizedCameraMount Camera mount]
-   * [ThePiratesCofin The Pirates Cofin]
+ * *The Treasure Chest*
+ * [pirates_treasure Pirates' Treasures]
+   * [StabilizedCameraMount Stabilized Camera Mount]
+   * [ThePiratesCofin The 'Official' Pirates Coffin]
    * [Waypoint_Nav_Description Waypoint Navigation]      
    * [UsingWiiSensors Using Wii Sensors]
    * [UbloxGPSTutorial Ublox GPS Tutorial]
  * [Videos]
  * ----
- * *Help*
+ * *Appendix*
  * [FAQ]
  * [ArduCopterInformation ArduCopter Information]
- * [ContributorsGuide Guideline for codebase contributors]
-   *[CodingConventions The Coders Bible]
+ * *For Developers*
+  * [ContributorsGuide Guideline for developers]
+  * [CodingConventions The Coders Bible]
