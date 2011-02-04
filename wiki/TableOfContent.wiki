@@ -1,11 +1,12 @@
 = !ArduPirates Wiki=
 
- *  [Getting_started Getting started]
-  *  [What_I_need What do I Need?]
-   * [Electro_Need Electronics]
-   * [Frame_Need Frame]
-   * [Propulsion_Need Motors, ESC's and Propellers]
-   * [Radio_Need Radio and Battery]
+ * [Getting_started Wiki Home]
+ * The Pirates
+ *  [What_I_need What do I Need?]
+  * [Electro_Need Electronics]
+  * [Frame_Need Frame]
+  * [Propulsion_Need Motors, ESC's and Propellers]
+  * [Radio_Need Radio and Battery]
  * ----
  * *Hardware*
  * [Building Building the hardware]
