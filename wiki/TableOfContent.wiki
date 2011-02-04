@@ -47,4 +47,4 @@
  * [FAQ]
  * [ArduCopterInformation ArduCopter Information]
  * [ContributorsGuide Guideline for codebase contributors]
-   *[CodingConventions The Coder's Bible]
+   *[CodingConventions The Coders Bible]
