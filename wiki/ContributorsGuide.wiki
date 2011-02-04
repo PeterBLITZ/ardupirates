@@ -1,0 +1,9 @@
+== Configurator Tool ==
+
+([http://code.google.com/p/ardupilot-mega/wiki/Guide Ardupilot Mega's source])
+
+=Guideline for codebase contributors=
+
+(Work in progress)
+
+*Languages:* We only support Arduino as our coding environment. As a rule of thumb, no code should be committed that the Arduino compiler can't understand. 

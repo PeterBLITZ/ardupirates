@@ -46,3 +46,4 @@
  * *Help*
  * [FAQ]
  * [ArduCopterInformation ArduCopter Information]
+ * [ContributorsGuide Guideline for codebase contributors]
