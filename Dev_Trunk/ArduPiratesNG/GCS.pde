@@ -59,19 +59,24 @@ void send_message(byte severity, const char *str)		// This is the instance of se
 }
 
 
-////////////////////////////////////////////////// 
-// Function  : readSerialCommand()
-//
-// Parameters: 
-//     - none
-//
-// Returns   : - none
-//
+/*
+***************************************************
+*												  *
+*		R E C E I V E   D A T A                   *
+*												  *
+***************************************************
+												 */
 void readSerialCommand() {
   // Check for serial message
   if (SerAva()) {
     queryType = SerRea();
     switch (queryType) {
+	
+	/*
+	=============================================
+	RECEIVE STABLE MODE PID VALUES
+	=============================================
+												*/
     case 'A': // Stable PID
       KP_QUAD_ROLL = readFloatSerial();
       KI_QUAD_ROLL = readFloatSerial();
@@ -85,6 +90,11 @@ void readSerialCommand() {
       STABLE_MODE_KP_RATE = readFloatSerial();   // NOT USED NOW
       MAGNETOMETER = readFloatSerial();
       break;
+	/*
+	=============================================
+	RECEIVE GPS HOLD MODE PID VALUES
+	=============================================
+												*/
     case 'C': // Receive GPS PID
       KP_GPS_ROLL = readFloatSerial();
       KI_GPS_ROLL = readFloatSerial();
@@ -95,17 +105,32 @@ void readSerialCommand() {
       GPS_MAX_ANGLE = readFloatSerial();
       GEOG_CORRECTION_FACTOR = readFloatSerial();
       break;
+	/*
+	=============================================
+	RECEIVE ALTITUDE HOLD MODE PID VALUES
+	=============================================
+												*/
     case 'E': // Receive altitude PID
       KP_ALTITUDE = readFloatSerial();
       KI_ALTITUDE = readFloatSerial();
       KD_ALTITUDE = readFloatSerial();
       break;
+	/*
+	=============================================
+	RECEIVE DRIFT CORRECTION PID VALUES
+	=============================================
+												*/
     case 'G': // Receive drift correction PID
       Kp_ROLLPITCH = readFloatSerial();
       Ki_ROLLPITCH = readFloatSerial();
       Kp_YAW = readFloatSerial();
       Ki_YAW = readFloatSerial();
       break;
+	/*
+	=============================================
+	RECEIVE SENSOR OFFSET VALUES
+	=============================================
+												*/
     case 'I': // Receive sensor offset
       gyro_offset_roll = readFloatSerial();
       gyro_offset_pitch = readFloatSerial();
@@ -114,11 +139,21 @@ void readSerialCommand() {
       acc_offset_y = readFloatSerial();
       acc_offset_z = readFloatSerial();
       break;
+	/*
+	=============================================
+	RECEIVE CAMERA MODE VALUE
+	=============================================
+												*/
     case 'K': // Camera mode
               // 1 = Tilt / Roll without 
       cam_mode = readFloatSerial();
       //BATTLOW = readFloatSerial();
       break;      
+	/*
+	=============================================
+	RECEIVE MOTOR DEBUG COMMANDS
+	=============================================
+												*/
     case 'M': // Receive debug motor commands
       frontMotor = readFloatSerial();
       backMotor = readFloatSerial();
@@ -126,6 +161,11 @@ void readSerialCommand() {
       leftMotor = readFloatSerial();
       motorArmed = readFloatSerial();
       break;     
+	/*
+	=============================================
+	RECEIVE RATE CONTROL PID VALUES
+	=============================================
+												*/
     case 'O': // Rate Control PID
       Kp_RateRoll = readFloatSerial();
       Ki_RateRoll = readFloatSerial();
@@ -138,15 +178,30 @@ void readSerialCommand() {
       Kd_RateYaw = readFloatSerial();
       xmitFactor = readFloatSerial();
       break;
+	/*
+	=============================================
+	WRITE USER CONFIG TO EEPROM
+	=============================================
+												*/
     case 'W': // Write all user configurable values to EEPROM
       writeUserConfig();
       break;
+	/*
+	=============================================
+	INITIALIZE EEPROM WITH DEFAULTS
+	=============================================
+												*/
     case 'Y': // Initialize EEPROM with default values
       defaultUserConfig();
 #if AIRFRAME == HELI
       heli_defaultUserConfig();
 #endif      
       break;
+	/*
+	=============================================
+	RECEIVE TRANSMITTER CALIBRATION VALUES
+	=============================================
+												*/
     case '1': // Receive transmitter calibration values
       ch_roll_slope = readFloatSerial();
       ch_roll_offset = readFloatSerial();
@@ -161,26 +216,36 @@ void readSerialCommand() {
       ch_aux2_slope = readFloatSerial();
       ch_aux2_offset = readFloatSerial();
       break;
-    case '5': // Special debug features
-
-
-      break;    
     }
   }
 }
 
+/*
+***************************************************
+*												  *
+*		S E N D   D A T A                         *
+*												  *
+***************************************************
+												 */
+
 void sendSerialTelemetry() {
   float aux_float[3]; // used for sensor calibration
   switch (queryType) {
+  /*
+	=============================================
+	SEND ALL VARIABLES 
+	=============================================
+												*/
   case '=': // Reserved debug command to view any variable from Serial Monitor
-    /*    SerPri(("throttle =");
+     SerPriln("***"); // Clears the remote serial monitor screen so we can have easy readable screens with each update
+     SerPri("throttle =");
      SerPrln(ch_throttle);
      SerPri("control roll =");
-     SerPrln(control_roll-CHANN_CENTER);
+     SerPrln(control_roll);
      SerPri("control pitch =");
-     SerPrln(control_pitch-CHANN_CENTER);
+     SerPrln(control_pitch);
      SerPri("control yaw =");
-     SerPrln(control_yaw-CHANN_CENTER);
+     SerPrln(control_yaw);
      SerPri("front left yaw =");
      SerPrln(frontMotor);
      SerPri("front right yaw =");
@@ -190,7 +255,6 @@ void sendSerialTelemetry() {
      SerPri("rear right motor =");
      SerPrln(backMotor);
      SerPrln();
-     
      SerPri("current roll rate =");
      SerPrln(read_adc(0));
      SerPri("current pitch rate =");
@@ -200,7 +264,7 @@ void sendSerialTelemetry() {
      SerPri("command rx yaw =");
      SerPrln(command_rx_yaw);
      SerPrln(); 
-     queryType = 'X';*/
+     queryType = 'X';
     SerPri(APM_RC.InputCh(0));
     comma();
     SerPri(ch_roll_slope);
@@ -209,6 +273,11 @@ void sendSerialTelemetry() {
     comma();
     SerPrln(ch_roll);
     break;
+  /*
+	=============================================
+	SEND STABLE MODE PID VALUES
+	=============================================
+												*/
   case 'B': // Send roll, pitch and yaw PID values
     SerPri(KP_QUAD_ROLL, 3);
     comma();
@@ -233,6 +302,11 @@ void sendSerialTelemetry() {
     SerPrln(MAGNETOMETER, 3);
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND GPS HOLD MODE PID VALUES 
+	=============================================
+												*/
   case 'D': // Send GPS PID
     SerPri(KP_GPS_ROLL, 3);
     comma();
@@ -251,6 +325,11 @@ void sendSerialTelemetry() {
     SerPrln(GEOG_CORRECTION_FACTOR, 3);
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND ALTITUDE HOLD MODE PID VALUES 
+	=============================================
+												*/
   case 'F': // Send altitude PID
     SerPri(KP_ALTITUDE, 3);
     comma();
@@ -259,6 +338,11 @@ void sendSerialTelemetry() {
     SerPrln(KD_ALTITUDE, 3);
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND DRIFT CORRECTION PID VALUES 
+	=============================================
+												*/
   case 'H': // Send drift correction PID
     SerPri(Kp_ROLLPITCH, 4);
     comma();
@@ -269,6 +353,11 @@ void sendSerialTelemetry() {
     SerPrln(Ki_YAW, 6);
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND SENSOR OFFSET VALUES
+	=============================================
+												*/
   case 'J': // Send sensor offset
     SerPri(gyro_offset_roll);
     comma();
@@ -286,6 +375,11 @@ void sendSerialTelemetry() {
     AN_OFFSET[5] = acc_offset_z;
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND CAMERA MODE VALUE
+	=============================================
+												*/
   case 'L': // Camera settings and 
     SerPri(cam_mode, DEC);
     tab();
@@ -293,9 +387,19 @@ void sendSerialTelemetry() {
     tab();
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND MAGNETOMETER SETTINGS
+	=============================================
+												*/
   case 'N': // Send magnetometer config
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND RATE CONTROL PID VALUES
+	=============================================
+												*/
   case 'P': // Send rate control PID
     SerPri(Kp_RateRoll, 3);
     comma();
@@ -318,6 +422,11 @@ void sendSerialTelemetry() {
     SerPrln(xmitFactor, 3);
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND SENSOR DATA
+	=============================================
+												*/
   case 'Q': // Send sensor data
     SerPri(read_adc(0));
     comma();
@@ -341,8 +450,18 @@ void sendSerialTelemetry() {
     comma();
     SerPrln(degrees(yaw));
     break;
+  /*
+	=============================================
+	SEND RAW SENSOR DATA
+	=============================================
+												*/
   case 'R': // Send raw sensor data
     break;
+  /*
+	=============================================
+	SEND ALL FLIGHT DATA
+	=============================================
+												*/
   case 'S': // Send all flight data
     SerPri(timer-timer_old);
     comma();
@@ -390,7 +509,12 @@ void sendSerialTelemetry() {
 	   comma();
      SerPriln();
     break;
-  case 'T': // Spare
+  /*
+	=============================================
+	SEND PLATFORM SETTINGS
+	=============================================
+												*/
+  case 'T': 
     if (AP_mode == AP_NORMAL_STABLE_MODE) 
       SerPriln("AP Mode = Normal Stable Mode");
     else if (AP_mode == AP_ALTITUDE_HOLD)
@@ -403,8 +527,8 @@ void sendSerialTelemetry() {
       SerPriln("Flight Mode = Stable Mode");
     else if (flightMode == FM_ACRO_MODE)
       SerPriln("Flight Mode = Acrobatic Mode");
-#if AIRFRAME == QUAD  
-#ifdef FLIGHT_MODE_X_45Degree
+	#if AIRFRAME == QUAD  
+	#ifdef FLIGHT_MODE_X_45Degree
     SerPri("Flight orientation: ");
     if(SW_DIP1) {
       SerPrln("x mode_45Degree (APM front pointing towards Front motor)");
@@ -412,12 +536,12 @@ void sendSerialTelemetry() {
     else {
       SerPrln("+ mode");
     }
-#endif    
-#ifdef FLIGHT_MODE_X
+	#endif    
+	#ifdef FLIGHT_MODE_X
     SerPri("Flight orientation: ");
     SerPrln("x mode (APM front between Front and Right motor) DIP1 not applicable");
-#endif
-#endif
+	#endif
+	#endif
     #if AIRFRAME == QUAD  
       SerPriln("Airframe = Quad");
     #endif
@@ -454,135 +578,140 @@ void sendSerialTelemetry() {
       SerPri(" Lon:");
       SerPri((float)gps.longitude / 10000000, DEC);
     }
-//    SerPri("Focus Servo = ");
-//    SerPriln(CAM_FOCUs);
+	//    SerPri("Focus Servo = ");
+	//    SerPriln(CAM_FOCUs);
     
-//    SerPri("Current Sonar Valude = ");
-//    SerPriln(Sonar_value);
-//    SerPri("Target Sonar Altitude = ");
-//    SerPriln(target_sonar_altitude);
-//    SerPri("Current Baro Altitude = ");
-//    SerPriln(press_alt);
-//    SerPri("Target Baro Altitude = ");
-//    SerPriln(target_baro_altitude);
-//    SerPri("Throttle Altitude Change Mode = ");
-//    if (Throttle_Altitude_Change_mode == 0) 
-//      SerPriln("Off");
-//    else if (Throttle_Altitude_Change_mode == 1)  
-//      SerPriln("On");
-//    SerPri("Hover Throttle Position Mode = ");
-//    if (Hover_Throttle_Position_mode == 0) 
-//      SerPriln("Off");
-//    else if (Hover_Throttle_Position_mode == 1)  
-//      SerPriln("On");
-//    SerPri("USE BMP Altitude mode = ");
-//    if (Use_BMP_Altitude == 0) 
-//      SerPriln("Off");
-//    else if (Use_BMP_Altitude == 1)
-//      SerPriln("On");
-//    SerPri("Hover Throttle Position = ");
-//    SerPriln(Hover_Throttle_Position);
-//    SerPri("Altitude I Grow = ");
-//    SerPriln(altitude_I_grow);
-//    SerPri("Current Sonar raw Reading = ");
-//    SerPriln(sonar_read);
-//    SerPri("STABLE MODE KP RATE = ");
-//    SerPriln(STABLE_MODE_KP_RATE, 3);
-//    SerPri("Altitude Command = ");
-//    SerPriln(command_altitude);
-//    SerPri("Total Throttle Command = ");
-//    SerPriln(ch_throttle + command_altitude);
+	//    SerPri("Current Sonar Valude = ");
+	//    SerPriln(Sonar_value);
+	//    SerPri("Target Sonar Altitude = ");
+	//    SerPriln(target_sonar_altitude);
+	//    SerPri("Current Baro Altitude = ");
+	//    SerPriln(press_alt);
+	//    SerPri("Target Baro Altitude = ");
+	//    SerPriln(target_baro_altitude);
+	//    SerPri("Throttle Altitude Change Mode = ");
+	//    if (Throttle_Altitude_Change_mode == 0) 
+	//      SerPriln("Off");
+	//    else if (Throttle_Altitude_Change_mode == 1)  
+	//      SerPriln("On");
+	//    SerPri("Hover Throttle Position Mode = ");
+	//    if (Hover_Throttle_Position_mode == 0) 
+	//      SerPriln("Off");
+	//    else if (Hover_Throttle_Position_mode == 1)  
+	//      SerPriln("On");
+	//    SerPri("USE BMP Altitude mode = ");
+	//    if (Use_BMP_Altitude == 0) 
+	//      SerPriln("Off");
+	//    else if (Use_BMP_Altitude == 1)
+	//      SerPriln("On");
+	//    SerPri("Hover Throttle Position = ");
+	//    SerPriln(Hover_Throttle_Position);
+	//    SerPri("Altitude I Grow = ");
+	//    SerPriln(altitude_I_grow);
+	//    SerPri("Current Sonar raw Reading = ");
+	//    SerPriln(sonar_read);
+	//    SerPri("STABLE MODE KP RATE = ");
+	//    SerPriln(STABLE_MODE_KP_RATE, 3);
+	//    SerPri("Altitude Command = ");
+	//    SerPriln(command_altitude);
+	//    SerPri("Total Throttle Command = ");
+	//    SerPriln(ch_throttle + command_altitude);
 
-//    SerPri("Current Altitude = ");
-//    SerPriln(BMP_Altitude);
-//    SerPri("Current throttle = ");
-//    SerPriln(ch_throttle);
-//    SerPri("Yaw mid = ");
-//    SerPriln(yaw_mid);
-//    SerPri("BMP_altitude command = ");
-//    SerPriln(BMP_command_altitude);
-//    SerPri("Amount RX Yaw = ");
-//    SerPriln(amount_rx_yaw);
-//    SerPri("Current Compass Heading = ");
-//    current_heading_hold = APM_Compass.Heading;
-//    if (current_heading_hold < 0)
-//      current_heading_hold += ToRad(360);
-//    SerPriln(ToDeg(current_heading_hold), 3);
-//    SerPri("Error Course = ");
-//    SerPriln(ToDeg(errorCourse), 3);
-//    SerPri("Heading Hold Mode = ");
-//    if (heading_hold_mode == 0) 
-//      SerPriln("Off");
-//    else 
-//      SerPriln("On");
-//    SerPri("KP ALTITUDE = ");
-//    SerPriln(KP_ALTITUDE, 3);
-//    SerPri("EEPROM KP ALTITUDE = ");
-//    SerPriln(readEEPROM(KP_ALTITUDE_ADR), 3);
-//    SerPri("KI ALTITUDE = ");
-//    SerPriln(KI_ALTITUDE, 3);
-//    SerPri("EEPROM KI ALTITUDE = ");
-//    SerPriln(readEEPROM(KI_ALTITUDE_ADR), 3);
-//    SerPri("KD ALTITUDE = ");
-//    SerPriln(KD_ALTITUDE, 3);
-//    SerPri("EEPROM KD ALTITUDE = ");
-//    SerPriln(readEEPROM(KD_ALTITUDE_ADR), 3);
-//    SerPri("KP ROLL ACRO MODE = ");
-//    SerPriln(Kp_RateRoll, 3);
-//    SerPri("EEPROM KP ROLL ACRO MODE = ");
-//    SerPriln(readEEPROM(KP_RATEROLL_ADR), 3);
-//    SerPri("STABLE MODE KP RATE ROLL = ");
-//    SerPriln(STABLE_MODE_KP_RATE_ROLL, 3);
-//    SerPri("EEPROM STABLE MODE KP RATE ROLL = ");
-//    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_ROLL_ADR), 3);
-//    SerPri("STABLE MODE KP RATE PITCH = ");
-//    SerPriln(STABLE_MODE_KP_RATE_PITCH, 3);
-//    SerPri("EEPROM STABLE MODE KP RATE PITCH = ");
-//    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_PITCH_ADR), 3);
-//    SerPri("KP PITCH ACRO MODE = ");
-//    SerPriln(Kp_RatePitch, 3);
-//    SerPri("EEPROM KP PITCH ACRO MODE = ");
-//    SerPriln(readEEPROM(KP_RATEPITCH_ADR), 3);
-//    SerPri("KP STABLE MODE YAW = ");
-//    SerPriln(STABLE_MODE_KP_RATE_YAW, 3);
-//    SerPri("EEPROM KP STABLE MODE YAW = ");
-//    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_YAW_ADR), 3);
+	//    SerPri("Current Altitude = ");
+	//    SerPriln(BMP_Altitude);
+	//    SerPri("Current throttle = ");
+	//    SerPriln(ch_throttle);
+	//    SerPri("Yaw mid = ");
+	//    SerPriln(yaw_mid);
+	//    SerPri("BMP_altitude command = ");
+	//    SerPriln(BMP_command_altitude);
+	//    SerPri("Amount RX Yaw = ");
+	//    SerPriln(amount_rx_yaw);
+	//    SerPri("Current Compass Heading = ");
+	//    current_heading_hold = APM_Compass.Heading;
+	//    if (current_heading_hold < 0)
+	//      current_heading_hold += ToRad(360);
+	//    SerPriln(ToDeg(current_heading_hold), 3);
+	//    SerPri("Error Course = ");
+	//    SerPriln(ToDeg(errorCourse), 3);
+	//    SerPri("Heading Hold Mode = ");
+	//    if (heading_hold_mode == 0) 
+	//      SerPriln("Off");
+	//    else 
+	//      SerPriln("On");
+	//    SerPri("KP ALTITUDE = ");
+	//    SerPriln(KP_ALTITUDE, 3);
+	//    SerPri("EEPROM KP ALTITUDE = ");
+	//    SerPriln(readEEPROM(KP_ALTITUDE_ADR), 3);
+	//    SerPri("KI ALTITUDE = ");
+	//    SerPriln(KI_ALTITUDE, 3);
+	//    SerPri("EEPROM KI ALTITUDE = ");
+	//    SerPriln(readEEPROM(KI_ALTITUDE_ADR), 3);
+	//    SerPri("KD ALTITUDE = ");
+	//    SerPriln(KD_ALTITUDE, 3);
+	//    SerPri("EEPROM KD ALTITUDE = ");
+	//    SerPriln(readEEPROM(KD_ALTITUDE_ADR), 3);
+	//    SerPri("KP ROLL ACRO MODE = ");
+	//    SerPriln(Kp_RateRoll, 3);
+	//    SerPri("EEPROM KP ROLL ACRO MODE = ");
+	//    SerPriln(readEEPROM(KP_RATEROLL_ADR), 3);
+	//    SerPri("STABLE MODE KP RATE ROLL = ");
+	//    SerPriln(STABLE_MODE_KP_RATE_ROLL, 3);
+	//    SerPri("EEPROM STABLE MODE KP RATE ROLL = ");
+	//    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_ROLL_ADR), 3);
+	//    SerPri("STABLE MODE KP RATE PITCH = ");
+	//    SerPriln(STABLE_MODE_KP_RATE_PITCH, 3);
+	//    SerPri("EEPROM STABLE MODE KP RATE PITCH = ");
+	//    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_PITCH_ADR), 3);
+	//    SerPri("KP PITCH ACRO MODE = ");
+	//    SerPriln(Kp_RatePitch, 3);
+	//    SerPri("EEPROM KP PITCH ACRO MODE = ");
+	//    SerPriln(readEEPROM(KP_RATEPITCH_ADR), 3);
+	//    SerPri("KP STABLE MODE YAW = ");
+	//    SerPriln(STABLE_MODE_KP_RATE_YAW, 3);
+	//    SerPri("EEPROM KP STABLE MODE YAW = ");
+	//    SerPriln(readEEPROM(STABLE_MODE_KP_RATE_YAW_ADR), 3);
 
-//    SerPri("KP GPS Roll = ");
-//    SerPriln(KP_GPS_ROLL, 3);
-//    SerPri("KP GPS Pitch = ");
-//    SerPriln(KP_GPS_PITCH, 3);
-//    SerPri("EEPROM KP GPS ROLL = ");
-//    SerPriln(readEEPROM(KP_GPS_ROLL_ADR), 3);
-//    SerPri("EEPROM KP GPS PITCH = ");
-//    SerPriln(readEEPROM(KP_GPS_ROLL_ADR), 3);
-//    SerPri("KI GPS Roll = ");
-//    SerPriln(KI_GPS_ROLL, 4);
-//    SerPri("KI GPS Pitch = ");
-//    SerPriln(KI_GPS_PITCH, 4);
-//    SerPri("EEPROM KI GPS ROLL = ");
-//    SerPriln(readEEPROM(KI_GPS_ROLL_ADR), 4);
-//    SerPri("EEPROM KP GPS PITCH = ");
-//    SerPriln(readEEPROM(KI_GPS_ROLL_ADR), 4);
-//    SerPri("Magnetometer = ");
-//    SerPriln(MAGNETOMETER);
-//    SerPri("EEPROM Magnetometer = ");
-//    SerPriln(readEEPROM(MAGNETOMETER_ADR));
-//    SerPri("Magnetometer Offset= ");
-//    SerPriln(Magoffset);
-//    SerPri("EEPROM Magoffset = ");
-//    SerPriln(readEEPROM(Magoffset_ADR));
+	//    SerPri("KP GPS Roll = ");
+	//    SerPriln(KP_GPS_ROLL, 3);
+	//    SerPri("KP GPS Pitch = ");
+	//    SerPriln(KP_GPS_PITCH, 3);
+	//    SerPri("EEPROM KP GPS ROLL = ");
+	//    SerPriln(readEEPROM(KP_GPS_ROLL_ADR), 3);
+	//    SerPri("EEPROM KP GPS PITCH = ");
+	//    SerPriln(readEEPROM(KP_GPS_ROLL_ADR), 3);
+	//    SerPri("KI GPS Roll = ");
+	//    SerPriln(KI_GPS_ROLL, 4);
+	//    SerPri("KI GPS Pitch = ");
+	//    SerPriln(KI_GPS_PITCH, 4);
+	//    SerPri("EEPROM KI GPS ROLL = ");
+	//    SerPriln(readEEPROM(KI_GPS_ROLL_ADR), 4);
+	//    SerPri("EEPROM KP GPS PITCH = ");
+	//    SerPriln(readEEPROM(KI_GPS_ROLL_ADR), 4);
+	//    SerPri("Magnetometer = ");
+	//    SerPriln(MAGNETOMETER);
+	//    SerPri("EEPROM Magnetometer = ");
+	//    SerPriln(readEEPROM(MAGNETOMETER_ADR));
+	//    SerPri("Magnetometer Offset= ");
+	//    SerPriln(Magoffset);
+	//    SerPri("EEPROM Magoffset = ");
+	//    SerPriln(readEEPROM(Magoffset_ADR));
     
-//    SerPri("Yaw = ");
-//    SerPriln(yaw);
-//    SerPri("Yaw to Degree = ");
-//    SerPriln(ToDeg(yaw));
-//    SerPri("command rx yaw =");
-//    SerPriln(command_rx_yaw);
+	//    SerPri("Yaw = ");
+	//    SerPriln(yaw);
+	//    SerPri("Yaw to Degree = ");
+	//    SerPriln(ToDeg(yaw));
+	//    SerPri("command rx yaw =");
+	//    SerPriln(command_rx_yaw);
 
     SerPriln(); 
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND RECEIVER VALUES
+	=============================================
+												*/
   case 'U': // Send receiver values
     SerPri(ch_roll); // Aileron
     comma();
@@ -602,14 +731,34 @@ void sendSerialTelemetry() {
     comma();
     SerPrln(yaw_mid); // Yaw MID Value
     break;
+  /*
+	=============================================
+	* SPARE *
+	=============================================
+												*/
   case 'V': // Spare
     break;
+  /*
+	=============================================
+	STOP DATA TRANSFER
+	=============================================
+												*/
   case 'X': // Stop sending messages
     break;
+  /*
+	=============================================
+	SEND FLIGHT SOFTWARE VERSION
+	=============================================
+												*/
   case '!': // Send flight software version
     SerPrln(VER);
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND TRANSMITTER CALIBRATION VALUES
+	=============================================
+												*/
   case '2': // Send transmitter calibration values
     SerPri(ch_roll_slope);
     comma();
@@ -636,6 +785,11 @@ void sendSerialTelemetry() {
     SerPrln(ch_aux2_offset);
     queryType = 'X';
     break;
+  /*
+	=============================================
+	SEND MISCELLANIOUS DEBUG VALUES
+	=============================================
+												*/
   case '3':  // Jani's debugs
     SerPri(yaw);
     tab();
@@ -659,10 +813,13 @@ void sendSerialTelemetry() {
     tab();
     SerPriln();
     break;
-#ifdef IsGPS
-  case '4':  // Jani's debugs
-//  Log_Write_GPS(GPS.Time, GPS.Latitude, GPS.Longitude, GPS.Altitude, GPS.Altitude, GPS.Ground_Speed, GPS.Ground_Course, gps.fix, GPS.NumSats);
-
+  /*
+	=============================================
+	SEND GPS DATA
+	=============================================
+												*/
+  #ifdef IsGPS
+  case '4':  
     SerPri(gps.time);
     tab();
     SerPri(gps.latitude);
@@ -678,11 +835,15 @@ void sendSerialTelemetry() {
     SerPri(gps.fix);
     tab();
     SerPri(gps.num_sats);
-
     tab();
     SerPriln();
     break;
-#endif    
+  #endif    
+  /*
+	=============================================
+	PID TUNING - START
+	=============================================
+												*/
 #if (defined(SerXbee) && defined(Use_PID_Tuning))
   case 'o': // Switch PID tuning ON
     ON_PID = 1;    
@@ -705,11 +866,21 @@ void sendSerialTelemetry() {
     D_PID = 0;
     queryType = 'X';
     break;
+  /*
+	=============================================
+	PID TUNING - STOP
+	=============================================
+												*/
   case 'f': // Switch PID tuning OFF
     ON_PID = 0;    
     SerPrln("PID Tuning OFF"); 
     queryType = 'X';
     break;
+  /*
+	=============================================
+	PID TUNING - STABLE MODE
+	=============================================
+												*/
   case 'r': // Switch to Pitch and Roll, PID tuning
     Pitch_Roll_PID = 1;
     Yaw_PID = 0;
@@ -730,6 +901,7 @@ void sendSerialTelemetry() {
     SerPrln("Pitch and Roll, PID Tuning, P of PID set");
     queryType = 'X';
     break;
+	
   case 'w': // Yaw PID tuning
     Pitch_Roll_PID = 0;
     Yaw_PID = 1;
@@ -997,7 +1169,12 @@ void sendSerialTelemetry() {
     SerPrln(CAM_RELEASE);
     queryType = 'X';
     break;
-#endif
+  #endif
+  /*
+	=============================================
+	MODIFY GPS SETTINGS ON GPS PORT
+	=============================================
+												*/
   case '.': // Modify GPS settings, print directly to GPS Port
     Serial1.print("$PGCMD,16,0,0,0,0,0*6A\r\n");
     break;
@@ -1032,5 +1209,3 @@ float readFloatSerial() {
   while ((data[constrain(index-1, 0, 128)] != ';') && (timeout < 5) && (index < 128));
   return atof(data);
 }
-
-
