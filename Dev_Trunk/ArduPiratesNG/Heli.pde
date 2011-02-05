@@ -2,7 +2,14 @@
  www.ArduCopter.com - www.DIYDrones.com
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
- 
+  
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : Heli.pde
  Desc     : code specific to traditional helicopters
  Version  : v1.0, Aug 27, 2010
@@ -10,6 +17,8 @@
              Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
              Jani Hirvinen, Ken McEwans, Roberto Navoni,          
              Sandro Benigno, Chris Anderson
+Author(s):  ArduPirates deveopment team
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim			 
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

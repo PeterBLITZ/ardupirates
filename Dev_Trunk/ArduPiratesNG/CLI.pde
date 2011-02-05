@@ -3,11 +3,21 @@
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
  
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : CLI.pde
  Version  : v1.0, Oct 18, 2010
  Author(s): ArduCopter Team
- Jani Hirvinen, Jose Julio, Jordi Muñoz,
- Ken McEwans, Roberto Navoni, Sandro Benigno, Chris Anderson, Randy McEvans
+			 Jani Hirvinen, Jose Julio, Jordi Muñoz,
+			 Ken McEwans, Roberto Navoni, Sandro Benigno, 
+			 Chris Anderson, Randy McEvans
+ Author(s): ArduPirates deveopment team
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
