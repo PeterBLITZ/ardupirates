@@ -1219,7 +1219,10 @@ void Show_Sensor_Data() {
     comma();
     SerPri(degrees(pitch));
     comma();
-    SerPrln(degrees(yaw));
+    SerPri(degrees(yaw));
+	comma();
+	SerPrln(press_baro_altitude);
+	
 }
 
 /****************************************************
