@@ -62,6 +62,7 @@ TODO:
 #define HEXACOAX        4
 #define OCTO            5
 #define QUADCOAX        6            // Quad with double motors as coax
+#define OCTA 3
 
 //Modes
 #define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
@@ -522,6 +523,10 @@ int RightCWMotor;
 int RightCCWMotor;
 int FrontCWMotor;
 int BackCCWMotor;
+
+// Octa Motors   //Additional to Hexa motors.
+int FrontCCWMotor;
+int BackCWMotor;
 
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed
 byte  motorSafety = 1;                             // 0 = safety off, 1 = on.  When On, sudden increases in throttle not allowed

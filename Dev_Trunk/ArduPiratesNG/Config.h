@@ -182,6 +182,33 @@ If you have a quadcopter, uncomment this next line ! */
 //#define AIRFRAME HEXA
 
 /*
+- ---------------------------------------------------------------------------- -
+   OCTA COPTER AIRFRAME SETUP (PWM) (8 motors)
+- ---------------------------------------------------------------------------- -
+/*
+
+       F CW 0           0 CCW F
+            ....FRONT....                 // 0 = Motors
+      L CCW 0....***....0 CW R            // *** = APM
+            .....***.....                 // ***
+      L CW  0....***....0 CCW R           // ***
+            .....BACK....
+      B CCW 0           0 CW B            // L = Left motors,
+                                          // R = Right motors,
+                                          // B = Back motorS,
+                                          // F = Front motorS.
+                                          // CW = Clockwise rotation,
+                                          // CCW = Counter clockwise rotation.
+
+   To make absolutely sure you are running the hexa flight mode, connect with
+   the Configurator and use the serial monitor in the Configurator to send the
+   command "T". It will tell you which flight mode is configured.
+
+   If you have a hexacopter, uncomment this next line !                                 */
+#define AIRFRAME OCTA
+
+
+/*
 = ============================================================================ =
    2. CHOOSE YOUR FLIGHT MODE:
 = ============================================================================ =

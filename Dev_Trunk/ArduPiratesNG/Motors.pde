@@ -98,14 +98,26 @@ void motor_output()
 
 #if AIRFRAME == HEXA
    // Hexacopter mix
+        FrontCWMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
         LeftCWMotor = constrain(throttle + control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
         LeftCCWMotor = constrain(throttle + control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
         RightCWMotor = constrain(throttle - control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
         RightCCWMotor = constrain(throttle - control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
-        FrontCWMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
         BackCCWMotor = constrain(throttle - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif 
  
+#if AIRFRAME == OCTA
+   // Octacopter mix
+        FrontCWMotor = constrain(throttle + control_pitch - control_roll - control_yaw, minThrottle, 2000);  // Front Motor CW
+        FrontCCWMotor = constrain(throttle + control_pitch + control_roll + control_yaw, minThrottle, 2000);  // Front Motor CCW
+        LeftCWMotor = constrain(throttle + control_roll + (0.33 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor = constrain(throttle + control_roll - (0.33 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor = constrain(throttle - control_roll - (0.33 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(throttle - control_roll + (0.33 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor = constrain(throttle - control_pitch + control_roll - control_yaw, minThrottle, 2000); // Back Motor CW
+        BackCCWMotor = constrain(throttle - control_pitch - control_roll + control_yaw, minThrottle, 2000); // Back Motor CCW
+#endif 
+
   } else {    // MOTORS DISARMED
 
 #ifdef IsAM
@@ -127,6 +139,17 @@ void motor_output()
       RightCCWMotor = MIN_THROTTLE;
       FrontCWMotor = MIN_THROTTLE;
       BackCCWMotor = MIN_THROTTLE;
+#endif
+
+#if AIRFRAME == OCTA
+      LeftCWMotor = MIN_THROTTLE;
+      LeftCCWMotor = MIN_THROTTLE;
+      RightCWMotor = MIN_THROTTLE;
+      RightCCWMotor = MIN_THROTTLE;
+      FrontCWMotor = MIN_THROTTLE;
+      FrontCCWMotor = MIN_THROTTLE;
+      BackCCWMotor = MIN_THROTTLE;
+      BackCWMotor = MIN_THROTTLE;
 #endif
 
     // Reset_I_Terms();
@@ -156,6 +179,17 @@ void motor_output()
     APM_RC.OutputCh(7, BackCCWMotor);    // Back Motor CCW    
 #endif
 
+#if AIRFRAME == OCTA
+    APM_RC.OutputCh(0, LeftCWMotor);     // Left Motor CW
+    APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
+    APM_RC.OutputCh(2, RightCWMotor);    // Right Motor CW
+    APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
+    APM_RC.OutputCh(6, FrontCWMotor);    // Front Motor CW
+    APM_RC.OutputCh(7, FrontCCWMotor);   // Front Motor CCW
+    APM_RC.OutputCh(9, BackCWMotor);     // Back Motor CW    // Connection PB5 on APM
+    APM_RC.OutputCh(10, BackCCWMotor);    // Back Motor CCW  // Connection PE3 on APM  
+#endif
+
   // InstantPWM => Force inmediate output on PWM signals
 #if AIRFRAME == QUAD   
      // InstantPWM
@@ -163,12 +197,13 @@ void motor_output()
     APM_RC.Force_Out2_Out3();
 #endif
 
-#if AIRFRAME == HEXA
+#if ((AIRFRAME == HEXA) || (AIRFRAME == OCTA))
       // InstantPWM
-    APM_RC.Force_Out0_Out1();
-    APM_RC.Force_Out2_Out3();
-    APM_RC.Force_Out6_Out7();
+    APM_RC.Force_Out0_Out1();  // Force Channel 0, 1 & 8
+    APM_RC.Force_Out2_Out3();  // Force Channel 2, 3 & 9
+    APM_RC.Force_Out6_Out7();  // Force Channel 6, 7 & 10.
 #endif
+
 //#elif MOTORTYPE == I2C
 
 //#else

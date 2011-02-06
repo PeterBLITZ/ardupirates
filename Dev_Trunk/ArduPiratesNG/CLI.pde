@@ -419,17 +419,28 @@ void CALIB_Esc() {
     APM_RC.OutputCh(6, ch_throttle);    // Front Motor CW
     APM_RC.OutputCh(7, ch_throttle);    // Back Motor CCW    
 #endif
+#if AIRFRAME == OCTA
+    APM_RC.OutputCh(0, ch_throttle);    // Front Motor CW
+    APM_RC.OutputCh(1, ch_throttle);    // Front Motor CCW
+    APM_RC.OutputCh(2, ch_throttle);    // Left Motor CW
+    APM_RC.OutputCh(3, ch_throttle);    // Left Motor CCW
+    APM_RC.OutputCh(6, ch_throttle);    // Right Motor CW
+    APM_RC.OutputCh(7, ch_throttle);    // Right Motor CCW    
+    APM_RC.OutputCh(9, ch_throttle);    // Back Motor CW    
+    APM_RC.OutputCh(10, ch_throttle);    // Back Motor CCW    
+#endif
+
     // InstantPWM => Force inmediate output on PWM signals
 #if AIRFRAME == QUAD   
      // InstantPWM
     APM_RC.Force_Out0_Out1();
     APM_RC.Force_Out2_Out3();
 #endif
-#if AIRFRAME == HEXA
+#if ((AIRFRAME == HEXA) || (AIRFRAME == OCTA))
       // InstantPWM
-    APM_RC.Force_Out0_Out1();
-    APM_RC.Force_Out2_Out3();
-    APM_RC.Force_Out6_Out7();
+    APM_RC.Force_Out0_Out1(); //Fast PWM at channels 0, 1 & 8
+    APM_RC.Force_Out2_Out3(); //Fast PWM at cahnnels 2, 3 & 9
+    APM_RC.Force_Out6_Out7(); //Fast PWM at channels 6, 7 & 10
 #endif
     delay(20);
     if(SerAva() > 0){
@@ -451,16 +462,26 @@ void CALIB_Esc() {
     APM_RC.OutputCh(6, 900);    // Front Motor CW
     APM_RC.OutputCh(7, 900);    // Back Motor CCW    
 #endif 
+#if AIRFRAME == OCTA
+    APM_RC.OutputCh(0, 900);    // Left Motor CW
+    APM_RC.OutputCh(1, 900);    // Left Motor CCW
+    APM_RC.OutputCh(2, 900);    // Right Motor CW
+    APM_RC.OutputCh(3, 900);    // Right Motor CCW    
+    APM_RC.OutputCh(6, 900);    // Front Motor CW
+    APM_RC.OutputCh(7, 900);    // Back Motor CCW    
+    APM_RC.OutputCh(9, 900);    // Front Motor CW
+    APM_RC.OutputCh(10, 900);   // Back Motor CCW    
+#endif 
 #if AIRFRAME == QUAD   
      // InstantPWM
     APM_RC.Force_Out0_Out1();
     APM_RC.Force_Out2_Out3();
 #endif
-#if AIRFRAME == HEXA
+#if ((AIRFRAME == HEXA) || (AIRFRAME == OCTA))
       // InstantPWM
-    APM_RC.Force_Out0_Out1();
-    APM_RC.Force_Out2_Out3();
-    APM_RC.Force_Out6_Out7();
+    APM_RC.Force_Out0_Out1(); //Fast PWM at channels 0, 1 & 8
+    APM_RC.Force_Out2_Out3(); //Fast PWM at cahnnels 2, 3 & 9
+    APM_RC.Force_Out6_Out7(); //Fast PWM at channels 6, 7 & 10
 #endif
 
   SerPrln("Motors: DISARMED");
@@ -623,6 +644,9 @@ void Show_Settings() {
 #endif
 #if AIRFRAME == HEXA  
   SerPriln("Airframe = Hexa");
+#endif
+#if AIRFRAME == OCTA  
+  SerPriln("Airframe = Octa");
 #endif
 
   Show_SonarAndObstacleAvoidance_PIDs();

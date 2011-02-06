@@ -16,7 +16,7 @@
              Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
              Jani Hirvinen, Ken McEwans, Roberto Navoni,          
              Sandro Benigno, Chris Anderson
-Author(s): 	ArduPirates deveopment team
+Author(s):  ArduPirates deveopment team
              Philipp Maloney, Norbert, Hein, Igor, Emile, Kim				 
  
  This program is free software: you can redistribute it and/or modify
