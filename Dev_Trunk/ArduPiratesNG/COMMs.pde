@@ -398,10 +398,6 @@ void sendSerialTelemetry() {
 			break;
 		case 'Z':						// * SPARE *
 			break;
-		case 's':						// Show settings
-			Show_Settings();
-			queryType = 'X';
-			break;
 		case 'v': 						// Show transmitter calibration values
 			Show_Transmitter_Calibration();
 			queryType = 'X';
