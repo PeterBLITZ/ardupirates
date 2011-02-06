@@ -16,7 +16,7 @@
              Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
              Jani Hirvinen, Ken McEwans, Roberto Navoni,
              Sandro Benigno, Chris Anderson
- Author(s): ArduPirates deveopment team
+Author(s): 	ArduPirates deveopment team
              Philipp Maloney, Norbert, Hein, Igor, Emile, Kim
 
  This program is free software: you can redistribute it and/or modify it under
@@ -370,7 +370,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
    Once you have achieved this fine tune in the Configurator's serial monitor by
    pressing "T" (capital t).
                                                                               */
-#define MAGCALIBRATION -15.65      
+#define MAGCALIBRATION 0.4333      
 
 /* SET MAGNETOMETER ORIENTATION:
    Next, you'll have to define how your magnetometer is mounted to your

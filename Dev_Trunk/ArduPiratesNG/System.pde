@@ -132,10 +132,10 @@ void APM_Init() {
   SW_DIP4 = APMPinRead(PINL, 7);
 
   // Is CLI mode active or not, if it is fire it up and never return.
-  if(!digitalRead(SW2)) {
-    RunCLI();
+  //if(!digitalRead(SW2)) {
+    //RunCLI(); // removed Feb 5, 2011 [kidogo]
     // Btw.. We never return from this....
-  }
+  //}
 
 
   flightOrientation = SW_DIP1;    // DIP1 up (OFF)  = X-mode,         DIP1 down (ON) = + mode
