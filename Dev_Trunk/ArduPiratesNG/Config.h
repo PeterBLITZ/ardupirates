@@ -558,7 +558,8 @@ Don't change this.        */
 //#define SerBau  19200
 //#define SerBau  38400
 //#define SerBau  57600
-#define SerBau  115200
+#define SerBau  115200     
+//#define SerBau 111100    //If using Telemetry, try this setting.
 
 /*
 - ---------------------------------------------------------------------------- -
