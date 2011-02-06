@@ -1,0 +1,63 @@
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.pdb
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.xml
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.xml
+C:\Users\Kidogo\documents\visual studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.pdb
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe.manifest
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.application
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.TrustInfo.xml
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe.manifest
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.application
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArtificialHorizon.resources
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.MainForm.resources
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.Resources.resources
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.SplashForm.resources
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe.config
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduProgressBar.resources
+E:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe.config
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.xml
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.pdb
+E:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe.manifest
+E:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.application
+E:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe
+E:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.pdb
+E:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.xml
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduProgressBar.resources
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArtificialHorizon.resources
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.MainForm.resources
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.Resources.resources
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.SplashForm.resources
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.TrustInfo.xml
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe.manifest
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.application
+C:\Users\Kidogo\Documents\Visual Studio 2010\Projects\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduCalibrationSlider.resources
+E:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduCalibrationSlider.resources
+G:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe.config
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.xml
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.pdb
+G:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe.manifest
+G:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.application
+G:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.exe
+G:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.pdb
+G:\ArduPirates Control\ArduPirates Control\bin\Debug\ArduPirates Control.xml
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ResolveAssemblyReference.cache
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduCalibrationSlider.resources
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduProgressBar.resources
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArtificialHorizon.resources
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.MainForm.resources
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.Resources.resources
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.SplashForm.resources
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\GenerateResource.read.1.tlog
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\GenerateResource.write.1.tlog
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.TrustInfo.xml
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe.manifest
+G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.application
