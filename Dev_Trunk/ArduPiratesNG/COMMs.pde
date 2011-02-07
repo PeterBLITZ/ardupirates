@@ -250,7 +250,7 @@ void readSerialCommand() {
 					//
 					Show_Menu_Prompt();
 				} else if (SubMenu==3) {		// Menu 3.6
-					//
+					Log_Read(1,4000);
 					Show_Menu_Prompt();
 				} else if (SubMenu==4) {		// Menu 4.6
 					//
@@ -293,6 +293,9 @@ void readSerialCommand() {
 					Show_Menu_Prompt();
 				}
 				break;
+                        default:
+                        // do nothing
+                        delay(10);
 			}
 	//SerFlu();
 	}
@@ -501,6 +504,10 @@ void sendSerialTelemetry() {
 			queryType = 'X';
 			break;
 		#endif	// (defined(SerXbee) && defined(Use_PID_Tuning)) 
+                default:
+                // do nothing
+                delay(10);
+                
 	}
   //SerFlu();
 }
@@ -2446,7 +2453,7 @@ void Show_Menu() {
 		SerPrln(" 3 - View sensor offsets");
 		SerPrln(" 4 - View all variables");  
 		SerPrln(" 5 - View GPS data");
-		SerPrln(" ");
+		SerPrln(" 6 - Dump logs to serial");
 		SerPrln(" ");
 		SerPrln(" ");
 		SerPrln(" ");
