@@ -1,6 +1,9 @@
 ﻿Imports System.Threading
 Imports System.Windows.Forms
 Imports System.Runtime.InteropServices
+Imports Touchless.Vision.Camera
+Imports WebCamLib
+
 
 Public Class MainForm
 
@@ -77,6 +80,10 @@ Public Class MainForm
     Dim numberOfPointsAddedMax As Integer = 1
     Dim pointNumber As Integer
 
+    'Camera (live feed)
+    Dim frameSource As CameraFrameSource
+    Dim latestFrame As Bitmap
+
     'This function helps prevent flicker while updating the serialdatafield
     <DllImport("user32.dll")> _
     Public Shared Function LockWindowUpdate(ByVal hWndLock As IntPtr) As Boolean
@@ -100,14 +107,30 @@ Public Class MainForm
         Serial.Parity = IO.Ports.Parity.None
         Serial.StopBits = IO.Ports.StopBits.One
         Serial.DataBits = 8
+
     End Sub
+
+    Sub Enumerate_Cameras()
+        For Each cam As Camera In CameraService.AvailableCameras
+            ComboBox_SelectCamera.Items.Add(cam)
+        Next
+
+        'Found at least one camera, show panel in connection tab
+        If ComboBox_SelectCamera.Items.Count > 0 Then
+            GroupBoxCamera.Visible = True
+        End If
+    End Sub
+
     Private Function RandomNumber(ByVal min As Integer, ByVal max As Integer) As Integer
         Dim random As New Random()
         Return random.Next(min, max)
     End Function 'RandomNumber 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        'When the form loads
         Me.Text = Me.Text & " v." & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & " build " & My.Application.Info.Version.Build
+
+        'Populate dropdown for camera select
+        Enumerate_Cameras()
+
         'Enumerate available Com ports and add to the list in the statusbar
         Enumerate_SerialPorts()
 
@@ -126,6 +149,10 @@ Public Class MainForm
 
         'Set starting value of the Mode Select combobox on the PID Tuning tab page
         ComboBox_PIDModeSelect.Text = "Acrobatic Mode"
+
+        'Position all controls in the correct place 
+        ArtificialHorizon1.Top = 10
+        VisualFlight.Left = 0
 
 
 
@@ -450,7 +477,6 @@ Public Class MainForm
                 Browser.Show()
                 Browser.Navigate("http://code.google.com/p/ardupirates/")
         End Select
-
     End Sub
 
     Private Sub SerialMonitor_Enter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SerialMonitor.Enter
@@ -787,6 +813,9 @@ failedtoopencom:
             Timer_SerialWork.Stop()
         End While
 
+        'Kill camera
+        DisposeCamera()
+
         'Ready to kill the main form, all other work has been terminated
         Application.Exit()
     End Sub
@@ -933,7 +962,7 @@ failedtoopencom:
 
     End Sub
 
-    
+
     Private Sub ComboBox_PIDModeSelect_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox_PIDModeSelect.SelectedIndexChanged
         Select Case ComboBox_PIDModeSelect.SelectedItem.ToString
             Case "Acrobatic Mode"
@@ -1034,4 +1063,123 @@ failedtoopencom:
     Private Sub Button_ShowMenu_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_ShowMenu.Click
         txBuffer = "?"
     End Sub
+
+
+    Private Sub MainForm_Resize(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Resize
+
+        'Set the ADI in the center of the screen 
+        ArtificialHorizon1.Left = (VisualFlight.Width / 2) - (ArtificialHorizon1.Width / 2)
+
+        'Make the ADI as big as possible, but make sure there is room for the gyro and accel panels. Plus add some margin
+        ArtificialHorizon1.Width = VisualFlight.Width - (Panel_Gyro_ADI.Width + Panel_Accel_ADI.Width + 25)
+        'Keep the ADI a square
+        ArtificialHorizon1.Height = ArtificialHorizon1.Width
+
+        'Make sure that the ADI is fitted inside the tab (set 10px margin on top and bottom)
+        If ArtificialHorizon1.Height > (VisualFlight.Height - 20) Then
+            ArtificialHorizon1.Height = VisualFlight.Height - 20
+            'Keep the ADI a square
+            ArtificialHorizon1.Width = ArtificialHorizon1.Height
+        End If
+
+        'Set the gyro panel to the left of the ADI
+        Panel_Gyro_ADI.Left = ArtificialHorizon1.Left - Panel_Gyro_ADI.Width
+
+        'Set the accel panel to the right of the ADI
+        Panel_Accel_ADI.Left = ArtificialHorizon1.Left + ArtificialHorizon1.Width + 5
+
+    End Sub
+
+
+    Private Sub ButtonButtonStartCamera_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonStartCamera.Click
+        If Not IsNothing(frameSource) Then
+            If MessageBox.Show("Please note that some cameras drivers does not want to get disposed of and might crash the application (EasyCap is one of them). " + Chr(13) + "Do you want to change camera?", "Stupid camera drivers warning", MessageBoxButtons.OKCancel, _
+                Nothing, MessageBoxDefaultButton.Button1) = DialogResult.OK Then
+                LabelCameraShowing.Text = "Initializing camera."
+                DisposeCamera()
+
+                StartLiveFeed()
+            End If
+        Else
+            LabelCameraShowing.Text = "Initializing camera."
+            DisposeCamera()
+
+            StartLiveFeed()
+        End If
+
+    End Sub
+
+    Private Sub DrawLatestImage(ByVal sender As Object, ByVal e As PaintEventArgs)
+
+        If Not IsNothing(latestFrame) Then
+            ' Draw the latest image from the active camera
+            e.Graphics.DrawImage(latestFrame, 0, 0, 640, 480)
+
+        End If
+    End Sub
+
+    Private Sub StartLiveFeed()
+        Try
+            Dim c As Camera
+            c = ComboBox_SelectCamera.SelectedItem
+            SetFrameSource(New CameraFrameSource(c))
+            frameSource.Camera.CaptureWidth = 640
+            frameSource.Camera.CaptureHeight = 480
+            frameSource.Camera.Fps = 20
+
+            AddHandler frameSource.NewFrame, AddressOf OnImageCaptured
+
+            AddHandler PictureBoxDisplay.Paint, AddressOf DrawLatestImage
+
+            frameSource.StartFrameCapture()
+
+            LabelCameraShowing.Text = "...streaming live feed..."
+        Catch ex As Exception
+            ComboBox_SelectCamera.Text = "Select a camera"
+            MessageBox.Show("Unable to enable camera: " + frameSource.Camera.Name + "\n\nFull error message: \n" + ex.Message)
+        End Try
+
+    End Sub
+
+    Private Sub SetFrameSource(ByVal cameraFrameSource As CameraFrameSource)
+        If (frameSource Is cameraFrameSource) Then
+            Return
+        End If
+        frameSource = cameraFrameSource
+
+    End Sub
+
+    Private Sub OnImageCaptured(ByVal frameSource As Touchless.Vision.Contracts.IFrameSource, ByVal frame As Touchless.Vision.Contracts.Frame, ByVal fps As Double)
+        latestFrame = frame.Image
+
+        'Update ADI
+        ArtificialHorizon1.PictureBoxLiveFeed.Image = latestFrame
+
+        'Update "Live feed" tab
+        PictureBoxDisplay.Invalidate()
+    End Sub
+
+    Private Sub DisposeCamera()
+        Try
+            If Not IsNothing(latestFrame) Then
+                RemoveHandler frameSource.NewFrame, AddressOf Me.OnImageCaptured
+                frameSource.Camera.Dispose()
+                RemoveHandler PictureBoxDisplay.Paint, AddressOf DrawLatestImage
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Unable to dispose camera: " + frameSource.Camera.Name + "\n\nFull error message: \n" + ex.Message)
+        End Try
+
+
+    End Sub
+
+    Private Sub CheckBoxShowLiveFeed_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxShowLiveFeed.CheckedChanged
+        If CheckBoxShowLiveFeed.Checked Then
+            ArtificialHorizon1.EnableLiveFeed()
+        Else
+            ArtificialHorizon1.DisableLiveFeed()
+        End If
+
+    End Sub
+
 End Class

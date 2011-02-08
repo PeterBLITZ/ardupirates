@@ -50,6 +50,10 @@ Partial Class MainForm
         Me.ToolStripStatusLabel_Time = New System.Windows.Forms.ToolStripStatusLabel()
         Me.Tabs = New System.Windows.Forms.TabControl()
         Me.Connection = New System.Windows.Forms.TabPage()
+        Me.GroupBoxCamera = New System.Windows.Forms.GroupBox()
+        Me.LabelCameraShowing = New System.Windows.Forms.Label()
+        Me.ComboBox_SelectCamera = New System.Windows.Forms.ComboBox()
+        Me.ButtonStartCamera = New System.Windows.Forms.Button()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
@@ -62,7 +66,7 @@ Partial Class MainForm
         Me.TextBox_MagDecl = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.ButtonFetchDeclination = New System.Windows.Forms.Button()
-        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
+        Me.GroupBoxSerial = New System.Windows.Forms.GroupBox()
         Me.Button_Refresh_Serialports = New System.Windows.Forms.Button()
         Me.CheckBox_AutoConnect = New System.Windows.Forms.CheckBox()
         Me.Button_Connect = New System.Windows.Forms.Button()
@@ -71,21 +75,31 @@ Partial Class MainForm
         Me.Label20 = New System.Windows.Forms.Label()
         Me.ComboBox_Ports = New System.Windows.Forms.ComboBox()
         Me.VisualFlight = New System.Windows.Forms.TabPage()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Label_yaw_gyro = New System.Windows.Forms.Label()
-        Me.Label_pitch_gyro = New System.Windows.Forms.Label()
-        Me.Label_roll_gyro = New System.Windows.Forms.Label()
+        Me.CheckBoxShowLiveFeed = New System.Windows.Forms.CheckBox()
+        Me.Panel_Accel_ADI = New System.Windows.Forms.Panel()
         Me.Label_z_accel = New System.Windows.Forms.Label()
         Me.Label_pitch_accel = New System.Windows.Forms.Label()
         Me.Label_roll_accel = New System.Windows.Forms.Label()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.accel_z = New WindowsFormsApplication.ArduProgressBar()
+        Me.accel_pitch = New WindowsFormsApplication.ArduProgressBar()
+        Me.accel_roll = New WindowsFormsApplication.ArduProgressBar()
+        Me.Panel_Gyro_ADI = New System.Windows.Forms.Panel()
+        Me.Label_yaw_gyro = New System.Windows.Forms.Label()
+        Me.Label_pitch_gyro = New System.Windows.Forms.Label()
+        Me.Label_roll_gyro = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.yaw_gyro = New WindowsFormsApplication.ArduProgressBar()
+        Me.pitch_gyro = New WindowsFormsApplication.ArduProgressBar()
+        Me.roll_gyro = New WindowsFormsApplication.ArduProgressBar()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.ArtificialHorizon1 = New WindowsFormsApplication.ArtificialHorizon()
         Me.SensorPlots = New System.Windows.Forms.TabPage()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Chart3 = New System.Windows.Forms.DataVisualization.Charting.Chart()
@@ -129,6 +143,7 @@ Partial Class MainForm
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.SerialDataField = New System.Windows.Forms.TextBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Button_ShowMenu = New System.Windows.Forms.Button()
         Me.Button_ClearScreen = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Button_Send = New System.Windows.Forms.Button()
@@ -139,16 +154,22 @@ Partial Class MainForm
         Me.Button_Send_calibration_values = New System.Windows.Forms.Button()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
         Me.Label_Error_Pitch = New System.Windows.Forms.Label()
+        Me.Slider_radio_pitch = New WindowsFormsApplication.ArduCalibrationSlider()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.Label_Error_Yaw = New System.Windows.Forms.Label()
+        Me.Slider_radio_yaw = New WindowsFormsApplication.ArduCalibrationSlider()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label_Error_Throttle = New System.Windows.Forms.Label()
+        Me.Slider_radio_throttle = New WindowsFormsApplication.ArduCalibrationSlider()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
         Me.Label_Error_AUX2 = New System.Windows.Forms.Label()
+        Me.Slider_radio_aux2 = New WindowsFormsApplication.ArduCalibrationSlider()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.Label_Error_AUX1 = New System.Windows.Forms.Label()
+        Me.Slider_radio_aux1 = New WindowsFormsApplication.ArduCalibrationSlider()
         Me.Roll = New System.Windows.Forms.GroupBox()
         Me.Label_Error_Roll = New System.Windows.Forms.Label()
+        Me.Slider_radio_roll = New WindowsFormsApplication.ArduCalibrationSlider()
         Me.PIDTuning = New System.Windows.Forms.TabPage()
         Me.SplitContainerPID = New System.Windows.Forms.SplitContainer()
         Me.Label_PID_Mode = New System.Windows.Forms.Label()
@@ -204,6 +225,8 @@ Partial Class MainForm
         Me.Button_Browser_Forward = New System.Windows.Forms.Button()
         Me.Button_Browser_Back = New System.Windows.Forms.Button()
         Me.Button_Browser_Home = New System.Windows.Forms.Button()
+        Me.LiveFeed = New System.Windows.Forms.TabPage()
+        Me.PictureBoxDisplay = New System.Windows.Forms.PictureBox()
         Me.TabImages = New System.Windows.Forms.ImageList(Me.components)
         Me.Timer_SerialWork = New System.Windows.Forms.Timer(Me.components)
         Me.Timer_VisualWork = New System.Windows.Forms.Timer(Me.components)
@@ -213,27 +236,16 @@ Partial Class MainForm
         Me.ADIDemoTimer = New System.Windows.Forms.Timer(Me.components)
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.TrayBarIcon = New System.Windows.Forms.NotifyIcon(Me.components)
-        Me.Button_ShowMenu = New System.Windows.Forms.Button()
-        Me.ArtificialHorizon1 = New WindowsFormsApplication.ArtificialHorizon()
-        Me.yaw_gyro = New WindowsFormsApplication.ArduProgressBar()
-        Me.pitch_gyro = New WindowsFormsApplication.ArduProgressBar()
-        Me.roll_gyro = New WindowsFormsApplication.ArduProgressBar()
-        Me.accel_z = New WindowsFormsApplication.ArduProgressBar()
-        Me.accel_pitch = New WindowsFormsApplication.ArduProgressBar()
-        Me.accel_roll = New WindowsFormsApplication.ArduProgressBar()
-        Me.Slider_radio_pitch = New WindowsFormsApplication.ArduCalibrationSlider()
-        Me.Slider_radio_yaw = New WindowsFormsApplication.ArduCalibrationSlider()
-        Me.Slider_radio_throttle = New WindowsFormsApplication.ArduCalibrationSlider()
-        Me.Slider_radio_aux2 = New WindowsFormsApplication.ArduCalibrationSlider()
-        Me.Slider_radio_aux1 = New WindowsFormsApplication.ArduCalibrationSlider()
-        Me.Slider_radio_roll = New WindowsFormsApplication.ArduCalibrationSlider()
         Me.Status.SuspendLayout()
         Me.Tabs.SuspendLayout()
         Me.Connection.SuspendLayout()
+        Me.GroupBoxCamera.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBoxMagDecl.SuspendLayout()
-        Me.GroupBox9.SuspendLayout()
+        Me.GroupBoxSerial.SuspendLayout()
         Me.VisualFlight.SuspendLayout()
+        Me.Panel_Accel_ADI.SuspendLayout()
+        Me.Panel_Gyro_ADI.SuspendLayout()
         Me.SensorPlots.SuspendLayout()
         Me.Panel5.SuspendLayout()
         CType(Me.Chart3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -274,6 +286,8 @@ Partial Class MainForm
         CType(Me.NumericUpDown_PID_Roll_P, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.OnlineSupport.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.LiveFeed.SuspendLayout()
+        CType(Me.PictureBoxDisplay, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Serial
@@ -334,6 +348,7 @@ Partial Class MainForm
         Me.Tabs.Controls.Add(Me.Transmitter)
         Me.Tabs.Controls.Add(Me.PIDTuning)
         Me.Tabs.Controls.Add(Me.OnlineSupport)
+        Me.Tabs.Controls.Add(Me.LiveFeed)
         Me.Tabs.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Tabs.HotTrack = True
         Me.Tabs.ImageList = Me.TabImages
@@ -346,11 +361,12 @@ Partial Class MainForm
         'Connection
         '
         Me.Connection.BackColor = System.Drawing.Color.DimGray
+        Me.Connection.Controls.Add(Me.GroupBoxCamera)
         Me.Connection.Controls.Add(Me.TextBox1)
         Me.Connection.Controls.Add(Me.Label32)
         Me.Connection.Controls.Add(Me.PictureBox1)
         Me.Connection.Controls.Add(Me.GroupBoxMagDecl)
-        Me.Connection.Controls.Add(Me.GroupBox9)
+        Me.Connection.Controls.Add(Me.GroupBoxSerial)
         Me.Connection.ImageKey = "(none)"
         Me.Connection.Location = New System.Drawing.Point(4, 23)
         Me.Connection.Name = "Connection"
@@ -358,6 +374,47 @@ Partial Class MainForm
         Me.Connection.Size = New System.Drawing.Size(776, 513)
         Me.Connection.TabIndex = 5
         Me.Connection.Text = "Connection"
+        '
+        'GroupBoxCamera
+        '
+        Me.GroupBoxCamera.Controls.Add(Me.LabelCameraShowing)
+        Me.GroupBoxCamera.Controls.Add(Me.ComboBox_SelectCamera)
+        Me.GroupBoxCamera.Controls.Add(Me.ButtonStartCamera)
+        Me.GroupBoxCamera.ForeColor = System.Drawing.Color.White
+        Me.GroupBoxCamera.Location = New System.Drawing.Point(237, 345)
+        Me.GroupBoxCamera.Name = "GroupBoxCamera"
+        Me.GroupBoxCamera.Size = New System.Drawing.Size(140, 162)
+        Me.GroupBoxCamera.TabIndex = 21
+        Me.GroupBoxCamera.TabStop = False
+        Me.GroupBoxCamera.Text = "Live camera"
+        Me.GroupBoxCamera.Visible = False
+        '
+        'LabelCameraShowing
+        '
+        Me.LabelCameraShowing.AutoSize = True
+        Me.LabelCameraShowing.Location = New System.Drawing.Point(16, 89)
+        Me.LabelCameraShowing.Name = "LabelCameraShowing"
+        Me.LabelCameraShowing.Size = New System.Drawing.Size(101, 13)
+        Me.LabelCameraShowing.TabIndex = 21
+        Me.LabelCameraShowing.Text = "Live feed not active"
+        '
+        'ComboBox_SelectCamera
+        '
+        Me.ComboBox_SelectCamera.FormattingEnabled = True
+        Me.ComboBox_SelectCamera.Location = New System.Drawing.Point(6, 31)
+        Me.ComboBox_SelectCamera.Name = "ComboBox_SelectCamera"
+        Me.ComboBox_SelectCamera.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox_SelectCamera.TabIndex = 19
+        '
+        'ButtonStartCamera
+        '
+        Me.ButtonStartCamera.ForeColor = System.Drawing.Color.Black
+        Me.ButtonStartCamera.Location = New System.Drawing.Point(40, 63)
+        Me.ButtonStartCamera.Name = "ButtonStartCamera"
+        Me.ButtonStartCamera.Size = New System.Drawing.Size(87, 23)
+        Me.ButtonStartCamera.TabIndex = 20
+        Me.ButtonStartCamera.Text = "Select camera"
+        Me.ButtonStartCamera.UseVisualStyleBackColor = True
         '
         'TextBox1
         '
@@ -486,22 +543,22 @@ Partial Class MainForm
         Me.ButtonFetchDeclination.Text = "Get declination online"
         Me.ButtonFetchDeclination.UseVisualStyleBackColor = False
         '
-        'GroupBox9
+        'GroupBoxSerial
         '
-        Me.GroupBox9.Controls.Add(Me.Button_Refresh_Serialports)
-        Me.GroupBox9.Controls.Add(Me.CheckBox_AutoConnect)
-        Me.GroupBox9.Controls.Add(Me.Button_Connect)
-        Me.GroupBox9.Controls.Add(Me.ComboBox_Baud)
-        Me.GroupBox9.Controls.Add(Me.Label21)
-        Me.GroupBox9.Controls.Add(Me.Label20)
-        Me.GroupBox9.Controls.Add(Me.ComboBox_Ports)
-        Me.GroupBox9.ForeColor = System.Drawing.Color.White
-        Me.GroupBox9.Location = New System.Drawing.Point(8, 345)
-        Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(222, 162)
-        Me.GroupBox9.TabIndex = 12
-        Me.GroupBox9.TabStop = False
-        Me.GroupBox9.Text = "Serial Connection"
+        Me.GroupBoxSerial.Controls.Add(Me.Button_Refresh_Serialports)
+        Me.GroupBoxSerial.Controls.Add(Me.CheckBox_AutoConnect)
+        Me.GroupBoxSerial.Controls.Add(Me.Button_Connect)
+        Me.GroupBoxSerial.Controls.Add(Me.ComboBox_Baud)
+        Me.GroupBoxSerial.Controls.Add(Me.Label21)
+        Me.GroupBoxSerial.Controls.Add(Me.Label20)
+        Me.GroupBoxSerial.Controls.Add(Me.ComboBox_Ports)
+        Me.GroupBoxSerial.ForeColor = System.Drawing.Color.White
+        Me.GroupBoxSerial.Location = New System.Drawing.Point(8, 345)
+        Me.GroupBoxSerial.Name = "GroupBoxSerial"
+        Me.GroupBoxSerial.Size = New System.Drawing.Size(222, 162)
+        Me.GroupBoxSerial.TabIndex = 12
+        Me.GroupBoxSerial.TabStop = False
+        Me.GroupBoxSerial.Text = "Serial Connection"
         '
         'Button_Refresh_Serialports
         '
@@ -576,28 +633,11 @@ Partial Class MainForm
         'VisualFlight
         '
         Me.VisualFlight.BackColor = System.Drawing.Color.Black
-        Me.VisualFlight.Controls.Add(Me.ArtificialHorizon1)
+        Me.VisualFlight.Controls.Add(Me.CheckBoxShowLiveFeed)
+        Me.VisualFlight.Controls.Add(Me.Panel_Accel_ADI)
+        Me.VisualFlight.Controls.Add(Me.Panel_Gyro_ADI)
         Me.VisualFlight.Controls.Add(Me.Button1)
-        Me.VisualFlight.Controls.Add(Me.Label_yaw_gyro)
-        Me.VisualFlight.Controls.Add(Me.Label_pitch_gyro)
-        Me.VisualFlight.Controls.Add(Me.Label_roll_gyro)
-        Me.VisualFlight.Controls.Add(Me.Label_z_accel)
-        Me.VisualFlight.Controls.Add(Me.Label_pitch_accel)
-        Me.VisualFlight.Controls.Add(Me.Label_roll_accel)
-        Me.VisualFlight.Controls.Add(Me.Label16)
-        Me.VisualFlight.Controls.Add(Me.Label7)
-        Me.VisualFlight.Controls.Add(Me.Label15)
-        Me.VisualFlight.Controls.Add(Me.Label6)
-        Me.VisualFlight.Controls.Add(Me.Label5)
-        Me.VisualFlight.Controls.Add(Me.Label4)
-        Me.VisualFlight.Controls.Add(Me.Label3)
-        Me.VisualFlight.Controls.Add(Me.Label2)
-        Me.VisualFlight.Controls.Add(Me.yaw_gyro)
-        Me.VisualFlight.Controls.Add(Me.pitch_gyro)
-        Me.VisualFlight.Controls.Add(Me.roll_gyro)
-        Me.VisualFlight.Controls.Add(Me.accel_z)
-        Me.VisualFlight.Controls.Add(Me.accel_pitch)
-        Me.VisualFlight.Controls.Add(Me.accel_roll)
+        Me.VisualFlight.Controls.Add(Me.ArtificialHorizon1)
         Me.VisualFlight.ImageKey = "(none)"
         Me.VisualFlight.Location = New System.Drawing.Point(4, 23)
         Me.VisualFlight.Margin = New System.Windows.Forms.Padding(0)
@@ -605,6 +645,309 @@ Partial Class MainForm
         Me.VisualFlight.Size = New System.Drawing.Size(776, 513)
         Me.VisualFlight.TabIndex = 0
         Me.VisualFlight.Text = "Visual Flight"
+        '
+        'CheckBoxShowLiveFeed
+        '
+        Me.CheckBoxShowLiveFeed.AutoSize = True
+        Me.CheckBoxShowLiveFeed.ForeColor = System.Drawing.Color.White
+        Me.CheckBoxShowLiveFeed.Location = New System.Drawing.Point(5, 289)
+        Me.CheckBoxShowLiveFeed.Name = "CheckBoxShowLiveFeed"
+        Me.CheckBoxShowLiveFeed.Size = New System.Drawing.Size(138, 17)
+        Me.CheckBoxShowLiveFeed.TabIndex = 38
+        Me.CheckBoxShowLiveFeed.Text = "Show video feed in ADI"
+        Me.CheckBoxShowLiveFeed.UseVisualStyleBackColor = True
+        '
+        'Panel_Accel_ADI
+        '
+        Me.Panel_Accel_ADI.Controls.Add(Me.Label_z_accel)
+        Me.Panel_Accel_ADI.Controls.Add(Me.Label_pitch_accel)
+        Me.Panel_Accel_ADI.Controls.Add(Me.Label_roll_accel)
+        Me.Panel_Accel_ADI.Controls.Add(Me.Label5)
+        Me.Panel_Accel_ADI.Controls.Add(Me.Label4)
+        Me.Panel_Accel_ADI.Controls.Add(Me.Label3)
+        Me.Panel_Accel_ADI.Controls.Add(Me.Label2)
+        Me.Panel_Accel_ADI.Controls.Add(Me.accel_z)
+        Me.Panel_Accel_ADI.Controls.Add(Me.accel_pitch)
+        Me.Panel_Accel_ADI.Controls.Add(Me.accel_roll)
+        Me.Panel_Accel_ADI.Location = New System.Drawing.Point(631, 12)
+        Me.Panel_Accel_ADI.Name = "Panel_Accel_ADI"
+        Me.Panel_Accel_ADI.Size = New System.Drawing.Size(137, 149)
+        Me.Panel_Accel_ADI.TabIndex = 37
+        '
+        'Label_z_accel
+        '
+        Me.Label_z_accel.BackColor = System.Drawing.Color.Black
+        Me.Label_z_accel.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_z_accel.ForeColor = System.Drawing.Color.White
+        Me.Label_z_accel.Location = New System.Drawing.Point(0, 106)
+        Me.Label_z_accel.Name = "Label_z_accel"
+        Me.Label_z_accel.Size = New System.Drawing.Size(38, 13)
+        Me.Label_z_accel.TabIndex = 40
+        Me.Label_z_accel.Text = "---"
+        Me.Label_z_accel.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label_pitch_accel
+        '
+        Me.Label_pitch_accel.BackColor = System.Drawing.Color.Black
+        Me.Label_pitch_accel.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_pitch_accel.ForeColor = System.Drawing.Color.White
+        Me.Label_pitch_accel.Location = New System.Drawing.Point(0, 63)
+        Me.Label_pitch_accel.Name = "Label_pitch_accel"
+        Me.Label_pitch_accel.Size = New System.Drawing.Size(38, 13)
+        Me.Label_pitch_accel.TabIndex = 39
+        Me.Label_pitch_accel.Text = "---"
+        Me.Label_pitch_accel.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label_roll_accel
+        '
+        Me.Label_roll_accel.BackColor = System.Drawing.Color.Black
+        Me.Label_roll_accel.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_roll_accel.ForeColor = System.Drawing.Color.White
+        Me.Label_roll_accel.Location = New System.Drawing.Point(0, 21)
+        Me.Label_roll_accel.Name = "Label_roll_accel"
+        Me.Label_roll_accel.Size = New System.Drawing.Size(38, 13)
+        Me.Label_roll_accel.TabIndex = 38
+        Me.Label_roll_accel.Text = "---"
+        Me.Label_roll_accel.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label5
+        '
+        Me.Label5.BackColor = System.Drawing.Color.Black
+        Me.Label5.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.ForeColor = System.Drawing.Color.LimeGreen
+        Me.Label5.Location = New System.Drawing.Point(85, 106)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(51, 13)
+        Me.Label5.TabIndex = 37
+        Me.Label5.Text = "Z"
+        Me.Label5.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label4
+        '
+        Me.Label4.BackColor = System.Drawing.Color.Black
+        Me.Label4.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.ForeColor = System.Drawing.Color.LimeGreen
+        Me.Label4.Location = New System.Drawing.Point(85, 63)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(51, 13)
+        Me.Label4.TabIndex = 36
+        Me.Label4.Text = "PITCH"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label3
+        '
+        Me.Label3.BackColor = System.Drawing.Color.Black
+        Me.Label3.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.ForeColor = System.Drawing.Color.LimeGreen
+        Me.Label3.Location = New System.Drawing.Point(85, 21)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(51, 13)
+        Me.Label3.TabIndex = 35
+        Me.Label3.Text = "ROLL"
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.BackColor = System.Drawing.Color.Black
+        Me.Label2.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.Lime
+        Me.Label2.Location = New System.Drawing.Point(0, 2)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(114, 13)
+        Me.Label2.TabIndex = 34
+        Me.Label2.Text = "ACCELEROMETER"
+        '
+        'accel_z
+        '
+        Me.accel_z.BackColor = System.Drawing.Color.Transparent
+        Me.accel_z.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.accel_z.ForeColor = System.Drawing.Color.Transparent
+        Me.accel_z.Location = New System.Drawing.Point(2, 123)
+        Me.accel_z.Maximum = 2048
+        Me.accel_z.Minimum = 0
+        Me.accel_z.Name = "accel_z"
+        Me.accel_z.ProgressBarColor = System.Drawing.Color.DarkGreen
+        Me.accel_z.Size = New System.Drawing.Size(134, 23)
+        Me.accel_z.TabIndex = 33
+        Me.ToolTip.SetToolTip(Me.accel_z, "Z accelerometer")
+        Me.accel_z.Value = 60
+        '
+        'accel_pitch
+        '
+        Me.accel_pitch.BackColor = System.Drawing.Color.Transparent
+        Me.accel_pitch.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.accel_pitch.ForeColor = System.Drawing.Color.Transparent
+        Me.accel_pitch.Location = New System.Drawing.Point(2, 80)
+        Me.accel_pitch.Maximum = 2048
+        Me.accel_pitch.Minimum = 0
+        Me.accel_pitch.Name = "accel_pitch"
+        Me.accel_pitch.ProgressBarColor = System.Drawing.Color.DarkGreen
+        Me.accel_pitch.Size = New System.Drawing.Size(134, 23)
+        Me.accel_pitch.TabIndex = 32
+        Me.ToolTip.SetToolTip(Me.accel_pitch, "Pitch accelerometer")
+        Me.accel_pitch.Value = 60
+        '
+        'accel_roll
+        '
+        Me.accel_roll.BackColor = System.Drawing.Color.Transparent
+        Me.accel_roll.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.accel_roll.ForeColor = System.Drawing.Color.Transparent
+        Me.accel_roll.Location = New System.Drawing.Point(2, 37)
+        Me.accel_roll.Maximum = 2048
+        Me.accel_roll.Minimum = 0
+        Me.accel_roll.Name = "accel_roll"
+        Me.accel_roll.ProgressBarColor = System.Drawing.Color.DarkGreen
+        Me.accel_roll.Size = New System.Drawing.Size(134, 23)
+        Me.accel_roll.TabIndex = 31
+        Me.ToolTip.SetToolTip(Me.accel_roll, "Roll accelerometer")
+        Me.accel_roll.Value = 1500
+        '
+        'Panel_Gyro_ADI
+        '
+        Me.Panel_Gyro_ADI.Controls.Add(Me.Label_yaw_gyro)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.Label_pitch_gyro)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.Label_roll_gyro)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.Label16)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.Label7)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.Label15)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.Label6)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.yaw_gyro)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.pitch_gyro)
+        Me.Panel_Gyro_ADI.Controls.Add(Me.roll_gyro)
+        Me.Panel_Gyro_ADI.Location = New System.Drawing.Point(5, 11)
+        Me.Panel_Gyro_ADI.Name = "Panel_Gyro_ADI"
+        Me.Panel_Gyro_ADI.Size = New System.Drawing.Size(140, 150)
+        Me.Panel_Gyro_ADI.TabIndex = 36
+        '
+        'Label_yaw_gyro
+        '
+        Me.Label_yaw_gyro.BackColor = System.Drawing.Color.Black
+        Me.Label_yaw_gyro.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_yaw_gyro.ForeColor = System.Drawing.Color.White
+        Me.Label_yaw_gyro.Location = New System.Drawing.Point(-1, 103)
+        Me.Label_yaw_gyro.Name = "Label_yaw_gyro"
+        Me.Label_yaw_gyro.Size = New System.Drawing.Size(38, 13)
+        Me.Label_yaw_gyro.TabIndex = 43
+        Me.Label_yaw_gyro.Text = "---"
+        Me.Label_yaw_gyro.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label_pitch_gyro
+        '
+        Me.Label_pitch_gyro.BackColor = System.Drawing.Color.Black
+        Me.Label_pitch_gyro.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_pitch_gyro.ForeColor = System.Drawing.Color.White
+        Me.Label_pitch_gyro.Location = New System.Drawing.Point(-1, 59)
+        Me.Label_pitch_gyro.Name = "Label_pitch_gyro"
+        Me.Label_pitch_gyro.Size = New System.Drawing.Size(38, 13)
+        Me.Label_pitch_gyro.TabIndex = 42
+        Me.Label_pitch_gyro.Text = "---"
+        Me.Label_pitch_gyro.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label_roll_gyro
+        '
+        Me.Label_roll_gyro.BackColor = System.Drawing.Color.Black
+        Me.Label_roll_gyro.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_roll_gyro.ForeColor = System.Drawing.Color.White
+        Me.Label_roll_gyro.Location = New System.Drawing.Point(-1, 17)
+        Me.Label_roll_gyro.Name = "Label_roll_gyro"
+        Me.Label_roll_gyro.Size = New System.Drawing.Size(38, 13)
+        Me.Label_roll_gyro.TabIndex = 41
+        Me.Label_roll_gyro.Text = "---"
+        Me.Label_roll_gyro.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label16
+        '
+        Me.Label16.BackColor = System.Drawing.Color.Black
+        Me.Label16.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label16.ForeColor = System.Drawing.Color.LimeGreen
+        Me.Label16.Location = New System.Drawing.Point(84, 103)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(51, 13)
+        Me.Label16.TabIndex = 40
+        Me.Label16.Text = "YAW"
+        Me.Label16.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label7
+        '
+        Me.Label7.BackColor = System.Drawing.Color.Black
+        Me.Label7.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.ForeColor = System.Drawing.Color.LimeGreen
+        Me.Label7.Location = New System.Drawing.Point(84, 59)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(51, 13)
+        Me.Label7.TabIndex = 39
+        Me.Label7.Text = "PITCH"
+        Me.Label7.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label15
+        '
+        Me.Label15.BackColor = System.Drawing.Color.Black
+        Me.Label15.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.ForeColor = System.Drawing.Color.LimeGreen
+        Me.Label15.Location = New System.Drawing.Point(84, 17)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(51, 13)
+        Me.Label15.TabIndex = 38
+        Me.Label15.Text = "ROLL"
+        Me.Label15.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.BackColor = System.Drawing.Color.Black
+        Me.Label6.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.ForeColor = System.Drawing.Color.Lime
+        Me.Label6.Location = New System.Drawing.Point(1, 1)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(41, 13)
+        Me.Label6.TabIndex = 37
+        Me.Label6.Text = "GYRO"
+        '
+        'yaw_gyro
+        '
+        Me.yaw_gyro.BackColor = System.Drawing.Color.Transparent
+        Me.yaw_gyro.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.yaw_gyro.ForeColor = System.Drawing.Color.Transparent
+        Me.yaw_gyro.Location = New System.Drawing.Point(0, 119)
+        Me.yaw_gyro.Maximum = 2048
+        Me.yaw_gyro.Minimum = 0
+        Me.yaw_gyro.Name = "yaw_gyro"
+        Me.yaw_gyro.ProgressBarColor = System.Drawing.Color.DarkGreen
+        Me.yaw_gyro.Size = New System.Drawing.Size(134, 23)
+        Me.yaw_gyro.TabIndex = 36
+        Me.ToolTip.SetToolTip(Me.yaw_gyro, "Yaw gyro")
+        Me.yaw_gyro.Value = 60
+        '
+        'pitch_gyro
+        '
+        Me.pitch_gyro.BackColor = System.Drawing.Color.Transparent
+        Me.pitch_gyro.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.pitch_gyro.ForeColor = System.Drawing.Color.Transparent
+        Me.pitch_gyro.Location = New System.Drawing.Point(1, 76)
+        Me.pitch_gyro.Maximum = 2048
+        Me.pitch_gyro.Minimum = 0
+        Me.pitch_gyro.Name = "pitch_gyro"
+        Me.pitch_gyro.ProgressBarColor = System.Drawing.Color.DarkGreen
+        Me.pitch_gyro.Size = New System.Drawing.Size(134, 23)
+        Me.pitch_gyro.TabIndex = 35
+        Me.ToolTip.SetToolTip(Me.pitch_gyro, "Pitch gyro")
+        Me.pitch_gyro.Value = 60
+        '
+        'roll_gyro
+        '
+        Me.roll_gyro.BackColor = System.Drawing.Color.Transparent
+        Me.roll_gyro.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.roll_gyro.ForeColor = System.Drawing.Color.Transparent
+        Me.roll_gyro.Location = New System.Drawing.Point(1, 33)
+        Me.roll_gyro.Maximum = 2048
+        Me.roll_gyro.Minimum = 0
+        Me.roll_gyro.Name = "roll_gyro"
+        Me.roll_gyro.ProgressBarColor = System.Drawing.Color.DarkGreen
+        Me.roll_gyro.Size = New System.Drawing.Size(134, 23)
+        Me.roll_gyro.TabIndex = 34
+        Me.ToolTip.SetToolTip(Me.roll_gyro, "Roll gyro")
+        Me.roll_gyro.Value = 60
         '
         'Button1
         '
@@ -617,173 +960,22 @@ Partial Class MainForm
         Me.ToolTip.SetToolTip(Me.Button1, "Show running demo of the ADI")
         Me.Button1.UseVisualStyleBackColor = True
         '
-        'Label_yaw_gyro
+        'ArtificialHorizon1
         '
-        Me.Label_yaw_gyro.BackColor = System.Drawing.Color.Black
-        Me.Label_yaw_gyro.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_yaw_gyro.ForeColor = System.Drawing.Color.White
-        Me.Label_yaw_gyro.Location = New System.Drawing.Point(9, 116)
-        Me.Label_yaw_gyro.Name = "Label_yaw_gyro"
-        Me.Label_yaw_gyro.Size = New System.Drawing.Size(38, 13)
-        Me.Label_yaw_gyro.TabIndex = 33
-        Me.Label_yaw_gyro.Text = "---"
-        Me.Label_yaw_gyro.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label_pitch_gyro
-        '
-        Me.Label_pitch_gyro.BackColor = System.Drawing.Color.Black
-        Me.Label_pitch_gyro.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_pitch_gyro.ForeColor = System.Drawing.Color.White
-        Me.Label_pitch_gyro.Location = New System.Drawing.Point(9, 72)
-        Me.Label_pitch_gyro.Name = "Label_pitch_gyro"
-        Me.Label_pitch_gyro.Size = New System.Drawing.Size(38, 13)
-        Me.Label_pitch_gyro.TabIndex = 32
-        Me.Label_pitch_gyro.Text = "---"
-        Me.Label_pitch_gyro.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label_roll_gyro
-        '
-        Me.Label_roll_gyro.BackColor = System.Drawing.Color.Black
-        Me.Label_roll_gyro.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_roll_gyro.ForeColor = System.Drawing.Color.White
-        Me.Label_roll_gyro.Location = New System.Drawing.Point(9, 30)
-        Me.Label_roll_gyro.Name = "Label_roll_gyro"
-        Me.Label_roll_gyro.Size = New System.Drawing.Size(38, 13)
-        Me.Label_roll_gyro.TabIndex = 31
-        Me.Label_roll_gyro.Text = "---"
-        Me.Label_roll_gyro.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label_z_accel
-        '
-        Me.Label_z_accel.BackColor = System.Drawing.Color.Black
-        Me.Label_z_accel.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_z_accel.ForeColor = System.Drawing.Color.White
-        Me.Label_z_accel.Location = New System.Drawing.Point(628, 115)
-        Me.Label_z_accel.Name = "Label_z_accel"
-        Me.Label_z_accel.Size = New System.Drawing.Size(38, 13)
-        Me.Label_z_accel.TabIndex = 30
-        Me.Label_z_accel.Text = "---"
-        Me.Label_z_accel.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label_pitch_accel
-        '
-        Me.Label_pitch_accel.BackColor = System.Drawing.Color.Black
-        Me.Label_pitch_accel.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_pitch_accel.ForeColor = System.Drawing.Color.White
-        Me.Label_pitch_accel.Location = New System.Drawing.Point(628, 72)
-        Me.Label_pitch_accel.Name = "Label_pitch_accel"
-        Me.Label_pitch_accel.Size = New System.Drawing.Size(38, 13)
-        Me.Label_pitch_accel.TabIndex = 29
-        Me.Label_pitch_accel.Text = "---"
-        Me.Label_pitch_accel.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label_roll_accel
-        '
-        Me.Label_roll_accel.BackColor = System.Drawing.Color.Black
-        Me.Label_roll_accel.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label_roll_accel.ForeColor = System.Drawing.Color.White
-        Me.Label_roll_accel.Location = New System.Drawing.Point(628, 30)
-        Me.Label_roll_accel.Name = "Label_roll_accel"
-        Me.Label_roll_accel.Size = New System.Drawing.Size(38, 13)
-        Me.Label_roll_accel.TabIndex = 28
-        Me.Label_roll_accel.Text = "---"
-        Me.Label_roll_accel.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label16
-        '
-        Me.Label16.BackColor = System.Drawing.Color.Black
-        Me.Label16.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label16.ForeColor = System.Drawing.Color.LimeGreen
-        Me.Label16.Location = New System.Drawing.Point(94, 116)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(51, 13)
-        Me.Label16.TabIndex = 26
-        Me.Label16.Text = "YAW"
-        Me.Label16.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label7
-        '
-        Me.Label7.BackColor = System.Drawing.Color.Black
-        Me.Label7.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.ForeColor = System.Drawing.Color.LimeGreen
-        Me.Label7.Location = New System.Drawing.Point(94, 72)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(51, 13)
-        Me.Label7.TabIndex = 25
-        Me.Label7.Text = "PITCH"
-        Me.Label7.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label15
-        '
-        Me.Label15.BackColor = System.Drawing.Color.Black
-        Me.Label15.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.ForeColor = System.Drawing.Color.LimeGreen
-        Me.Label15.Location = New System.Drawing.Point(94, 30)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(51, 13)
-        Me.Label15.TabIndex = 24
-        Me.Label15.Text = "ROLL"
-        Me.Label15.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.BackColor = System.Drawing.Color.Black
-        Me.Label6.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.ForeColor = System.Drawing.Color.Lime
-        Me.Label6.Location = New System.Drawing.Point(9, 14)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(41, 13)
-        Me.Label6.TabIndex = 23
-        Me.Label6.Text = "GYRO"
-        '
-        'Label5
-        '
-        Me.Label5.BackColor = System.Drawing.Color.Black
-        Me.Label5.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.ForeColor = System.Drawing.Color.LimeGreen
-        Me.Label5.Location = New System.Drawing.Point(713, 115)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(51, 13)
-        Me.Label5.TabIndex = 22
-        Me.Label5.Text = "Z"
-        Me.Label5.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label4
-        '
-        Me.Label4.BackColor = System.Drawing.Color.Black
-        Me.Label4.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.ForeColor = System.Drawing.Color.LimeGreen
-        Me.Label4.Location = New System.Drawing.Point(713, 72)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(51, 13)
-        Me.Label4.TabIndex = 21
-        Me.Label4.Text = "PITCH"
-        Me.Label4.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label3
-        '
-        Me.Label3.BackColor = System.Drawing.Color.Black
-        Me.Label3.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.ForeColor = System.Drawing.Color.LimeGreen
-        Me.Label3.Location = New System.Drawing.Point(713, 30)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(51, 13)
-        Me.Label3.TabIndex = 20
-        Me.Label3.Text = "ROLL"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.BackColor = System.Drawing.Color.Black
-        Me.Label2.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.Lime
-        Me.Label2.Location = New System.Drawing.Point(628, 11)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(114, 13)
-        Me.Label2.TabIndex = 19
-        Me.Label2.Text = "ACCELEROMETER"
+        Me.ArtificialHorizon1.altitude = -64.0R
+        Me.ArtificialHorizon1.AutoScroll = True
+        Me.ArtificialHorizon1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.ArtificialHorizon1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange
+        Me.ArtificialHorizon1.BackColor = System.Drawing.Color.Transparent
+        Me.ArtificialHorizon1.ForeColor = System.Drawing.Color.Transparent
+        Me.ArtificialHorizon1.Location = New System.Drawing.Point(151, 10)
+        Me.ArtificialHorizon1.Name = "ArtificialHorizon1"
+        Me.ArtificialHorizon1.pitch_angle = 0.0R
+        Me.ArtificialHorizon1.roll_angle = 0.0R
+        Me.ArtificialHorizon1.Size = New System.Drawing.Size(473, 473)
+        Me.ArtificialHorizon1.TabIndex = 35
+        Me.ToolTip.SetToolTip(Me.ArtificialHorizon1, "ADI or Attitude Director Indicator or Artificial Horizon")
+        Me.ArtificialHorizon1.yaw_angle = 23.0R
         '
         'SensorPlots
         '
@@ -1498,6 +1690,17 @@ Partial Class MainForm
         Me.Panel2.Size = New System.Drawing.Size(770, 35)
         Me.Panel2.TabIndex = 1
         '
+        'Button_ShowMenu
+        '
+        Me.Button_ShowMenu.ForeColor = System.Drawing.Color.Black
+        Me.Button_ShowMenu.Location = New System.Drawing.Point(596, 6)
+        Me.Button_ShowMenu.Name = "Button_ShowMenu"
+        Me.Button_ShowMenu.Size = New System.Drawing.Size(75, 23)
+        Me.Button_ShowMenu.TabIndex = 4
+        Me.Button_ShowMenu.Text = "Menu"
+        Me.ToolTip.SetToolTip(Me.Button_ShowMenu, "Click to show the CLI main menu")
+        Me.Button_ShowMenu.UseVisualStyleBackColor = True
+        '
         'Button_ClearScreen
         '
         Me.Button_ClearScreen.ForeColor = System.Drawing.Color.Black
@@ -1626,6 +1829,26 @@ Partial Class MainForm
         Me.Label_Error_Pitch.TabIndex = 6
         Me.Label_Error_Pitch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'Slider_radio_pitch
+        '
+        Me.Slider_radio_pitch.BackColor = System.Drawing.Color.Transparent
+        Me.Slider_radio_pitch.BorderColor = System.Drawing.Color.Maroon
+        Me.Slider_radio_pitch.CalibrationCenterColor = System.Drawing.Color.Gray
+        Me.Slider_radio_pitch.CalibrationMaxColor = System.Drawing.Color.SteelBlue
+        Me.Slider_radio_pitch.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
+        Me.Slider_radio_pitch.ForeColor = System.Drawing.SystemColors.HotTrack
+        Me.Slider_radio_pitch.Location = New System.Drawing.Point(10, 16)
+        Me.Slider_radio_pitch.Maximum = 2100
+        Me.Slider_radio_pitch.Minimum = 900
+        Me.Slider_radio_pitch.Name = "Slider_radio_pitch"
+        Me.Slider_radio_pitch.ProgressBarColor = System.Drawing.Color.CadetBlue
+        Me.Slider_radio_pitch.ShowInverted = True
+        Me.Slider_radio_pitch.Size = New System.Drawing.Size(70, 350)
+        Me.Slider_radio_pitch.TabIndex = 5
+        Me.ToolTip.SetToolTip(Me.Slider_radio_pitch, "Pitch channel - controls forward/backward motion")
+        Me.Slider_radio_pitch.Value = 1500
+        Me.Slider_radio_pitch.Vertical = False
+        '
         'GroupBox5
         '
         Me.GroupBox5.BackColor = System.Drawing.Color.Transparent
@@ -1651,6 +1874,25 @@ Partial Class MainForm
         Me.Label_Error_Yaw.Size = New System.Drawing.Size(73, 20)
         Me.Label_Error_Yaw.TabIndex = 7
         Me.Label_Error_Yaw.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Slider_radio_yaw
+        '
+        Me.Slider_radio_yaw.BackColor = System.Drawing.Color.Transparent
+        Me.Slider_radio_yaw.BorderColor = System.Drawing.Color.LightGray
+        Me.Slider_radio_yaw.CalibrationCenterColor = System.Drawing.Color.Gray
+        Me.Slider_radio_yaw.CalibrationMaxColor = System.Drawing.Color.SteelBlue
+        Me.Slider_radio_yaw.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
+        Me.Slider_radio_yaw.Location = New System.Drawing.Point(10, 16)
+        Me.Slider_radio_yaw.Maximum = 2100
+        Me.Slider_radio_yaw.Minimum = 900
+        Me.Slider_radio_yaw.Name = "Slider_radio_yaw"
+        Me.Slider_radio_yaw.ProgressBarColor = System.Drawing.Color.CadetBlue
+        Me.Slider_radio_yaw.ShowInverted = False
+        Me.Slider_radio_yaw.Size = New System.Drawing.Size(70, 350)
+        Me.Slider_radio_yaw.TabIndex = 4
+        Me.ToolTip.SetToolTip(Me.Slider_radio_yaw, "Yaw channel - controls left/right motion (naysaying)")
+        Me.Slider_radio_yaw.Value = 1500
+        Me.Slider_radio_yaw.Vertical = False
         '
         'GroupBox4
         '
@@ -1678,6 +1920,25 @@ Partial Class MainForm
         Me.Label_Error_Throttle.TabIndex = 8
         Me.Label_Error_Throttle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'Slider_radio_throttle
+        '
+        Me.Slider_radio_throttle.BackColor = System.Drawing.Color.Transparent
+        Me.Slider_radio_throttle.BorderColor = System.Drawing.Color.LightGray
+        Me.Slider_radio_throttle.CalibrationCenterColor = System.Drawing.Color.Gray
+        Me.Slider_radio_throttle.CalibrationMaxColor = System.Drawing.Color.SteelBlue
+        Me.Slider_radio_throttle.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
+        Me.Slider_radio_throttle.Location = New System.Drawing.Point(9, 16)
+        Me.Slider_radio_throttle.Maximum = 2100
+        Me.Slider_radio_throttle.Minimum = 900
+        Me.Slider_radio_throttle.Name = "Slider_radio_throttle"
+        Me.Slider_radio_throttle.ProgressBarColor = System.Drawing.Color.CadetBlue
+        Me.Slider_radio_throttle.ShowInverted = False
+        Me.Slider_radio_throttle.Size = New System.Drawing.Size(70, 350)
+        Me.Slider_radio_throttle.TabIndex = 3
+        Me.ToolTip.SetToolTip(Me.Slider_radio_throttle, "Throttle channel - controls up/down motion")
+        Me.Slider_radio_throttle.Value = 1500
+        Me.Slider_radio_throttle.Vertical = False
+        '
         'GroupBox8
         '
         Me.GroupBox8.BackColor = System.Drawing.Color.Transparent
@@ -1703,6 +1964,26 @@ Partial Class MainForm
         Me.Label_Error_AUX2.Size = New System.Drawing.Size(73, 20)
         Me.Label_Error_AUX2.TabIndex = 8
         Me.Label_Error_AUX2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Slider_radio_aux2
+        '
+        Me.Slider_radio_aux2.BackColor = System.Drawing.Color.Transparent
+        Me.Slider_radio_aux2.BorderColor = System.Drawing.Color.LightGray
+        Me.Slider_radio_aux2.CalibrationCenterColor = System.Drawing.Color.Gray
+        Me.Slider_radio_aux2.CalibrationMaxColor = System.Drawing.Color.SteelBlue
+        Me.Slider_radio_aux2.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
+        Me.Slider_radio_aux2.Enabled = False
+        Me.Slider_radio_aux2.Location = New System.Drawing.Point(10, 16)
+        Me.Slider_radio_aux2.Maximum = 2100
+        Me.Slider_radio_aux2.Minimum = 900
+        Me.Slider_radio_aux2.Name = "Slider_radio_aux2"
+        Me.Slider_radio_aux2.ProgressBarColor = System.Drawing.Color.CadetBlue
+        Me.Slider_radio_aux2.ShowInverted = False
+        Me.Slider_radio_aux2.Size = New System.Drawing.Size(70, 350)
+        Me.Slider_radio_aux2.TabIndex = 1
+        Me.ToolTip.SetToolTip(Me.Slider_radio_aux2, "AUX2 channel - controls GPS hold mode")
+        Me.Slider_radio_aux2.Value = 1500
+        Me.Slider_radio_aux2.Vertical = False
         '
         'GroupBox7
         '
@@ -1730,6 +2011,25 @@ Partial Class MainForm
         Me.Label_Error_AUX1.TabIndex = 8
         Me.Label_Error_AUX1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'Slider_radio_aux1
+        '
+        Me.Slider_radio_aux1.BackColor = System.Drawing.Color.Transparent
+        Me.Slider_radio_aux1.BorderColor = System.Drawing.Color.LightGray
+        Me.Slider_radio_aux1.CalibrationCenterColor = System.Drawing.Color.Gray
+        Me.Slider_radio_aux1.CalibrationMaxColor = System.Drawing.Color.SteelBlue
+        Me.Slider_radio_aux1.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
+        Me.Slider_radio_aux1.Location = New System.Drawing.Point(10, 16)
+        Me.Slider_radio_aux1.Maximum = 2100
+        Me.Slider_radio_aux1.Minimum = 900
+        Me.Slider_radio_aux1.Name = "Slider_radio_aux1"
+        Me.Slider_radio_aux1.ProgressBarColor = System.Drawing.Color.CadetBlue
+        Me.Slider_radio_aux1.ShowInverted = False
+        Me.Slider_radio_aux1.Size = New System.Drawing.Size(70, 350)
+        Me.Slider_radio_aux1.TabIndex = 2
+        Me.ToolTip.SetToolTip(Me.Slider_radio_aux1, "AUX1 channel - controls altitude hold mode")
+        Me.Slider_radio_aux1.Value = 1500
+        Me.Slider_radio_aux1.Vertical = False
+        '
         'Roll
         '
         Me.Roll.BackColor = System.Drawing.Color.Transparent
@@ -1755,6 +2055,25 @@ Partial Class MainForm
         Me.Label_Error_Roll.Size = New System.Drawing.Size(73, 20)
         Me.Label_Error_Roll.TabIndex = 8
         Me.Label_Error_Roll.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Slider_radio_roll
+        '
+        Me.Slider_radio_roll.BackColor = System.Drawing.Color.Transparent
+        Me.Slider_radio_roll.BorderColor = System.Drawing.Color.LightGray
+        Me.Slider_radio_roll.CalibrationCenterColor = System.Drawing.Color.Gray
+        Me.Slider_radio_roll.CalibrationMaxColor = System.Drawing.Color.SteelBlue
+        Me.Slider_radio_roll.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
+        Me.Slider_radio_roll.Location = New System.Drawing.Point(10, 16)
+        Me.Slider_radio_roll.Maximum = 2100
+        Me.Slider_radio_roll.Minimum = 900
+        Me.Slider_radio_roll.Name = "Slider_radio_roll"
+        Me.Slider_radio_roll.ProgressBarColor = System.Drawing.Color.CadetBlue
+        Me.Slider_radio_roll.ShowInverted = False
+        Me.Slider_radio_roll.Size = New System.Drawing.Size(70, 350)
+        Me.Slider_radio_roll.TabIndex = 6
+        Me.ToolTip.SetToolTip(Me.Slider_radio_roll, "Roll channel - controls sideways roll motion")
+        Me.Slider_radio_roll.Value = 1500
+        Me.Slider_radio_roll.Vertical = True
         '
         'PIDTuning
         '
@@ -2394,6 +2713,26 @@ Partial Class MainForm
         Me.Button_Browser_Home.Text = "Home"
         Me.Button_Browser_Home.UseVisualStyleBackColor = True
         '
+        'LiveFeed
+        '
+        Me.LiveFeed.Controls.Add(Me.PictureBoxDisplay)
+        Me.LiveFeed.Location = New System.Drawing.Point(4, 23)
+        Me.LiveFeed.Name = "LiveFeed"
+        Me.LiveFeed.Size = New System.Drawing.Size(776, 513)
+        Me.LiveFeed.TabIndex = 8
+        Me.LiveFeed.Text = "Live feed"
+        Me.LiveFeed.UseVisualStyleBackColor = True
+        '
+        'PictureBoxDisplay
+        '
+        Me.PictureBoxDisplay.Image = Global.WindowsFormsApplication.My.Resources.Resources.refresh
+        Me.PictureBoxDisplay.Location = New System.Drawing.Point(57, 47)
+        Me.PictureBoxDisplay.Name = "PictureBoxDisplay"
+        Me.PictureBoxDisplay.Size = New System.Drawing.Size(648, 444)
+        Me.PictureBoxDisplay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBoxDisplay.TabIndex = 2
+        Me.PictureBoxDisplay.TabStop = False
+        '
         'TabImages
         '
         Me.TabImages.ImageStream = CType(resources.GetObject("TabImages.ImageStream"), System.Windows.Forms.ImageListStreamer)
@@ -2444,239 +2783,6 @@ Partial Class MainForm
         Me.TrayBarIcon.Text = "ArduPirates Management Console"
         Me.TrayBarIcon.Visible = True
         '
-        'Button_ShowMenu
-        '
-        Me.Button_ShowMenu.ForeColor = System.Drawing.Color.Black
-        Me.Button_ShowMenu.Location = New System.Drawing.Point(596, 6)
-        Me.Button_ShowMenu.Name = "Button_ShowMenu"
-        Me.Button_ShowMenu.Size = New System.Drawing.Size(75, 23)
-        Me.Button_ShowMenu.TabIndex = 4
-        Me.Button_ShowMenu.Text = "Menu"
-        Me.ToolTip.SetToolTip(Me.Button_ShowMenu, "Click to show the CLI main menu")
-        Me.Button_ShowMenu.UseVisualStyleBackColor = True
-        '
-        'ArtificialHorizon1
-        '
-        Me.ArtificialHorizon1.altitude = -64.0R
-        Me.ArtificialHorizon1.AutoScroll = True
-        Me.ArtificialHorizon1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange
-        Me.ArtificialHorizon1.BackColor = System.Drawing.Color.Transparent
-        Me.ArtificialHorizon1.ForeColor = System.Drawing.Color.Transparent
-        Me.ArtificialHorizon1.Location = New System.Drawing.Point(151, 28)
-        Me.ArtificialHorizon1.Name = "ArtificialHorizon1"
-        Me.ArtificialHorizon1.pitch_angle = 0.0R
-        Me.ArtificialHorizon1.roll_angle = 0.0R
-        Me.ArtificialHorizon1.Size = New System.Drawing.Size(473, 473)
-        Me.ArtificialHorizon1.TabIndex = 35
-        Me.ToolTip.SetToolTip(Me.ArtificialHorizon1, "ADI or Attitude Director Indicator or Artificial Horizon")
-        Me.ArtificialHorizon1.yaw_angle = 23.0R
-        '
-        'yaw_gyro
-        '
-        Me.yaw_gyro.BackColor = System.Drawing.Color.Transparent
-        Me.yaw_gyro.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.yaw_gyro.ForeColor = System.Drawing.Color.Transparent
-        Me.yaw_gyro.Location = New System.Drawing.Point(11, 132)
-        Me.yaw_gyro.Maximum = 2048
-        Me.yaw_gyro.Minimum = 0
-        Me.yaw_gyro.Name = "yaw_gyro"
-        Me.yaw_gyro.ProgressBarColor = System.Drawing.Color.DarkGreen
-        Me.yaw_gyro.Size = New System.Drawing.Size(134, 23)
-        Me.yaw_gyro.TabIndex = 17
-        Me.ToolTip.SetToolTip(Me.yaw_gyro, "Yaw gyro")
-        Me.yaw_gyro.Value = 60
-        '
-        'pitch_gyro
-        '
-        Me.pitch_gyro.BackColor = System.Drawing.Color.Transparent
-        Me.pitch_gyro.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.pitch_gyro.ForeColor = System.Drawing.Color.Transparent
-        Me.pitch_gyro.Location = New System.Drawing.Point(11, 89)
-        Me.pitch_gyro.Maximum = 2048
-        Me.pitch_gyro.Minimum = 0
-        Me.pitch_gyro.Name = "pitch_gyro"
-        Me.pitch_gyro.ProgressBarColor = System.Drawing.Color.DarkGreen
-        Me.pitch_gyro.Size = New System.Drawing.Size(134, 23)
-        Me.pitch_gyro.TabIndex = 16
-        Me.ToolTip.SetToolTip(Me.pitch_gyro, "Pitch gyro")
-        Me.pitch_gyro.Value = 60
-        '
-        'roll_gyro
-        '
-        Me.roll_gyro.BackColor = System.Drawing.Color.Transparent
-        Me.roll_gyro.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.roll_gyro.ForeColor = System.Drawing.Color.Transparent
-        Me.roll_gyro.Location = New System.Drawing.Point(11, 46)
-        Me.roll_gyro.Maximum = 2048
-        Me.roll_gyro.Minimum = 0
-        Me.roll_gyro.Name = "roll_gyro"
-        Me.roll_gyro.ProgressBarColor = System.Drawing.Color.DarkGreen
-        Me.roll_gyro.Size = New System.Drawing.Size(134, 23)
-        Me.roll_gyro.TabIndex = 15
-        Me.ToolTip.SetToolTip(Me.roll_gyro, "Roll gyro")
-        Me.roll_gyro.Value = 60
-        '
-        'accel_z
-        '
-        Me.accel_z.BackColor = System.Drawing.Color.Transparent
-        Me.accel_z.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.accel_z.ForeColor = System.Drawing.Color.Transparent
-        Me.accel_z.Location = New System.Drawing.Point(630, 132)
-        Me.accel_z.Maximum = 2048
-        Me.accel_z.Minimum = 0
-        Me.accel_z.Name = "accel_z"
-        Me.accel_z.ProgressBarColor = System.Drawing.Color.DarkGreen
-        Me.accel_z.Size = New System.Drawing.Size(134, 23)
-        Me.accel_z.TabIndex = 14
-        Me.ToolTip.SetToolTip(Me.accel_z, "Z accelerometer")
-        Me.accel_z.Value = 60
-        '
-        'accel_pitch
-        '
-        Me.accel_pitch.BackColor = System.Drawing.Color.Transparent
-        Me.accel_pitch.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.accel_pitch.ForeColor = System.Drawing.Color.Transparent
-        Me.accel_pitch.Location = New System.Drawing.Point(630, 89)
-        Me.accel_pitch.Maximum = 2048
-        Me.accel_pitch.Minimum = 0
-        Me.accel_pitch.Name = "accel_pitch"
-        Me.accel_pitch.ProgressBarColor = System.Drawing.Color.DarkGreen
-        Me.accel_pitch.Size = New System.Drawing.Size(134, 23)
-        Me.accel_pitch.TabIndex = 13
-        Me.ToolTip.SetToolTip(Me.accel_pitch, "Pitch accelerometer")
-        Me.accel_pitch.Value = 60
-        '
-        'accel_roll
-        '
-        Me.accel_roll.BackColor = System.Drawing.Color.Transparent
-        Me.accel_roll.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.accel_roll.ForeColor = System.Drawing.Color.Transparent
-        Me.accel_roll.Location = New System.Drawing.Point(630, 46)
-        Me.accel_roll.Maximum = 2048
-        Me.accel_roll.Minimum = 0
-        Me.accel_roll.Name = "accel_roll"
-        Me.accel_roll.ProgressBarColor = System.Drawing.Color.DarkGreen
-        Me.accel_roll.Size = New System.Drawing.Size(134, 23)
-        Me.accel_roll.TabIndex = 12
-        Me.ToolTip.SetToolTip(Me.accel_roll, "Roll accelerometer")
-        Me.accel_roll.Value = 1500
-        '
-        'Slider_radio_pitch
-        '
-        Me.Slider_radio_pitch.BackColor = System.Drawing.Color.Transparent
-        Me.Slider_radio_pitch.BorderColor = System.Drawing.Color.Maroon
-        Me.Slider_radio_pitch.CalibrationCenterColor = System.Drawing.Color.Gray
-        Me.Slider_radio_pitch.CalibrationMaxColor = System.Drawing.Color.SteelBlue
-        Me.Slider_radio_pitch.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
-        Me.Slider_radio_pitch.ForeColor = System.Drawing.SystemColors.HotTrack
-        Me.Slider_radio_pitch.Location = New System.Drawing.Point(10, 16)
-        Me.Slider_radio_pitch.Maximum = 2100
-        Me.Slider_radio_pitch.Minimum = 900
-        Me.Slider_radio_pitch.Name = "Slider_radio_pitch"
-        Me.Slider_radio_pitch.ProgressBarColor = System.Drawing.Color.CadetBlue
-        Me.Slider_radio_pitch.ShowInverted = True
-        Me.Slider_radio_pitch.Size = New System.Drawing.Size(70, 350)
-        Me.Slider_radio_pitch.TabIndex = 5
-        Me.ToolTip.SetToolTip(Me.Slider_radio_pitch, "Pitch channel - controls forward/backward motion")
-        Me.Slider_radio_pitch.Value = 1500
-        Me.Slider_radio_pitch.Vertical = False
-        '
-        'Slider_radio_yaw
-        '
-        Me.Slider_radio_yaw.BackColor = System.Drawing.Color.Transparent
-        Me.Slider_radio_yaw.BorderColor = System.Drawing.Color.LightGray
-        Me.Slider_radio_yaw.CalibrationCenterColor = System.Drawing.Color.Gray
-        Me.Slider_radio_yaw.CalibrationMaxColor = System.Drawing.Color.SteelBlue
-        Me.Slider_radio_yaw.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
-        Me.Slider_radio_yaw.Location = New System.Drawing.Point(10, 16)
-        Me.Slider_radio_yaw.Maximum = 2100
-        Me.Slider_radio_yaw.Minimum = 900
-        Me.Slider_radio_yaw.Name = "Slider_radio_yaw"
-        Me.Slider_radio_yaw.ProgressBarColor = System.Drawing.Color.CadetBlue
-        Me.Slider_radio_yaw.ShowInverted = False
-        Me.Slider_radio_yaw.Size = New System.Drawing.Size(70, 350)
-        Me.Slider_radio_yaw.TabIndex = 4
-        Me.ToolTip.SetToolTip(Me.Slider_radio_yaw, "Yaw channel - controls left/right motion (naysaying)")
-        Me.Slider_radio_yaw.Value = 1500
-        Me.Slider_radio_yaw.Vertical = False
-        '
-        'Slider_radio_throttle
-        '
-        Me.Slider_radio_throttle.BackColor = System.Drawing.Color.Transparent
-        Me.Slider_radio_throttle.BorderColor = System.Drawing.Color.LightGray
-        Me.Slider_radio_throttle.CalibrationCenterColor = System.Drawing.Color.Gray
-        Me.Slider_radio_throttle.CalibrationMaxColor = System.Drawing.Color.SteelBlue
-        Me.Slider_radio_throttle.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
-        Me.Slider_radio_throttle.Location = New System.Drawing.Point(9, 16)
-        Me.Slider_radio_throttle.Maximum = 2100
-        Me.Slider_radio_throttle.Minimum = 900
-        Me.Slider_radio_throttle.Name = "Slider_radio_throttle"
-        Me.Slider_radio_throttle.ProgressBarColor = System.Drawing.Color.CadetBlue
-        Me.Slider_radio_throttle.ShowInverted = False
-        Me.Slider_radio_throttle.Size = New System.Drawing.Size(70, 350)
-        Me.Slider_radio_throttle.TabIndex = 3
-        Me.ToolTip.SetToolTip(Me.Slider_radio_throttle, "Throttle channel - controls up/down motion")
-        Me.Slider_radio_throttle.Value = 1500
-        Me.Slider_radio_throttle.Vertical = False
-        '
-        'Slider_radio_aux2
-        '
-        Me.Slider_radio_aux2.BackColor = System.Drawing.Color.Transparent
-        Me.Slider_radio_aux2.BorderColor = System.Drawing.Color.LightGray
-        Me.Slider_radio_aux2.CalibrationCenterColor = System.Drawing.Color.Gray
-        Me.Slider_radio_aux2.CalibrationMaxColor = System.Drawing.Color.SteelBlue
-        Me.Slider_radio_aux2.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
-        Me.Slider_radio_aux2.Enabled = False
-        Me.Slider_radio_aux2.Location = New System.Drawing.Point(10, 16)
-        Me.Slider_radio_aux2.Maximum = 2100
-        Me.Slider_radio_aux2.Minimum = 900
-        Me.Slider_radio_aux2.Name = "Slider_radio_aux2"
-        Me.Slider_radio_aux2.ProgressBarColor = System.Drawing.Color.CadetBlue
-        Me.Slider_radio_aux2.ShowInverted = False
-        Me.Slider_radio_aux2.Size = New System.Drawing.Size(70, 350)
-        Me.Slider_radio_aux2.TabIndex = 1
-        Me.ToolTip.SetToolTip(Me.Slider_radio_aux2, "AUX2 channel - controls GPS hold mode")
-        Me.Slider_radio_aux2.Value = 1500
-        Me.Slider_radio_aux2.Vertical = False
-        '
-        'Slider_radio_aux1
-        '
-        Me.Slider_radio_aux1.BackColor = System.Drawing.Color.Transparent
-        Me.Slider_radio_aux1.BorderColor = System.Drawing.Color.LightGray
-        Me.Slider_radio_aux1.CalibrationCenterColor = System.Drawing.Color.Gray
-        Me.Slider_radio_aux1.CalibrationMaxColor = System.Drawing.Color.SteelBlue
-        Me.Slider_radio_aux1.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
-        Me.Slider_radio_aux1.Location = New System.Drawing.Point(10, 16)
-        Me.Slider_radio_aux1.Maximum = 2100
-        Me.Slider_radio_aux1.Minimum = 900
-        Me.Slider_radio_aux1.Name = "Slider_radio_aux1"
-        Me.Slider_radio_aux1.ProgressBarColor = System.Drawing.Color.CadetBlue
-        Me.Slider_radio_aux1.ShowInverted = False
-        Me.Slider_radio_aux1.Size = New System.Drawing.Size(70, 350)
-        Me.Slider_radio_aux1.TabIndex = 2
-        Me.ToolTip.SetToolTip(Me.Slider_radio_aux1, "AUX1 channel - controls altitude hold mode")
-        Me.Slider_radio_aux1.Value = 1500
-        Me.Slider_radio_aux1.Vertical = False
-        '
-        'Slider_radio_roll
-        '
-        Me.Slider_radio_roll.BackColor = System.Drawing.Color.Transparent
-        Me.Slider_radio_roll.BorderColor = System.Drawing.Color.LightGray
-        Me.Slider_radio_roll.CalibrationCenterColor = System.Drawing.Color.Gray
-        Me.Slider_radio_roll.CalibrationMaxColor = System.Drawing.Color.SteelBlue
-        Me.Slider_radio_roll.CalibrationMinColor = System.Drawing.Color.LightSeaGreen
-        Me.Slider_radio_roll.Location = New System.Drawing.Point(10, 16)
-        Me.Slider_radio_roll.Maximum = 2100
-        Me.Slider_radio_roll.Minimum = 900
-        Me.Slider_radio_roll.Name = "Slider_radio_roll"
-        Me.Slider_radio_roll.ProgressBarColor = System.Drawing.Color.CadetBlue
-        Me.Slider_radio_roll.ShowInverted = False
-        Me.Slider_radio_roll.Size = New System.Drawing.Size(70, 350)
-        Me.Slider_radio_roll.TabIndex = 6
-        Me.ToolTip.SetToolTip(Me.Slider_radio_roll, "Roll channel - controls sideways roll motion")
-        Me.Slider_radio_roll.Value = 1500
-        Me.Slider_radio_roll.Vertical = True
-        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2684,10 +2790,7 @@ Partial Class MainForm
         Me.ClientSize = New System.Drawing.Size(784, 562)
         Me.Controls.Add(Me.Tabs)
         Me.Controls.Add(Me.Status)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximizeBox = False
-        Me.MinimizeBox = False
         Me.Name = "MainForm"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -2697,13 +2800,19 @@ Partial Class MainForm
         Me.Tabs.ResumeLayout(False)
         Me.Connection.ResumeLayout(False)
         Me.Connection.PerformLayout()
+        Me.GroupBoxCamera.ResumeLayout(False)
+        Me.GroupBoxCamera.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBoxMagDecl.ResumeLayout(False)
         Me.GroupBoxMagDecl.PerformLayout()
-        Me.GroupBox9.ResumeLayout(False)
-        Me.GroupBox9.PerformLayout()
+        Me.GroupBoxSerial.ResumeLayout(False)
+        Me.GroupBoxSerial.PerformLayout()
         Me.VisualFlight.ResumeLayout(False)
         Me.VisualFlight.PerformLayout()
+        Me.Panel_Accel_ADI.ResumeLayout(False)
+        Me.Panel_Accel_ADI.PerformLayout()
+        Me.Panel_Gyro_ADI.ResumeLayout(False)
+        Me.Panel_Gyro_ADI.PerformLayout()
         Me.SensorPlots.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
         CType(Me.Chart3, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2750,6 +2859,8 @@ Partial Class MainForm
         CType(Me.NumericUpDown_PID_Roll_P, System.ComponentModel.ISupportInitialize).EndInit()
         Me.OnlineSupport.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
+        Me.LiveFeed.ResumeLayout(False)
+        CType(Me.PictureBoxDisplay, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2799,30 +2910,10 @@ Partial Class MainForm
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents PIDTuning As System.Windows.Forms.TabPage
-    Friend WithEvents accel_z As WindowsFormsApplication.ArduProgressBar
-    Friend WithEvents accel_pitch As WindowsFormsApplication.ArduProgressBar
-    Friend WithEvents accel_roll As WindowsFormsApplication.ArduProgressBar
-    Friend WithEvents yaw_gyro As WindowsFormsApplication.ArduProgressBar
-    Friend WithEvents pitch_gyro As WindowsFormsApplication.ArduProgressBar
-    Friend WithEvents roll_gyro As WindowsFormsApplication.ArduProgressBar
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents Label16 As System.Windows.Forms.Label
-    Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents Connection As System.Windows.Forms.TabPage
     Friend WithEvents ComboBox_Baud As System.Windows.Forms.ComboBox
     Friend WithEvents Button_Connect As System.Windows.Forms.Button
     Friend WithEvents ComboBox_Ports As System.Windows.Forms.ComboBox
-    Friend WithEvents Label_yaw_gyro As System.Windows.Forms.Label
-    Friend WithEvents Label_pitch_gyro As System.Windows.Forms.Label
-    Friend WithEvents Label_roll_gyro As System.Windows.Forms.Label
-    Friend WithEvents Label_z_accel As System.Windows.Forms.Label
-    Friend WithEvents Label_pitch_accel As System.Windows.Forms.Label
-    Friend WithEvents Label_roll_accel As System.Windows.Forms.Label
     Friend WithEvents TabImages As System.Windows.Forms.ImageList
     Friend WithEvents Transmitter As System.Windows.Forms.TabPage
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
@@ -2857,7 +2948,7 @@ Partial Class MainForm
     Friend WithEvents ADIDemoTimer As System.Windows.Forms.Timer
     Friend WithEvents ArtificialHorizon1 As WindowsFormsApplication.ArtificialHorizon
     Friend WithEvents ToolTip As System.Windows.Forms.ToolTip
-    Friend WithEvents GroupBox9 As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBoxSerial As System.Windows.Forms.GroupBox
     Friend WithEvents Label21 As System.Windows.Forms.Label
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents CheckBox_AutoConnect As System.Windows.Forms.CheckBox
@@ -2939,5 +3030,34 @@ Partial Class MainForm
     Friend WithEvents Button_Browser_Home As System.Windows.Forms.Button
     Friend WithEvents ToolStripStatusLabel2 As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents Button_ShowMenu As System.Windows.Forms.Button
+    Friend WithEvents Panel_Gyro_ADI As System.Windows.Forms.Panel
+    Friend WithEvents Label_yaw_gyro As System.Windows.Forms.Label
+    Friend WithEvents Label_pitch_gyro As System.Windows.Forms.Label
+    Friend WithEvents Label_roll_gyro As System.Windows.Forms.Label
+    Friend WithEvents Label16 As System.Windows.Forms.Label
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents Label15 As System.Windows.Forms.Label
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents yaw_gyro As WindowsFormsApplication.ArduProgressBar
+    Friend WithEvents pitch_gyro As WindowsFormsApplication.ArduProgressBar
+    Friend WithEvents roll_gyro As WindowsFormsApplication.ArduProgressBar
+    Friend WithEvents Panel_Accel_ADI As System.Windows.Forms.Panel
+    Friend WithEvents Label_z_accel As System.Windows.Forms.Label
+    Friend WithEvents Label_pitch_accel As System.Windows.Forms.Label
+    Friend WithEvents Label_roll_accel As System.Windows.Forms.Label
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents accel_z As WindowsFormsApplication.ArduProgressBar
+    Friend WithEvents accel_pitch As WindowsFormsApplication.ArduProgressBar
+    Friend WithEvents accel_roll As WindowsFormsApplication.ArduProgressBar
+    Friend WithEvents LiveFeed As System.Windows.Forms.TabPage
+    Friend WithEvents PictureBoxDisplay As System.Windows.Forms.PictureBox
+    Friend WithEvents ButtonStartCamera As System.Windows.Forms.Button
+    Friend WithEvents ComboBox_SelectCamera As System.Windows.Forms.ComboBox
+    Friend WithEvents GroupBoxCamera As System.Windows.Forms.GroupBox
+    Friend WithEvents LabelCameraShowing As System.Windows.Forms.Label
+    Friend WithEvents CheckBoxShowLiveFeed As System.Windows.Forms.CheckBox
 
 End Class

@@ -13,6 +13,7 @@ Public Class ArtificialHorizon
     Private Pen4 As Pen = New Pen(Color.White, 1)
     Private Pen5 As Pen = New Pen(Color.Lime, 2)
 
+    Private image As Bitmap
 
     Private _roll_angle As Double
     Public Property roll_angle() As Double
@@ -72,9 +73,98 @@ Public Class ArtificialHorizon
         Return New Bitmap(source)
     End Function
 
+    Public Sub EnableLiveFeed()
+        'no need to update ArtificialHorizon_Paint since we draw in the picturebox
+        RemoveHandler Me.Paint, AddressOf ArtificialHorizon_Paint
+        'Draw the ADI with live feed image
+        AddHandler PictureBoxLiveFeed.Paint, AddressOf PictureBox1_Paint
+
+        'Show the live feed image
+        PictureBoxLiveFeed.Enabled = True
+        PictureBoxLiveFeed.Visible = True
+
+        PictureBoxLiveFeed.Top = 0
+        PictureBoxLiveFeed.Left = 0
+        PictureBoxLiveFeed.Width = Me.Width
+        PictureBoxLiveFeed.Height = Me.Height
+    End Sub
+
+    Public Sub DisableLiveFeed()
+        'Draw the ADI with ArtificialHorizon
+        AddHandler Me.Paint, AddressOf ArtificialHorizon_Paint
+        'Hide the live feed image
+        PictureBoxLiveFeed.Visible = False
+        PictureBoxLiveFeed.Enabled = False
+        'Stop updating the live feed image
+        RemoveHandler PictureBoxLiveFeed.Paint, AddressOf PictureBox1_Paint
+    End Sub
 
     Private Sub ArtificialHorizon_Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles Me.Paint
+        RenderADI(sender, e, True)
+    End Sub
+
+    Private Sub drawpitchline(ByVal g As Graphics, ByVal pitch As Double)
+
+        Dim w As Single = Me.Width / 16
+        Dim sF As SizeF
+        g.DrawLine(Pen3, -w, pitch_to_pix(-pitch + 5), w, pitch_to_pix(-pitch + 5))
+        g.DrawLine(Pen3, -w * 5 / 3, pitch_to_pix(-pitch), w * 5 / 3, pitch_to_pix(-pitch))
+        sF = g.MeasureString(pitch, NormalFont)
+        If pitch <> 0 Then
+            g.DrawString(pitch, NormalFont, Brushes.Lime, -w * 1.7 - sF.Width, pitch_to_pix(-pitch) - sF.Height / 2)
+            g.DrawString(pitch, NormalFont, Brushes.Lime, w * 1.7, pitch_to_pix(-pitch) - sF.Height / 2)
+        End If
+
+    End Sub
+
+    Private Sub drawaltline(ByVal g As Graphics, ByVal alt As Double)
+        Dim w As Single = Me.Width / 32
+        Dim m As Single = Me.Width / 2
+        Dim sF As SizeF
+        g.DrawLine(Pen3, -m, alt_to_pix(-alt), -m + w, alt_to_pix(-alt))
+        g.DrawLine(Pen3, -m, alt_to_pix(-alt + 5), -m + w / 2, alt_to_pix(-alt + 5))
+        sF = g.MeasureString(Math.Round(alt, 0), NormalFont)
+        g.DrawString(Math.Round(alt, 0), NormalFont, Brushes.Lime, -m + w + 2, alt_to_pix(-alt) - sF.Height / 2)
+        'If alt <> 0 Then g.DrawString("" & alt, NormalFont, Brushes.Lime, Me.ClientRectangle.Left + h + 2, y - sF.Height / 2)
+
+    End Sub
+
+    Private Sub drawyawline(ByVal g As Graphics, ByVal yaw As Double)
+        Dim h As Single = Me.Height / 32
+        Dim x As Single = yaw_to_pix(yaw)
+        Dim sF As SizeF
+
+        g.DrawLine(New Pen(Brushes.Lime, 1), x, Me.ClientRectangle.Top, x, Me.ClientRectangle.Top + h)
+        sF = g.MeasureString("" & yaw & Chr(176), NormalFont)
+        If yaw <> 0 Then g.DrawString("" & yaw & Chr(176), NormalFont, Brushes.Lime, x - sF.Width / 2, Me.ClientRectangle.Top + h)
+
+    End Sub
+
+    Private Sub drawrollline(ByVal g As Graphics, ByVal a As Single)
+        Dim w2 As Single = Me.Width / 2
+        Dim sF As SizeF
+        g.RotateTransform(a + 90)
+        g.TranslateTransform(-w2 + 10, 0)
+        g.DrawLine(Pens.Lime, 0, 0, 15, 0)
+        'g.DrawEllipse(Pens.Red, New Rectangle(12, -3, 6, 6)) 'Used for visual reference
+        g.TranslateTransform(10, 5)
+        g.RotateTransform(-a - 90)
+        sF = g.MeasureString("" & (a) & Chr(176), NormalFont)
+        If a <> 0 Then g.DrawString("" & (a) & Chr(176), NormalFont, Brushes.Lime, -(sF.Width / 3), a / 12.5 + 4)
+        g.RotateTransform(+90 + a)
+        g.TranslateTransform(-10, -5)
+        g.TranslateTransform(+w2 - 10, 0)
+        g.RotateTransform(-a - 90)
+    End Sub
+
+    Private Sub PictureBox1_Paint(ByVal sender As System.Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles PictureBoxLiveFeed.Paint
+        RenderADI(sender, e, False)
+    End Sub
+
+
+    Private Sub RenderADI(ByVal sender As System.Object, ByVal e As System.Windows.Forms.PaintEventArgs, ByVal drawArtificialHorizon As Boolean)
         g = e.Graphics
+
         g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
 
         'g.Clear(Me.BackColor)
@@ -100,23 +190,25 @@ Public Class ArtificialHorizon
         g.RotateTransform(roll_angle)
         g.TranslateTransform(0, pitch_to_pix(pitch_angle))
 
-        ' Draw ground, bottom portion
-        Dim b As New System.Drawing.Drawing2D.LinearGradientBrush(New RectangleF(-Me.Width, 0, Me.Height * 2, Me.Width * 2), Color.FromArgb(255, 145, 111, 0), Color.FromArgb(255, 244, 208, 88), Drawing2D.LinearGradientMode.Vertical)
-        g.FillRectangle(b, New RectangleF(-Me.Width * 2, +30, Me.Height * 4, Me.Width * 4))
+        If drawArtificialHorizon = True Then
+            ' Draw ground, bottom portion
+            Dim b As New System.Drawing.Drawing2D.LinearGradientBrush(New RectangleF(-Me.Width, 0, Me.Height * 2, Me.Width * 2), Color.FromArgb(255, 145, 111, 0), Color.FromArgb(255, 244, 208, 88), Drawing2D.LinearGradientMode.Vertical)
+            g.FillRectangle(b, New RectangleF(-Me.Width * 2, +30, Me.Height * 4, Me.Width * 4))
 
-        ' Draw ground, portion nearest the horizon
-        b = New System.Drawing.Drawing2D.LinearGradientBrush(New RectangleF(-Me.Width, +1, Me.Height * 2, 31), Color.FromArgb(255, 255, 228, 10), Color.FromArgb(255, 145, 111, 0), Drawing2D.LinearGradientMode.Vertical)
-        g.FillRectangle(b, New RectangleF(-Me.Width * 2, +1, Me.Height * 4, +30))
+            ' Draw ground, portion nearest the horizon
+            b = New System.Drawing.Drawing2D.LinearGradientBrush(New RectangleF(-Me.Width, +1, Me.Height * 2, 31), Color.FromArgb(255, 255, 228, 10), Color.FromArgb(255, 145, 111, 0), Drawing2D.LinearGradientMode.Vertical)
+            g.FillRectangle(b, New RectangleF(-Me.Width * 2, +1, Me.Height * 4, +30))
 
-        g.RotateTransform(180) 'Flip around
+            g.RotateTransform(180) 'Flip around
 
-        ' Draw sky, upper part
-        b = New System.Drawing.Drawing2D.LinearGradientBrush(New RectangleF(-Me.Width, 91, Me.Height * 2, Me.Width * 2), Color.FromArgb(255, 58, 117, 181), Color.FromArgb(255, 0, 39, 89), Drawing2D.LinearGradientMode.Vertical)
-        g.FillRectangle(b, New RectangleF(-Me.Width * 2, 90, Me.Height * 4, Me.Width * 4))
+            ' Draw sky, upper part
+            b = New System.Drawing.Drawing2D.LinearGradientBrush(New RectangleF(-Me.Width, 91, Me.Height * 2, Me.Width * 2), Color.FromArgb(255, 58, 117, 181), Color.FromArgb(255, 0, 39, 89), Drawing2D.LinearGradientMode.Vertical)
+            g.FillRectangle(b, New RectangleF(-Me.Width * 2, 90, Me.Height * 4, Me.Width * 4))
 
-        'Draw sky, lower part (near horizon)
-        b = New System.Drawing.Drawing2D.LinearGradientBrush(New RectangleF(-Me.Width, 0, Me.Width * 2, 93), Color.FromArgb(255, 176, 212, 236), Color.FromArgb(255, 58, 117, 181), Drawing2D.LinearGradientMode.Vertical)
-        g.FillRectangle(b, New RectangleF(-Me.Width * 2, 0, Me.Height * 4, 92))
+            'Draw sky, lower part (near horizon)
+            b = New System.Drawing.Drawing2D.LinearGradientBrush(New RectangleF(-Me.Width, 0, Me.Width * 2, 93), Color.FromArgb(255, 176, 212, 236), Color.FromArgb(255, 58, 117, 181), Drawing2D.LinearGradientMode.Vertical)
+            g.FillRectangle(b, New RectangleF(-Me.Width * 2, 0, Me.Height * 4, 92))
+        End If
 
         g.ResetTransform()
 
@@ -273,63 +365,8 @@ Public Class ArtificialHorizon
         sF = g.MeasureString("ALT", NormalFont)
         g.DrawString("ALT", NormalFont, Brushes.Black, w + (w * 4) / 2 - (sF.Width / 2), -w - (w) / 2 - (sF.Height / 2) - 1)
         g.ResetTransform()
-
-
-
-
-
         'And that's it ! Complete ADI :)
     End Sub
 
-    Private Sub drawpitchline(ByVal g As Graphics, ByVal pitch As Double)
-        Dim w As Single = Me.Width / 16
-        Dim sF As SizeF
-        g.DrawLine(Pen3, -w, pitch_to_pix(-pitch + 5), w, pitch_to_pix(-pitch + 5))
-        g.DrawLine(Pen3, -w * 5 / 3, pitch_to_pix(-pitch), w * 5 / 3, pitch_to_pix(-pitch))
-        sF = g.MeasureString(pitch, NormalFont)
-        If pitch <> 0 Then
-            g.DrawString(pitch, NormalFont, Brushes.Lime, -w * 1.7 - sF.Width, pitch_to_pix(-pitch) - sF.Height / 2)
-            g.DrawString(pitch, NormalFont, Brushes.Lime, w * 1.7, pitch_to_pix(-pitch) - sF.Height / 2)
-        End If
-        
-    End Sub
-    Private Sub drawaltline(ByVal g As Graphics, ByVal alt As Double)
-        Dim w As Single = Me.Width / 32
-        Dim m As Single = Me.Width / 2
-        Dim sF As SizeF
-        g.DrawLine(Pen3, -m, alt_to_pix(-alt), -m + w, alt_to_pix(-alt))
-        g.DrawLine(Pen3, -m, alt_to_pix(-alt + 5), -m + w / 2, alt_to_pix(-alt + 5))
-        sF = g.MeasureString(Math.Round(alt, 0), NormalFont)
-        g.DrawString(Math.Round(alt, 0), NormalFont, Brushes.Lime, -m + w + 2, alt_to_pix(-alt) - sF.Height / 2)
-        'If alt <> 0 Then g.DrawString("" & alt, NormalFont, Brushes.Lime, Me.ClientRectangle.Left + h + 2, y - sF.Height / 2)
 
-    End Sub
-
-    Private Sub drawyawline(ByVal g As Graphics, ByVal yaw As Double)
-        Dim h As Single = Me.Height / 32
-        Dim x As Single = yaw_to_pix(yaw)
-        Dim sF As SizeF
-
-        g.DrawLine(New Pen(Brushes.Lime, 1), x, Me.ClientRectangle.Top, x, Me.ClientRectangle.Top + h)
-        sF = g.MeasureString("" & yaw & Chr(176), NormalFont)
-        If yaw <> 0 Then g.DrawString("" & yaw & Chr(176), NormalFont, Brushes.Lime, x - sF.Width / 2, Me.ClientRectangle.Top + h)
-
-    End Sub
-
-    Private Sub drawrollline(ByVal g As Graphics, ByVal a As Single)
-        Dim w2 As Single = Me.Width / 2
-        Dim sF As SizeF
-        g.RotateTransform(a + 90)
-        g.TranslateTransform(-w2 + 10, 0)
-        g.DrawLine(Pens.Lime, 0, 0, 15, 0)
-        'g.DrawEllipse(Pens.Red, New Rectangle(12, -3, 6, 6)) 'Used for visual reference
-        g.TranslateTransform(10, 5)
-        g.RotateTransform(-a - 90)
-        sF = g.MeasureString("" & (a) & Chr(176), NormalFont)
-        If a <> 0 Then g.DrawString("" & (a) & Chr(176), NormalFont, Brushes.Lime, -(sF.Width / 3), a / 12.5 + 4)
-        g.RotateTransform(+90 + a)
-        g.TranslateTransform(-10, -5)
-        g.TranslateTransform(+w2 - 10, 0)
-        g.RotateTransform(-a - 90)
-    End Sub
 End Class
