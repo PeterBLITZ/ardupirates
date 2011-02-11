@@ -612,19 +612,19 @@ void Show_Settings() {
 // Display obstacle avoidance pids
 void Show_SonarAndObstacleAvoidance_PIDs() {
   SerPri("\tSonar PID: ");
-  SerPri(KP_SONAR_ALTITUDE); cspc();
-  SerPri(KI_SONAR_ALTITUDE); cspc();
-  SerPrln(KD_SONAR_ALTITUDE);
+  SerPri(KP_SONAR_ALTITUDE,3); cspc();
+  SerPri(KI_SONAR_ALTITUDE,3); cspc();
+  SerPrln(KD_SONAR_ALTITUDE,3);
   SerPri("\tObstacle SafetyZone: ");
   SerPrln(RF_SAFETY_ZONE);
   SerPri("\tRoll PID: ");
-  SerPri(KP_RF_ROLL); cspc();
-  SerPri(KI_RF_ROLL); cspc();
-  SerPrln(KD_RF_ROLL);
+  SerPri(KP_RF_ROLL,3); cspc();
+  SerPri(KI_RF_ROLL,3); cspc();
+  SerPrln(KD_RF_ROLL,3);
   SerPri("\tPitch PID: ");
-  SerPri(KP_RF_PITCH); cspc();
-  SerPri(KI_RF_PITCH); cspc();
-  SerPri(KD_RF_PITCH); 
+  SerPri(KP_RF_PITCH,3); cspc();
+  SerPri(KI_RF_PITCH,3); cspc();
+  SerPri(KD_RF_PITCH,3); 
   SerPrln();
   SerPri("\tMaxAngle: "); 
   SerPri(RF_MAX_ANGLE);   
@@ -668,11 +668,11 @@ void Set_SonarAndObstacleAvoidance_PIDs() {
       KD_SONAR_ALTITUDE = tempVal3;
       SerPrln();
       SerPri("P:");
-      SerPri(KP_SONAR_ALTITUDE);
+      SerPri(KP_SONAR_ALTITUDE,3);
       SerPri("\tI:");
-      SerPri(KI_SONAR_ALTITUDE);
+      SerPri(KI_SONAR_ALTITUDE,3);
       SerPri("\tD:");
-      SerPri(KD_SONAR_ALTITUDE);
+      SerPri(KD_SONAR_ALTITUDE,3);
       saveToEeprom = 1;
   }
   SerPrln();    
@@ -685,7 +685,7 @@ void Set_SonarAndObstacleAvoidance_PIDs() {
   if( tempVal1 >= 20 && tempVal1 <= 700 ) {
       RF_SAFETY_ZONE = tempVal1;
       SerPri("SafetyZone: ");
-      SerPri(RF_SAFETY_ZONE);
+      SerPri(RF_SAFETY_ZONE,3);
       saveToEeprom = 1;   
   }
   SerPrln();      
@@ -703,11 +703,11 @@ void Set_SonarAndObstacleAvoidance_PIDs() {
       KD_RF_ROLL = tempVal3;
       SerPrln();
       SerPri("P:");
-      SerPri(KP_RF_ROLL);
+      SerPri(KP_RF_ROLL,3);
       SerPri("\tI:");
-      SerPri(KI_RF_ROLL);
+      SerPri(KI_RF_ROLL,3);
       SerPri("\tD:");
-      SerPri(KD_RF_ROLL);
+      SerPri(KD_RF_ROLL,3);
       saveToEeprom = 1;
   }
   SerPrln();  
@@ -725,11 +725,11 @@ void Set_SonarAndObstacleAvoidance_PIDs() {
       KD_RF_PITCH = tempVal3;
       SerPrln();
       SerPri("P:");
-      SerPri(KP_RF_PITCH);
+      SerPri(KP_RF_PITCH,3);
       SerPri("\tI:");
-      SerPri(KI_RF_PITCH);
+      SerPri(KI_RF_PITCH,3);
       SerPri("\tD:");
-      SerPri(KD_RF_PITCH);      
+      SerPri(KD_RF_PITCH,3);      
       saveToEeprom = 1;
   }
   SerPrln();  
