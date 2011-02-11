@@ -146,6 +146,7 @@ For class-specific constants, use {{{static const}}} members or enumerations as 
     * Line endings should be native to the platform on which the file was checked out, and all files containing text should have the appropriate SVN attributes to ensure that line endings are translated correctly.
     * The default indentation will be four spaces.
     * No tab characters in our source files.  This means the code will always look 'right' in any editor.
+    * Dates should use the international format of YYYY-MM-DD. For example, "3rd of April 2002", in international format is written as 2002-04-03.
 
 _editor configuration examples TBD_
 
@@ -179,4 +180,3 @@ unpad-paren                # spaces are removed from around parentheses in expre
 keep-one-line-statements   # don't wrap complex or multi-line statements
 align-pointer=name         # keep the * in pointer declarations with the pointer name
 }}}
-
