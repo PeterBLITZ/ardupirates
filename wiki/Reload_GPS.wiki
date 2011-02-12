@@ -1,0 +1,7 @@
+== Reloading or updating your GPS firmware ==
+
+ * [http://code.google.com/p/arducopter/wiki/UBlox uBlox GPS module]
+http://store.diydrones.com/v/vspfiles/photos/SPK-GPS-GS407-2T.jpg
+
+ * [http://code.google.com/p/arducopter/wiki/MediaTek MediaTek GPS module]
+http://store.diydrones.com/v/vspfiles/photos/MT3329-02-2T.jpg
