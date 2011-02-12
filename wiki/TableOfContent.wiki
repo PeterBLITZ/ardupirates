@@ -48,6 +48,7 @@
  * [FAQ]
  * [ArduCopterInformation ArduCopter Information]
  * [Reload_GPS Reloading/updating your GPS firmware]
+   * [Reload_MTek MediaTek]
  * *For Developers*
   * [ContributorsGuide Guideline for developers]
   * [CodingConventions The Coders Bible]
