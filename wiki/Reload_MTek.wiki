@@ -1,0 +1,13 @@
+== Reloading or updating your !MediaTek GPS firmware ==
+
+This is a pretty simple process, requiring only a [http://store.diydrones.com/product_p/ttl-232r-3v3.htm FTDI cable], at least eight pins of [http://store.diydrones.com/product_p/pr-pbc36saan.htm breakaway headers], and four [http://www.adafruit.com/index.php?main_page=product_info&cPath=33&products_id=266 female-to-female jumper cables] or a couple [http://store.diydrones.com/product_p/pr-0003-03-5cm.htm female-to-female servo cables] (you've had to use all of these for basic !ArduPilot, so you should have them on hand)
+
+*Step 1*: Solder on a four-pin header on the pads on the bottom of the !MediaTek module, as shown in the picture below. 
+
+http://ardupilot-mega.googlecode.com/svn/ArduPilotMegaImages/IMG_4843.JPG
+
+*Step 2*: Press some spare headers into the FTDI cable connector. Now connect the GPS module to the FTDI cable with jumper cables, as shown below (GPS GND->FTDI black, GPS 5V->FTDI red, GPS Out->FTDI yellow, GPS in -> FTDI orange).
+
+http://ardupilot-mega.googlecode.com/svn/ArduPilotMegaImages/IMG_4842.JPG
+
+*Step 3*: Now download the firmware update utility and new firmware [http://code.google.com/p/ardupilot/downloads/detail?name=MTK_DIYdrones.zip&can=2&q= here]. Unzip the file, and follow the instructions in the !MediaTek_Programming.pdf document. 
