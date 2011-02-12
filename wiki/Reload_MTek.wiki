@@ -10,4 +10,4 @@ http://ardupilot-mega.googlecode.com/svn/ArduPilotMegaImages/IMG_4843.JPG
 
 http://ardupilot-mega.googlecode.com/svn/ArduPilotMegaImages/IMG_4842.JPG
 
-*Step 3*: Now download the firmware update utility and new firmware [http://code.google.com/p/ardupilot/downloads/detail?name=MTK_DIYdrones.zip&can=2&q= here]. Unzip the file, and follow the instructions in the !MediaTek_Programming.pdf document. 
+*Step 3*: Now download the firmware update utility and new firmware [http://code.google.com/p/ardupirates/downloads/detail?name=MTK_utility_update1.6.zip&can=2&q= here]. Unzip the file, and follow the instructions in the !MediaTek_Programming.pdf document. 
