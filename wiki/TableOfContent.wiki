@@ -47,6 +47,7 @@
  * *Appendix*
  * [FAQ]
  * [ArduCopterInformation ArduCopter Information]
+ * [Reload_GPS Reloading/updating your GPS firmware]
  * *For Developers*
   * [ContributorsGuide Guideline for developers]
   * [CodingConventions The Coders Bible]
