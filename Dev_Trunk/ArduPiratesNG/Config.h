@@ -71,7 +71,7 @@ TODO:
    (HEXA). The first airframe has four motors, the second has six.
 
 If you have a quadcopter, uncomment this next line ! */
-#define AIRFRAME QUAD
+//#define AIRFRAME QUAD
 /*
 - ---------------------------------------------------------------------------- -
    QUAD COPTER AIRFRAME SETUP (PWM) (4 motors)
@@ -151,7 +151,7 @@ If you have a quadcopter, uncomment this next line ! */
 
    To choose FLIGHT_MODE_X, just uncommend the line below.
                                                                               */
-#define FLIGHT_MODE_X
+//#define FLIGHT_MODE_X
 
 /* --------------------------------------------------------------------------- */
 
@@ -179,7 +179,7 @@ If you have a quadcopter, uncomment this next line ! */
    command "T". It will tell you which flight mode is configured.
 
    If you have a hexacopter, uncomment this next line !                                 */
-//#define AIRFRAME HEXA
+#define AIRFRAME HEXA
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -200,12 +200,14 @@ If you have a quadcopter, uncomment this next line ! */
                                           // CW = Clockwise rotation,
                                           // CCW = Counter clockwise rotation.
 
-   To make absolutely sure you are running the hexa flight mode, connect with
+   To make absolutely sure you are running the Octa flight mode, connect with
    the Configurator and use the serial monitor in the Configurator to send the
    command "T". It will tell you which flight mode is configured.
-
-   If you have a hexacopter, uncomment this next line !                                 */
-#define AIRFRAME OCTA
+   These PWM (ESC) connectors below you will have to solder directly on the APM board.  
+   CH_10 (output 9) = Connection PB5 on APM
+   CH_11 (output 10) = Connection PE3 on APM
+   If you have a Octacopter, uncomment this next line !                                 */
+//#define AIRFRAME OCTA
 
 
 /*
@@ -370,7 +372,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
    Once you have achieved this fine tune in the Configurator's serial monitor by
    pressing "T" (capital t).
                                                                               */
-#define MAGCALIBRATION 0.4333      
+#define MAGCALIBRATION -15.65      
 
 /* SET MAGNETOMETER ORIENTATION:
    Next, you'll have to define how your magnetometer is mounted to your
@@ -459,11 +461,11 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
    need to use the Configurator and send the K command. Refer to the Wiki for
    more info on the Configurator and this specific command.
                                                                               */
-//#define IsCAM              // Do we have camera stabilization in use, If you
+#define IsCAM              // Do we have camera stabilization in use, If you
                            // activate, check OUTPUT pins from ArduUser.h
                            // DIP2 down (ON) = Camera Stabilization enabled,
                            // DIP2 up (OFF) = Camera Stabilization disabled.
-//#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
+#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
                            // during GPS Hold or Altitude Hold.
 
 
@@ -550,7 +552,7 @@ Don't change this.        */
    command link. If we are using normal FTDI/USB port as our telemetry/
    configuration, keep next line disabled.
                                                                               */
-//#define SerXbee
+#define SerXbee
 
 /*
    Telemetry port speed, default is 115200
@@ -558,8 +560,8 @@ Don't change this.        */
 //#define SerBau  19200
 //#define SerBau  38400
 //#define SerBau  57600
-#define SerBau  115200     
-//#define SerBau 111100    //If using Telemetry, try this setting.
+//#define SerBau  115200     
+#define SerBau 111100    //If using Telemetry, try this setting.
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -584,7 +586,7 @@ Don't change this.        */
    Your Aux1 will be your 3 position channel, and your radio has to be in acro
    (plane) mode.
                                                                               */
-//#define Use_PID_Tuning
+#define Use_PID_Tuning
 
 
 /*

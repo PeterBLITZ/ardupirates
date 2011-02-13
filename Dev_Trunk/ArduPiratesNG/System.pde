@@ -101,9 +101,9 @@ void APM_Init() {
   APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
   APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
   APM_RC.OutputCh(6, MIN_THROTTLE);    // Front Motor CW
-  APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
-  APM_RC.OutputCh(9, MIN_THROTTLE);     // Back Motor CW    // Connection PB5 on APM
-  APM_RC.OutputCh(10, MIN_THROTTLE);    // Back Motor CCW  // Connection PE3 on APM  
+  APM_RC.OutputCh(7, MIN_THROTTLE);    // Front Motor CCW    
+  APM_RC.OutputCh(9, MIN_THROTTLE);    // Back Motor CW    // Connection PB5 on APM
+  APM_RC.OutputCh(10, MIN_THROTTLE);   // Back Motor CCW   // Connection PE3 on APM  
 #endif
 
   // Make sure that Relay is switched off.
@@ -179,9 +179,9 @@ void APM_Init() {
   APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
   APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
   APM_RC.OutputCh(6, MIN_THROTTLE);    // Front Motor CW
-  APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
-  APM_RC.OutputCh(9, MIN_THROTTLE);     // Back Motor CW    // Connection PB5 on APM
-  APM_RC.OutputCh(10, MIN_THROTTLE);    // Back Motor CCW  // Connection PE3 on APM  
+  APM_RC.OutputCh(7, MIN_THROTTLE);    // Front Motor CCW    
+  APM_RC.OutputCh(9, MIN_THROTTLE);    // Back Motor CW    // Connection PB5 on APM
+  APM_RC.OutputCh(10, MIN_THROTTLE);   // Back Motor CCW   // Connection PE3 on APM  
 #endif
 
   // Initialise Wire library used by Magnetometer and Barometer

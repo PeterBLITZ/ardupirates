@@ -148,7 +148,7 @@ void motor_output()
       RightCCWMotor = MIN_THROTTLE;
       FrontCWMotor = MIN_THROTTLE;
       FrontCCWMotor = MIN_THROTTLE;
-      BackCCWMotor = MIN_THROTTLE;
+      BackCCWMotor = MIN_THROTTLE;  
       BackCWMotor = MIN_THROTTLE;
 #endif
 
@@ -187,7 +187,7 @@ void motor_output()
     APM_RC.OutputCh(6, FrontCWMotor);    // Front Motor CW
     APM_RC.OutputCh(7, FrontCCWMotor);   // Front Motor CCW
     APM_RC.OutputCh(9, BackCWMotor);     // Back Motor CW    // Connection PB5 on APM
-    APM_RC.OutputCh(10, BackCCWMotor);    // Back Motor CCW  // Connection PE3 on APM  
+    APM_RC.OutputCh(10, BackCCWMotor);   // Back Motor CCW   // Connection PE3 on APM  
 #endif
 
   // InstantPWM => Force inmediate output on PWM signals

@@ -357,7 +357,12 @@ float command_rx_yaw_diff;
 int control_roll;           // PID control results
 int control_pitch;
 int control_yaw;
-//float K_aux;
+
+// Wind Compensation variables
+int control_wind_roll;
+int control_wind_pitch;
+int max_wind_angle;
+int Gyro_drift_error_sum;
 
 
 boolean SW_DIP1;  // closest to SW2 slider switch
@@ -725,7 +730,6 @@ float KI_SONAR_ALTITUDE;
 float KD_SONAR_ALTITUDE;
 
 // Camera related settings
-
 int CAM_SMOOTHING;      // Camera movement smoothing on pitch axis
 int CAM_SMOOTHING_ROLL; // Camera movement smoothing on roll axis
 int CAM_CENT;           // Camera center
@@ -746,16 +750,16 @@ void defaultUserConfig() {
   KI_QUAD_YAW                = 0.15;
   STABLE_MODE_KP_RATE_YAW    = 2.4;
   STABLE_MODE_KP_RATE        = 0.2;     // NOT USED NOW
-  KP_GPS_ROLL                = 0.012;   //0.013;
-  KI_GPS_ROLL                = 0.001;   //0.005;
-  KD_GPS_ROLL                = 0.015;   //0.012;
-  KP_GPS_PITCH               = 0.010;   //0.013;
-  KI_GPS_PITCH               = 0.001;   //0.005;
-  KD_GPS_PITCH               = 0.015;   //0.01;
+  KP_GPS_ROLL                = 0.012;   //0.013;  Hexa 0.004
+  KI_GPS_ROLL                = 0.001;   //0.005;  Hexa 0.001
+  KD_GPS_ROLL                = 0.015;   //0.012;  Hexa 0.005
+  KP_GPS_PITCH               = 0.010;   //0.013;  Hexa 0.004
+  KI_GPS_PITCH               = 0.001;   //0.005;  Hexa 0.001
+  KD_GPS_PITCH               = 0.015;   //0.01;   Hexa 0.005
   GPS_MAX_ANGLE              = 22;
-  KP_ALTITUDE                = 0.08;
-  KI_ALTITUDE                = 0.05;
-  KD_ALTITUDE                = 0.06;
+  KP_ALTITUDE                = 0.08;    // Hexa 0.04          
+  KI_ALTITUDE                = 0.05;    // Hexa 0.025 
+  KD_ALTITUDE                = 0.06;    // Hexa 0.03 
   acc_offset_x               = 2048;
   acc_offset_y               = 2048;
   acc_offset_z               = 2048;

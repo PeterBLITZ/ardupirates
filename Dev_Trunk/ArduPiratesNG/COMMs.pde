@@ -516,7 +516,7 @@ void sendSerialTelemetry() {
   PID TUNING - TURN ON
 ****************************************************/
 void PID_Tuning_ON() {
-	ON_PID = 1;    
+    ON_PID = 1;    
     SerPrln("PID Tuning ON, Pitch & Roll set, P of PID set"); 
     Pitch_Roll_PID = 1;
     Yaw_PID = 0;
@@ -540,7 +540,7 @@ void PID_Tuning_ON() {
   PID TUNING - TURN OFF
 ****************************************************/
 void PID_Tuning_OFF() {
-	ON_PID = 0;    
+    ON_PID = 0;    
     SerPrln("PID Tuning OFF"); 
 }
 
@@ -548,7 +548,7 @@ void PID_Tuning_OFF() {
   PID TUNING - TUNE ROLL AND PITCH
 ****************************************************/
 void PID_Tuning_Tune_Roll_Pitch() {
-	Pitch_Roll_PID = 1;
+    Pitch_Roll_PID = 1;
     Yaw_PID = 0;
     Baro_PID = 0;
     Sonar_PID = 0;
@@ -571,7 +571,7 @@ void PID_Tuning_Tune_Roll_Pitch() {
   PID TUNING - TUNE YAW
 ****************************************************/
 void PID_Tuning_Tune_Yaw() {
-	Pitch_Roll_PID = 0;
+    Pitch_Roll_PID = 0;
     Yaw_PID = 1;
     Baro_PID = 0;
     Sonar_PID = 0;
@@ -594,7 +594,7 @@ void PID_Tuning_Tune_Yaw() {
   PID TUNING - TUNE BARO
 ****************************************************/
 void PID_Tuning_Tune_Baro() {
-	Pitch_Roll_PID = 0;
+    Pitch_Roll_PID = 0;
     Yaw_PID = 0;
     Baro_PID = 1;
     Sonar_PID = 0;
@@ -617,7 +617,7 @@ void PID_Tuning_Tune_Baro() {
   PID TUNING - TUNE SONAR
 ****************************************************/
 void PID_Tuning_Tune_Sonar() {
-	Pitch_Roll_PID = 0;
+    Pitch_Roll_PID = 0;
     Yaw_PID = 0;
     Baro_PID = 0;
     Sonar_PID = 1;
@@ -640,7 +640,7 @@ void PID_Tuning_Tune_Sonar() {
   PID TUNING - TUNE GPS
 ****************************************************/
 void PID_Tuning_Tune_GPS() {
-	Pitch_Roll_PID = 0;
+    Pitch_Roll_PID = 0;
     Yaw_PID = 0;
     Baro_PID = 0;
     Sonar_PID = 0;
@@ -663,7 +663,7 @@ void PID_Tuning_Tune_GPS() {
   PID TUNING - TUNE ACCEL ROLL
 ****************************************************/
 void PID_Tuning_Tune_Accel_Roll() {
-	P_PID = 0;
+    P_PID = 0;
     I_PID = 0;
     D_PID = 0;
     Pitch_Roll_PID = 0;
@@ -686,7 +686,7 @@ void PID_Tuning_Tune_Accel_Roll() {
   PID TUNING - TUNE ACCEL PITCH
 ****************************************************/
 void PID_Tuning_Tune_Accel_Pitch() {
-	P_PID = 0;
+    P_PID = 0;
     I_PID = 0;
     D_PID = 0;
     Pitch_Roll_PID = 0;
@@ -709,7 +709,7 @@ void PID_Tuning_Tune_Accel_Pitch() {
   PID TUNING - TUNE CAMERA PITCH
 ****************************************************/
 void PID_Tuning_Tune_Camera_Pitch(){
-	P_PID = 0;
+    P_PID = 0;
     I_PID = 0;
     D_PID = 0;
     Pitch_Roll_PID = 0;
@@ -733,7 +733,7 @@ void PID_Tuning_Tune_Camera_Pitch(){
   PID TUNING - TUNE CAMERA ROLL
 ****************************************************/
 void PID_Tuning_Tune_Camera_Roll() {
-	P_PID = 0;
+    P_PID = 0;
     I_PID = 0;
     D_PID = 0;
     Pitch_Roll_PID = 0;
@@ -757,7 +757,7 @@ void PID_Tuning_Tune_Camera_Roll() {
   PID TUNING - TUNE CAMERA ROLL CENTRE
 ****************************************************/
 void PID_Tuning_Tune_Camera_Roll_Centre() {
-	P_PID = 0;
+    P_PID = 0;
     I_PID = 0;
     D_PID = 0;
     Pitch_Roll_PID = 0;
@@ -781,7 +781,7 @@ void PID_Tuning_Tune_Camera_Roll_Centre() {
   PID TUNING - TUNE CAMERA FOCUS POSITION
 ****************************************************/
 void PID_Tuning_Tune_Camera_Focus_Position() {
-	P_PID = 0;
+    P_PID = 0;
     I_PID = 0;
     D_PID = 0;
     Pitch_Roll_PID = 0;
@@ -805,7 +805,7 @@ void PID_Tuning_Tune_Camera_Focus_Position() {
   PID TUNING - TUNE CAMERA TRIGGER POSITION
 ****************************************************/
 void PID_Tuning_Tune_Camera_Trigger_Position() {
-	P_PID = 0;
+    P_PID = 0;
     I_PID = 0;
     D_PID = 0;
     Pitch_Roll_PID = 0;
@@ -829,7 +829,7 @@ void PID_Tuning_Tune_Camera_Trigger_Position() {
   PID TUNING - CAMERA RELEASE POSITION
 ****************************************************/
 void PID_Tuning_Tune_Camera_Release_Position() {
-	P_PID = 0;
+    P_PID = 0;
     I_PID = 0;
     D_PID = 0;
     Pitch_Roll_PID = 0;
@@ -853,7 +853,7 @@ void PID_Tuning_Tune_Camera_Release_Position() {
   SHOW GPS DATA
 ****************************************************/
 void Show_GPS_Data() {
-	SerPri(gps.time);
+    SerPri(gps.time);
     tab();
     SerPri(gps.latitude);
     tab();
@@ -876,7 +876,7 @@ void Show_GPS_Data() {
   SHOW DEBUG VALUES
 ****************************************************/
 void Show_Debug_Values() {
-	SerPri(yaw);
+    SerPri(yaw);
     tab();
     SerPri(command_rx_yaw);
     tab();
@@ -903,7 +903,7 @@ void Show_Debug_Values() {
   SHOW TRANSMITTER CALIBRATION VALUES
 ****************************************************/
 void Show_Transmitter_Calibration() {
-	SerPri(ch_roll_slope);
+    SerPri(ch_roll_slope);
     comma();
     SerPri(ch_roll_offset);
     comma();
@@ -932,7 +932,7 @@ void Show_Transmitter_Calibration() {
   SHOW RECEIVER VALUES
 ****************************************************/
 void Show_Receiver_Values() {
-	SerPri(ch_roll); // Aileron
+    SerPri(ch_roll); // Aileron
     comma();
     SerPri(ch_pitch); // Elevator
     comma();
@@ -955,7 +955,7 @@ void Show_Receiver_Values() {
   SHOW PLATFORM INFORMATION
 ****************************************************/
 void Show_Platform_Info() {
-	if (AP_mode == AP_NORMAL_STABLE_MODE) 
+    if (AP_mode == AP_NORMAL_STABLE_MODE) 
       SerPriln("AP Mode = Normal Stable Mode");
     else if (AP_mode == AP_ALTITUDE_HOLD)
       SerPriln("AP Mode = Altitude Hold Mode");
@@ -1151,7 +1151,7 @@ void Show_Platform_Info() {
   SHOW FLIGHT DATA
 ****************************************************/
 void Show_Flight_Data() {
-	SerPri(timer-timer_old);
+    SerPri(timer-timer_old);
     comma();
     SerPri(read_adc(0));
     comma();
@@ -1202,7 +1202,7 @@ void Show_Flight_Data() {
   SHOW SENSOR DATA
 ****************************************************/
 void Show_Sensor_Data() {
-	SerPri(read_adc(0));
+    SerPri(read_adc(0));
     comma();
     SerPri(read_adc(1));
     comma();
@@ -1223,8 +1223,8 @@ void Show_Sensor_Data() {
     SerPri(degrees(pitch));
     comma();
     SerPri(degrees(yaw));
-	comma();
-	SerPrln(press_baro_altitude);
+    comma();
+    SerPrln(press_baro_altitude);
 	
 }
 
@@ -1232,7 +1232,7 @@ void Show_Sensor_Data() {
   SHOW CAMERA MODE
 ****************************************************/
 void Show_Camera_Mode() {
-	SerPri(cam_mode, DEC);
+    SerPri(cam_mode, DEC);
     tab();
     SerPri(BATTLOW, DEC);
     tab();
@@ -1242,7 +1242,7 @@ void Show_Camera_Mode() {
   SHOW SENSOR OFFSETS
 ****************************************************/
 void Show_Sensor_Offsets() {
-	SerPri(gyro_offset_roll);
+    SerPri(gyro_offset_roll);
     comma();
     SerPri(gyro_offset_pitch);
     comma();
@@ -1402,14 +1402,14 @@ void Calibrate_ESC() {
 			APM_RC.OutputCh(7, ch_throttle);    // Back Motor CCW    
 		#endif
 		#if AIRFRAME == OCTA
-		    APM_RC.OutputCh(0, ch_throttle);    // Front Motor CW
-			APM_RC.OutputCh(1, ch_throttle);    // Front Motor CCW
-			APM_RC.OutputCh(2, ch_throttle);    // Left Motor CW
-			APM_RC.OutputCh(3, ch_throttle);    // Left Motor CCW
-			APM_RC.OutputCh(6, ch_throttle);    // Right Motor CW
-			APM_RC.OutputCh(7, ch_throttle);    // Right Motor CCW
+		        APM_RC.OutputCh(0, ch_throttle);    // Left Motor CW
+			APM_RC.OutputCh(1, ch_throttle);    // left Motor CCW
+			APM_RC.OutputCh(2, ch_throttle);    // Right Motor CW
+			APM_RC.OutputCh(3, ch_throttle);    // Right Motor CCW
+			APM_RC.OutputCh(6, ch_throttle);    // Front Motor CW
+			APM_RC.OutputCh(7, ch_throttle);    // Front Motor CCW
 			APM_RC.OutputCh(9, ch_throttle);    // Back Motor CW
-			APM_RC.OutputCh(10, ch_throttle);    // Back Motor CCW
+			APM_RC.OutputCh(10, ch_throttle);   // Back Motor CCW
 		#endif
 		// InstantPWM => Force inmediate output on PWM signals
 		#if AIRFRAME == QUAD   
@@ -1448,8 +1448,8 @@ void Calibrate_ESC() {
 		APM_RC.OutputCh(2, 900);    // Right Motor CW
 		APM_RC.OutputCh(3, 900);    // Right Motor CCW
 		APM_RC.OutputCh(6, 900);    // Front Motor CW
-		APM_RC.OutputCh(7, 900);    // Back Motor CCW
-		APM_RC.OutputCh(9, 900);    // Front Motor CW
+		APM_RC.OutputCh(7, 900);    // Front Motor CCW
+		APM_RC.OutputCh(9, 900);    // Back Motor CW
 		APM_RC.OutputCh(10, 900);   // Back Motor CCW
 	#endif
 	#if AIRFRAME == QUAD   
@@ -1572,7 +1572,7 @@ byte Reset_Settings() {
   SHOW GPS HOLD MODE PIDS
 ****************************************************/
 void Show_GPS_PIDs() {
-SerPri(KP_GPS_ROLL, 3);
+    SerPri(KP_GPS_ROLL, 3);
     comma();
     SerPri(KI_GPS_ROLL, 3);
     comma();
@@ -1593,7 +1593,7 @@ SerPri(KP_GPS_ROLL, 3);
   SHOW STABLE MODE PIDS
 ****************************************************/
 void Show_Stable_PIDs() {
-	SerPri(KP_QUAD_ROLL, 3);
+    SerPri(KP_QUAD_ROLL, 3);
     comma();
     SerPri(KI_QUAD_ROLL, 3);
     comma();
@@ -1620,7 +1620,7 @@ void Show_Stable_PIDs() {
   SHOW ALTITUDE HOLD MODE PIDS
 ****************************************************/
 void Show_Altitude_PIDs() {
-	SerPri(KP_ALTITUDE, 3);
+    SerPri(KP_ALTITUDE, 3);
     comma();
     SerPri(KI_ALTITUDE, 3);
     comma();
@@ -1631,7 +1631,7 @@ void Show_Altitude_PIDs() {
   SHOW DRIFT CORRECTION PIDS
 ****************************************************/
 void Show_Drift_Correction_PIDs() {
-	SerPri(Kp_ROLLPITCH, 4);
+    SerPri(Kp_ROLLPITCH, 4);
     comma();
     SerPri(Ki_ROLLPITCH, 7);
     comma();
@@ -1644,7 +1644,7 @@ void Show_Drift_Correction_PIDs() {
   SHOW RATE CONTROL PIDS
 ****************************************************/
 void Show_Rate_Control_PIDs() {
-	SerPri(Kp_RateRoll, 3);
+    SerPri(Kp_RateRoll, 3);
     comma();
     SerPri(Ki_RateRoll, 3);
     comma();
@@ -1939,7 +1939,7 @@ void Set_Camera_Trigger() {
   RECEIVE STABLE MODE PID VALUES
 ****************************************************/
 void Receive_Stable_PID() {
-	KP_QUAD_ROLL = readFloatSerial();
+    KP_QUAD_ROLL = readFloatSerial();
     KI_QUAD_ROLL = readFloatSerial();
     STABLE_MODE_KP_RATE_ROLL = readFloatSerial();
     KP_QUAD_PITCH = readFloatSerial();
@@ -1956,7 +1956,7 @@ void Receive_Stable_PID() {
   RECEIVE GPS HOLD MODE PID VALUES
 ****************************************************/
 void Receive_GPS_PID() {
-	KP_GPS_ROLL = readFloatSerial();
+    KP_GPS_ROLL = readFloatSerial();
     KI_GPS_ROLL = readFloatSerial();
     KD_GPS_ROLL = readFloatSerial();
     KP_GPS_PITCH = readFloatSerial();
@@ -1970,7 +1970,7 @@ void Receive_GPS_PID() {
   RECEIVE ALTITUDE HOLD MODE PID VALUES
 ****************************************************/
 void Receive_Altitude_PID() {
-	KP_ALTITUDE = readFloatSerial();
+    KP_ALTITUDE = readFloatSerial();
     KI_ALTITUDE = readFloatSerial();
     KD_ALTITUDE = readFloatSerial();
 }
@@ -1979,7 +1979,7 @@ void Receive_Altitude_PID() {
   RECEIVE DRIFT CORRECTION PID VALUES
 ****************************************************/
 void Receive_Drift_PID() {
-	Kp_ROLLPITCH = readFloatSerial();
+    Kp_ROLLPITCH = readFloatSerial();
     Ki_ROLLPITCH = readFloatSerial();
     Kp_YAW = readFloatSerial();
     Ki_YAW = readFloatSerial();
@@ -1989,7 +1989,7 @@ void Receive_Drift_PID() {
   RECEIVE SENSOR OFFSET VALUES
 ****************************************************/
 void Receive_Sensor_Offsets() {
-	gyro_offset_roll = readFloatSerial();
+    gyro_offset_roll = readFloatSerial();
     gyro_offset_pitch = readFloatSerial();
     gyro_offset_yaw = readFloatSerial();
     acc_offset_x = readFloatSerial();
@@ -2001,7 +2001,7 @@ void Receive_Sensor_Offsets() {
   RECEIVE CAMERA MODE
 ****************************************************/
 void Receive_Camera_Mode() {
-	cam_mode = readFloatSerial();
+    cam_mode = readFloatSerial();
     //BATTLOW = readFloatSerial();
 }
 
@@ -2009,7 +2009,7 @@ void Receive_Camera_Mode() {
   RECEIVE MOTOR DEBUG COMMANDS
 ****************************************************/
 void Receive_Motor_Debug_Commands() {
-	frontMotor = readFloatSerial();
+    frontMotor = readFloatSerial();
     backMotor = readFloatSerial();
     rightMotor = readFloatSerial();
     leftMotor = readFloatSerial();
@@ -2020,7 +2020,7 @@ void Receive_Motor_Debug_Commands() {
   RECEIVE RATE CONTROL PID VALUES
 ****************************************************/
 void Receive_Rate_Control_PID() {
-	Kp_RateRoll = readFloatSerial();
+    Kp_RateRoll = readFloatSerial();
     Ki_RateRoll = readFloatSerial();
     Kd_RateRoll = readFloatSerial();
     Kp_RatePitch = readFloatSerial();
@@ -2036,7 +2036,7 @@ void Receive_Rate_Control_PID() {
   RECEIVE TRANSMITTER CALIBRATION VALUES
 ****************************************************/
 void Receive_Transmitter_Calibration() {
-	ch_roll_slope = readFloatSerial();
+    ch_roll_slope = readFloatSerial();
     ch_roll_offset = readFloatSerial();
     ch_pitch_slope = readFloatSerial();
     ch_pitch_offset = readFloatSerial();
