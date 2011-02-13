@@ -134,15 +134,15 @@ void setup() {
   
 #ifdef SerXbee
   Serial.begin(SerBau);
-  Serial.print("ArduCopter v");
+  Serial.print("ArduPirate v");
   Serial.println(VER);
-  Serial.println("Serial data on Telemetry port");
-  Serial.println("No commands or output on this serial, check your Arducopter.pde if needed to change.");
+  Serial.println("You will find serial data on the Telemetry port.");
+  Serial.println("No commands or output on this serial port, check your Config.h if you need to change this.");
   Serial.println();
-  Serial.println("General info:");
-  if(!SW_DIP1) Serial.println("Flight mode: + ");
-  if(SW_DIP1) Serial.println("Flight mode: x ");
 #endif 
+  SerPrln(VER);
+  SerPrln("ArduPirate");
+  SerPrln("Type '?' to activate the CLI Menu.");
 
 
   delay(10);

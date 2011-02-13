@@ -49,7 +49,7 @@
 			point a complete halt of processing on the APM was
 			observed.
 			Please refrain from using SerFlu().
-2011/06/02	[kidogo]; Added a 7x7 menu matrix to accomodate
+2011/06/02	[kidogo]; Added a 8x8 menu matrix to accomodate
 			most commands that are not used in flight.
 			Menu driven setup to help newbies and pro's alike.
 			Many options still can be accessed by their original
@@ -67,7 +67,6 @@
 // Declare variables
 boolean ShowMenu;
 int SubMenu=0;
-int MenuOption=0;
 
 /*
 ***************************************************
@@ -82,7 +81,7 @@ should not be used while in flight.
 												 */
 		 
 void readSerialCommand() {
-	if(!ShowMenu) Show_Menu();
+	//if(!ShowMenu) Show_Menu();
 	// Check for serial message
 	if (SerAva()) {
 		queryType = SerRea();
@@ -90,21 +89,25 @@ void readSerialCommand() {
 	
 			// Menu navigation first
 			case '?':	// Show main menu
-			    SubMenu=0;
+			        SubMenu=0;
+                                ShowMenu=false;
 				Show_Menu();
 				break;
 			case '0':  // Always takes us back to main menu
+                                if (!ShowMenu){
 				if (SubMenu==0){				// Option 0 in main menu; save settings.
-					writeUserConfig();
-					SerPrln("Saved settings to EEPROM.");	
-					delay(2000);
-					Show_Menu();				
+					ShowMenu=true;		
+                                        SerPrln("Menu closed. Type '?' to re-open the CLI Menu.");
 				} else {
 					SubMenu=0;
 					Show_Menu();
 				}
+                                }else{
+                                  // Actions to take outside menu 
+                                }
 				break;
 			case '1':
+                                if (!ShowMenu){
 				if (SubMenu==0){				// Takes us to Submenu 1
 					SubMenu=1;
 					Show_Menu();				
@@ -129,9 +132,19 @@ void readSerialCommand() {
 				} else if (SubMenu==7) {		// SubMenu 7.1
 					//
 					Show_Menu_Prompt();
+				} else if (SubMenu==8) {		// Menu 8.1
+					//
+					Show_Menu_Prompt();
 				}
-				break;
+                                }else{
+                                  // Actions to take outside menu
+                                  Show_Transmitter_Calibration();
+			          queryType = 'X';                                  
+                                }
+                                
+                                break;
 			case '2':
+                                if (!ShowMenu){
 				if (SubMenu==0){				// Takes us to Submenu 2
 					SubMenu=2;
 					Show_Menu();
@@ -156,9 +169,16 @@ void readSerialCommand() {
 				} else if (SubMenu==7) {		// SubMenu 7.2
 					//
 					Show_Menu_Prompt();
+				} else if (SubMenu==8) {		// Menu 8.2
+					//
+					Show_Menu_Prompt();
 				}
+                                }else{
+                                  // Actions to take outside menu 
+                                }
 				break;
 			case '3':
+                                if (!ShowMenu){
 				if (SubMenu==0){				// Takes us to submenu 3
 					SubMenu=3;
 					Show_Menu();
@@ -183,9 +203,16 @@ void readSerialCommand() {
 				} else if (SubMenu==7) {		// Menu 7.3
 					//
 					Show_Menu_Prompt();
+				} else if (SubMenu==8) {		// Menu 8.3
+					//
+					Show_Menu_Prompt();
 				}
+                                }else{
+                                  // Actions to take outside menu 
+                                }
 				break;
 			case '4':
+                                if (!ShowMenu){
 				if (SubMenu==0){				// Takes us to submenu 4
 					SubMenu=4;
 					Show_Menu();
@@ -210,9 +237,16 @@ void readSerialCommand() {
 				} else if (SubMenu==7) {		// Menu 7.4
 					//
 					Show_Menu_Prompt();
+				} else if (SubMenu==8) {		// Menu 8.4
+					//
+					Show_Menu_Prompt();
 				}
+                                }else{
+                                  // Actions to take outside menu 
+                                }
 				break;
 			case '5':
+                                if (!ShowMenu){
 				if (SubMenu==0){				// Takes us to submenu 5
 					SubMenu=5;
 					Show_Menu();
@@ -237,9 +271,16 @@ void readSerialCommand() {
 				} else if (SubMenu==7) {		// Menu 7.5
 					//
 					Show_Menu_Prompt();
+				} else if (SubMenu==8) {		// Menu 8.5
+					//
+					Show_Menu_Prompt();
 				}
+                                }else{
+                                  // Actions to take outside menu 
+                                }
 				break;
 			case '6':
+                                if (!ShowMenu){
 				if (SubMenu==0){				// Takes us to submenu 6
 					SubMenu=6;
 					Show_Menu();
@@ -264,9 +305,16 @@ void readSerialCommand() {
 				} else if (SubMenu==7) {		// Menu 7.6
 					//
 					Show_Menu_Prompt();
+				} else if (SubMenu==8) {		// Menu 8.6
+					//
+					Show_Menu_Prompt();
 				}
+                                }else{
+                                  // Actions to take outside menu 
+                                }
 				break;
 			case '7':
+                                if (!ShowMenu){
 				if (SubMenu==0){				// Takes us to submenu 7
 					SubMenu=7;
 					Show_Menu();
@@ -291,12 +339,67 @@ void readSerialCommand() {
 				} else if (SubMenu==7) {		// Menu 7.7
 					//
 					Show_Menu_Prompt();
+				} else if (SubMenu==8) {		// Menu 8.7
+					//
+					Show_Menu_Prompt();
 				}
+                                }else{
+                                  // Actions to take outside menu 
+                                }
 				break;
+                        case '8':
+                                if (!ShowMenu){
+				if (SubMenu==0){				// Takes us to submenu 8
+					SubMenu=8;
+					Show_Menu();
+				} else if (SubMenu==1) {		// Menu 1.8
+					RUN_Motors();
+					Show_Menu_Prompt();
+				} else if (SubMenu==2) {		// Menu 2.8
+					//
+					Show_Menu_Prompt();
+				} else if (SubMenu==3) {		// Menu 3.8
+					//
+					Show_Menu_Prompt();
+				} else if (SubMenu==4) {		// Menu 4.8
+					//
+					Show_Menu_Prompt();
+				} else if (SubMenu==5) {		// Menu 5.8
+					//
+					Show_Menu_Prompt();
+				} else if (SubMenu==6) {		// Menu 6.8
+					//
+					Show_Menu_Prompt();
+				} else if (SubMenu==7) {		// Menu 7.8
+					//
+					Show_Menu_Prompt();
+				} else if (SubMenu==8) {		// Menu 8.8
+					//
+					Show_Menu_Prompt();
+				}
+                                }else{
+                                  // Actions to take outside menu 
+                                }
+				break;
+                        case '9':
+                                if (!ShowMenu){
+                                if (SubMenu!=0){
+                                  SubMenu=0;
+                                  Show_Menu();
+                                } else {
+                                  writeUserConfig();
+				  SerPrln("Saved settings to EEPROM.");	
+				  delay(2000);
+                                  Show_Menu();
+                                }
+                                }else{
+                                  // Actions to take outside menu 
+                                }
+                                break;
                         default:
                         // do nothing
                         delay(10);
-			}
+                        }
 	//SerFlu();
 	}
 }
@@ -570,8 +673,10 @@ void PID_Tuning_Tune_Roll_Pitch() {
 /****************************************************
   PID TUNING - TUNE YAW
 ****************************************************/
+
 void PID_Tuning_Tune_Yaw() {
     Pitch_Roll_PID = 0;
+
     Yaw_PID = 1;
     Baro_PID = 0;
     Sonar_PID = 0;
@@ -1194,7 +1299,7 @@ void Show_Flight_Data() {
     SerPri(AP_Compass.mag_z);
     comma();
     SerPri(press_baro_altitude);
-	comma();
+    comma();
     SerPriln();
 }
 
@@ -1232,10 +1337,14 @@ void Show_Sensor_Data() {
   SHOW CAMERA MODE
 ****************************************************/
 void Show_Camera_Mode() {
+
+    SerPri("Camera mode: ");
     SerPri(cam_mode, DEC);
     tab();
+    SerPri("Battery low: ");
     SerPri(BATTLOW, DEC);
     tab();
+    SerPrln();
 }
 
 /****************************************************
@@ -1261,72 +1370,69 @@ void Show_Sensor_Offsets() {
 /****************************************************
   SHOW SETTINGS
 ****************************************************/
-void Show_Settings() {
-	// Reading current EEPROM values
+void Show_Settings() {  
+    // Reading current EEPROM values
 
     SerPrln("ArduPirate - Current settings");
-	SerPrln("--------------------------------------");
-	SerPri("Firmware                 : ");
-	SerPri(VER);
-	SerPrln();
-	SerPrln();
+    SerPrln("--------------------------------------");
+    SerPri("Firmware                 : ");
+    SerPri(VER);
+    SerPrln();
+    SerPrln();
+    readUserConfig();
+    delay(50);
+    SerPri("Magnetom. offsets (x,y,z): ");
+    SerPri(mag_offset_x);
+    cspc();
+    SerPri(mag_offset_y);
+    cspc();
+    SerPri(mag_offset_z);
+    SerPrln();
 
-	readUserConfig();
-	delay(50);
+    SerPri("Accel offsets (x,y,z)    : ");
+    SerPri(acc_offset_x);
+    cspc();
+    SerPri(acc_offset_y);
+    cspc();
+    SerPri(acc_offset_z);
+    SerPrln();
 
-	SerPri("Magnetom. offsets (x,y,z): ");
-	SerPri(mag_offset_x);
-	cspc();
-	SerPri(mag_offset_y);
-	cspc();
-	SerPri(mag_offset_z);
-	SerPrln();
+    SerPri("Min Throttle             : ");
+    SerPrln(MIN_THROTTLE);
 
-	SerPri("Accel offsets (x,y,z)    : ");
-	SerPri(acc_offset_x);
-	cspc();
-	SerPri(acc_offset_y);
-	cspc();
-	SerPri(acc_offset_z);
-	SerPrln();
-
-	SerPri("Min Throttle             : ");
-	SerPrln(MIN_THROTTLE);
-
-	SerPri("Magnetometer             : ");
-	if (MAGNETOMETER==0) {
-		SerPrln("Disabled");
-	}else{
-		SerPrln("Enabled");
-	}
+    SerPri("Magnetometer             : ");
+    if (MAGNETOMETER==0) {
+      SerPrln("Disabled");
+    }else{
+      SerPrln("Enabled");
+    }
 	
-	SerPri("Camera mode	             : ");
-	SerPrln(cam_mode, DEC);
-	Show_Camera_Smooth();
-	Show_Camera_Trigger();
+    SerPri("Camera mode	             : ");
+    SerPrln(cam_mode, DEC);
+    Show_Camera_Smooth();
+    Show_Camera_Trigger();
 
-	#if AIRFRAME == QUAD  
-		SerPriln("Airframe 	             : Quad");
-		#ifdef FLIGHT_MODE_X_45Degree
-		SerPri("Flight orientation       : ");
-		if(SW_DIP1) {
-			SerPrln("X mode_45Degree (APM front pointing towards Front motor)");
-		} else {
-			SerPrln("+ mode");
-		}
-		#endif 
-		#ifdef FLIGHT_MODE_X
-		SerPri("Flight orientation       : ");
-		SerPrln("X mode (APM front between Front and Right motor) DIP1 not applicable");
-		#endif
-	#endif
-	#if AIRFRAME == HEXA  
-	SerPriln("Airframe 	             : Hexa");
-	#endif
+    #if AIRFRAME == QUAD  
+      SerPriln("Airframe 	             : Quad");
+      #ifdef FLIGHT_MODE_X_45Degree
+        SerPri("Flight orientation       : ");
+	if(SW_DIP1) {
+          SerPrln("X mode_45Degree (APM front pointing towards Front motor)");
+	} else {
+	  SerPrln("+ mode");
+	}
+      #endif 
+      #ifdef FLIGHT_MODE_X
+	SerPri("Flight orientation       : ");
+	SerPrln("X mode (APM front between Front and Right motor) DIP1 not applicable");
+      #endif
+    #endif
+    #if AIRFRAME == HEXA  
+      SerPriln("Airframe 	             : Hexa");
+    #endif
 
-	Show_SonarAndObstacleAvoidance_PIDs();
-
-	SerPrln(); 
+    Show_SonarAndObstacleAvoidance_PIDs();
+    SerPrln(); 
 }
 
 /****************************************************
@@ -1402,7 +1508,7 @@ void Calibrate_ESC() {
 			APM_RC.OutputCh(7, ch_throttle);    // Back Motor CCW    
 		#endif
 		#if AIRFRAME == OCTA
-		        APM_RC.OutputCh(0, ch_throttle);    // Left Motor CW
+			APM_RC.OutputCh(0, ch_throttle);    // Left Motor CW
 			APM_RC.OutputCh(1, ch_throttle);    // left Motor CCW
 			APM_RC.OutputCh(2, ch_throttle);    // Right Motor CW
 			APM_RC.OutputCh(3, ch_throttle);    // Right Motor CCW
@@ -2001,6 +2107,23 @@ void Receive_Sensor_Offsets() {
   RECEIVE CAMERA MODE
 ****************************************************/
 void Receive_Camera_Mode() {
+        SerFlu();
+        delay(53);
+        float tempVal;
+	SerPrln("Enter camera mode [1-4]: ");
+	while( SerAva()==0 );  // wait until user presses a key
+        tempVal=0;
+	tempVal = readFloatSerial();
+	if (tempVal != 0) {
+		cam_mode = tempVal;
+		SerPri("Camera mode is now set to: ");
+		SerPriln(cam_mode,DEC);
+	}
+	SerPri("Saving camera mode setting to EEPROM...");   
+        delay(100);
+        writeEEPROM(cam_mode, cam_mode_ADR);
+        delay(1000);
+        SerPrln("done.");
     cam_mode = readFloatSerial();
     //BATTLOW = readFloatSerial();
 }
@@ -2396,7 +2519,6 @@ void Show_Menu_Prompt() {
 }
 	
 void Show_Menu() {
-	ShowMenu = TRUE; 
 	// SubMenu; if 0 the main menu, otherwise a submenu
 	// MenuOption; if 0, go back to previous menu otherwise make a choice.
 	SerPriClScr(); // ArduPirates Management Console; clears the console screen
@@ -2415,8 +2537,8 @@ void Show_Menu() {
 		SerPrln(" ");
 		SerPrln(" ");
 		SerPrln(" ");
-		SerPrln(" ");
-		SerPrln(" 0 - Save settings");
+		SerPrln(" 9 - Save settings to EEPROM");
+		SerPrln(" 0 - Exit CLI menu");
 	} else if (SubMenu==1) {
 		SerPrln("Initial Setup");
 		SerPrln("----------------------------------------------");
@@ -2430,7 +2552,7 @@ void Show_Menu() {
 		SerPrln(" ");
 		SerPrln(" ");
 		SerPrln(" ");
-		SerPrln(" 0 - Back to main menu");
+		SerPrln(" 9 - Back to main menu");
 	}  else if (SubMenu==2) {
 		SerPrln("Camera settings");
 		SerPrln("----------------------------------------------");
@@ -2444,7 +2566,7 @@ void Show_Menu() {
 		SerPrln(" ");
 		SerPrln(" ");
 		SerPrln(" ");
-		SerPrln(" 0 - Back to main menu");
+		SerPrln(" 9 - Back to main menu");
 	}else if (SubMenu==3) {
 		SerPrln("Show settings");
 		SerPrln("----------------------------------------------");
@@ -2458,7 +2580,7 @@ void Show_Menu() {
 		SerPrln(" ");
 		SerPrln(" ");
 		SerPrln(" ");
-		SerPrln(" 0 - Back to main menu");
+		SerPrln(" 9 - Back to main menu");
 	}else if (SubMenu==4) {
 		SerPrln("PID Tuning");
 		SerPrln("----------------------------------------------");
@@ -2472,7 +2594,7 @@ void Show_Menu() {
 		SerPrln(" ");
 		SerPrln(" ");
 		SerPrln(" ");
-		SerPrln(" 0 - Back to main menu");
+		SerPrln(" 9 - Back to main menu");
 	}else if (SubMenu==5) {
 		SerPrln("Reset...");
 		SerPrln("----------------------------------------------");
@@ -2486,7 +2608,7 @@ void Show_Menu() {
 		SerPrln(" ");
 		SerPrln(" ");
 		SerPrln(" ");
-		SerPrln(" 0 - Back to main menu");
+		SerPrln(" 9 - Back to main menu");
 	}else {
 		SerPrln("Invalid choice. Try again.");
 	}
