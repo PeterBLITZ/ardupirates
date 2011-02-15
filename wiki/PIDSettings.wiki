@@ -1,5 +1,8 @@
 How to set PID settings for your !ArduPirate.
 
+==_Informations above were based on !ArduPirates !SuperStable code. They are great to understand how PID works, but need to be completed and updated._ Please read [http://www.rcgroups.com/forums/showpost.php?p=16162772&postcount=969 this information], too.==
+
+
 = Introduction =
 
 *This Tutorial will show you how to set your Stable and Acro Roll/Pitch/Yaw settings to get you ready for your Maiden Flight.*
