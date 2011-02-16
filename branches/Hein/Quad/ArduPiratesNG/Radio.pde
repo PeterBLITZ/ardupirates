@@ -49,7 +49,7 @@ void read_radio()
     ch_aux2 = APM_RC.InputCh(CH_6) * ch_aux2_slope + ch_aux2_offset;   //This is the MODE Channel in Configurator.
 //  Use this channel if you have a 7 or more Channel Radio.
 //  Can be used for PID tuning (see FUNCTIONS) or Camera 3 position tilt (pitch).
-#if defined(SerXbee) && defined(Use_PID_Tuning)
+#if (defined(SerXbee) && defined(Use_PID_Tuning))
     ch_flightmode = APM_RC.InputCh(CH_7);  // flight mode 3-position switch.
 #endif    
     // special checks for throttle
@@ -135,8 +135,7 @@ void read_radio()
     if (flightMode == FM_STABLE_MODE)  // IN STABLE MODE we convert stick positions to absolute angles
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
-#ifdef QUAD
-
+#if AIRFRAME == QUAD
 #ifndef FLIGHT_MODE_X
       if(flightOrientation) {
         //FLIGHT_MODE_X_45Degree
@@ -159,7 +158,7 @@ void read_radio()
 #endif
 #endif
 
-#ifdef HEXA
+#if AIRFRAME == HEXA     
         command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
         command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 #endif  
