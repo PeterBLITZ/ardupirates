@@ -434,11 +434,11 @@ AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmwa
  beginning of the line
  
  - ---------------------------------------------------------------------------- -
- Function for: Motormount LED's or Attraction Mode
+ Function for: Motormount LED's or Attraction Mode (NB this feature can only be used with Quad....NOT HEXA and NOT OCTA)
  - ---------------------------------------------------------------------------- -
  */
 //#define IsAM             // Do we have motormount LED's. AM = Atraction Mode
-
+//  (NB this feature can only be used with Quad....NOT HEXA and NOT OCTA)
 /*
 - ---------------------------------------------------------------------------- -
  Functions for: Camera mounted to the multicopter
