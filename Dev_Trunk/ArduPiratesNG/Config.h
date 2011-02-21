@@ -93,15 +93,15 @@
  - After changing DIP1, reboot your APM.
  
  F  CW  0....Front....0 CCW  R        // 0 = Motors
- ...****........               // ****  = APM
- ......****.....               //    ****
- .........****..               //       ****
+        ...****........               // ****  = APM
+        ......****.....               //    ****
+        .........****..               //       ****
  L CCW  0....Back.....0  CW  B        //  L = Left motor,
- //  R = Right motor,
- //  B = Back motor,
- //  F = Front motor.
- // CW = Clockwise rotation,
- // CCW = Counter clockwise rotation.
+                                      //  R = Right motor,
+                                      //  B = Back motor,
+                                      //  F = Front motor.
+                                      // CW = Clockwise rotation,
+                                      // CCW = Counter clockwise rotation.
  
  To choose FLIGHT_MODE_X_45Degree, just set DIP1 to (OFF).
  
@@ -112,18 +112,18 @@
  - You must set the DIP1 switch to ON (down) !
  - After changing DIP1, reboot your APM.
  
- F CW 0
- ....FRONT.....                // 0 = Motors
- .....***......                // *** = APM
+         F CW 0
+        ....FRONT.....                // 0 = Motors
+        .....***......                // *** = APM
  L CCW 0.....***.....0 CCW R          // ***
- .....***......                // ***
- .....BACK.....
- B CW  0                       // L = Left motor,
- // R = Right motor,
- // B = Back motor,
- // F = Front motor.
- // CW = Clockwise rotation,
- // CCW = Counter clockwise rotation.
+        .....***......                // ***
+        .....BACK.....
+        B CW  0                       // L = Left motor,
+                                      // R = Right motor,
+                                      // B = Back motor,
+                                      // F = Front motor.
+                                      // CW = Clockwise rotation,
+                                      // CCW = Counter clockwise rotation.
  
  To choose FLIGHT_MODE_+, just set DIP1 to (ON).
  																			*/
@@ -139,15 +139,15 @@
  - Uncomment the line #define FLIGHT_MODE_X below !!
  
  F  CW  0....Front....0 CCW  R        // 0 = Motors
- ......***......               // *** = APM
- ......***......               // ***
- ......***......               // ***
+        ......***......               // *** = APM
+        ......***......               // ***
+        ......***......               // ***
  L CCW  0....Back.....0  CW  B        // L = Left motor,
- // R = Right motor,
- // B = Back motor,
- // F = Front motor.
- // CW = Clockwise rotation,
- // CCW = Counter clockwise rotation.
+                                      // R = Right motor,
+                                      // B = Back motor,
+                                      // F = Front motor.
+                                      // CW = Clockwise rotation,
+                                      // CCW = Counter clockwise rotation.
  
  To choose FLIGHT_MODE_X, just uncommend the line below.
  */
@@ -161,18 +161,18 @@
  - ---------------------------------------------------------------------------- -
 /*
  
- F CW 0
- ....FRONT....                 // 0 = Motors
+        F CW 0
+       ....FRONT....                 // 0 = Motors
  L CCW 0....***....0 CCW R           // *** = APM
- .....***.....                 // ***
+       .....***.....                 // ***
  L CW  0....***....0 CW  R           // ***
- .....BACK....
- B CCW 0                       // L = Left motors,
- // R = Right motors,
- // B = Back motor,
- // F = Front motor.
- // CW = Clockwise rotation,
- // CCW = Counter clockwise rotation.
+       .....BACK....
+       B CCW 0                       // L = Left motors,
+                                     // R = Right motors,
+                                     // B = Back motor,
+                                     // F = Front motor.
+                                     // CW = Clockwise rotation,
+                                     // CCW = Counter clockwise rotation.
  
  To make absolutely sure you are running the hexa flight mode, connect with
  the Configurator and use the serial monitor in the Configurator to send the
@@ -187,18 +187,18 @@
  - ---------------------------------------------------------------------------- -
 /*
  
- F CW 0           0 CCW F
- ....FRONT....                 // 0 = Motors
+  F CW 0           0 CCW F
+       ....FRONT....                 // 0 = Motors
  L CCW 0....***....0 CW R            // *** = APM
- .....***.....                 // ***
+       .....***.....                 // ***
  L CW  0....***....0 CCW R           // ***
- .....BACK....
+       .....BACK....
  B CCW 0           0 CW B            // L = Left motors,
- // R = Right motors,
- // B = Back motorS,
- // F = Front motorS.
- // CW = Clockwise rotation,
- // CCW = Counter clockwise rotation.
+                                     // R = Right motors,
+                                     // B = Back motors,
+                                     // F = Front motors.
+                                     // CW = Clockwise rotation,
+                                     // CCW = Counter clockwise rotation.
  
  To make absolutely sure you are running the Octa flight mode, connect with
  the Configurator and use the serial monitor in the Configurator to send the
@@ -312,8 +312,8 @@
 //AP_GPS_SIRF		gps(&Serial1);  // SiRF-based GPS in Binary mode.  NOT TESTED
 //AP_GPS_UBLOX	        gps(&Serial1);  // UBLOX GPS
 //AP_GPS_IMU		gps(&Serial);	// X-Plane interface or ArduPilot IMU.// note, console port
-//AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.4
-AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.6
+AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.4
+//AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.6
 //AP_GPS_None		gps(NULL);      // No GPS attached!!
 #endif
 
@@ -372,8 +372,8 @@ AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmwa
  Once you have achieved this fine tune in the Configurator's serial monitor by
  pressing "T" (capital t).
  */
-//#define MAGCALIBRATION -15.65      
-#define MAGCALIBRATION 0.0      
+#define MAGCALIBRATION -15.65      
+//#define MAGCALIBRATION -21.65       //Quad      
 
 /* SET MAGNETOMETER ORIENTATION:
  Next, you'll have to define how your magnetometer is mounted to your
@@ -437,8 +437,8 @@ AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmwa
  Function for: Motormount LED's or Attraction Mode (NB this feature can only be used with Quad....NOT HEXA and NOT OCTA)
  - ---------------------------------------------------------------------------- -
  */
-//#define IsAM             // Do we have motormount LED's. AM = Atraction Mode
-//  (NB this feature can only be used with Quad....NOT HEXA and NOT OCTA)
+//#define IsAM             // Do we have motormount LED's. AM = Attraction Mode
+                           //  (NB this feature can only be used with Quad....NOT HEXA and NOT OCTA)
 /*
 - ---------------------------------------------------------------------------- -
  Functions for: Camera mounted to the multicopter
@@ -462,12 +462,12 @@ AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmwa
  need to use the Configurator and send the K command. Refer to the Wiki for
  more info on the Configurator and this specific command.
  */
-//#define IsCAM              // Do we have camera stabilization in use, If you
-// activate, check OUTPUT pins from ArduUser.h
-// DIP2 down (ON) = Camera Stabilization enabled,
-// DIP2 up (OFF) = Camera Stabilization disabled.
-//#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
-// during GPS Hold or Altitude Hold.
+#define IsCAM              // Do we have camera stabilization in use, If you
+                             // activate, check OUTPUT pins from ArduUser.h
+                             // DIP2 down (ON) = Camera Stabilization enabled,
+                             // DIP2 up (OFF) = Camera Stabilization disabled.
+#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
+                             // during GPS Hold or Altitude Hold.
 
 
 /*
@@ -553,7 +553,7 @@ AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmwa
  command link. If we are using normal FTDI/USB port as our telemetry/
  configuration, keep next line disabled.
  */
-//#define SerXbee
+#define SerXbee
 
 /*
    Telemetry port speed, default is 115200
@@ -587,7 +587,7 @@ AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmwa
  Your Aux1 will be your 3 position channel, and your radio has to be in acro
  (plane) mode.
  */
-//#define Use_PID_Tuning
+#define Use_PID_Tuning
 
 
 /*
