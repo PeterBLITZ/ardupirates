@@ -2,7 +2,7 @@
 Imports System.Windows.Forms
 Imports System.Runtime.InteropServices
 Imports Touchless.Vision.Camera
-Imports WebCamLib
+
 
 
 Public Class MainForm
@@ -80,9 +80,17 @@ Public Class MainForm
     Dim numberOfPointsAddedMax As Integer = 1
     Dim pointNumber As Integer
 
-    'Camera (live feed)
+    ' Camera (live feed)
     Dim frameSource As CameraFrameSource
     Dim latestFrame As Bitmap
+    Dim aspectRatio As Single = 4.0F / 3.0F    'start with 4:3
+
+    ' Map (Google earth)
+    Dim webDocumentMap As HtmlDocument
+
+    'MAVLInk message
+    Dim msg As New MAVLINK_msg(0)
+
 
     'This function helps prevent flicker while updating the serialdatafield
     <DllImport("user32.dll")> _
@@ -90,24 +98,29 @@ Public Class MainForm
     End Function
 
     Sub Enumerate_SerialPorts()
-        comPorts = IO.Ports.SerialPort.GetPortNames()
-        ComboBox_Ports.Items.Clear()
-        For i = 0 To UBound(comPorts)
-            ComboBox_Ports.Items.Add(comPorts(i))
-        Next
-        ComboBox_Ports.Sorted = True
-        'Set ComboBox1 text to first available port
-        ComboBox_Ports.Text = ComboBox_Ports.Items.Item(0)
+        Try
 
-        'Set SerialPort1 portname to first available port
-        Serial.PortName = ComboBox_Ports.Text
-        Serial.BaudRate = ComboBox_Baud.Text
+            comPorts = IO.Ports.SerialPort.GetPortNames()
+            ComboBox_Ports.Items.Clear()
+            For i = 0 To UBound(comPorts)
+                ComboBox_Ports.Items.Add(comPorts(i))
+            Next
+            ComboBox_Ports.Sorted = True
+            'Set ComboBox1 text to first available port
+            ComboBox_Ports.Text = ComboBox_Ports.Items.Item(0)
 
-        'Set SerialPort1 parity etc.
-        Serial.Parity = IO.Ports.Parity.None
-        Serial.StopBits = IO.Ports.StopBits.One
-        Serial.DataBits = 8
+            'Set SerialPort1 portname to first available port
+            Serial.PortName = ComboBox_Ports.Text
+            Serial.BaudRate = ComboBox_Baud.Text
 
+            'Set SerialPort1 parity etc.
+            Serial.Parity = IO.Ports.Parity.None
+            Serial.StopBits = IO.Ports.StopBits.One
+            Serial.DataBits = 8
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Sub Enumerate_Cameras()
@@ -154,15 +167,16 @@ Public Class MainForm
         ArtificialHorizon1.Top = 10
         VisualFlight.Left = 0
 
+        ComboBox_AspectRatio.SelectedItem = 0
+        ComboBox_AspectRatio.SelectedText = "4:3"
 
+        'Load Google Earth
 
     End Sub
 
 
 
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_Send.Click
-        rxBuffer = ""
-
         'Write the data in the 
         If Serial.IsOpen Then Serial.Write(Field_SerialCommand.Text) Else MsgBox("Please connect first !")
         Field_SerialCommand.Focus()
@@ -178,7 +192,8 @@ Public Class MainForm
 
         If Serial.IsOpen Then
             'Move recieved data into the buffer, datastream always ends with a newline
-            rxBuffer = rxBuffer & Replace(Serial.ReadExisting, vbLf, "") 'Adds the incoming data to the end of the buffer.
+
+            ' rxBuffer = rxBuffer & Replace(Serial.ReadExisting, vbLf, "") 'Adds the incoming data to the end of the buffer.
         End If
     End Sub
 
@@ -193,75 +208,12 @@ Public Class MainForm
         'Don't go here if the Serial port is closed
         If Serial.IsOpen Then
 
-
-            '
-            'The buffer is just one big string with all the incoming data appended to it at the end.
-            'Going through it, we remove each line of data terminated with a line end from the
-            'beginning of the buffer after handling it. 
-
-            'If there is at least one full data line (terminated with a line end) in the receive buffer, handle it.
-            If InStr(rxBuffer, vbCr) > 0 Then
-                'There seems to be data in the rxBuffer
-
-                'Check where the first complete line of data at the beginning of the buffer ends.
-                'This will be our marker (rxBufferMarker). Everything behind it will be handled in a later pass through this loop.
-                rxBufferMarker = InStr(rxBuffer, vbCr)
-
-                'Extract this first line.
-                rxBufferLineOfData = Replace(Mid(rxBuffer, 1, rxBufferMarker), vbCr, vbCrLf) 'And also replace the trailing vbCr with vbCrLf
-
-                'Now that we have the line, remove this data from the main rxBuffer
-                rxBuffer = Mid(rxBuffer, rxBufferMarker + 1) 'Exclude the vbCr !
-
-                'Check the current visual mode
-                Select Case CurrentTab
-                    Case "VisualFlight", "SensorPlots"
-                        'Disect the incoming data into it's individual variables
-                        Dim FlightData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
-                        If (FlightData.Count >= 11) Then '11 values separated by commas, just checking that we are getting the correct data in.
-                            ADI_roll_angle = CDbl(FlightData(8))
-                            ADI_pitch_angle = CDbl(FlightData(9))
-                            ADI_yaw_angle = CDbl(FlightData(10))
-                            roll_gyro_value = CDbl(FlightData(0))
-                            pitch_gyro_value = CDbl(FlightData(1))
-                            yaw_gyro_value = CDbl(FlightData(2))
-                            accel_pitch_value = CDbl(FlightData(3))
-                            accel_roll_value = CDbl(FlightData(4))
-                            accel_z_value = CDbl(FlightData(5))
-                            press_baro_altitude = CDbl(FlightData(11))
-                        End If
-                    Case "SerialMonitor"
-                        SerialDataLine = ""
-                        SerialDataLine = rxBufferLineOfData
-                    Case "Transmitter"
-                        'Disect the incoming data into it's individual variables
-                        Dim RadioData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
-                        If (RadioData.Count >= 9) Then '9 values separated by commas, just checking that we are getting the correct data in.
-                            radio_roll_value = CDbl(RadioData(0))
-                            radio_pitch_value = CDbl(RadioData(1))
-                            radio_yaw_value = CDbl(RadioData(2))
-                            radio_throttle_value = CDbl(RadioData(3))
-                            radio_aux1_value = CDbl(RadioData(4))
-                            radio_aux2_value = CDbl(RadioData(5))
-                            radio_roll_mid_value = CDbl(RadioData(6))
-                            radio_pitch_mid_value = CDbl(RadioData(7))
-                            radio_yaw_mid_value = CDbl(RadioData(8))
-                        End If
-
-                End Select
+            If ComboBox_Protocol.Text.Equals("MAVLink") Then
+                SerialMAVLink()
+            Else
+                SerialLegacy()
             End If
 
-            ' We can now assume we've handled the data that was in the buffer, so we can empty it now, ready for the next data load.
-            rxBufferLineOfData = ""
-            rxBufferMarker = -1
-
-            'Here we handle the data that needs to be sent back out (TX)
-            If (Serial.IsOpen) Then
-                If txBuffer <> "" Then
-                    Serial.Write(txBuffer)
-                    txBuffer = ""
-                End If
-            End If
         Else
             'Serial is not open !
             ToolStripStatusLabel_Connection.Text = "Disconnected"
@@ -270,6 +222,85 @@ Public Class MainForm
             Button_ShowMenu.Enabled = False
         End If
     End Sub
+
+    Private Sub SerialLegacy()
+        ' Read "old" serial format, which is strings with a line end
+
+        rxBuffer = rxBuffer & Replace(Serial.ReadExisting, vbLf, "") 'Adds the incoming data to the end of the buffer.
+
+        'The buffer is just one big string with all the incoming data appended to it at the end.
+        'Going through it, we remove each line of data terminated with a line end from the
+        'beginning of the buffer after handling it. 
+
+        'If there is at least one full data line (terminated with a line end) in the receive buffer, handle it.
+        If InStr(rxBuffer, vbCr) > 0 Then
+            'There seems to be data in the rxBuffer
+
+            'Check where the first complete line of data at the beginning of the buffer ends.
+            'This will be our marker (rxBufferMarker). Everything behind it will be handled in a later pass through this loop.
+            rxBufferMarker = InStr(rxBuffer, vbCr)
+
+            'Extract this first line.
+            rxBufferLineOfData = Replace(Mid(rxBuffer, 1, rxBufferMarker), vbCr, vbCrLf) 'And also replace the trailing vbCr with vbCrLf
+
+            'Now that we have the line, remove this data from the main rxBuffer
+            rxBuffer = Mid(rxBuffer, rxBufferMarker + 1) 'Exclude the vbCr !
+
+            'Check the current visual mode
+            Select Case CurrentTab
+                Case "VisualFlight", "SensorPlots"
+                    'Disect the incoming data into it's individual variables
+                    Dim FlightData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
+                    If (FlightData.Count >= 11) Then '11 values separated by commas, just checking that we are getting the correct data in.
+                        ADI_roll_angle = CDbl(FlightData(8))
+                        ADI_pitch_angle = CDbl(FlightData(9))
+                        ADI_yaw_angle = CDbl(FlightData(10))
+                        roll_gyro_value = CDbl(FlightData(0))
+                        pitch_gyro_value = CDbl(FlightData(1))
+                        yaw_gyro_value = CDbl(FlightData(2))
+                        accel_pitch_value = CDbl(FlightData(3))
+                        accel_roll_value = CDbl(FlightData(4))
+                        accel_z_value = CDbl(FlightData(5))
+                        press_baro_altitude = CDbl(FlightData(11))
+                    End If
+                Case "SerialMonitor"
+                    SerialDataLine = ""
+                    SerialDataLine = rxBufferLineOfData
+                Case "Transmitter"
+                    'Disect the incoming data into it's individual variables
+                    Dim RadioData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
+                    If (RadioData.Count >= 9) Then '9 values separated by commas, just checking that we are getting the correct data in.
+                        radio_roll_value = CDbl(RadioData(0))
+                        radio_pitch_value = CDbl(RadioData(1))
+                        radio_yaw_value = CDbl(RadioData(2))
+                        radio_throttle_value = CDbl(RadioData(3))
+                        radio_aux1_value = CDbl(RadioData(4))
+                        radio_aux2_value = CDbl(RadioData(5))
+                        radio_roll_mid_value = CDbl(RadioData(6))
+                        radio_pitch_mid_value = CDbl(RadioData(7))
+                        radio_yaw_mid_value = CDbl(RadioData(8))
+                    End If
+
+            End Select
+        End If
+
+        ' We can now assume we've handled the data that was in the buffer, so we can empty it now, ready for the next data load.
+        rxBufferLineOfData = ""
+        rxBufferMarker = -1
+
+        'Here we handle the data that needs to be sent back out (TX)
+        If (Serial.IsOpen) Then
+            If txBuffer <> "" Then
+                Serial.Write(txBuffer)
+                txBuffer = ""
+            End If
+        End If
+    End Sub
+
+
+
+    '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
     '*************************** SUB FOR VISUAL WORK QUEUE ******************************************
     Sub Run_VisualWork()
@@ -425,6 +456,8 @@ Public Class MainForm
         Field_SerialCommand.Focus()
     End Sub
     Private Sub ComboBox_Ports_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox_Ports.SelectedIndexChanged
+        Try
+
         While Serial.IsOpen
             Serial.Close()
         End While
@@ -434,6 +467,10 @@ Public Class MainForm
         Button_Connect.Text = "Connect"
         Button_Send.Enabled = False
         Button_ShowMenu.Enabled = False
+        Catch ex As Exception
+
+        End Try
+
     End Sub
 
     Private Sub Serial1_PinChanged(ByVal sender As System.Object, ByVal e As System.IO.Ports.SerialPinChangedEventArgs) Handles Serial.PinChanged
@@ -453,30 +490,48 @@ Public Class MainForm
     End Sub
 
     Private Sub Tabs_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Tabs.SelectedIndexChanged
-        'On each change of the used view page, we send a serial command to get data
-        currentViewChanged = True
-        CurrentView = Tabs.SelectedTab.Name
-        If CurrentView <> "OnlineSupport" Then
-            'Kill the instance of IE to save memory space. You must know, I hate IE ! :)
-            Browser.Dispose()
-            Browser = Nothing
+        Try
 
-        End If
-        Select Case CurrentView
-            Case "SerialMonitor"
-                Field_SerialCommand.Focus()
-            Case "OnlineSupport"
-                '*sigh* We want Online Support via our ArduPirates Google code group. And we need to instantiate
-                'Internet Explorer within the application to view our site, http://code.google.com/p/ardupirates/
-                Browser = New WebBrowser
-                Browser.Parent = OnlineSupport
-                Browser.Dock = DockStyle.Fill
-                Browser.IsWebBrowserContextMenuEnabled = False
-                Browser.ScriptErrorsSuppressed = vbYes
-                Browser.WebBrowserShortcutsEnabled = False
-                Browser.Show()
-                Browser.Navigate("http://code.google.com/p/ardupirates/")
-        End Select
+            'On each change of the used view page, we send a serial command to get data
+            currentViewChanged = True
+            CurrentView = Tabs.SelectedTab.Name
+            'Don´t kill browser if on "Support" or "Map" tab
+            If CurrentView <> "OnlineSupport" And CurrentView <> "Map" Then
+                'Kill the instance of IE (if running) to save memory space. You must know, I hate IE ! :)
+                If Not IsNothing(Browser) Then
+                    Browser.Dispose()
+                    Browser = Nothing
+                End If
+            End If
+
+            Select Case CurrentView
+                Case "SerialMonitor"
+                    Field_SerialCommand.Focus()
+                Case "OnlineSupport"
+                    '*sigh* We want Online Support via our ArduPirates Google code group. And we need to instantiate
+                    'Internet Explorer within the application to view our site, http://code.google.com/p/ardupirates/
+                    Browser = New WebBrowser
+                    Browser.Parent = OnlineSupport
+                    Browser.Dock = DockStyle.Fill
+                    Browser.IsWebBrowserContextMenuEnabled = False
+                    Browser.ScriptErrorsSuppressed = vbYes
+                    Browser.WebBrowserShortcutsEnabled = False
+                    Browser.Show()
+                    Browser.Navigate("http://code.google.com/p/ardupirates/")
+                    'Case "Map"
+                    '    Browser = New WebBrowser
+                    '    Browser.Parent = PanelMap
+                    '    Browser.Dock = DockStyle.Fill
+                    '    Browser.IsWebBrowserContextMenuEnabled = False
+                    '    Browser.ScriptErrorsSuppressed = vbYes
+                    '    Browser.WebBrowserShortcutsEnabled = False
+                    '    Browser.Show()
+                    '    Browser.Navigate(System.Environment.CurrentDirectory + "\GE.html")
+            End Select
+        Catch ex As Exception
+            MessageBox.Show(ex.Message.ToString)
+        End Try
+
     End Sub
 
     Private Sub SerialMonitor_Enter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SerialMonitor.Enter
@@ -1088,10 +1143,25 @@ failedtoopencom:
         'Set the accel panel to the right of the ADI
         Panel_Accel_ADI.Left = ArtificialHorizon1.Left + ArtificialHorizon1.Width + 5
 
+
+        ResizeCamera()
+
+
     End Sub
 
+    Private Sub ResizeCamera()
+        PictureBoxDisplay.Height = LiveFeedTab.Height - 20
+        PictureBoxDisplay.Width = PictureBoxDisplay.Height * aspectRatio
+        PictureBoxDisplay.Top = 0
+        PictureBoxDisplay.Left = (LiveFeedTab.Width - PictureBoxDisplay.Width) / 2
+        PanelliveFeedSetting.Top = PictureBoxDisplay.Height
+    End Sub
 
     Private Sub ButtonButtonStartCamera_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonStartCamera.Click
+        If ComboBox_SelectCamera.SelectedIndex < 0 Then
+            MessageBox.Show("Please select a camera")
+            Return
+        End If
         If Not IsNothing(frameSource) Then
             If MessageBox.Show("Please note that some cameras drivers does not want to get disposed of and might crash the application (EasyCap is one of them). " + Chr(13) + "Do you want to change camera?", "Stupid camera drivers warning", MessageBoxButtons.OKCancel, _
                 Nothing, MessageBoxDefaultButton.Button1) = DialogResult.OK Then
@@ -1113,7 +1183,7 @@ failedtoopencom:
 
         If Not IsNothing(latestFrame) Then
             ' Draw the latest image from the active camera
-            e.Graphics.DrawImage(latestFrame, 0, 0, 640, 480)
+            e.Graphics.DrawImage(latestFrame, 0, 0, PictureBoxDisplay.Width, PictureBoxDisplay.Height)
 
         End If
     End Sub
@@ -1123,8 +1193,8 @@ failedtoopencom:
             Dim c As Camera
             c = ComboBox_SelectCamera.SelectedItem
             SetFrameSource(New CameraFrameSource(c))
-            frameSource.Camera.CaptureWidth = 640
-            frameSource.Camera.CaptureHeight = 480
+            frameSource.Camera.CaptureWidth = 800
+            frameSource.Camera.CaptureHeight = 600
             frameSource.Camera.Fps = 20
 
             AddHandler frameSource.NewFrame, AddressOf OnImageCaptured
@@ -1179,6 +1249,210 @@ failedtoopencom:
         Else
             ArtificialHorizon1.DisableLiveFeed()
         End If
+
+    End Sub
+
+    Private Sub ComboBoxAspectRatio_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox_AspectRatio.SelectedIndexChanged
+
+        If (ComboBox_AspectRatio.SelectedItem.ToString().Equals("4:3")) Then
+            aspectRatio = 4.0F / 3.0F
+        End If
+        If (ComboBox_AspectRatio.SelectedItem.ToString().Equals("16:9")) Then
+            aspectRatio = 16.0F / 9.0F
+        End If
+        ResizeCamera()
+
+        PictureBoxDisplay.Invalidate()
+    End Sub
+
+
+    Private Sub ButtonMissionPlanner_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonMissionPlanner.Click
+        Dim missionPlanner As New MissionPlanner
+        missionPlanner.Show()
+    End Sub
+
+    '------------------------------------------MAVlink------------------------------
+
+    Private Sub SerialMAVLink()
+
+        'MAVLink protocol. 
+
+        'read all bytes that comes into the serial buffer
+        'append the bytes to a buffer
+        'search the buffer for valid packets (and take action if found)
+        'remove the packet that was processed
+        'loop over and over
+
+        'Set correct encoding for the serial port
+        Serial.Encoding = System.Text.Encoding.UTF8
+
+        Dim nReadResult As Integer      'what was the result of the read
+        Dim nBytesToRead As Integer     'Number of Bytes to read
+
+
+        'Do we have anything in the serial port
+        If Serial.BytesToRead > 0 Then
+
+            'read how many bytes are thereto read
+            nBytesToRead = Serial.BytesToRead
+
+            'a place to store the data
+            Dim cData(nBytesToRead - 1) As Byte
+
+            'Read the data in the serial buffer
+            nReadResult = Serial.Read(cData, 0, nBytesToRead)
+
+            'Append the data to the buffer
+            rxBuffer = rxBuffer & System.Text.Encoding.Default.GetString(cData)
+
+            'search the buffer for valid MAVlink packets
+            SearchBufferForValidPackets(rxBuffer)
+
+        End If
+    End Sub
+
+    Private Sub SendMavLink(ByVal inputCommand As String)
+        'serial port must be open
+        If Serial.IsOpen Then
+
+            'Set correct encoding 
+            Serial.Encoding = System.Text.Encoding.GetEncoding(1252)
+            'write the data to the port
+            Serial.Write(inputCommand)
+        End If
+ 
+
+    End Sub
+
+    Private Sub Button20_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button20.Click
+        'Create a "heartbeat" package 
+
+        SendMavLink(mavlink_msg_heartbeat_pack(msg))
+      
+
+    End Sub
+
+    Private Sub Button21_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button21.Click
+        'Send a "Set altitude" message
+        'target = sensor on receiving platform that should be changed
+        'mode = the new value
+        SendMavLink(mavlink_msg_set_altitude_pack(msg, 2, 200))
+
+    End Sub
+
+    Private Sub ProcessMAVLinkPacket(ByRef msg As MAVLINK_msg)
+
+        'What type of message is this
+        Select Case msg.msgid
+
+            'Update what needs to be updated
+            Case MAVLINK_msg.ID.HEARTBEAT
+                SerialDataLine = "type " & ConvertMavlinkToInteger(Mid(msg.payload, 2, 1))
+                SerialDataLine += "atype " & ConvertMavlinkToInteger(Mid(msg.payload, 3, 1)) & vbCrLf
+                '    Console.WriteLine(", autopilot type: " & ConvertMavlinkToInteger(Mid(msg.payload, 3, 1)))  '
+
+            Case MAVLINK_msg.ID.SET_ALTITUDE
+                SerialDataLine = " target: " & ConvertMavlinkToInteger(Mid(msg.payload, 2, 1)) & " "
+                'Console.Write(" target: " & ConvertMavlinkToInteger(Mid(msg.payload, 2, 1)))
+                'Console.WriteLine(" mode (alt): " & ConvertMavlinkToInteger(Mid(msg.payload, 5, 2)))
+
+            Case MAVLINK_msg.ID.RAW_IMU
+                SerialDataLine = " xacc: " & ConvertMavlinkToInteger(Mid(msg.payload, 3, 2))
+                SerialDataLine = " yacc: " & ConvertMavlinkToInteger(Mid(msg.payload, 5, 2))
+                SerialDataLine = " zacc: " & ConvertMavlinkToInteger(Mid(msg.payload, 7, 2))
+                'Console.Write()
+
+                Console.Write(" xgyro: " & ConvertMavlinkToInteger(Mid(msg.payload, 9, 2)))
+                Console.Write(" ygyro: " & ConvertMavlinkToInteger(Mid(msg.payload, 11, 2)))
+                'Console.Write(" zgyro: " & ConvertMavlinkToInteger(Mid(msg.payload, 13, 2)))
+
+                'Console.Write(" xmag: " & ConvertMavlinkToInteger(Mid(msg.payload, 15, 2), True))
+                'Console.Write(" ymag: " & ConvertMavlinkToInteger(Mid(msg.payload, 17, 2), True))
+                'Console.Write(" zmag: " & ConvertMavlinkToInteger(Mid(msg.payload, 19, 3), True))
+
+                Console.WriteLine()
+
+        End Select
+    End Sub
+
+    Private Sub SearchBufferForValidPackets(ByRef rxBuffer As String)
+        Dim sHeaderCharacters As String = Chr(85)   ' U character
+        Dim MAVLinkPacket As String = ""            ' The full MAVLink packet, including checksum
+        Dim headersize As Integer = 6               ' headersize of the packet
+        Dim packetSize As Integer                   ' How long is the packet
+        Dim Packet As String                        ' the payload of the packet
+        Dim Checksum As String                      ' The checksum of the MAVLink packet
+        Dim Output As String                        ' Som we can print the packet as hex 
+
+        msg = New MAVLINK_msg(0)
+
+        'Where does the packet begin
+        rxBufferMarker = InStr(rxBuffer, sHeaderCharacters)
+
+        'If we start processing before we have a full packet, start from beginning of buffer
+        If rxBufferMarker < 1 Then
+            rxBufferMarker = 1
+        End If
+
+        'Does the buffer contain anything?
+        If Len(Mid(rxBuffer, rxBufferMarker)) > 1 Then
+
+            'Read the length of the packet from info in packet (standard in MAVlink)
+            packetSize = Asc(Mid(rxBuffer, InStr(rxBuffer, sHeaderCharacters) + 1, 1)) + 2
+
+            'Do we have enough characters in the buffer to get the whole packet
+            If Len(Mid(rxBuffer, rxBufferMarker)) >= packetSize + headersize Then
+
+                'Ok, so we have enough characters, but does it contain a headercharacter?
+                rxBufferMarker = InStr(rxBuffer, sHeaderCharacters)
+
+                'Extract the MAVLink packet from the buffer
+                MAVLinkPacket = Mid(rxBuffer, rxBufferMarker, packetSize + headersize)
+
+                'Convert the binary data to HEX so we can read it (for debug reasons)
+                Output = ""
+                For nCount = 1 To Len(MAVLinkPacket)
+                    Output = Output & Hex(Asc(Mid(MAVLinkPacket, nCount, 1))).PadLeft(2, "0") & " "
+                Next
+
+                'Get the packet without the checksum
+                Packet = Mid(MAVLinkPacket, 1, Len(MAVLinkPacket) - 2)
+
+                'Get the checksum of the packet
+                Checksum = Strings.Right(MAVLinkPacket, 2)
+
+                ' Is this a valid MAVLink packet?
+                ' If so, extract the payload
+                If Checksum = crc_calculate(Packet) Then
+                    msg.payload = Mid(MAVLinkPacket, headersize, Len(MAVLinkPacket) - 2)
+                    msg.msgid = Asc(Mid(Packet, headersize, 1))
+                    msg.len = Len(msg.payload)
+                    msg.seq = Asc(Mid(MAVLinkPacket, 3, 1))
+                    'Console.WriteLine(Output)
+
+                    'We have a valid packet, se what type of packet it is and take action.
+                    ProcessMAVLinkPacket(msg)
+
+                    'Remove the extracted packet from the buffer
+                    rxBuffer = Mid(rxBuffer, rxBufferMarker + Len(MAVLinkPacket))
+
+                    'strip the buffer from linefeed and carrige return
+                    If Not String.IsNullOrEmpty(rxBuffer) Then
+                        Do While Asc(Mid(rxBuffer, 1, 1)) = vbCr Or Asc(Mid(rxBuffer, 1, 1)) = vbCrLf Or Asc(Mid(rxBuffer, 1, 1)) = vbLf
+                            rxBuffer = Mid(rxBuffer, 2)
+                            rxBufferMarker = rxBufferMarker - 1
+                        Loop
+                    End If
+                End If
+
+            End If
+
+        End If
+
+        If Len(rxBuffer) > 1000 Then
+            rxBuffer = Mid(rxBuffer, 501)
+        End If
+
 
     End Sub
 

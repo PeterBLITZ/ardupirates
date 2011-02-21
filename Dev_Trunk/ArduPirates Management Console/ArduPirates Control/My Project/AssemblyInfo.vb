@@ -15,7 +15,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyCompany("ArduPirates")> 
 <Assembly: AssemblyProduct("ArduPirates Management Console")> 
 <Assembly: AssemblyCopyright("Copyright © ArduPirates Group")> 
-<Assembly: AssemblyTrademark("Kim Dalmeijer")> 
+<Assembly: AssemblyTrademark("Kim Dalmeijer, Christer Leuhusen")> 
 
 <Assembly: ComVisible(False)> 
 

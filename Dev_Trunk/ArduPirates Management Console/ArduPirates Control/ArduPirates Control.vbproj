@@ -30,7 +30,8 @@
     <TargetCulture>en</TargetCulture>
     <ProductName>ArduPirates Management Console</ProductName>
     <PublisherName>ArduPirates Group</PublisherName>
-    <ApplicationRevision>6</ApplicationRevision>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -100,11 +101,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Touchless.Vision">
+    <Reference Include="Touchless.Vision, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Touchless.Vision.dll</HintPath>
-    </Reference>
-    <Reference Include="WebCamLib">
-      <HintPath>.\WebCamLib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +138,19 @@
     </Compile>
     <Compile Include="ArtificialHorizon.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MAVLink.vb" />
+    <Compile Include="modcrc16.vb" />
+    <Compile Include="My Project\Application1.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="Waypoint.vb" />
+    <Compile Include="MissionPlanner.Designer.vb">
+      <DependentUpon>MissionPlanner.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MissionPlanner.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.vb">
       <DependentUpon>MainForm.vb</DependentUpon>
@@ -179,6 +191,9 @@
       <DependentUpon>ArtificialHorizon.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="MissionPlanner.resx">
+      <DependentUpon>MissionPlanner.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -193,13 +208,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="My Project\app.manifest">
       <SubType>Designer</SubType>
     </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
-      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+      <LastGenOutput>Application1.Designer.vb</LastGenOutput>
     </None>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -230,6 +247,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="common.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MissionPlanner.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="TextFile1.txt" />
     <None Include="refresh.png" />
     <None Include="backgroundskin.jpg" />
     <None Include="ArduPirates.png" />

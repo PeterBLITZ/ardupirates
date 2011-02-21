@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0px; padding: 0px }
+      #map_canvas { height: 100% }
+
+      #infoBox {
+      position: absolute;
+      top: 10px;
+      left: 130px;
+      border: solid 1px #CCC;
+      background-color: #fff;
+      width:300px;
+      height: 20px;
+      }
+
+      #contextMenu, #markerMenu {
+      position: absolute;
+
+      min-width: 100px;
+      z-index: 1000;
+      background: #fff;
+      border-top: solid 1px #CCC;
+      border-left: solid 1px #CCC;
+      border-bottom: solid 1px #676767;
+      border-right: solid 1px #676767;
+      padding: 0px;
+      margin: 0px;
+      display:none;
+      }
+
+      #contextMenu a {
+      color: #000;
+      text-decoration: none;
+      display: block;
+      line-height: 22px;
+      height: 22px;
+      padding: 1px 10px;
+      }
+
+      #contextMenu li {
+      list-style: none;
+      padding: 1px;
+      margin: 0px;
+      }
+
+      #contextMenu li.hover a {
+      background-color: #A7C4FA;
+      }
+
+
+      #markerMenu a {
+      color: #000;
+      text-decoration: none;
+      display: block;
+      line-height: 22px;
+      height: 22px;
+      padding: 1px 10px;
+      }
+
+      #contextMenu li.separator {
+      border-top: solid 1px #ccc;
+
+
+      #markerMenu li {
+      list-style: none;
+      padding: 1px;
+      margin: 0px;
+      }
+
+      #markerMenu li.hover a {
+      background-color: #A7C4FA;
+      }
+
+      #markerMenu li.separator {
+      border-top: solid 1px #ccc;
+      }
+
+
+
+    </style>
+
+    <script type="text/javascript"
+        src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry">
+    </script>
+    <script type="text/javascript">
+      <!--
+        var map;
+        var markers = new Array();
+        var markerPreviousposition;
+        var currentMarker;
+        var elevator;
+		          // Create the context menu element
+		          var contextMenu = $(document.createElement('ul'))
+			          .attr('id', 'contextMenu');
+
+		          var markerMenu = $(document.createElement('ul'))
+			          .attr('id', 'markerMenu');
+
+        function initialize() {
+            //var latlng = new google.maps.LatLng(59.229, 18.0697); // Svartviksvägen (Krokodil)
+            var latlng = new google.maps.LatLng(59.33925922404158, 18.072639701080316); //Stockholm
+            //var latlng = new google.maps.LatLng(5, 1);
+            var myOptions = {
+                zoom: 10,
+                center: latlng,
+                disableDoubleClickZoom: true,
+                draggable: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+            elevator = new google.maps.ElevationService();
+            var polyOptions = {
+                strokeColor: '#000000',
+                strokeOpacity: 0.5,
+                strokeWeight: 5
+              };
+
+              poly = new google.maps.Polyline(polyOptions);
+              poly.setMap(map);
+
+
+		          /**
+		           * Create the context menus
+		           */
+
+		          // Fill map menu with links
+		          contextMenu.append(
+                '<li><b>Map menu</b></li><li><hr width=100></li>' +
+			          '<li><a href="#add">Add waypoint</a></li>' +
+                '<li><hr width=100><li><a href="#clr">clear map</a></li>' 
+		          );
+ 
+ 		          // Fill waypoint menu with links
+		          markerMenu.append(
+			          '<li><b>Waypoint menu</b></li><li><hr width=100 height=1></li>' +
+                '<li><a href="#ins">Insert waypoint</a></li>' + 
+			          '<li><a href="#del">Delete waypoint</a></li>' 
+		          );
+ 
+		          // Disable the browser context menu on our context menu
+		          contextMenu.bind('contextmenu', function() { return false; });
+              markerMenu.bind('markerMenu', function() { return false; });
+              
+		          // Append it to the map object
+		          $(map.getDiv()).append(contextMenu);
+ 
+ 	          // Append it to the map object
+		          $(map.getDiv()).append(markerMenu);
+              
+		          /**
+		           * Menu events
+		           */
+ 
+		          // Keep track of where you clicked
+		          var clickedLatLng;
+ 
+		          // Display and position the menu
+		          google.maps.event.addListener(map, 'rightclick', function(e)
+		          {
+			          // start buy hiding the context menu if its open
+			          contextMenu.hide();
+ 
+			          var mapDiv = $(map.getDiv()),
+				          x = e.pixel.x,
+				          y = e.pixel.y;
+ 
+			          // save the clicked location
+			          clickedLatLng = e.latLng;
+ 
+			          // adjust if clicked to close to the edge of the map
+			          if ( x > mapDiv.width() - contextMenu.width() )
+				          x -= contextMenu.width();
+ 
+			          if ( y > mapDiv.height() - contextMenu.height() )
+				          y -= contextMenu.height();
+ 
+			          // Set the location and fade in the context menu
+			          contextMenu.css({ top: y, left: x }).fadeIn(100);
+		          });
+ 
+		          // Set some events on the context menu links
+		          contextMenu.find('a').click( function()
+		          {
+			          // fade out the menu
+			          contextMenu.fadeOut(75);
+ 
+			          var action = $(this).attr('href').substr($(this).attr('href').length-3,3);
+                
+			          switch ( action )
+			          {
+				          case 'add':
+					          placeMarker(clickedLatLng,"", null,true);
+					          break;
+ 
+				          case 'clr':
+					          clearMap(true);
+					          break;
+ 
+			          }
+ 
+			          return true;
+		          });
+ 		          // Set some events on the context menu links
+		          markerMenu.find('a').click( function()
+		          {
+			          // fade out the menu
+			          contextMenu.fadeOut(75);
+ 
+			          var action = $(this).attr('href').substr($(this).attr('href').length-3,3);
+                
+			          switch ( action )
+			          {
+ 
+				          case 'del':
+					          deleteMarker(currentMarker);
+                    markerMenu.hide();      
+                    break;
+                  case 'ins':
+                 		insertWaypoint(currentMarker);
+                    markerMenu.hide();      
+                    break; 
+			          }
+ 
+			          return true;
+		          });
+		          // Hover events for effect
+		          contextMenu.find('a').hover( function() {
+			          $(this).parent().addClass('hover');
+		          }, function() {
+			          $(this).parent().removeClass('hover');
+		          });
+ 
+		        // Hide context menu on some events
+		        $.each('click dragstart zoom_changed maptypeid_changed'.split(' '), function(i,name){
+			        google.maps.event.addListener(map, name, function(){ 
+              contextMenu.hide(); 
+              markerMenu.hide(); 
+              stopBounce();       //stop all bouncing markers
+              });
+
+		        });
+
+
+
+              //Add listener to click event
+              //If doubleclicked, place marker
+              google.maps.event.addListener(map, 'dblclick', function (event) {
+                  placeMarker(event.latLng,"",null, true);
+              });
+            
+            
+
+            
+        }
+        //End Initialze
+
+
+        //Place marker on map at <location>, insert into array at position <positionInArray>.
+        //If <positionInArray>is null, add to end of array
+        //If <sendToCaller>is true, all markers are sent to the calling program. Do not use if markers are created from calling program (which is the case when loading a saved file)
+        function placeMarker(location, title, positionInArray, sendToCaller) {
+
+            var path = poly.getPath();
+            
+            if (positionInArray != null) {
+              location = getMidPoint(location, markers[positionInArray-1].position);
+              //alert(location.lat());
+            }
+            
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                draggable: true,
+                title: title
+            }
+            ); //END MARKER
+
+
+
+            //If user clicked a marker
+            google.maps.event.addListener(marker, 'click', function () {
+                selectedWaypoint(marker.position, null);
+                //alert(marker.title);
+            });
+
+
+            //If user started dragging a marker 
+            google.maps.event.addListener(marker, 'dragstart', function () {
+                markerPreviousposition = marker.position;
+            });
+
+            //If user dragged a marker 
+            google.maps.event.addListener(marker, 'dragend', function () {
+                moveWaypoint(marker.position);
+            });
+
+
+		          // Display and position the menu
+		          google.maps.event.addListener(marker, 'rightclick', function(e)
+		          {
+                currentMarker=marker; 
+
+			          markerMenu.hide();
+			          markerMenu.css({ top: 10, left: 10 }).fadeIn(100);
+                
+		          });
+            // map.setCenter(location);
+
+            if (positionInArray == null) {
+              //push marker to the array and path
+              path.push(location);
+              markers.push(marker);
+              positionInArray=0;
+              }
+            else {
+              //Insert the marker into the array (and path) at set position
+              markers.splice(positionInArray,0,marker);
+              path.insertAt(positionInArray, marker.position);
+            }
+            
+            if(sendToCaller==true){
+              window.external.AddWaypoint(positionInArray+":"+ location+":"+marker.title);  //Send marker to create a waypoint
+            }
+
+            printTotalDistance();
+            printLastLegDistance();
+
+        } // end function placeMarker
+
+
+        //Delete marker by position, called from rightclick menu 
+        function deleteMarker(marker)
+        {
+          var path = poly.getPath();
+          var markerNum=1;
+          for (i = 0; i < markers.length; i++) {
+                if (marker.position == markers[i].position) {
+                      //Set var so we can send it to caller                    
+                      markerNum=i;
+                      //Remove marker
+                      markers[i].setMap(null);
+                      markers.splice(i, 1);
+                      path.removeAt(i);
+                 }
+            }
+            //remove waypoint from calling program 
+            window.external.DeleteWaypoint(markerNum);
+        }
+
+        //Delete waypoint by number, called from VB
+          function deleteWaypoint(waypointnumber) {
+            //
+            var path = poly.getPath();
+            var tmp = "";
+            for (i = 0; i < markers.length; i++) {
+                if (i == waypointnumber) {
+                    //Remove marker
+                    markers[i].setMap(null);
+                    markers.splice(i, 1);
+                    path.removeAt(i);
+                }
+            }
+        } //End deleteWaypoint
+
+
+        //Packs the waypoints in a string and sends to calling program
+        //The string looks like this: <num>:<lat>:<lng>:<title>;
+        //We really should use JSon for this, but since it requires a external dll to make that work in .Net,
+        //we don´t use that for now. 
+        function sendWaypointsToCaller()
+        {
+            //var path = poly.getPath();
+            var waypoints = "";
+            if (markers.length > 0) {
+            
+              for (i = 0; i < markers.length; i++) {
+                pos = markers[i].position.toString();
+                waypoints += i + ":" + pos.replace(",", ":") + ":" + markers[i].title + i + ";";
+                
+              }
+            }
+            
+            printTotalDistance();
+            
+            //Call function in VB-program
+            window.external.WP(waypoints);      
+        }
+
+        /**Not used at the moment, maybe later there is time to implement support for JSon in the calling VB-program.*/
+        function sendWaypointsToCallerJSon()
+        {
+          //Create a JSon object
+          var waypoints =[];
+        
+          if (markers.length > 0) {
+               for (i = 0; i < markers.length; i++) {
+                waypoints.push(
+                {number: i, position: markers[i].position}
+                );
+              }
+            }
+            
+            //alert(waypoints.toString());
+            //Call function in VB-program
+            //window.external.WP(waypoints);      
+        }
+
+
+        
+        //Moves the waypoint by place in marker array
+        function moveWaypoint(markerPosition) {
+            var path = poly.getPath();
+
+            //Find path position that moved
+            for (i = 0; i < path.length; i++) {
+                if (path.getAt(i) == markerPreviousposition) {
+                    //Remove element
+                    path.removeAt(i);
+                    //insert element at same position
+                    path.insertAt(i, markerPosition);
+                    //End loop
+                    break;
+                }
+            }
+            
+            printTotalDistance();
+            printLastLegDistance();
+            //Update waypoint in VB-program
+            window.external.UpdateWaypoint(i, markerPosition);
+        }
+        
+        //Inserts a marker next to <marker>
+        //<marker>The marker on which user selected to insert waypoint before</marker>
+        function insertWaypoint(marker)
+        {
+          
+          var path = poly.getPath();
+          var index=0;
+           for (i = 0; i < markers.length; i++) {
+                if (marker.position == markers[i].position) {
+                  //if (i==0) {
+                    index=i; //Insert at position (i)
+                    break;
+                  //}
+                }
+          }
+          if (index > 0) //Don´t insert before first
+            placeMarker(markers[index].position, "Waypoint", index, true);
+        }
+        
+        function selectedWaypoint(position, waypointNumber)
+        {
+            if (waypointNumber == null){
+              var waypoint;
+              for (i = 0; i < markers.length; i++) {
+                  if (markers[i].position == position) {
+                    waypoint = i;
+                  }
+              }
+            }
+            else {
+              waypoint = waypointNumber;
+            }
+            stopBounce();
+            markers[waypoint].setAnimation(google.maps.Animation.BOUNCE);
+            window.external.SelectedWaypoint(waypoint);
+        }
+        
+        
+        function stopBounce() {
+          for (i=0;i<markers.length;i++)
+          {
+            markers[i].setAnimation(null);
+          }
+        }
+        
+        function avg(first, second)
+        {
+          var sum = first + second;
+          return sum/2;
+        }
+        
+   
+        function getMidPoint(firstPosition, secondPosition)
+        {
+              var firstLocation = firstPosition.toString();
+              firstLocation = firstLocation.replace("(","").replace(")","").replace(" ","");
+              firstLocation= firstLocation.split(",");
+              var Lat1 = firstLocation[0];
+              var Lng1 = firstLocation[1];
+             
+              var secondPosition = secondPosition.toString();
+              secondPosition = secondPosition.replace("(","").replace(")","").replace(" ","");
+              secondPosition= secondPosition.split(",");
+              var Lat2 = secondPosition[0];
+              var Lng2 = secondPosition[1];
+              
+              var Lat = avg(Number(Lat1), Number(Lat2));
+              var Lng = avg(Number(Lng1), Number(Lng2));
+              
+              var newPosition = new google.maps.LatLng(Lat, Lng, false);
+              //alert(newPosition);
+              return newPosition;
+        }
+        
+        //The calling program sent a list of positions, create markers from list
+        //The string looks like this: <num>:<lat>:<lng>:<title>;
+        function createMarkers(inputMarkers)
+        {
+          //Clear all markers
+          clearMap(false);
+          
+          //alert("inputMarkers: "+inputMarkers);
+          var newMarkers = Array();
+          var newMarker = Array();
+          var location ;
+          newMarkers = newMarkers.toString();
+          inputMarkers= inputMarkers.toString();
+          var totalDistance=0;
+          newMarkers = inputMarkers.split(";");
+          
+          for (i=0;i<newMarkers.length-1;i++)
+          {
+            
+            newMarker = newMarkers[i].split(":");   
+            location = new google.maps.LatLng(Number(newMarker[1]), Number(newMarker[2]), false);
+            placeMarker(location,newMarker[3], null, false);
+            
+          }
+          //alert(newMarkers[3]);
+          printTotalDistance();
+            
+        }
+
+
+        //<sendWaypointsToCaller> specifies if we should send the waypoints to the calling program
+        //Do not send if calling program requested clearing of the map
+        function clearMap(bSendWaypointsToCaller)
+        {
+            if (markers.length > 0) {
+              var path = poly.getPath();
+              path.clear();
+              var numOfMarkers=markers.length-1;
+            
+              for (i = 0; i < numOfMarkers; i++) {
+                markers[i].setMap(null);
+              }
+              markers[i].setMap(null);
+              markers.splice(0,numOfMarkers+1);            
+            
+              if (bSendWaypointsToCaller == true)
+                window.external.ClearWayPoints();
+          }
+        }
+        
+        //
+        function formatDistance(distance)
+        {
+          distance = distance.toString().split(".");
+          var newDistance = Number(distance[0]);
+         
+          if (newDistance > 99999) {
+              newDistance = newDistance.toString();
+              newDistance = newDistance.substring(0,3) + "." +newDistance.substring(1,3)+" km."  ;
+            }
+         if (newDistance > 9999) {
+              newDistance = newDistance.toString();
+              newDistance = newDistance.substring(0,2) + "." +newDistance.substring(1,3)+" km."  ;
+            }
+         else if (newDistance > 999) {
+              newDistance = newDistance.toString();
+              newDistance = newDistance.substring(0,1) + "." +newDistance.substring(1,3)+" km."  ;
+             
+          }
+          else newDistance += "m."
+          return newDistance;
+                
+          
+
+        }
+
+        function printTotalDistance()
+        {
+            var path = poly.getPath();           
+            var distance = google.maps.geometry.spherical.computeLength(path, 6378137);
+            distance = formatDistance(distance);
+            document.getElementById('infoBox').innerHTML = "Total distance: "+distance;
+        }
+        
+        function printLastLegDistance()
+        {
+            if (markers.length > 1) {
+                var distance = google.maps.geometry.spherical.computeDistanceBetween(markers[markers.length-1].getPosition(), markers[markers.length-2].getPosition(), 6378137);
+                distance = formatDistance(distance);
+                document.getElementById('infoBox').innerHTML += "(Last leg: "+distance+")";
+            }
+        }
+-->
+
+    </script>
+  </head>
+  <body onload="initialize()">
+
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+    <div id="infoBox" class="infobox"></div>
+  </body>
+</html>
