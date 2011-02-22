@@ -30,14 +30,22 @@ Partial Class MissionPlanner
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.LabelWaypointTitle = New System.Windows.Forms.Label()
         Me.SplitContainerWhole = New System.Windows.Forms.SplitContainer()
         Me.SplitContainerMapWaypoints = New System.Windows.Forms.SplitContainer()
         Me.PanelMap = New System.Windows.Forms.Panel()
         Me.WaypointGridView = New System.Windows.Forms.DataGridView()
+        Me.Num = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Latitude = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Longitude = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MoveUp = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.MoveDown = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Delete = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.PanelSettings = New System.Windows.Forms.Panel()
         Me.ButtonSaveMission = New System.Windows.Forms.Button()
         Me.ButtonLoadMission = New System.Windows.Forms.Button()
         Me.PanelWaypointProperties = New System.Windows.Forms.Panel()
+        Me.TextBoxWaypointTitle = New System.Windows.Forms.TextBox()
         Me.LabelWaypoint = New System.Windows.Forms.Label()
         Me.ButtonSetNewWaypointValues = New System.Windows.Forms.Button()
         Me.ComboBoxCommandType = New System.Windows.Forms.ComboBox()
@@ -57,14 +65,6 @@ Partial Class MissionPlanner
         Me.TextBoxParameter6 = New System.Windows.Forms.TextBox()
         Me.TextBoxParameter7 = New System.Windows.Forms.TextBox()
         Me.LabelParameter1 = New System.Windows.Forms.Label()
-        Me.TextBoxWaypointTitle = New System.Windows.Forms.TextBox()
-        Me.LabelWaypointTitle = New System.Windows.Forms.Label()
-        Me.Num = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Latitude = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Longitude = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MoveUp = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.MoveDown = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.Delete = New System.Windows.Forms.DataGridViewButtonColumn()
         CType(Me.SplitContainerWhole, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainerWhole.Panel1.SuspendLayout()
         Me.SplitContainerWhole.Panel2.SuspendLayout()
@@ -82,6 +82,17 @@ Partial Class MissionPlanner
         'OpenFileDialog1
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
+        '
+        'LabelWaypointTitle
+        '
+        Me.LabelWaypointTitle.AutoSize = True
+        Me.LabelWaypointTitle.ForeColor = System.Drawing.Color.White
+        Me.LabelWaypointTitle.Location = New System.Drawing.Point(34, 53)
+        Me.LabelWaypointTitle.Name = "LabelWaypointTitle"
+        Me.LabelWaypointTitle.Size = New System.Drawing.Size(60, 13)
+        Me.LabelWaypointTitle.TabIndex = 6
+        Me.LabelWaypointTitle.Text = "Description"
+        Me.ToolTip1.SetToolTip(Me.LabelWaypointTitle, "Shows when hover over a marker on map")
         '
         'SplitContainerWhole
         '
@@ -166,6 +177,49 @@ Partial Class MissionPlanner
         Me.WaypointGridView.Size = New System.Drawing.Size(589, 112)
         Me.WaypointGridView.TabIndex = 4
         '
+        'Num
+        '
+        Me.Num.FillWeight = 10.0!
+        Me.Num.HeaderText = "Num"
+        Me.Num.Name = "Num"
+        Me.Num.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Num.Width = 40
+        '
+        'Latitude
+        '
+        Me.Latitude.HeaderText = "Latitude"
+        Me.Latitude.Name = "Latitude"
+        Me.Latitude.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Longitude
+        '
+        Me.Longitude.HeaderText = "Longitude"
+        Me.Longitude.Name = "Longitude"
+        Me.Longitude.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'MoveUp
+        '
+        Me.MoveUp.FillWeight = 50.0!
+        Me.MoveUp.HeaderText = "Move up"
+        Me.MoveUp.Name = "MoveUp"
+        Me.MoveUp.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.MoveUp.Width = 75
+        '
+        'MoveDown
+        '
+        Me.MoveDown.FillWeight = 50.0!
+        Me.MoveDown.HeaderText = "Move down"
+        Me.MoveDown.Name = "MoveDown"
+        Me.MoveDown.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.MoveDown.Width = 75
+        '
+        'Delete
+        '
+        Me.Delete.FillWeight = 50.0!
+        Me.Delete.HeaderText = "Delete"
+        Me.Delete.Name = "Delete"
+        Me.Delete.Width = 60
+        '
         'PanelSettings
         '
         Me.PanelSettings.BackColor = System.Drawing.Color.White
@@ -209,6 +263,13 @@ Partial Class MissionPlanner
         Me.PanelWaypointProperties.Size = New System.Drawing.Size(225, 248)
         Me.PanelWaypointProperties.TabIndex = 5
         Me.PanelWaypointProperties.Visible = False
+        '
+        'TextBoxWaypointTitle
+        '
+        Me.TextBoxWaypointTitle.Location = New System.Drawing.Point(114, 50)
+        Me.TextBoxWaypointTitle.Name = "TextBoxWaypointTitle"
+        Me.TextBoxWaypointTitle.Size = New System.Drawing.Size(94, 20)
+        Me.TextBoxWaypointTitle.TabIndex = 5
         '
         'LabelWaypoint
         '
@@ -286,7 +347,7 @@ Partial Class MissionPlanner
         '
         Me.LabelParameter7.AutoSize = True
         Me.LabelParameter7.ForeColor = System.Drawing.Color.White
-        Me.LabelParameter7.Location = New System.Drawing.Point(3, 127)
+        Me.LabelParameter7.Location = New System.Drawing.Point(3, 120)
         Me.LabelParameter7.Name = "LabelParameter7"
         Me.LabelParameter7.Size = New System.Drawing.Size(64, 13)
         Me.LabelParameter7.TabIndex = 13
@@ -297,7 +358,7 @@ Partial Class MissionPlanner
         '
         Me.LabelParameter6.AutoSize = True
         Me.LabelParameter6.ForeColor = System.Drawing.Color.White
-        Me.LabelParameter6.Location = New System.Drawing.Point(3, 107)
+        Me.LabelParameter6.Location = New System.Drawing.Point(3, 100)
         Me.LabelParameter6.Name = "LabelParameter6"
         Me.LabelParameter6.Size = New System.Drawing.Size(64, 13)
         Me.LabelParameter6.TabIndex = 12
@@ -308,7 +369,7 @@ Partial Class MissionPlanner
         '
         Me.LabelParameter5.AutoSize = True
         Me.LabelParameter5.ForeColor = System.Drawing.Color.White
-        Me.LabelParameter5.Location = New System.Drawing.Point(3, 87)
+        Me.LabelParameter5.Location = New System.Drawing.Point(3, 80)
         Me.LabelParameter5.Name = "LabelParameter5"
         Me.LabelParameter5.Size = New System.Drawing.Size(64, 13)
         Me.LabelParameter5.TabIndex = 11
@@ -319,7 +380,7 @@ Partial Class MissionPlanner
         '
         Me.LabelParameter4.AutoSize = True
         Me.LabelParameter4.ForeColor = System.Drawing.Color.White
-        Me.LabelParameter4.Location = New System.Drawing.Point(3, 67)
+        Me.LabelParameter4.Location = New System.Drawing.Point(3, 60)
         Me.LabelParameter4.Name = "LabelParameter4"
         Me.LabelParameter4.Size = New System.Drawing.Size(64, 13)
         Me.LabelParameter4.TabIndex = 10
@@ -330,7 +391,7 @@ Partial Class MissionPlanner
         '
         Me.LabelParameter3.AutoSize = True
         Me.LabelParameter3.ForeColor = System.Drawing.Color.White
-        Me.LabelParameter3.Location = New System.Drawing.Point(3, 47)
+        Me.LabelParameter3.Location = New System.Drawing.Point(3, 40)
         Me.LabelParameter3.Name = "LabelParameter3"
         Me.LabelParameter3.Size = New System.Drawing.Size(64, 13)
         Me.LabelParameter3.TabIndex = 9
@@ -341,7 +402,7 @@ Partial Class MissionPlanner
         '
         Me.LabelParameter2.AutoSize = True
         Me.LabelParameter2.ForeColor = System.Drawing.Color.White
-        Me.LabelParameter2.Location = New System.Drawing.Point(3, 27)
+        Me.LabelParameter2.Location = New System.Drawing.Point(3, 20)
         Me.LabelParameter2.Name = "LabelParameter2"
         Me.LabelParameter2.Size = New System.Drawing.Size(64, 13)
         Me.LabelParameter2.TabIndex = 8
@@ -401,73 +462,12 @@ Partial Class MissionPlanner
         '
         Me.LabelParameter1.AutoSize = True
         Me.LabelParameter1.ForeColor = System.Drawing.Color.White
-        Me.LabelParameter1.Location = New System.Drawing.Point(3, 7)
+        Me.LabelParameter1.Location = New System.Drawing.Point(3, 0)
         Me.LabelParameter1.Name = "LabelParameter1"
         Me.LabelParameter1.Size = New System.Drawing.Size(64, 13)
         Me.LabelParameter1.TabIndex = 7
         Me.LabelParameter1.Tag = "11"
         Me.LabelParameter1.Text = "Parameter 1"
-        '
-        'TextBoxWaypointTitle
-        '
-        Me.TextBoxWaypointTitle.Location = New System.Drawing.Point(114, 50)
-        Me.TextBoxWaypointTitle.Name = "TextBoxWaypointTitle"
-        Me.TextBoxWaypointTitle.Size = New System.Drawing.Size(94, 20)
-        Me.TextBoxWaypointTitle.TabIndex = 5
-        '
-        'LabelWaypointTitle
-        '
-        Me.LabelWaypointTitle.AutoSize = True
-        Me.LabelWaypointTitle.ForeColor = System.Drawing.Color.White
-        Me.LabelWaypointTitle.Location = New System.Drawing.Point(34, 53)
-        Me.LabelWaypointTitle.Name = "LabelWaypointTitle"
-        Me.LabelWaypointTitle.Size = New System.Drawing.Size(60, 13)
-        Me.LabelWaypointTitle.TabIndex = 6
-        Me.LabelWaypointTitle.Text = "Description"
-        Me.ToolTip1.SetToolTip(Me.LabelWaypointTitle, "Shows when hover over a marker on map")
-        '
-        'Num
-        '
-        Me.Num.FillWeight = 10.0!
-        Me.Num.HeaderText = "Num"
-        Me.Num.Name = "Num"
-        Me.Num.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Num.Width = 40
-        '
-        'Latitude
-        '
-        Me.Latitude.HeaderText = "Latitude"
-        Me.Latitude.Name = "Latitude"
-        Me.Latitude.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Longitude
-        '
-        Me.Longitude.HeaderText = "Longitude"
-        Me.Longitude.Name = "Longitude"
-        Me.Longitude.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'MoveUp
-        '
-        Me.MoveUp.FillWeight = 50.0!
-        Me.MoveUp.HeaderText = "Move up"
-        Me.MoveUp.Name = "MoveUp"
-        Me.MoveUp.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.MoveUp.Width = 75
-        '
-        'MoveDown
-        '
-        Me.MoveDown.FillWeight = 50.0!
-        Me.MoveDown.HeaderText = "Move down"
-        Me.MoveDown.Name = "MoveDown"
-        Me.MoveDown.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.MoveDown.Width = 75
-        '
-        'Delete
-        '
-        Me.Delete.FillWeight = 50.0!
-        Me.Delete.HeaderText = "Delete"
-        Me.Delete.Name = "Delete"
-        Me.Delete.Width = 60
         '
         'MissionPlanner
         '

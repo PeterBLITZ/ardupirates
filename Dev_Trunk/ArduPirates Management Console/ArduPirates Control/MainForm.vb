@@ -124,14 +124,18 @@ Public Class MainForm
     End Sub
 
     Sub Enumerate_Cameras()
-        For Each cam As Camera In CameraService.AvailableCameras
-            ComboBox_SelectCamera.Items.Add(cam)
-        Next
+        Try
+            For Each cam As Camera In CameraService.AvailableCameras
+                ComboBox_SelectCamera.Items.Add(cam)
+            Next
 
-        'Found at least one camera, show panel in connection tab
-        If ComboBox_SelectCamera.Items.Count > 0 Then
-            GroupBoxCamera.Visible = True
-        End If
+            'Found at least one camera, show panel in connection tab
+            If ComboBox_SelectCamera.Items.Count > 0 Then
+                GroupBoxCamera.Visible = True
+            End If
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Function RandomNumber(ByVal min As Integer, ByVal max As Integer) As Integer

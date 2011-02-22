@@ -61,3 +61,58 @@ G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\GenerateResource.write.
 G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.TrustInfo.xml
 G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe.manifest
 G:\ArduPirates Control\ArduPirates Control\obj\x86\Debug\ArduPirates Control.application
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduCalibrationSlider.resources
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduProgressBar.resources
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArtificialHorizon.resources
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.MainForm.resources
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.Resources.resources
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.SplashForm.resources
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.xml
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.pdb
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.exe.config
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.exe.manifest
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.application
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.exe
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.pdb
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.xml
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.TrustInfo.xml
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe.manifest
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.application
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\Touchless.Vision.dll
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\WebCamLib.dll
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\System.ComponentModel.Composition.dll
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\GenerateResource.read.164.tlog
+C:\Arducopter\sketches\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\GenerateResource.read.165.tlog
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.exe.config
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.xml
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.pdb
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.exe.manifest
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.application
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.exe
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.pdb
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\ArduPirates Control.xml
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\Touchless.Vision.dll
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\System.ComponentModel.Composition.dll
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduCalibrationSlider.resources
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArduProgressBar.resources
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.ArtificialHorizon.resources
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.MainForm.resources
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.Resources.resources
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.SplashForm.resources
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\GenerateResource.read.164.tlog
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\GenerateResource.read.165.tlog
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.TrustInfo.xml
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.exe.manifest
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\ArduPirates Control.application
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Debug\WindowsFormsApplication.MissionPlanner.resources
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\MissionPlanner.html
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\WebCamLib.dll
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Debug\common.xml

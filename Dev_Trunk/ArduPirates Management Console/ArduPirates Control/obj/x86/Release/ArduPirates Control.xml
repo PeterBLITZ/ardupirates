@@ -6,7 +6,66 @@ ArduPiratesControl
 </name>
 </assembly>
 <members>
-<member name="P:WindowsFormsApplication.My.Resources.Resources.ResourceManager">
+<member name="M:WindowsFormsApplication.Waypoint.#ctor(System.Int32,System.String,System.String,System.String,System.String)">
+	<summary>
+ Creates a new Waypoint
+ </summary>
+	<param name="Latitude">Waypoints latitude</param>
+	<param name="Longitude">Waypoints longitude</param>
+	<remarks></remarks>
+</member><member name="P:WindowsFormsApplication.Waypoint.Position">
+	<summary>
+ Returns a Google Maps compatible position of the waypoint
+ </summary>
+	<value></value>
+	<returns>Returns a Google Maps compatible position of the waypoint</returns>
+	<remarks></remarks>
+</member><member name="M:WindowsFormsApplication.MissionPlanner.AddWaypoint(System.String)">
+	<summary>
+ Adds a waypoint to the list of waypoints
+ </summary>
+	<param name="WaypointData">The string with waypoint data</param>
+	<remarks></remarks>
+</member><member name="M:WindowsFormsApplication.MissionPlanner.DeleteWaypoint(System.Int32)">
+	<summary>
+ Deletes a waypoint from list of waypoints
+ </summary>
+	<param name="waypointnumber">The place in the list to remove waypoint</param>
+	<remarks></remarks>
+</member><member name="M:WindowsFormsApplication.MissionPlanner.UpdateWaypoint(System.Int32,System.String)">
+	<summary>
+ Updates the waypoint with new position
+ </summary>
+	<param name="waypointNumber">The waypoint to update</param>
+	<param name="markerPosition">The new position</param>
+	<remarks></remarks>
+</member><member name="M:WindowsFormsApplication.MissionPlanner.UpdateWayPointList(System.Int32,System.Boolean@)">
+	<summary>
+ Updates the list of waypoints in the grid view
+ </summary>
+	<param name="selectedWaypoint">The waypoint to mark as selected. -1 select none. -10 updates Google maps</param>
+	<remarks></remarks>
+</member><member name="M:WindowsFormsApplication.MissionPlanner.SelectedWaypoint(System.Int32)">
+	<summary>
+ A waypoint is selected, mark it in list and show properties panel
+ </summary>
+	<param name="waypointNum">the number of the selected waypoint</param>
+	<remarks>Called from html-file</remarks>
+</member><member name="M:WindowsFormsApplication.MissionPlanner.ButtonSetNewWaypointValues_Click(System.Object,System.EventArgs)">
+	<summary>
+ User changed the waypoint parameters, update waypoint values
+ </summary>
+	<param name="sender"></param>
+	<param name="e"></param>
+	<remarks></remarks>
+</member><member name="M:WindowsFormsApplication.MissionPlanner.ComboBoxCommandType_SelectedIndexChanged(System.Object,System.EventArgs)">
+	<summary>
+ User changed the CommandType in the dropdown, update parameter descriptions next to textboxes
+ </summary>
+	<param name="sender"></param>
+	<param name="e"></param>
+	<remarks></remarks>
+</member><member name="P:WindowsFormsApplication.My.Resources.Resources.ResourceManager">
 	<summary>
   Returns the cached ResourceManager instance used by this class.
 </summary>
@@ -19,6 +78,42 @@ ArduPiratesControl
 	<summary>
   A strongly-typed resource class, for looking up localized strings, etc.
 </summary>
+</member><member name="M:WindowsFormsApplication.MAVLink.mavlink_msg_heartbeat_pack(WindowsFormsApplication.MAVLINK_msg@)">
+	<summary>
+ Create a MAVLink "heartbeat" packet
+ </summary>
+	<returns>The finalized packet</returns>
+	<remarks></remarks>
+</member><member name="M:WindowsFormsApplication.MAVLink.mavlink_msg_set_altitude_pack(WindowsFormsApplication.MAVLINK_msg@,System.Int32,System.Int32)">
+	<summary>
+ Create a MAVLink "set_altitude" packet
+ </summary>
+	<param name="msg">The message to pack</param>
+	<param name="target">the system setting for "Altitude"</param>
+	<param name="mode">The new altitude in meters</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WindowsFormsApplication.MAVLink.mavlink_finalize_message(WindowsFormsApplication.MAVLINK_msg@,System.Int32,System.Int32)">
+	<summary>
+ Pack a MAVLink packet and create (and append) checksum
+ </summary>
+	<param name="msg">The MAVLink message to pack</param>
+	<param name="system_id">The SystemID</param>
+	<param name="component_id">The componentID</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="T:WindowsFormsApplication.MAVLink">
+	<summary>''' Module for functions to use with MAVLink.
+ Based on a module written by HappyKillmore (happy@happykillmore.com) 
+ Extended for APMC by Krokodil
+ </summary>
+	<remarks></remarks>
+</member><member name="T:WindowsFormsApplication.modcrc16">
+	<summary>
+ Module for functions to use with MAVLink.
+ Written by HappyKillmore (happy@happykillmore.com) 
+ </summary>
+	<remarks></remarks>
 </member>
 </members>
 </doc>

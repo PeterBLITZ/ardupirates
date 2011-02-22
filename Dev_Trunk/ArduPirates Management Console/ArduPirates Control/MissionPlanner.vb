@@ -118,6 +118,9 @@ Public Class MissionPlanner
         'Set waypoints new position
         WaypointList.Item(waypointNumber).Position = markerPosition
 
+        'Set moved marker as selected waypoint
+        SelectedWaypoint(waypointNumber)
+
         'set the waypoint as selected
         UpdateWayPointList(waypointNumber, False)
     End Sub
@@ -162,6 +165,10 @@ Public Class MissionPlanner
         If selectedWaypoint > -1 Then
 
             WaypointGridView.Rows.Item(selectedWaypoint).DefaultCellStyle.BackColor = Color.Coral
+
+            TextBoxParameter5.Text = WaypointList(selectedWaypoint).Latitude
+            TextBoxParameter6.Text = WaypointList(selectedWaypoint).Longitude
+
 
             'start render the grid
             WaypointGridView.FirstDisplayedScrollingRowIndex() = selectedWaypoint
