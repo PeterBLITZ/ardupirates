@@ -34,7 +34,7 @@
  
  * ************************************************************** *
  ChangeLog:
- 2010-10-30          Added basic camera stabilization functions with jumptables
+ 30-10-10 added basic camera stabilization functions with jumptables
  
  * ************************************************************** *
  TODO:

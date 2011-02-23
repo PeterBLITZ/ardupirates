@@ -144,17 +144,9 @@ void read_radio()
     if (flightMode == FM_STABLE_MODE)  // IN STABLE MODE we convert stick positions to absolute angles
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
-#ifdef QUAD
-#ifdef FLIGHT_MODE_X
-        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
-        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
-#else
+#if AIRFRAME == QUAD
+#ifndef FLIGHT_MODE_X
       if(flightOrientation) {
-        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
-        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
-      } 
-      else 
-      {
         //FLIGHT_MODE_X_45Degree
         // For X mode - (APM-front pointing towards front motor)
         float aux_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
@@ -162,8 +154,16 @@ void read_radio()
         command_rx_roll = aux_roll - aux_pitch;
         command_rx_pitch = aux_roll + aux_pitch;
         // For X mode - APM front between front and right motor 
+      } 
+      else 
+      {
+        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
+        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
       }
-
+#endif
+#ifdef FLIGHT_MODE_X
+        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
+        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 #endif
 #endif
 
@@ -181,9 +181,7 @@ void read_radio()
     
     // Write Radio data to DataFlash log
     #if LOG_RADIO
-    #ifdef Use_DataFlash
     Log_Write_Radio(ch_roll,ch_pitch,ch_throttle,ch_yaw,ch_aux,ch_aux2);
-    #endif
     #endif
     
     // Motor arm logic

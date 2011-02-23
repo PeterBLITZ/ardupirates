@@ -34,7 +34,6 @@ Author(s): ArduPirates deveopment team
 
 * ************************************************************** *
 ChangeLog:
-2011/05/02 peejay;    Add code to disable DataFlash when no hardware support
 
 
 * ************************************************************** *
@@ -64,9 +63,6 @@ TODO:
 #define LOG_RANGEFINDER_MSG             0x0B
 
 #define LOG_MAX_ERRORS                  50   // when reading logs, give up after 50 sequential failures to find HEADBYTE1
-
-
-#ifdef Use_DataFlash
 
 void Log_Erase(void)
 {
@@ -670,4 +666,3 @@ void Log_Read(int start_page, int end_page)
 }
 
 
-#endif    //  #ifdef Use_Dataflash
