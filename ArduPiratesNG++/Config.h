@@ -591,6 +591,28 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
 
 
 /*
+- ---------------------------------------------------------------------------- -
+   Wii sensors
+- ---------------------------------------------------------------------------- -
+
+   To enable Wii sensor mode, uncomment the below line.
+   This is currently designed so the DIYDRONES.COM oilpan can be replaced with
+   cheap sensors from a Wii Numchuck and Wii Motion +
+   Please see the Wiki for more information and wiring diagrams.
+   
+   ** THIS MODE IS STILL EXPERIMENTAL - USE AT YOUR OWN RISK!! **
+                                                                              */
+#define Use_Wii
+
+/*  Due to "undocumented features" in Arduino IDE these can't be automagically
+    selected, so comment out the one you are not using.                       */
+    
+APM_Wii         adc;  //Using Wii
+//AP_ADC_ADS7844	adc;  //Using Oilpan
+
+
+/*
+/*
 ********************************************************************************
  E N D   O F   F I L E
  ********************************************************************************

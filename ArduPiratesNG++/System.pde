@@ -68,6 +68,14 @@ void APM_Init() {
 
   APM_RC.Init();             // APM Radio initialization
 
+#if AIRFRAME == TRI
+  // RC channels Initialization (Quad motors)  
+  APM_RC.OutputCh(0,MIN_THROTTLE);  // Motors stoped
+  APM_RC.OutputCh(1,MIN_THROTTLE);
+  APM_RC.OutputCh(2,MIN_THROTTLE);
+  APM_RC.OutputCh(3,CHAN_CENTER);   // Mid position
+#endif  
+
 #if AIRFRAME == QUAD
   // RC channels Initialization (Quad motors)  
   APM_RC.OutputCh(0,MIN_THROTTLE);  // Motors stoped
@@ -113,7 +121,10 @@ void APM_Init() {
   FullBlink(50,20);
 
   adc.Init();            // APM ADC library initialization
-  DataFlash.Init();          // DataFlash log initialization
+
+#ifdef Use_DataFlash
+  DataFlash.Init();      // DataFlash log initialization
+#endif
   
 
 //  GPS Setup
@@ -126,20 +137,33 @@ void APM_Init() {
 
   // Read DIP Switches and other important values. DIP switches needs special functions to 
   // read due they are not defined as normal pins like other GPIO's are. 
-  SW_DIP1 = APMPinRead(PINE, 7);
-  SW_DIP2 = APMPinRead(PINE, 6);
-  SW_DIP3 = APMPinRead(PINL, 6);
-  SW_DIP4 = APMPinRead(PINL, 7);
+#ifdef Use_Wii
+  SwitchPosition.Dip1 = 1;
+  SwitchPosition.Dip2 = 0;
+  SwitchPosition.Dip3 = 0;
+  SwitchPosition.Dip4 = 0;
+  SwitchPosition.Sw1  = 0;
+  SwitchPosition.Sw2  = 0;
+#else
+  //Most pins have pullup resistors so logic is inverted.
+  //Keep electrical + software same to reduce confusion.
+  SwitchPosition.Dip1 = !APMPinRead(PINE, 7);
+  SwitchPosition.Dip2 = !APMPinRead(PINE, 6);
+  SwitchPosition.Dip3 = !APMPinRead(PINL, 6);
+  SwitchPosition.Dip4 = !APMPinRead(PINL, 7);
+  SwitchPosition.Sw1  = !digitalRead(SW1);
+  SwitchPosition.Sw2  = digitalRead(SW2);
+#endif
 
   // Is CLI mode active or not, if it is fire it up and never return.
-  //if(!digitalRead(SW2)) {
+  if(SwitchPosition.Sw2) {
     //RunCLI(); // removed Feb 5, 2011 [kidogo]
     // Btw.. We never return from this....
-  //}
 
 
-  flightOrientation = SW_DIP1;    // DIP1 up (OFF)  = X-mode,         DIP1 down (ON) = + mode
-  flightMode = SW_DIP3;           // DIP3 down (ON) = Acrobatic Mode, DIP3 up (OFF)  = Stable Mode.
+
+  flightOrientation = SwitchPosition.Dip1;    // DIP1 up (OFF)  = X-mode,         DIP1 down (ON) = + mode
+  flightMode        = SwitchPosition.Dip3;    // DIP3 down (ON) = Acrobatic Mode, DIP3 up (OFF)  = Stable Mode.
 
  
    // Safety measure for Channel mids
@@ -196,7 +220,9 @@ void APM_Init() {
   }
 #endif
 
+#ifdef Use_DataFlash
   DataFlash.StartWrite(1);   // Start a write session on page 1
+#endif
 
   // Proper Serial port/baud are defined on main .pde and then Arducopter.h with
   // Choises of Xbee or normal serial port
@@ -204,12 +230,14 @@ void APM_Init() {
 
   // Check if we enable the DataFlash log Read Mode (switch)
   // If we press switch 1 at startup we read the Dataflash eeprom
-  while (digitalRead(SW1)==0)  // LEGACY remove soon by jp, 30-10-10
+  /*while (digitalRead(SW1)==0)  // LEGACY remove soon by jp, 30-10-10
   {
     Serial.println("Entering Log Read Mode...");    // This will be obsole soon due moving to CLI system
+    #ifdef Use_DataFlash
     Log_Read(1,1000);
+    #endif
     delay(30000);
-  }
+  }*/
 
   calibrateSensors();         // Calibrate neutral values of gyros  (in Sensors.pde)
 
@@ -246,7 +274,9 @@ void APM_Init() {
 
   delay(1000);
 
+#ifdef Use_DataFlash
   DataFlash.StartWrite(1);   // Start a write session on page 1
+#endif
 
   // initialise helicopter
 #if AIRFRAME == HELI

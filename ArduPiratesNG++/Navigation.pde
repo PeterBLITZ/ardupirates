@@ -52,7 +52,9 @@ void read_GPS_data()
 
   // Write GPS data to DataFlash log
   #if LOG_GPS
+  #ifdef Use_DataFlash
   Log_Write_GPS(gps.time, gps.latitude, gps.longitude, gps.altitude, gps.altitude, gps.ground_speed, gps.ground_course, gps.fix, gps.num_sats);
+  #endif
   #endif
   //if (gps.fix >= 2)
 //  if (gps.fix)
@@ -88,8 +90,10 @@ void Position_control(long lat_dest, long lon_dest)
 
   command_gps_roll = KP_GPS_ROLL * gps_err_roll + KD_GPS_ROLL * gps_roll_D + KI_GPS_ROLL * gps_roll_I;
   command_gps_roll = constrain(command_gps_roll, -GPS_MAX_ANGLE, GPS_MAX_ANGLE); // Limit max command
-
+  
+  #ifdef Use_DataFlash
   //Log_Write_PID(1,KP_GPS_ROLL*gps_err_roll*10,KI_GPS_ROLL*gps_roll_I*10,KD_GPS_ROLL*gps_roll_D*10,command_gps_roll*10);
+  #endif
 
   // PITCH
   gps_err_pitch = -(float)Lat_diff * DCM_Matrix[0][0] - (float)Lon_diff * GEOG_CORRECTION_FACTOR * DCM_Matrix[1][0];
@@ -103,7 +107,9 @@ void Position_control(long lat_dest, long lon_dest)
   command_gps_pitch = KP_GPS_PITCH * gps_err_pitch + KD_GPS_PITCH * gps_pitch_D + KI_GPS_PITCH * gps_pitch_I;
   command_gps_pitch = constrain(command_gps_pitch, -GPS_MAX_ANGLE, GPS_MAX_ANGLE); // Limit max command
 
+  #ifdef Use_DataFlash
   //Log_Write_PID(2,KP_GPS_PITCH*gps_err_pitch*10,KI_GPS_PITCH*gps_pitch_I*10,KD_GPS_PITCH*gps_pitch_D*10,command_gps_pitch*10);
+  #endif
 #endif  
 }
 
@@ -143,7 +149,9 @@ void Position_control_v2(long lat_dest, long lon_dest)
   command_gps_roll = KP_GPS_ROLL * gps_err_roll + KD_GPS_ROLL * gps_roll_D + KI_GPS_ROLL * gps_roll_I;
   command_gps_roll = constrain(command_gps_roll, -GPS_MAX_ANGLE, GPS_MAX_ANGLE); // Limit max command
   #if LOG_PID
+  #ifdef Use_DataFlash
   Log_Write_PID(1,KP_GPS_ROLL*gps_err_roll,KI_GPS_ROLL*gps_roll_I,KD_GPS_ROLL*gps_roll_D,command_gps_roll);
+  #endif
   #endif
   // PITCH
   gps_err_pitch = (-gps_err_lat * DCM_Matrix[0][0] - gps_err_lon * DCM_Matrix[1][0]);
@@ -153,7 +161,9 @@ void Position_control_v2(long lat_dest, long lon_dest)
   command_gps_pitch = KP_GPS_PITCH * gps_err_pitch + KD_GPS_PITCH * gps_pitch_D + KI_GPS_PITCH * gps_pitch_I;
   command_gps_pitch = constrain(command_gps_pitch, -GPS_MAX_ANGLE, GPS_MAX_ANGLE); // Limit max command
   #if LOG_PID
+  #ifdef Use_DataFlash
   Log_Write_PID(2,KP_GPS_PITCH*gps_err_pitch,KI_GPS_PITCH*gps_pitch_I,KD_GPS_PITCH*gps_pitch_D,command_gps_pitch);
+  #endif
   #endif
 #endif  
 }
@@ -188,7 +198,9 @@ int Altitude_control_baro(int altitude, int target_altitude)
   command_altitude = KP_ALTITUDE*err_altitude + KD_ALTITUDE*baro_altitude_D + KI_ALTITUDE*baro_altitude_I;
   command_altitude = initial_throttle + constrain(command_altitude,-ALTITUDE_CONTROL_BARO_OUTPUT_MIN,ALTITUDE_CONTROL_BARO_OUTPUT_MAX);
   #if LOG_PID
+  #ifdef Use_DataFlash
   Log_Write_PID(5,KP_ALTITUDE*err_altitude,KI_ALTITUDE*baro_altitude_I,KD_ALTITUDE*baro_altitude_D,command_altitude);  
+  #endif
   #endif
   return command_altitude;
 }
@@ -212,7 +224,9 @@ int Altitude_control_Sonar(int altitude, int target_altitude)
   command_altitude = KP_SONAR_ALTITUDE*err_altitude + KI_SONAR_ALTITUDE*sonar_altitude_I + KD_SONAR_ALTITUDE*sonar_altitude_D ;
   command_altitude = initial_throttle + constrain(command_altitude,-ALTITUDE_CONTROL_SONAR_OUTPUT_MIN,ALTITUDE_CONTROL_SONAR_OUTPUT_MAX);
   #if LOG_PID
+  #ifdef Use_DataFlash
   Log_Write_PID(4,KP_SONAR_ALTITUDE*err_altitude,KI_SONAR_ALTITUDE*sonar_altitude_I,KD_SONAR_ALTITUDE*sonar_altitude_D,command_altitude);
+  #endif
   #endif
   return command_altitude;
 }

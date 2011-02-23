@@ -78,29 +78,39 @@ WARNING: This file now only contains program logic. You need not edit
 #include <Wire.h>               // I2C Communication library
 #include <EEPROM.h>             // EEPROM 
 #include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
+#include <APM_Wii.h>            // Wii Sensor Library
 #include <AP_GPS.h>
 #include "Arducopter.h"
 
 #if AIRFRAME == HELI
-#include "Heli.h"
+//#include "Heli.h"
 #endif
 
 /* Software version */
 #define VER 2.01    // Current software version (only numeric values)
 
-// Sensors - declare one global instance
-AP_ADC_ADS7844		adc;
+//Disable some IMU functions when using alternate hardware
+#ifdef Use_Wii
+  //Nothing needed here yet.
+#else
+  //Default to DIY Oilpan hardware
+  #define Use_DataFlash
+  //#define Use_DIYOilpan  //Not yet needed
+#endif
+
 APM_BMP085_Class	APM_BMP085;
 AP_Compass_HMC5843	AP_Compass;
+
 #ifdef IsSONAR
-AP_RangeFinder_MaxsonarXL  AP_RangeFinder_down;  // Default sonar for altitude hold
-//AP_RangeFinder_MaxsonarLV  AP_RangeFinder_down;  // Alternative sonar is AP_RangeFinder_MaxsonarLV
+  AP_RangeFinder_MaxsonarXL  AP_RangeFinder_down;  // Default sonar for altitude hold
+  //AP_RangeFinder_MaxsonarLV  AP_RangeFinder_down;  // Alternative sonar is AP_RangeFinder_MaxsonarLV
 #endif
+
 #ifdef IsRANGEFINDER
-AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontRight;
-AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backRight;
-AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backLeft;
-AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontLeft;
+  AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontRight;
+  AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backRight;
+  AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backLeft;
+  AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontLeft;
 #endif
 
 
@@ -139,6 +149,13 @@ void setup() {
   Serial.println("You will find serial data on the Telemetry port.");
   Serial.println("No commands or output on this serial port, check your Config.h if you need to change this.");
   Serial.println();
+  Serial.println("General info:");
+#if AIRFRAME == QUAD  
+  if(SwitchPosition.Dip1)
+    Serial.println("Flight mode: + ");
+  else
+    Serial.println("Flight mode: X ");
+#endif
 #endif 
   SerPrln(VER);
   SerPrln("ArduPirate");
@@ -241,7 +258,7 @@ void loop()
 
 #ifdef IsCAM
   // Do we have cameras stabilization connected and in use?
-  if(!SW_DIP2){ 
+  if(SwitchPosition.Dip2){ 
     camera_output();
 #ifdef UseCamShutter
     CamTrigger();
