@@ -69,32 +69,41 @@ void motor_output()
 #endif
 
 #if AIRFRAME == QUAD
-#ifdef FLIGHT_MODE_X      
-    // For X mode - APM front between front and right motor 
-    rightMotor = constrain(throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
-    leftMotor  = constrain(throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
-    frontMotor = constrain(throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
-    backMotor  = constrain(throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
-#else
-    // FLIGHT_MODE_X_45Degree
-    // and
-    // For + mode 
-    rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
-    leftMotor  = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
-    frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
-    backMotor  = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
+    // Quadcopter mix
 
+#ifndef FLIGHT_MODE_X
+    if(flightOrientation) {
+          //FLIGHT_MODE_X_45Degree
+          // For X mode - (APM-front pointing towards front motor)
+          rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
+          leftMotor = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
+          frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
+          backMotor = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
+        } else {
+          // For + mode 
+          rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
+          leftMotor = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
+          frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
+          backMotor = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
+        }
+#endif
+#ifdef FLIGHT_MODE_X      
+          // For X mode - APM front between front and right motor 
+          rightMotor = constrain(throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
+          leftMotor = constrain(throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
+          frontMotor = constrain(throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
+          backMotor = constrain(throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
 #endif
 #endif 
 
 #if AIRFRAME == HEXA
-    // Hexacopter mix
-    LeftCWMotor  = constrain(throttle + control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
-    LeftCCWMotor = constrain(throttle + control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
-    RightCWMotor = constrain(throttle - control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-    RightCCWMotor= constrain(throttle - control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
-    FrontCWMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
-    BackCCWMotor = constrain(throttle - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
+   // Hexacopter mix
+        FrontCWMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
+        LeftCWMotor = constrain(throttle + control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor = constrain(throttle + control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor = constrain(throttle - control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(throttle - control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCCWMotor = constrain(throttle - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif 
  
 #if AIRFRAME == OCTA
