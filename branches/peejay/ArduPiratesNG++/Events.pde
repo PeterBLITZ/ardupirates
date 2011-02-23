@@ -71,7 +71,7 @@ else
   // SW_DIP1 is a multplier, settings  
 #if AIRFRAME == QUAD
 #ifndef FLIGHT_MODE_X
-  switch ((SW_DIP1 * 4) + cam_mode + (BATTLOW * 10)) {
+  switch ((!SwitchPosition.Dip1 * 4) + cam_mode + (BATTLOW * 10)) {
     // Cases 1 & 4 are stabilization for + Mode flying setup
     // Cases 5 & 8 are stabilization for x Mode flying setup
 #endif
