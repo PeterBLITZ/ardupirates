@@ -3,15 +3,21 @@
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
  
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : ArducopterNG.pde
  Version  : v1.0, 11 October 2010
  Author(s): ArduCopter Team
- Ted Carancho (AeroQuad), Jose Julio, Jordi Muñoz,
- Jani Hirvinen, Ken McEwans, Roberto Navoni,          
- Sandro Benigno, Chris Anderson
-
- Author(s) : ArduPirates deveopment team                                  
-          Philipp Maloney, Norbert, Hein, Igor, Emile, Kidogo 
+			 Ted Carancho (AeroQuad), Jose Julio, Jordi Muñoz,
+			 Jani Hirvinen, Ken McEwans, Roberto Navoni,          
+			 Sandro Benigno, Chris Anderson
+Author(s): 	ArduPirates deveopment team                                  
+			 Philipp Maloney, Norbert, Hein, Igor, Emile, Kidogo 
           
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -72,29 +78,39 @@ WARNING: This file now only contains program logic. You need not edit
 #include <Wire.h>               // I2C Communication library
 #include <EEPROM.h>             // EEPROM 
 #include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
+#include <APM_Wii.h>            // Wii Sensor Library
 #include <AP_GPS.h>
 #include "Arducopter.h"
 
 #if AIRFRAME == HELI
-#include "Heli.h"
+//#include "Heli.h"
 #endif
 
 /* Software version */
 #define VER 2.01    // Current software version (only numeric values)
 
-// Sensors - declare one global instance
-AP_ADC_ADS7844		adc;
+//Disable some IMU functions when using alternate hardware
+#ifdef Use_Wii
+  //Nothing needed here yet.
+#else
+  //Default to DIY Oilpan hardware
+  #define Use_DataFlash
+  //#define Use_DIYOilpan  //Not yet needed
+#endif
+
 APM_BMP085_Class	APM_BMP085;
 AP_Compass_HMC5843	AP_Compass;
+
 #ifdef IsSONAR
-AP_RangeFinder_MaxsonarXL  AP_RangeFinder_down;  // Default sonar for altitude hold
-//AP_RangeFinder_MaxsonarLV  AP_RangeFinder_down;  // Alternative sonar is AP_RangeFinder_MaxsonarLV
+  AP_RangeFinder_MaxsonarXL  AP_RangeFinder_down;  // Default sonar for altitude hold
+  //AP_RangeFinder_MaxsonarLV  AP_RangeFinder_down;  // Alternative sonar is AP_RangeFinder_MaxsonarLV
 #endif
+
 #ifdef IsRANGEFINDER
-AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontRight;
-AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backRight;
-AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backLeft;
-AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontLeft;
+  AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontRight;
+  AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backRight;
+  AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backLeft;
+  AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontLeft;
 #endif
 
 
@@ -128,15 +144,22 @@ void setup() {
   
 #ifdef SerXbee
   Serial.begin(SerBau);
-  Serial.print("ArduCopter v");
+  Serial.print("ArduPirate v");
   Serial.println(VER);
-  Serial.println("Serial data on Telemetry port");
-  Serial.println("No commands or output on this serial, check your Arducopter.pde if needed to change.");
+  Serial.println("You will find serial data on the Telemetry port.");
+  Serial.println("No commands or output on this serial port, check your Config.h if you need to change this.");
   Serial.println();
   Serial.println("General info:");
-  if(!SW_DIP1) Serial.println("Flight mode: + ");
-  if(SW_DIP1) Serial.println("Flight mode: x ");
+#if AIRFRAME == QUAD  
+  if(SwitchPosition.Dip1)
+    Serial.println("Flight mode: + ");
+  else
+    Serial.println("Flight mode: X ");
+#endif
 #endif 
+  SerPrln(VER);
+  SerPrln("ArduPirate");
+  SerPrln("Type '?' to activate the CLI Menu.");
 
 
   delay(10);
@@ -191,7 +214,7 @@ void loop()
 
     // Read radio values (if new data is available)
     if (APM_RC.GetState() == 1) {  // New radio frame?
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))   
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))   
       read_radio();
 #endif
 #if AIRFRAME == HELI
@@ -206,14 +229,14 @@ void loop()
     if(flightMode == FM_STABLE_MODE) {    // STABLE Mode
       gled_speed = 1200;
       if (AP_mode == AP_NORMAL_STABLE_MODE) {   // Normal mode
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))
         Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll,command_rx_pitch,command_rx_collective,command_rx_yaw);
 #endif
       }else{                        // Automatic mode : GPS position hold mode
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))      
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))      
         Attitude_control_v3(command_rx_roll+command_gps_roll+command_RF_roll,command_rx_pitch+command_gps_pitch+command_RF_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HELI
@@ -229,13 +252,13 @@ void loop()
     }
 
     // Send output commands to motor ESCs...
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))     
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))     
     motor_output();
 #endif  
 
 #ifdef IsCAM
   // Do we have cameras stabilization connected and in use?
-  if(!SW_DIP2){ 
+  if(SwitchPosition.Dip2){ 
     camera_output();
 #ifdef UseCamShutter
     CamTrigger();

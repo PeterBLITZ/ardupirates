@@ -3,12 +3,21 @@
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
  
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : Radio.pde
  Version  : v1.0, Aug 27, 2010
  Author(s): ArduCopter Team
              Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
              Jani Hirvinen, Ken McEwans, Roberto Navoni,          
              Sandro Benigno, Chris Anderson
+Author(s):  ArduPirates deveopment team
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -135,10 +144,17 @@ void read_radio()
     if (flightMode == FM_STABLE_MODE)  // IN STABLE MODE we convert stick positions to absolute angles
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
-#if AIRFRAME == QUAD
-
-#ifndef FLIGHT_MODE_X
+#ifdef QUAD
+#ifdef FLIGHT_MODE_X
+        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
+        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
+#else
       if(flightOrientation) {
+        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
+        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
+      } 
+      else 
+      {
         //FLIGHT_MODE_X_45Degree
         // For X mode - (APM-front pointing towards front motor)
         float aux_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;
@@ -146,20 +162,12 @@ void read_radio()
         command_rx_roll = aux_roll - aux_pitch;
         command_rx_pitch = aux_roll + aux_pitch;
         // For X mode - APM front between front and right motor 
-      } 
-      else 
-      {
-        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
-        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
       }
-#endif
-#ifdef FLIGHT_MODE_X
-        command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
-        command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
+
 #endif
 #endif
 
-#if AIRFRAME == HEXA
+#if ((AIRFRAME == HEXA) || (AIRFRAME == OCTA))     
         command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
         command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 #endif  
@@ -173,7 +181,9 @@ void read_radio()
     
     // Write Radio data to DataFlash log
     #if LOG_RADIO
+    #ifdef Use_DataFlash
     Log_Write_Radio(ch_roll,ch_pitch,ch_throttle,ch_yaw,ch_aux,ch_aux2);
+    #endif
     #endif
     
     // Motor arm logic

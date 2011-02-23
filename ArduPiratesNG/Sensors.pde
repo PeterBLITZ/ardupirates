@@ -3,12 +3,21 @@
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
  
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : Sensors.pde
  Version  : v1.0, Aug 27, 2010
  Author(s): ArduCopter Team
              Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
              Jani Hirvinen, Ken McEwans, Roberto Navoni,          
              Sandro Benigno, Chris Anderson
+Author(s): 	ArduPirates deveopment team
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim			 
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -26,7 +35,7 @@
 * ************************************************************** */
 
 /* ******* ADC functions ********************* */
-// Read all the ADC channles
+// Read all the ADC channels
 void Read_adc_raw(void)
 {
   //int temp;
@@ -68,7 +77,9 @@ void calibrateSensors(void) {
     for(gyro = GYROZ; gyro <= GYROY; gyro++)   
       aux_float[gyro] = aux_float[gyro] * 0.8 + AN[gyro] * 0.2;     // Filtering  
     #if LOG_SEN
+    #ifdef Use_DataFlash
     Log_Write_Sensor(AN[0], AN[1], AN[2], AN[3], AN[4], AN[5], 0);
+    #endif
     #endif
 
     delay(5);

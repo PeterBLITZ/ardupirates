@@ -3,12 +3,21 @@
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
  
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : Log.pde
  Version  : v1.0, Aug 27, 2010
  Author(s): ArduCopter Team
              Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
              Jani Hirvinen, Ken McEwans, Roberto Navoni,          
              Sandro Benigno, Chris Anderson
+Author(s): ArduPirates deveopment team
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim			 
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -25,6 +34,7 @@
 
 * ************************************************************** *
 ChangeLog:
+2011/05/02 peejay;    Add code to disable DataFlash when no hardware support
 
 
 * ************************************************************** *
@@ -54,6 +64,9 @@ TODO:
 #define LOG_RANGEFINDER_MSG             0x0B
 
 #define LOG_MAX_ERRORS                  50   // when reading logs, give up after 50 sequential failures to find HEADBYTE1
+
+
+#ifdef Use_DataFlash
 
 void Log_Erase(void)
 {
@@ -657,3 +670,4 @@ void Log_Read(int start_page, int end_page)
 }
 
 
+#endif    //  #ifdef Use_Dataflash

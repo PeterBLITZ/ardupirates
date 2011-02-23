@@ -3,12 +3,21 @@
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
  
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : Motors.pde
  Version  : v1.0, Aug 27, 2010
  Author(s): ArduCopter Team
- Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
- Jani Hirvinen, Ken McEwans, Roberto Navoni,          
- Sandro Benigno, Chris Anderson
+			 Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
+			 Jani Hirvinen, Ken McEwans, Roberto Navoni,          
+			 Sandro Benigno, Chris Anderson
+ Author(s): ArduPirates deveopment team
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -60,43 +69,46 @@ void motor_output()
 #endif
 
 #if AIRFRAME == QUAD
-    // Quadcopter mix
-
-#ifndef FLIGHT_MODE_X
-    if(flightOrientation) {
-          //FLIGHT_MODE_X_45Degree
-          // For X mode - (APM-front pointing towards front motor)
-          rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
-          leftMotor = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
-          frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
-          backMotor = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
-        } else {
-          // For + mode 
-          rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
-          leftMotor = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
-          frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
-          backMotor = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
-        }
-#endif
 #ifdef FLIGHT_MODE_X      
-          // For X mode - APM front between front and right motor 
-          rightMotor = constrain(throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
-          leftMotor = constrain(throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
-          frontMotor = constrain(throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
-          backMotor = constrain(throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
+    // For X mode - APM front between front and right motor 
+    rightMotor = constrain(throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
+    leftMotor  = constrain(throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
+    frontMotor = constrain(throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
+    backMotor  = constrain(throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
+#else
+    // FLIGHT_MODE_X_45Degree
+    // and
+    // For + mode 
+    rightMotor = constrain(throttle - control_roll + control_yaw, minThrottle, 2000);
+    leftMotor  = constrain(throttle + control_roll + control_yaw, minThrottle, 2000);
+    frontMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);
+    backMotor  = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000);
+
 #endif
 #endif 
 
 #if AIRFRAME == HEXA
-   // Hexacopter mix
-        LeftCWMotor = constrain(throttle + control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
-        LeftCCWMotor = constrain(throttle + control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
-        RightCWMotor = constrain(throttle - control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-        RightCCWMotor = constrain(throttle - control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
-        FrontCWMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
-        BackCCWMotor = constrain(throttle - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
+    // Hexacopter mix
+    LeftCWMotor  = constrain(throttle + control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
+    LeftCCWMotor = constrain(throttle + control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+    RightCWMotor = constrain(throttle - control_roll - (0.5 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+    RightCCWMotor= constrain(throttle - control_roll + (0.5 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
+    FrontCWMotor = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
+    BackCCWMotor = constrain(throttle - control_pitch + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif 
  
+#if AIRFRAME == OCTA
+   // Octacopter mix
+        FrontCWMotor = constrain(throttle + control_pitch - control_roll - control_yaw, minThrottle, 2000);  // Front Motor CW
+        FrontCCWMotor = constrain(throttle + control_pitch + control_roll + control_yaw, minThrottle, 2000);  // Front Motor CCW
+        LeftCWMotor = constrain(throttle + control_roll + (0.33 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor = constrain(throttle + control_roll - (0.33 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor = constrain(throttle - control_roll - (0.33 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(throttle - control_roll + (0.33 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor = constrain(throttle - control_pitch + control_roll - control_yaw, minThrottle, 2000); // Back Motor CW
+        BackCCWMotor = constrain(throttle - control_pitch - control_roll + control_yaw, minThrottle, 2000); // Back Motor CCW
+#endif 
+
   } else {    // MOTORS DISARMED
 
 #ifdef IsAM
@@ -118,6 +130,17 @@ void motor_output()
       RightCCWMotor = MIN_THROTTLE;
       FrontCWMotor = MIN_THROTTLE;
       BackCCWMotor = MIN_THROTTLE;
+#endif
+
+#if AIRFRAME == OCTA
+      LeftCWMotor = MIN_THROTTLE;
+      LeftCCWMotor = MIN_THROTTLE;
+      RightCWMotor = MIN_THROTTLE;
+      RightCCWMotor = MIN_THROTTLE;
+      FrontCWMotor = MIN_THROTTLE;
+      FrontCCWMotor = MIN_THROTTLE;
+      BackCCWMotor = MIN_THROTTLE;  
+      BackCWMotor = MIN_THROTTLE;
 #endif
 
     // Reset_I_Terms();
@@ -147,6 +170,17 @@ void motor_output()
     APM_RC.OutputCh(7, BackCCWMotor);    // Back Motor CCW    
 #endif
 
+#if AIRFRAME == OCTA
+    APM_RC.OutputCh(0, LeftCWMotor);     // Left Motor CW
+    APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
+    APM_RC.OutputCh(2, RightCWMotor);    // Right Motor CW
+    APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
+    APM_RC.OutputCh(6, FrontCWMotor);    // Front Motor CW
+    APM_RC.OutputCh(7, FrontCCWMotor);   // Front Motor CCW
+    APM_RC.OutputCh(9, BackCWMotor);     // Back Motor CW    // Connection PB5 on APM
+    APM_RC.OutputCh(10, BackCCWMotor);   // Back Motor CCW   // Connection PE3 on APM  
+#endif
+
   // InstantPWM => Force inmediate output on PWM signals
 #if AIRFRAME == QUAD   
      // InstantPWM
@@ -154,12 +188,13 @@ void motor_output()
     APM_RC.Force_Out2_Out3();
 #endif
 
-#if AIRFRAME == HEXA
+#if ((AIRFRAME == HEXA) || (AIRFRAME == OCTA))
       // InstantPWM
-    APM_RC.Force_Out0_Out1();
-    APM_RC.Force_Out2_Out3();
-    APM_RC.Force_Out6_Out7();
+    APM_RC.Force_Out0_Out1();  // Force Channel 0, 1 & 8
+    APM_RC.Force_Out2_Out3();  // Force Channel 2, 3 & 9
+    APM_RC.Force_Out6_Out7();  // Force Channel 6, 7 & 10.
 #endif
+
 //#elif MOTORTYPE == I2C
 
 //#else

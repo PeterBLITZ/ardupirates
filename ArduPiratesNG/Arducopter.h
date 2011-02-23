@@ -3,12 +3,21 @@
  Copyright (c) 2010.  All rights reserved.
  An Open Source Arduino based multicopter.
  
+      ___          _      ______ _           _
+     / _ \        | |     | ___ (_)         | |
+    / /_\ \_ __ __| |_   _| |_/ /_ _ __ __ _| |_ ___  ___
+    |  _  | '__/ _` | | | |  __/| | '__/ _` | __/ _ \/ __|
+    | | | | | | (_| | |_| | |   | | | | (_| | ||  __/\__ \
+    \_| |_/_|  \__,_|\__,_\_|   |_|_|  \__,_|\__\___||___/
+
  File     : Arducopter.h
  Version  : v1.0, Aug 27, 2010
  Author(s): ArduCopter Team
              Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
              Jani Hirvinen, Ken McEwans, Roberto Navoni,          
              Sandro Benigno, Chris Anderson
+Author(s): 	ArduPirates deveopment team
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim	
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -25,7 +34,8 @@
 
 * ************************************************************** *
 ChangeLog:
-
+2011-02-05 peejay   Add changes to enable Wii sensors
+2011-02-12 peejay   Add struct for dipswitch hardware handling
 
 * ************************************************************** *
 TODO:
@@ -46,13 +56,19 @@ TODO:
 // General definitions
 //
 // Airframe
-#define QUAD 0
-#define HELI 1
-#define HEXA 2
+#define TRI             7            // Tricopter with yaw servo
+#define QUAD            0            // Normal Quad 
+#define HELI            1
+#define HEXA            2            // Hexa
+#define HEXARADIAL      3
+#define HEXACOAX        4
+#define OCTO            5
+#define QUADCOAX        6            // Quad with double motors as coax
+#define OCTA            3            // Is this right?? (PJ 2011-02-23)
 
 //Modes
-#define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
-#define FM_STABLE_MODE         1  // DIP3 up   (OFF) = Stable Mode.
+#define FM_STABLE_MODE         0  // DIP3 up   (OFF) = Stable Mode.
+#define FM_ACRO_MODE           1  // DIP3 down (ON)  = Acrobatic Mode
 #define AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
 #define AP_ALTITUDE_HOLD       3  // Just Altitude Hold
 #define AP_GPS_HOLD            4  // Just GPS Hold
@@ -138,14 +154,8 @@ TODO:
 
 // Programmable hardware switches/relays 
 #define RELAY 47  // Onboard relay (PL2)
-#define SW1 41    // Push button close to I2C port (PG0)
-#define SW2 40    // Slide switch next to DIP switched (PG1)
-
-// Due limitations of Arduino libraries, these pins needs to be controlled differently so no real PIN numbers
-//#define DIP1  (PE7)
-//#define DIP2  (PE6) 
-//#define DIP3  (PL6)
-//#define DIP4  (PL/)
+#define SW1   41
+#define SW2   40
 
 /* ************************************************************** */
 /* Expansion PIN's that people can use for various things. */
@@ -230,15 +240,17 @@ FastSerialPort3(Serial3);		// Telemetry port (optional, Standard and ArduPilot p
 
 
 /* *********************************************** */
-// IMU definitions
+// Hardware definitions
 // Sensor: GYROX, GYROY, GYROZ, ACCELX, ACCELY, ACCELZ
-uint8_t sensors[6] = {1, 2, 0, 4, 5, 6};  // For ArduPilot Mega Sensor Shield Hardware
+byte sensors[6] = {1, 2, 0, 4, 5, 6};  // For ArduPilot Mega Sensor Shield Hardware & Wii library
 
 // Sensor: GYROX, GYROY, GYROZ,   ACCELX, ACCELY, ACCELZ,     MAGX, MAGY, MAGZ
-int SENSOR_SIGN[]={
-  1, -1, -1,    -1, 1, 1,     -1, -1, -1}; 
- //{-1,1,-1,1,-1,1,-1,-1,-1};
-/* APM Hardware definitions, END */
+#ifdef Use_Wii
+char SENSOR_SIGN[]={-1, -1, -1,     1, -1, 1     -1, -1, -1}; 
+#else
+char SENSOR_SIGN[]={ 1, -1, -1,    -1,  1, 1,    -1, -1, -1};
+#endif
+
 
 /* *********************************************** */
 /* General definitions */
@@ -258,8 +270,6 @@ int SENSOR_SIGN[]={
 #define PITCH_DEF 0      // Level values for pitch, used to calculate pitch_acc_offset
 #define Z_DEF  GRAVITY   // Stable level value for Z, used to calculate z_acc_offset, same as GRAVITY
 
-#define ToRad(x) (x*0.01745329252)  // *pi/180
-#define ToDeg(x) (x*57.2957795131)  // *180/pi
 
 // IDG500 Sensitivity (from datasheet) => 2.0mV/º/s, 0.8mV/ADC step => 0.8/3.33 = 0.4
 // Tested values : 
@@ -307,6 +317,18 @@ float yaw = 0;
 
 unsigned int counter = 0;
 
+struct SwitchPosition_t
+{
+  boolean Dip1 : 1;
+  boolean Dip2 : 1;
+  boolean Dip3 : 1;
+  boolean Dip4 : 1;
+  boolean Sw1  : 1;
+  boolean Sw2  : 1;
+} SwitchPosition;
+
+
+
 float DCM_Matrix[3][3]= {
   { 1,0,0 },
   { 0,1,0 },
@@ -345,17 +367,15 @@ float command_rx_yaw_diff;
 int control_roll;           // PID control results
 int control_pitch;
 int control_yaw;
-//float K_aux;
 
-
-boolean SW_DIP1;  // closest to SW2 slider switch
-boolean SW_DIP2;
-boolean SW_DIP3;
-boolean SW_DIP4;  // closest to header pins
+// Wind Compensation variables
+int control_wind_roll;
+int control_wind_pitch;
+int max_wind_angle;
+int Gyro_drift_error_sum;
 
 boolean BATTLOW = FALSE;    // We should be always FALSE, if we are TRUE.. it means destruction is close, 
                             // shut down all secondary systems that uses our precious mAh's
-
 // Attitude PID controls
 float roll_I=0;
 float roll_D;
@@ -512,11 +532,15 @@ int RightCCWMotor;
 int FrontCWMotor;
 int BackCCWMotor;
 
+// Octa Motors   //Additional to Hexa motors.
+int FrontCCWMotor;
+int BackCWMotor;
+
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed
 byte  motorSafety = 1;                             // 0 = safety off, 1 = on.  When On, sudden increases in throttle not allowed
 int   minThrottle = 0;
 byte  safetyOff = 0;                              // During normal Flight, the motor Safety feature is switched off.
-boolean flightOrientation = 0;                    // 0 = +, 1 = x this is read from DIP1 switch during system bootup
+boolean flightOrientation = 0;                    // 1 = +, 0 = x this is read from DIP1 switch during system bootup
 
 // Serial communication
 char   queryType;
@@ -623,19 +647,10 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 #define MODE3           3
 #define MODE4           4
 
-// Frame models
-#define QUAD            0            // Normal Quad 
-#define QUADCOAX        1            // Quad with double motors as coax
-#define HEXA            2            // Hexa
-#define HEXARADIAL      3
-#define HEXACOAX        4
-#define OCTO            5
 
 #define PWM             0
 #define I2C             1
 #define UART            2
-
-
 
 // Following variables stored in EEPROM
 float KP_QUAD_ROLL;
@@ -718,7 +733,6 @@ float KI_SONAR_ALTITUDE;
 float KD_SONAR_ALTITUDE;
 
 // Camera related settings
-
 int CAM_SMOOTHING;      // Camera movement smoothing on pitch axis
 int CAM_SMOOTHING_ROLL; // Camera movement smoothing on roll axis
 int CAM_CENT;           // Camera center
@@ -739,16 +753,16 @@ void defaultUserConfig() {
   KI_QUAD_YAW                = 0.15;
   STABLE_MODE_KP_RATE_YAW    = 2.4;
   STABLE_MODE_KP_RATE        = 0.2;     // NOT USED NOW
-  KP_GPS_ROLL                = 0.012;   //0.013;
-  KI_GPS_ROLL                = 0.001;   //0.005;
-  KD_GPS_ROLL                = 0.015;   //0.012;
-  KP_GPS_PITCH               = 0.010;   //0.013;
-  KI_GPS_PITCH               = 0.001;   //0.005;
-  KD_GPS_PITCH               = 0.015;   //0.01;
+  KP_GPS_ROLL                = 0.012;   //0.013;  Hexa 0.004
+  KI_GPS_ROLL                = 0.001;   //0.005;  Hexa 0.001
+  KD_GPS_ROLL                = 0.015;   //0.012;  Hexa 0.005
+  KP_GPS_PITCH               = 0.010;   //0.013;  Hexa 0.004
+  KI_GPS_PITCH               = 0.001;   //0.005;  Hexa 0.001
+  KD_GPS_PITCH               = 0.015;   //0.01;   Hexa 0.005
   GPS_MAX_ANGLE              = 22;
-  KP_ALTITUDE                = 0.08;
-  KI_ALTITUDE                = 0.05;
-  KD_ALTITUDE                = 0.06;
+  KP_ALTITUDE                = 0.08;    // Hexa 0.04          
+  KI_ALTITUDE                = 0.05;    // Hexa 0.025 
+  KD_ALTITUDE                = 0.06;    // Hexa 0.03 
   acc_offset_x               = 2048;
   acc_offset_y               = 2048;
   acc_offset_z               = 2048;
