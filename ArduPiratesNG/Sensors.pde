@@ -1,14 +1,15 @@
 /*
  www.ArduCopter.com - www.DIYDrones.com
- Copyright (c) 2010.  All rights reserved.
+ Copyright (c) 2011.  All rights reserved.
  An Open Source Arduino based multicopter.
  
  File     : Sensors.pde
- Version  : v1.0, Aug 27, 2010
+ Version  : v1.1, February 19, 2011
  Author(s): ArduCopter Team
              Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
              Jani Hirvinen, Ken McEwans, Roberto Navoni,          
              Sandro Benigno, Chris Anderson
+            Dror Caspi
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -24,6 +25,27 @@
  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 * ************************************************************** */
+
+// Local Definitions
+
+#define SENSORS_CALIBRATE_MIN_STABLE_CYCLES     600
+          // How many 5 msec cycles are required, with the sensors stable,
+          // until we're done calibrating
+#define SENSORS_CALIBRATE_AVG_SHIFT             6
+          // Determines the IIR averaging period. For 5 msec rate this is
+          // about 2^6 * 5 which is ~ 300 msec
+#define SENSORS_CALIBRATE_AVG_DEV_MAX           2
+          // How much the current reading can deviate from the average
+          // and still be considered stable
+#define SENSORS_CALIBRATE_OFFSET_DEV_MAX        200
+          // How much the gyro reading can deviate from the pre-configured
+          // offset and still be acceptable.  This is used for sanity
+          // checking only
+#define SENSORS_CALIBRATE_LED_STABLE_SLOWDOWN   5
+          // Determines blinking rate when sensors are stable
+#define SENSORS_CALIBRATE_LED_UNSTABLE_SLOWDOWN 25
+          // Determines blinking rate when sensors are not stable
+
 
 /* ******* ADC functions ********************* */
 // Read all the ADC channles
@@ -44,47 +66,134 @@ int read_adc(int select)
     return (AN[select]-AN_OFFSET[select]);
 }
 
-void calibrateSensors(void) {
-  int i;
-  int j = 0;
-  byte gyro;
-  float aux_float[3];
+
+//=============================================================================
+//
+// Calibrate the sensors on power up
+//
+void calibrateSensors(void)
+{
+  uint16_t stable_cycles;
+  uint8_t  led_cycle = 0;
+  uint8_t  led_delay = 0;
+  uint8_t  sensor;
+  int32_t  avg[LASTSENSOR];   // Average of sensor inputs.  Scale is
+                              // (1 << SENSORS_CALIBRATE_AVG_SHIFT) times
+                              // sensor read scale.
+  int16_t  avg_diff;          // Difference of current reading from average
+  int16_t  offset_diff;       // Difference of current reading from nominal offset
+  static const int16_t default_offsets[LASTSENSOR] PROGMEM = 
+  {
+    1650,   // GYROZ
+    1650,   // GYROX
+    1650,   // GYROY
+    2048,   // ACCELX
+    2048,   // ACCELY
+    2480    // ACCELZ
+  };                          // Table of default offset per sensor
+                              // TODO: this should really be public, and the numbers
+                              // TODO: should be used in the initialization code in
+                              // TODO: arducopter.h
+
+
+  // TODO: I'm not sure why the initial read is really needed
   
   Read_adc_raw();     // Read sensors data
   delay(5);
 
-  // Offset values for accels and gyros...
-  AN_OFFSET[3] = acc_offset_x;                // Accel offset values are taken from external calibration (In Configurator)
-  AN_OFFSET[4] = acc_offset_y;
-  AN_OFFSET[5] = acc_offset_z;
-  aux_float[0] = gyro_offset_roll;
-  aux_float[1] = gyro_offset_pitch;
-  aux_float[2] = gyro_offset_yaw;
-
-  // Take the gyro offset values
-  for(i=0;i<600;i++)
+  // Initialize the averages to the default values
+  
+  for(sensor = 0; sensor < LASTSENSOR; sensor++)
+  {
+    avg[sensor] = ((int32_t)pgm_read_word(&default_offsets[sensor])) << SENSORS_CALIBRATE_AVG_SHIFT;
+  }
+  
+  // Loop while the the sensors have not been stable for at least some time
+  
+  for (stable_cycles = 0; stable_cycles < SENSORS_CALIBRATE_MIN_STABLE_CYCLES; stable_cycles++)
   {
     Read_adc_raw();   // Read sensors
-    for(gyro = GYROZ; gyro <= GYROY; gyro++)   
-      aux_float[gyro] = aux_float[gyro] * 0.8 + AN[gyro] * 0.2;     // Filtering  
+    
+    for(sensor = 0; sensor < LASTSENSOR; sensor++)
+    {
+      // Calculate the current reading's deviation from the average
+      
+      avg_diff = AN[sensor] - (int16_t)(avg[sensor] >> SENSORS_CALIBRATE_AVG_SHIFT);
+      
+      // Update moving average (single-term IIR LPF)
+      
+      avg[sensor] += avg_diff;
+
+      // To be considered stable, the current reading must not deviate from average
+      // too much. It also must not deviate from the nominal offset too much.
+      // TODO: we should really use the configured offsets, not the default ones.
+      // TODO: However currently this would hang the code here in an infinite loop
+      // TODO: before we get the chance to set the EEPROM.
+
+      offset_diff = AN[sensor] - (int16_t)pgm_read_word(&default_offsets[sensor]);
+      
+      if ((avg_diff    > (int16_t) SENSORS_CALIBRATE_AVG_DEV_MAX)     ||
+          (avg_diff    < (int16_t)-SENSORS_CALIBRATE_AVG_DEV_MAX)     ||
+          (offset_diff > (int16_t) SENSORS_CALIBRATE_OFFSET_DEV_MAX)  ||
+          (offset_diff < (int16_t)-SENSORS_CALIBRATE_OFFSET_DEV_MAX))
+      {
+        // Not stable.  Reset the stable cycles counter.
+        
+        stable_cycles = 0;
+      }
+    }
+
     #if LOG_SEN
     Log_Write_Sensor(AN[0], AN[1], AN[2], AN[3], AN[4], AN[5], 0);
     #endif
 
+    // We sample at 200Hz.  Since it's done before we get into the main loop,
+    // we just delay here.
+    
     delay(5);
 
-    RunningLights(j);   // (in Functions.pde)
-    // Runnings lights effect to let user know that we are taking mesurements
-    if((i % 5) == 0) j++;
-    if(j >= 3) j = 0;
+    // Update the running lights display:
+    // Fast running for unstable, slow running for stable, waiting to finish
+    
+    RunningLights(led_cycle);
+    led_delay++;
+    if (stable_cycles > 0)
+    {
+      if (led_delay >= SENSORS_CALIBRATE_LED_STABLE_SLOWDOWN)
+      {
+        led_delay = 0;
+      led_cycle++;
+      }
+    }
+    else if (++led_delay >= SENSORS_CALIBRATE_LED_UNSTABLE_SLOWDOWN)
+    {
+      led_delay = 0;
+      led_cycle++;
+    };
+    if (led_cycle > RUNNING_LIGHTS_LED_STEP_MAX)
+      led_cycle = 0;
   }
-  
+
+  // At this point all sensors are stable.
   // Switch off all ABC lights
+  
   LightsOff();
 
-  for(gyro = GYROZ; gyro <= GYROY; gyro++)  
-    AN_OFFSET[gyro] = aux_float[gyro];    // Update sensor OFFSETs from values read
+  // Store the gyro averages as the updated offset values.
+  
+  for (sensor = GYROZ; sensor <= GYROY; sensor++)  
+  {
+    AN_OFFSET[sensor] = avg[sensor] >> SENSORS_CALIBRATE_AVG_SHIFT;
+  }
+
+  // Do NOT store the accelerometer averages, the aircraft is not guaranteed
+  // to be level now.  Instead, just use the configured offsets from EEPROM
+  
+  AN_OFFSET[ACCELX] = acc_offset_x;
+  AN_OFFSET[ACCELY] = acc_offset_y;
+  AN_OFFSET[ACCELZ] = acc_offset_z;
 }
+
 
 #ifdef UseBMP
 void read_baro(void)
