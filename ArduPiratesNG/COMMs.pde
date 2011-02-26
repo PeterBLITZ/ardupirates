@@ -161,7 +161,9 @@ void readSerialCommand() {
 					//	PID ?
 					Show_Menu_Prompt();
 				} else if (SubMenu==5) {		// SubMenu 5.2
-					Log_Erase();
+                                        #ifdef Use_DataFlash					
+                                        Log_Erase();
+                                        #endif
 					Show_Menu_Prompt();
 				} else if (SubMenu==6) {		// SubMenu 6.2
 					//
@@ -291,7 +293,9 @@ void readSerialCommand() {
 					//
 					Show_Menu_Prompt();
 				} else if (SubMenu==3) {		// Menu 3.6
-					Log_Read(1,4000);
+                                        #ifdef Use_DataFlash					
+                                        Log_Read(1,4000);
+                                        #endif
 					Show_Menu_Prompt();
 				} else if (SubMenu==4) {		// Menu 4.6
 					//
