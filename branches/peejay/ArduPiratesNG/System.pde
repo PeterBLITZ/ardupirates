@@ -156,7 +156,7 @@ void APM_Init() {
 #endif
 
   // Is CLI mode active or not, if it is fire it up and never return.
-  if(SwitchPosition.Sw2) {
+  if(SwitchPosition.Sw2)
     //RunCLI(); // removed Feb 5, 2011 [kidogo]
     // Btw.. We never return from this....
 

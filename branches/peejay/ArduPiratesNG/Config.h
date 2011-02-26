@@ -46,7 +46,7 @@
  * **************************************************************************** *
  */
 #include <AP_GPS.h>
-
+#include <APM_Wii.h>
 /*
 - ---------------------------------------------------------------------------- -
  H O W   T O   U S E   T H I S   F I L E :
@@ -71,7 +71,7 @@
  (HEXA). The first airframe has four motors, the second has six.
  
  If you have a quadcopter, uncomment this next line ! */
-//#define AIRFRAME QUAD
+#define AIRFRAME QUAD
 /*
 - ---------------------------------------------------------------------------- -
  QUAD COPTER AIRFRAME SETUP (PWM) (4 motors)
@@ -179,7 +179,7 @@
  command "T". It will tell you which flight mode is configured.
  
  If you have a hexacopter, uncomment this next line !                                 */
-#define AIRFRAME HEXA
+//#define AIRFRAME HEXA
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -301,21 +301,19 @@
  Uncomment this next line if you wish to use GPS, comment it if you don't want
  to use GPS.
  */
-#define IsGPS
+//#define IsGPS
 
 /*
    If you use a GPS, please uncomment your GPS Protocol based on your GPS device
  even if you do not have a GPS!!
  */
-#ifdef IsGPS
 //AP_GPS_NMEA		gps(&Serial1);  // Standard NMEA GPS.      NOT SUPPORTED (yet?)
 //AP_GPS_SIRF		gps(&Serial1);  // SiRF-based GPS in Binary mode.  NOT TESTED
 //AP_GPS_UBLOX	        gps(&Serial1);  // UBLOX GPS
 //AP_GPS_IMU		gps(&Serial);	// X-Plane interface or ArduPilot IMU.// note, console port
-AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.4
+//AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.4
 //AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.6
-//AP_GPS_None		gps(NULL);      // No GPS attached!!
-#endif
+AP_GPS_None		gps(NULL);      // No GPS attached!!
 
 
 
@@ -327,7 +325,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  Uncomment this next line if you wish to use the magnetometers, comment it if
  you don't want to use them.
  */
-#define IsMAG              // Do we have a magnetometer connected
+//#define IsMAG              // Do we have a magnetometer connected
 
 /*
    IMPORTANT: You must activate the magnetometer either using the CLI or the
@@ -462,7 +460,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  need to use the Configurator and send the K command. Refer to the Wiki for
  more info on the Configurator and this specific command.
  */
-#define IsCAM              // Do we have camera stabilization in use, If you
+//#define IsCAM              // Do we have camera stabilization in use, If you
                              // activate, check OUTPUT pins from ArduUser.h
                              // DIP2 down (ON) = Camera Stabilization enabled,
                              // DIP2 up (OFF) = Camera Stabilization disabled.
@@ -553,7 +551,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  command link. If we are using normal FTDI/USB port as our telemetry/
  configuration, keep next line disabled.
  */
-#define SerXbee
+//#define SerXbee
 
 /*
    Telemetry port speed, default is 115200
@@ -587,7 +585,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  Your Aux1 will be your 3 position channel, and your radio has to be in acro
  (plane) mode.
  */
-#define Use_PID_Tuning
+//#define Use_PID_Tuning
 
 
 /*
