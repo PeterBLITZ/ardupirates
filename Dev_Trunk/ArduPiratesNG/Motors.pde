@@ -133,7 +133,7 @@ void motor_output()
 #endif
 
 #if AIRFRAME == HEXA
-      Middle_Left_Front_MotorCCW = MIN_THROTTLE;
+      LeftCWMotor = MIN_THROTTLE;
       LeftCCWMotor = MIN_THROTTLE;
       RightCWMotor = MIN_THROTTLE;
       RightCCWMotor = MIN_THROTTLE;
