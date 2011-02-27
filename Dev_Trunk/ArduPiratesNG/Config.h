@@ -187,13 +187,13 @@
  - ---------------------------------------------------------------------------- -
 /*
  
- F CCW 0           0 CW F
+  F CW 0           0 CW F
        ....FRONT....                 // 0 = Motors
-  L CW 0....***....0 CCW R           // *** = APM
+ L CCW 0....***....0 CCW R           // *** = APM
        .....***.....                 // ***
- L CCW 0....***....0 CW R            // ***
+ L CCW 0....***....0 CCW R           // ***
        .....BACK....
-  B CW 0           0 CCW B            // L = Left motors,
+  B CW 0           0 CW B             // L = Left motors,
                                       // R = Right motors,
                                       // B = Back motors,
                                       // F = Front motors.
