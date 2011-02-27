@@ -180,14 +180,14 @@ void motor_output()
 #endif
 
 #if AIRFRAME == OCTA
-    APM_RC.OutputCh(0, LeftCWMotor);     // Left Motor CW
-    APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
-    APM_RC.OutputCh(2, RightCWMotor);    // Right Motor CW
-    APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
-    APM_RC.OutputCh(6, FrontCWMotor);    // Front Motor CW
-    APM_RC.OutputCh(7, FrontCCWMotor);   // Front Motor CCW
-    APM_RC.OutputCh(9, BackCWMotor);     // Back Motor CW    // Connection PB5 on APM
-    APM_RC.OutputCh(10, BackCCWMotor);   // Back Motor CCW   // Connection PE3 on APM  
+    APM_RC.OutputCh(1, LeftCWMotor);     // Left Motor CW
+    APM_RC.OutputCh(0, LeftCCWMotor);    // Left Motor CCW
+    APM_RC.OutputCh(3, RightCWMotor);    // Right Motor CW
+    APM_RC.OutputCh(2, RightCCWMotor);   // Right Motor CCW    
+    APM_RC.OutputCh(7, FrontCWMotor);    // Front Motor CW
+    APM_RC.OutputCh(6, FrontCCWMotor);   // Front Motor CCW
+    APM_RC.OutputCh(10, BackCWMotor);    // Back Motor CW    // Connection PE3 on APM
+    APM_RC.OutputCh(9, BackCCWMotor);    // Back Motor CCW   // Connection PB5 on APM  
 #endif
 
   // InstantPWM => Force inmediate output on PWM signals

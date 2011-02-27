@@ -179,7 +179,7 @@
  command "T". It will tell you which flight mode is configured.
  
  If you have a hexacopter, uncomment this next line !                                 */
-#define AIRFRAME HEXA
+//#define AIRFRAME HEXA
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -187,18 +187,18 @@
  - ---------------------------------------------------------------------------- -
 /*
  
-  F CW 0           0 CCW F
+ F CCW 0           0 CW F
        ....FRONT....                 // 0 = Motors
- L CCW 0....***....0 CW R            // *** = APM
+  L CW 0....***....0 CCW R           // *** = APM
        .....***.....                 // ***
- L CW  0....***....0 CCW R           // ***
+ L CCW 0....***....0 CW R            // ***
        .....BACK....
- B CCW 0           0 CW B            // L = Left motors,
-                                     // R = Right motors,
-                                     // B = Back motors,
-                                     // F = Front motors.
-                                     // CW = Clockwise rotation,
-                                     // CCW = Counter clockwise rotation.
+  B CW 0           0 CCW B            // L = Left motors,
+                                      // R = Right motors,
+                                      // B = Back motors,
+                                      // F = Front motors.
+                                      // CW = Clockwise rotation,
+                                      // CCW = Counter clockwise rotation.
  
  To make absolutely sure you are running the Octa flight mode, connect with
  the Configurator and use the serial monitor in the Configurator to send the
@@ -207,7 +207,7 @@
  CH_10 (output 9) = Connection PB5 on APM
  CH_11 (output 10) = Connection PE3 on APM
  If you have a Octacopter, uncomment this next line !                                 */
-//#define AIRFRAME OCTA
+#define AIRFRAME OCTA
 
 
 /*
@@ -372,8 +372,8 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  Once you have achieved this fine tune in the Configurator's serial monitor by
  pressing "T" (capital t).
  */
-#define MAGCALIBRATION -15.65      
-//#define MAGCALIBRATION -21.65       //Quad      
+//#define MAGCALIBRATION -15.65      
+#define MAGCALIBRATION -21.65       //Quad      
 
 /* SET MAGNETOMETER ORIENTATION:
  Next, you'll have to define how your magnetometer is mounted to your
@@ -391,7 +391,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
-#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
+//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -410,7 +410,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
+#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -462,11 +462,11 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  need to use the Configurator and send the K command. Refer to the Wiki for
  more info on the Configurator and this specific command.
  */
-#define IsCAM              // Do we have camera stabilization in use, If you
+//#define IsCAM              // Do we have camera stabilization in use, If you
                              // activate, check OUTPUT pins from ArduUser.h
                              // DIP2 down (ON) = Camera Stabilization enabled,
                              // DIP2 up (OFF) = Camera Stabilization disabled.
-#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
+//#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
                              // during GPS Hold or Altitude Hold.
 
 
