@@ -179,7 +179,36 @@ If you have a quadcopter, uncomment this next line ! */
    command "T". It will tell you which flight mode is configured.
 
    If you have a hexacopter, uncomment this next line !                                 */
-#define AIRFRAME HEXA
+//#define AIRFRAME HEXA
+
+/*
+- ---------------------------------------------------------------------------- -
+ OCTA COPTER AIRFRAME SETUP (PWM) (8 motors)
+ - ---------------------------------------------------------------------------- -
+/*
+ 
+  F CW 0           0 CW F
+       ....FRONT....                 // 0 = Motors
+ L CCW 0....***....0 CCW R           // *** = APM
+       .....***.....                 // ***
+ L CCW 0....***....0 CCW R           // ***
+       .....BACK....
+  B CW 0           0 CW B             // L = Left motors,
+                                      // R = Right motors,
+                                      // B = Back motors,
+                                      // F = Front motors.
+                                      // CW = Clockwise rotation,
+                                      // CCW = Counter clockwise rotation.
+ 
+ To make absolutely sure you are running the Octa flight mode, connect with
+ the Configurator and use the serial monitor in the Configurator to send the
+ command "T". It will tell you which flight mode is configured.
+ These PWM (ESC) connectors below you will have to solder directly on the APM board.  
+ CH_10 (output 9) = Connection PB5 on APM
+ CH_11 (output 10) = Connection PE3 on APM
+ If you have a Octacopter, uncomment this next line !                                 */
+#define AIRFRAME OCTA
+
 
 /*
 = ============================================================================ =
@@ -532,6 +561,8 @@ Don't change this.        */
 //#define SerBau  38400
 //#define SerBau  57600
 #define SerBau  115200
+//#define SerBau 111100    //If using Telemetry, try this setting.
+
 
 /*
 - ---------------------------------------------------------------------------- -

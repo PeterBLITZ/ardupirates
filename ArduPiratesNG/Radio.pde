@@ -159,7 +159,7 @@ void read_radio()
 #endif
 #endif
 
-#if AIRFRAME == HEXA
+#if ((AIRFRAME == HEXA) || (AIRFRAME == OCTA))     
         command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
         command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 #endif  

@@ -191,7 +191,7 @@ void loop()
 
     // Read radio values (if new data is available)
     if (APM_RC.GetState() == 1) {  // New radio frame?
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))   
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))   
       read_radio();
 #endif
 #if AIRFRAME == HELI
@@ -206,14 +206,14 @@ void loop()
     if(flightMode == FM_STABLE_MODE) {    // STABLE Mode
       gled_speed = 1200;
       if (AP_mode == AP_NORMAL_STABLE_MODE) {   // Normal mode
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))
         Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll,command_rx_pitch,command_rx_collective,command_rx_yaw);
 #endif
       }else{                        // Automatic mode : GPS position hold mode
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))      
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))
         Attitude_control_v3(command_rx_roll+command_gps_roll+command_RF_roll,command_rx_pitch+command_gps_pitch+command_RF_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HELI
@@ -229,7 +229,7 @@ void loop()
     }
 
     // Send output commands to motor ESCs...
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))     
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))
     motor_output();
 #endif  
 

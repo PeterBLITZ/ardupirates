@@ -512,6 +512,16 @@ int RightCCWMotor;
 int FrontCWMotor;
 int BackCCWMotor;
 
+// Octa Motors   
+int Front_Right_MotorCW;
+int Front_Left_MotorCW;
+int Middle_Left_Front_MotorCCW;
+int Middle_Left_Back_MotorCCW;
+int Middle_Right_Back_MotorCCW;
+int Middle_Right_Front_MotorCCW;
+int Back_Right_MotorCW;  
+int Back_Left_MotorCW;
+
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed
 byte  motorSafety = 1;                             // 0 = safety off, 1 = on.  When On, sudden increases in throttle not allowed
 int   minThrottle = 0;
