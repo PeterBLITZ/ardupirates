@@ -186,19 +186,24 @@
  OCTA COPTER AIRFRAME SETUP (PWM) (8 motors)
  - ---------------------------------------------------------------------------- -
 /*
+
+
  
-  F CW 0           0 CW F
-       ....FRONT....                 // 0 = Motors
- L CCW 0....***....0 CCW R           // *** = APM
-       .....***.....                 // ***
- L CCW 0....***....0 CCW R           // ***
-       .....BACK....
-  B CW 0           0 CW B             // L = Left motors,
-                                      // R = Right motors,
-                                      // B = Back motors,
-                                      // F = Front motors.
-                                      // CW = Clockwise rotation,
-                                      // CCW = Counter clockwise rotation.
+            F CW 0
+         .....FRONT.......                 // 0 = Motors
+   L CCW 0...............0 CCW R           // *** = APM
+         .......***.......                 // ***
+L CW 0   .......***.......   0 CW R        // ***
+         .......***.......                            
+   L CCW 0...............0 CCW R           
+         ......BACK.......
+            B CW 0                   // L = Left motors,
+                                     // R = Right motors,
+                                     // B = Back motor,
+                                     // F = Front motor.
+                                     // CW = Clockwise rotation,
+                                     // CCW = Counter clockwise rotation.
+ 
  
  To make absolutely sure you are running the Octa flight mode, connect with
  the Configurator and use the serial monitor in the Configurator to send the
