@@ -187,18 +187,22 @@ If you have a quadcopter, uncomment this next line ! */
  - ---------------------------------------------------------------------------- -
 /*
  
-  F CW 0           0 CW F
-       ....FRONT....                 // 0 = Motors
- L CCW 0....***....0 CCW R           // *** = APM
-       .....***.....                 // ***
- L CCW 0....***....0 CCW R           // ***
-       .....BACK....
-  B CW 0           0 CW B             // L = Left motors,
-                                      // R = Right motors,
-                                      // B = Back motors,
-                                      // F = Front motors.
-                                      // CW = Clockwise rotation,
-                                      // CCW = Counter clockwise rotation.
+
+ 
+            F CW 0
+         .....FRONT.......                 // 0 = Motors
+   L CCW 0...............0 CCW R           // *** = APM
+         .......***.......                 // ***
+L CW 0   .......***.......   0 CW R        // ***
+         .......***.......                            
+   L CCW 0...............0 CCW R           
+         ......BACK.......
+            B CW 0                   // L = Left motors,
+                                     // R = Right motors,
+                                     // B = Back motor,
+                                     // F = Front motor.
+                                     // CW = Clockwise rotation,
+                                     // CCW = Counter clockwise rotation.
  
  To make absolutely sure you are running the Octa flight mode, connect with
  the Configurator and use the serial monitor in the Configurator to send the
@@ -390,7 +394,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_UP_PINS_FORWARD_LEFT
-#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
+//#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -409,7 +413,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
+#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -461,11 +465,11 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
    need to use the Configurator and send the K command. Refer to the Wiki for
    more info on the Configurator and this specific command.
                                                                               */
-#define IsCAM              // Do we have camera stabilization in use, If you
+//#define IsCAM              // Do we have camera stabilization in use, If you
                            // activate, check OUTPUT pins from ArduUser.h
                            // DIP2 down (ON) = Camera Stabilization enabled,
                            // DIP2 up (OFF) = Camera Stabilization disabled.
-#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
+//#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
                            // during GPS Hold or Altitude Hold.
 
 
