@@ -494,6 +494,7 @@ void sendSerialTelemetry() {
 			break;
 		case 'V': 						// Receive transmitter calibration values
 			Receive_Transmitter_Calibration();
+			queryType = 'X';
 			break;
 		case 'W':
 			Set_SonarAndObstacleAvoidance_PIDs();
