@@ -424,6 +424,7 @@ void sendSerialTelemetry() {
 		// functions more towards the bottom (kidogo, Feb 6, 2011)
 		case 'A': 						// Stable PID
 			Receive_Stable_PID();
+			queryType = 'X';
 			break;
 		case 'B': 						// Show roll, pitch and yaw PID values
 			Show_Stable_PIDs();
