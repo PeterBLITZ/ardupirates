@@ -26,6 +26,8 @@ The Xbee modules ship with a default of 9600bps, which you must change to match 
 
 Connect each one of the them to the Sparkfun USB adapter board, plug the USB cable into your PC, and use [http://www.digi.com/support/productdetl.jsp?pid=3352&osvid=57&s=316&tp=5&tp2=0 Digi's X-CTU utility] to select the right serial port and communicate with them. Remember to initially set the utility to 9600bps to contact the new Xbee modules, and than after you've changed the speed, change the utility's serial speed accordingly. You should also give the modules unique Network IDs (VIDs) so they will be paired. Just use any 3-digit number, and just make sure you have set it the same on both modules. (Note: If you will be flying near other UAV planes make sure to verify the Network IDs are unique and not used by others in your vicinity.) You should finally set the Destination Adress High to 0 and the Destination Adress Low to FFFF.
 
+Remember, on the Modem Configuration Tab, select your modem type, set the parameters and click "Write" before you click "Read", otherwise the "Read" button doesn't work. This might seem silly, but the first time you face it, it is not that obvious.
+
 This is what the setting should look like when you click "Read" in Modem Configuration tab of X-CTU (we're using 999 as the VID here as an example): 
 
 http://ardupilot.googlecode.com/svn/images/xbee.png
