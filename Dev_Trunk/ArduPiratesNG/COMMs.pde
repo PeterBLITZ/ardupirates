@@ -439,6 +439,7 @@ void sendSerialTelemetry() {
 			break;
 		case 'E': 						// Receive altitude PID
 			Receive_Altitude_PID();
+			queryType = 'X';
 			break;
 		case 'F': 						// Show altitude PID
 			Show_Altitude_PIDs();
@@ -446,6 +447,7 @@ void sendSerialTelemetry() {
 			break;
 		case 'G': 						// Receive drift correction PID
 			Receive_Drift_PID();
+			queryType = 'X';
 			break;
 		case 'H': 						// Show drift correction PID
 			Show_Drift_Correction_PIDs();
@@ -460,6 +462,7 @@ void sendSerialTelemetry() {
 			break;
 		case 'K': 						// Camera mode
 			Receive_Camera_Mode();        
+			queryType = 'X';
 			break;      
 		case 'L': 						// Camera settings
 			Show_Camera_Mode();
