@@ -65,6 +65,8 @@ Partial Class MissionPlanner
         Me.TextBoxParameter6 = New System.Windows.Forms.TextBox()
         Me.TextBoxParameter7 = New System.Windows.Forms.TextBox()
         Me.LabelParameter1 = New System.Windows.Forms.Label()
+        Me.SetHomeLocationButton = New System.Windows.Forms.Button()
+        Me.SetHomeLocationLabel = New System.Windows.Forms.Label()
         CType(Me.SplitContainerWhole, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainerWhole.Panel1.SuspendLayout()
         Me.SplitContainerWhole.Panel2.SuspendLayout()
@@ -123,6 +125,7 @@ Partial Class MissionPlanner
         'SplitContainerMapWaypoints.Panel1
         '
         Me.SplitContainerMapWaypoints.Panel1.BackColor = System.Drawing.Color.DimGray
+        Me.SplitContainerMapWaypoints.Panel1.Controls.Add(Me.SetHomeLocationLabel)
         Me.SplitContainerMapWaypoints.Panel1.Controls.Add(Me.PanelMap)
         '
         'SplitContainerMapWaypoints.Panel2
@@ -223,6 +226,7 @@ Partial Class MissionPlanner
         'PanelSettings
         '
         Me.PanelSettings.BackColor = System.Drawing.Color.White
+        Me.PanelSettings.Controls.Add(Me.SetHomeLocationButton)
         Me.PanelSettings.Controls.Add(Me.ButtonSaveMission)
         Me.PanelSettings.Controls.Add(Me.ButtonLoadMission)
         Me.PanelSettings.Location = New System.Drawing.Point(7, 3)
@@ -469,6 +473,27 @@ Partial Class MissionPlanner
         Me.LabelParameter1.Tag = "11"
         Me.LabelParameter1.Text = "Parameter 1"
         '
+        'SetHomeLocationButton
+        '
+        Me.SetHomeLocationButton.Location = New System.Drawing.Point(4, 169)
+        Me.SetHomeLocationButton.Name = "SetHomeLocationButton"
+        Me.SetHomeLocationButton.Size = New System.Drawing.Size(75, 23)
+        Me.SetHomeLocationButton.TabIndex = 6
+        Me.SetHomeLocationButton.Text = "Set home"
+        Me.SetHomeLocationButton.UseVisualStyleBackColor = True
+        '
+        'SetHomeLocationLabel
+        '
+        Me.SetHomeLocationLabel.AutoSize = True
+        Me.SetHomeLocationLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.SetHomeLocationLabel.ForeColor = System.Drawing.Color.White
+        Me.SetHomeLocationLabel.Location = New System.Drawing.Point(149, 163)
+        Me.SetHomeLocationLabel.Name = "SetHomeLocationLabel"
+        Me.SetHomeLocationLabel.Size = New System.Drawing.Size(323, 16)
+        Me.SetHomeLocationLabel.TabIndex = 8
+        Me.SetHomeLocationLabel.Text = "Please double click on map to set new home position"
+        Me.SetHomeLocationLabel.Visible = False
+        '
         'MissionPlanner
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -484,6 +509,7 @@ Partial Class MissionPlanner
         CType(Me.SplitContainerWhole, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainerWhole.ResumeLayout(False)
         Me.SplitContainerMapWaypoints.Panel1.ResumeLayout(False)
+        Me.SplitContainerMapWaypoints.Panel1.PerformLayout()
         Me.SplitContainerMapWaypoints.Panel2.ResumeLayout(False)
         CType(Me.SplitContainerMapWaypoints, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainerMapWaypoints.ResumeLayout(False)
@@ -534,4 +560,6 @@ Partial Class MissionPlanner
     Friend WithEvents MoveUp As System.Windows.Forms.DataGridViewButtonColumn
     Friend WithEvents MoveDown As System.Windows.Forms.DataGridViewButtonColumn
     Friend WithEvents Delete As System.Windows.Forms.DataGridViewButtonColumn
+    Friend WithEvents SetHomeLocationButton As System.Windows.Forms.Button
+    Friend WithEvents SetHomeLocationLabel As System.Windows.Forms.Label
 End Class

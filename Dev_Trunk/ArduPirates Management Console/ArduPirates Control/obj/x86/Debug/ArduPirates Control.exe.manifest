@@ -43,26 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ArduPirates Control.exe" size="811520">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ArduPirates Control.exe" size="825856">
       <assemblyIdentity name="ArduPirates Control" version="1.1.21.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>oiuoWGIDRRjI8sO1JWrcyEAG3cY=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="System.ComponentModel.Composition.dll" size="225280">
-      <assemblyIdentity name="System.ComponentModel.Composition" version="2009.1.23.0" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>txlkm5RSMpffmDW1SvNJ7a/I6f0=</dsig:DigestValue>
+        <dsig:DigestValue>809G9lfWcbkCglnhJBfJDcFjNMw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -126,13 +114,13 @@
       <dsig:DigestValue>36Gxex/IapwxKvTpvswFWEOFa9c=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="TextFile1.txt" size="1583">
+  <file name="MissionPlannerGE.html" size="7682">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>JIF89dMejUnTBmrV4JDnl0LhS8U=</dsig:DigestValue>
+      <dsig:DigestValue>bBYdlplfxggV3YoRYZEVxKEZTA4=</dsig:DigestValue>
     </hash>
   </file>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">

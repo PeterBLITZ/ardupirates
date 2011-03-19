@@ -11,12 +11,8 @@ Public Class MissionPlanner
 
     Private webBrowser1 As New WebBrowser()
 
-
-    Dim currentLat As String
-    Dim currentLng As String
-    Dim currentTitle As String
     Dim currentnum As String
-
+    Dim setHomePosition As Boolean              'if set, where the user clicked on the map is the new pos for home marker
     Dim WaypointList As List(Of Waypoint)
     Dim MAV_commands_NAV As List(Of MAV_command)
 
@@ -38,14 +34,16 @@ Public Class MissionPlanner
         ' Uncomment the following line when you are finished debugging.
         'webBrowser1.ScriptErrorsSuppressed = True
 
-        webBrowser1.Navigate(System.Environment.CurrentDirectory + "\MissionPlanner.html")
+        webBrowser1.Navigate(System.Environment.CurrentDirectory + "\MissionPlannerGE.html")
         webBrowser1.Parent = PanelMap       'Put browser in a panel to be able to better control size
 
         MAV_commands_NAV = New List(Of MAV_command)
-        WaypointList = New List(Of Waypoint)
-
-
         PopulateCommandTypeList()
+
+        WaypointList = New List(Of Waypoint)
+        AddWaypoint(0, 0, "Home")
+
+
 
         ResizeForm()
     End Sub
@@ -55,7 +53,7 @@ Public Class MissionPlanner
     ''' </summary>
     ''' <param name="WaypointData">The string with waypoint data</param>
     ''' <remarks></remarks>
-    Public Sub AddWaypoint(ByVal WaypointData As String)
+    Public Sub AddWaypointOLD(ByVal WaypointData As String)
 
         'Got data for new waypoint
         If (Not String.IsNullOrEmpty(WaypointData)) Then
@@ -97,6 +95,30 @@ Public Class MissionPlanner
 
     End Sub
 
+    Public Sub AddWaypoint(ByVal Latitude As String, ByVal Longitude As String, ByVal Title As String)
+        Dim newWaypoint As New Waypoint
+
+        If (setHomePosition) Then
+            WaypointList(0).Latitude = Latitude
+            WaypointList(0).Longitude = Longitude
+            setHomePosition = False
+            SetHomeLocationLabel.Visible = False
+        Else
+
+            'Add waypoint to list of waypoints (set waypoint command type to default)
+            newWaypoint = New Waypoint(
+                        0, Latitude, Longitude, "NAV_WAYPOINT", Title
+                        )
+
+            WaypointList.Add(newWaypoint) 'add last in list
+
+        End If
+
+        'Populate and refresh the waypointlist, and mark the added as  selected 
+        UpdateWayPointList(WaypointList.Count - 1, False)
+        ShowWaypointProperties(WaypointList.Count - 1)
+    End Sub
+
     ''' <summary>
     ''' Deletes a waypoint from list of waypoints
     ''' </summary>
@@ -113,16 +135,18 @@ Public Class MissionPlanner
     ''' <param name="waypointNumber">The waypoint to update</param>
     ''' <param name="markerPosition">The new position</param>
     ''' <remarks></remarks>
-    Public Sub UpdateWaypoint(ByVal waypointNumber As Integer, ByVal markerPosition As String)
+    Public Sub UpdateWaypoint(ByVal iconURL As String, ByVal Latitude As String, ByVal Longitude As String)
+        Dim waypointNum As Integer
+        waypointNum = GetWaypointNum(iconURL)
 
         'Set waypoints new position
-        WaypointList.Item(waypointNumber).Position = markerPosition
-
+        WaypointList.Item(waypointNum).Latitude = Latitude
+        WaypointList.Item(waypointNum).Longitude = Longitude
         'Set moved marker as selected waypoint
-        SelectedWaypoint(waypointNumber)
+        SelectedWaypoint(iconURL)
 
         'set the waypoint as selected
-        UpdateWayPointList(waypointNumber, False)
+        UpdateWayPointList(waypointNum, False)
     End Sub
 
     ''' <summary>
@@ -139,7 +163,7 @@ Public Class MissionPlanner
         'Feel free to improve ;-)
 
         WaypointGridView.Rows.Clear()
-
+        webBrowser1.Document.InvokeScript("clearMap")
         Dim row As Integer = 0
         Dim coll As Integer = 0
 
@@ -156,10 +180,23 @@ Public Class MissionPlanner
 
             Waypoint.Number = row
 
-            waypoints += row.ToString() + ":" + Waypoint.Latitude.ToString() + ":" + Waypoint.Longitude.ToString() + ":" + Waypoint.Title + ";"
+            'waypoints += row.ToString() + ":" + Waypoint.Latitude.ToString() + ":" + Waypoint.Longitude.ToString() + ":" + Waypoint.Title + ";"
+
+            'If it is not home marker (and not on 0,0), add waypoint to  GE
+            If row = 0 Then
+                'Place Home marker
+                webBrowser1.Document.InvokeScript("placeMarker", New Object() {0, Waypoint.Latitude, Waypoint.Longitude, 100, Waypoint.Title, True})
+            Else
+                'Place waypoint
+                webBrowser1.Document.InvokeScript("placeMarker", New Object() {(row).ToString.PadLeft(2, "0"), Waypoint.Latitude, Waypoint.Longitude, 100, Waypoint.Title, False})
+            End If
 
             row = row + 1
         Next
+
+        'Don´t display the home marker (pos 0) in list
+        WaypointGridView.Rows.Item(0).Visible = False
+
 
         'user selected a waypoint, mark it and make sure user sees it after updating
         If selectedWaypoint > -1 Then
@@ -170,28 +207,25 @@ Public Class MissionPlanner
             TextBoxParameter6.Text = WaypointList(selectedWaypoint).Longitude
 
 
-            'start render the grid
-            WaypointGridView.FirstDisplayedScrollingRowIndex() = selectedWaypoint
+            'start render the grid at selected waypoint
+            If selectedWaypoint > 0 Then
+                WaypointGridView.FirstDisplayedScrollingRowIndex() = selectedWaypoint
+            End If
+
         End If
 
         'Added new waypoint, set newly created waypoint as selected
         If selectedWaypoint = -1 Then
             If (WaypointGridView.Rows.Count > 1) Then
-                WaypointGridView.Rows.Item(WaypointGridView.Rows.Count - 2).DefaultCellStyle.BackColor = Color.Coral
-                ShowWaypointProperties(WaypointGridView.Rows.Count - 2)
+                WaypointGridView.Rows.Item(WaypointGridView.Rows.Count).DefaultCellStyle.BackColor = Color.Coral
+                ShowWaypointProperties(WaypointGridView.Rows.Count)
             Else
-                WaypointGridView.Rows.Item(0).DefaultCellStyle.BackColor = Color.Coral
+                'WaypointGridView.Rows.Item(0).DefaultCellStyle.BackColor = Color.Coral
             End If
 
-            WaypointGridView.FirstDisplayedScrollingRowIndex() = WaypointGridView.Rows.Count - 1
+            WaypointGridView.FirstDisplayedScrollingRowIndex() = WaypointGridView.Rows.Count
+
         End If
-
-        'Send waypoints to Google Maps
-        If UpdateGoogleMaps Then
-
-            webBrowser1.Document.InvokeScript("createMarkers", New Object() {waypoints})
-        End If
-
 
         'MessageBox.Show(waypoints)
 
@@ -202,7 +236,18 @@ Public Class MissionPlanner
     ''' </summary>
     ''' <param name="waypointNum">the number of the selected waypoint</param>
     ''' <remarks>Called from html-file</remarks>
+    Public Sub SelectedWaypoint(ByVal iconURL As String)
+        Dim waypointNum As Integer
+
+        waypointNum = GetWaypointNum(iconURL)
+        'Show waypoint properties panel
+        ShowWaypointProperties(waypointNum)
+
+        UpdateWayPointList(waypointNum, False)
+    End Sub
+
     Public Sub SelectedWaypoint(ByVal waypointNum As Integer)
+
         'Show waypoint properties panel
         ShowWaypointProperties(waypointNum)
 
@@ -230,7 +275,7 @@ Public Class MissionPlanner
                 'Up
                 If (e.ColumnIndex = WaypointGridView.ColumnCount - 3) Then
                     'Move selected waypoint up in the list
-                    If (e.RowIndex > 0) Then 'Don´t move the top waypoint upward
+                    If (e.RowIndex > 1) Then 'Don´t move the top waypoint upward
                         SwapWaypointPositions(e.RowIndex, 1)
                     End If
                 End If
@@ -254,7 +299,7 @@ Public Class MissionPlanner
                             'Remove the waypoint 
                             WaypointList.RemoveAt(e.RowIndex)
                             webBrowser1.Document.InvokeScript("deleteWaypoint", New Object() {e.RowIndex})
-                            UpdateWayPointList(-1, True)
+                            UpdateWayPointList(WaypointList.Count - 1, True)
                         End If
                     End If
                 End If
@@ -413,6 +458,23 @@ Public Class MissionPlanner
 
     End Sub
 
+    Private Function GetWaypointNum(ByVal iconURL As String)
+        Dim tmpNum As Integer
+        Dim tmpStr As String
+        'Select everything before file type (png)
+        tmpStr = iconURL.Substring(0, InStrRev(iconURL, ".") - 1)
+
+        If tmpStr.Substring(Len(tmpStr) - 1) = "H" Then
+            'Home marker
+            tmpNum = 0
+        Else
+            'Get the two digits (waypoint num)
+            tmpNum = Convert.ToInt32(tmpStr.Substring(Len(tmpStr) - 2))
+        End If
+       
+
+        Return tmpNum
+    End Function
 
     Private Sub SplitContainer1_SplitterMoved(ByVal sender As System.Object, ByVal e As System.Windows.Forms.SplitterEventArgs) Handles SplitContainerWhole.SplitterMoved
         ResizeForm()
@@ -451,7 +513,7 @@ Public Class MissionPlanner
         WaypointList.Item(row - direction) = WaypointList.Item(row)
         WaypointList.Item(row) = tmp
 
-        UpdateWayPointList(-1, True)
+        UpdateWayPointList(row, True)
 
         tmp = Nothing
     End Sub
@@ -537,7 +599,7 @@ Public Class MissionPlanner
 
         If waypointnum > -1 Then
             PanelWaypointProperties.Visible = True
-            LabelWaypointNumber.Text = (WaypointList.Item(waypointnum).Number + 1).ToString()
+            LabelWaypointNumber.Text = (WaypointList.Item(waypointnum).Number).ToString()
         End If
 
 
@@ -555,37 +617,37 @@ Public Class MissionPlanner
         currentnum = CInt(LabelWaypointNumber.Text)
         Dim parameters As New List(Of String)
 
-        If currentnum > 0 Then
+        'If currentnum > 0 Then
 
 
-            'set waypoints commandtype to selected value
+        'set waypoints commandtype to selected value
 
-            WaypointList(currentnum - 1).CommandType = ComboBoxCommandType.Text
+        WaypointList(currentnum).CommandType = ComboBoxCommandType.Text
 
-            WaypointList(currentnum - 1).Title = TextBoxWaypointTitle.Text
+        WaypointList(currentnum).Title = TextBoxWaypointTitle.Text
 
-            Dim currentControl As Control
-            parameters.Add("") 'description
-            For i = 1 To 7
+        Dim currentControl As Control
+        parameters.Add("") 'description
+        For i = 1 To 7
+            currentControl = TableLayoutPanel1.Controls("TextBoxParameter" + i.ToString())
+            parameters.Add(currentControl.Text)
+
+            currentControl = TableLayoutPanel1.Controls("LabelParameter" + i.ToString())
+
+            If currentControl.Text.Equals("Latitude") Then
                 currentControl = TableLayoutPanel1.Controls("TextBoxParameter" + i.ToString())
-                parameters.Add(currentControl.Text)
+                WaypointList(currentnum).Latitude = currentControl.Text
+            End If
+            If currentControl.Text.Equals("Longitude") Then
+                currentControl = TableLayoutPanel1.Controls("TextBoxParameter" + i.ToString())
+                WaypointList(currentnum).Longitude = currentControl.Text
+            End If
+        Next
 
-                currentControl = TableLayoutPanel1.Controls("LabelParameter" + i.ToString())
+        WaypointList(currentnum).Parameters = parameters
 
-                If currentControl.Text.Equals("Latitude") Then
-                    currentControl = TableLayoutPanel1.Controls("TextBoxParameter" + i.ToString())
-                    WaypointList(currentnum - 1).Latitude = currentControl.Text
-                End If
-                If currentControl.Text.Equals("Longitude") Then
-                    currentControl = TableLayoutPanel1.Controls("TextBoxParameter" + i.ToString())
-                    WaypointList(currentnum - 1).Longitude = currentControl.Text
-                End If
-            Next
-
-            WaypointList(currentnum - 1).Parameters = parameters
-
-            UpdateWayPointList(currentnum - 1, True)
-        End If
+        UpdateWayPointList(currentnum, True)
+        'End If
     End Sub
 
 
@@ -702,4 +764,8 @@ Public Class MissionPlanner
         ResizeForm()
     End Sub
 
+    Private Sub ButtonSetHomeLocation_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SetHomeLocationButton.Click
+        setHomePosition = True
+        SetHomeLocationLabel.Visible = True
+    End Sub
 End Class

@@ -88,8 +88,8 @@
         max = 2100                    ' Maximum value for progress range
         val = 1500
         mincal = 1400                    'Minimum calibrated value
-        midcal = 1500                    'Middle calibrated value or center position
-        maxcal = 1600                    'Maximum calibrated value
+        midcal = 1450                    'Middle calibrated value or center position
+        maxcal = 1500                    'Maximum calibrated value
         bOutsideRange = False
     End Sub
 
@@ -165,9 +165,9 @@
             Dim oldValue As Integer = val
 
             ' Make sure that the value does not stray outside the valid range(900-2100)
-            If Value < 900 Then bOutsideRange = True
+            'If Value < 900 Then bOutsideRange = True
 
-            If Value > 2100 Then bOutsideRange = True
+            ' If Value > 2100 Then bOutsideRange = True
 
             val = Value
 

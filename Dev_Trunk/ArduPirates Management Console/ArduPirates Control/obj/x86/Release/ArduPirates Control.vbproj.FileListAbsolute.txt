@@ -104,7 +104,6 @@ C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\R
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Release\ArduPirates Control.pdb
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Release\ArduPirates Control.xml
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Release\Touchless.Vision.dll
-C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Release\System.ComponentModel.Composition.dll
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Release\ArduPirates Control.TrustInfo.xml
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Release\ArduPirates Control.exe.manifest
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x86\Release\ArduPirates Control.application
@@ -112,3 +111,4 @@ C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\obj\x
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Release\MissionPlanner.html
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Release\WebCamLib.dll
 C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Release\common.xml
+C:\Arducopter\dev_trunk\ArduPirates Management Console\ArduPirates Control\bin\Release\MissionPlannerGE.html

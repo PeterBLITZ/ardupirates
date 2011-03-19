@@ -253,7 +253,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="TextFile1.txt" />
+    <Content Include="MissionPlannerGE.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="refresh.png" />
     <None Include="backgroundskin.jpg" />
     <None Include="ArduPirates.png" />

@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<head>
+    <title>Google Earth Plug-in</title>
+    <!-- NOTE: replace the key below with your own key -->
+    <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAmYh9xGY75kLhPHs-qgtHGxQ8odl3Z7TxCRh7JQnVrZTBkrLOcBT9bjA1Nasdrdg6gW1V11DQ6TUdLw"></script>
+    <!--<script type="text/javascript" src="http://www.google.com/jsapi?key=<GoogleEarthKey>"></script>-->
+
+       <script type="text/javascript">
+         var ge;
+         var lineString = null;
+         var lineStringPlacemark = null;
+         var lineStyle = null;
+
+         var markers = new Array();
+         try {
+         google.load("earth", "1");
+         }
+         catch (err) {
+         }
+
+         function init() {
+         google.earth.createInstance('map3d', initCB, failureCB);
+         }
+
+
+         function initCB(instance) {
+         ge = instance;
+         ge.getWindow().setVisibility(true);
+         // add a navigation control
+         ge.getNavigationControl().setVisibility(ge.VISIBILITY_AUTO);
+
+
+         // add some layers
+         //ge.getLayerRoot().enableLayerById(ge.LAYER_BORDERS, true);
+         //ge.getLayerRoot().enableLayerById(ge.LAYER_ROADS, true);
+
+         lineStringPlacemark = ge.createPlacemark('');
+         lineString = ge.createLineString('');
+         lineStringPlacemark.setGeometry(lineString);
+         lineString.setTessellate(true);
+         lineString.setAltitudeMode(ge.ALTITUDE_ABSOLUTE);
+         lineStringPlacemark.setStyleSelector(ge.createStyle(''));
+         lineStyle = lineStringPlacemark.getStyleSelector().getLineStyle();
+         lineStyle.setWidth(3);
+         lineStyle.getColor().set('ff222222');
+
+         // Listen to the doublclick event on the globe.
+         google.earth.addEventListener(ge.getGlobe(), 'dblclick', function (event) {
+         //Do not zoom when doubleclicked
+         event.preventDefault();
+         //Place a marker where user clicked
+         window.external.AddWayPoint(event.getLatitude(), event.getLongitude(), "");
+         //placeMarker(event.getLatitude(), event.getLongitude(), "New waypoint", null, true);
+         });
+         }
+
+         function failureCB(errorCode) {
+         alert(errorcode);
+         }
+
+
+         function placeMarker(waypointnum, lat, lng, alt, title, isHome) {
+         var placemark = ge.createPlacemark('');
+         placemark.setName(title);
+
+         // Create style map for placemark
+         var icon = ge.createIcon('');
+         if (isHome==true)
+         {
+         icon.setHref('http://google-maps-icons.googlecode.com/files/blueH.png'); //Black is available
+         }
+         else {
+         icon.setHref('http://google-maps-icons.googlecode.com/files/red' + waypointnum + '.png');
+         }
+         var style = ge.createStyle('');
+         style.getIconStyle().setIcon(icon);
+         placemark.setStyleSelector(style);
+
+         // Create point
+         //var la = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
+         var point = ge.createPoint('');
+         point.setLatitude(lat);
+         point.setLongitude(lng);
+         placemark.setGeometry(point);
+         
+         // listen for mousedown on the window (look specifically for point placemarks)
+         google.earth.addEventListener(placemark, 'mousedown', function (event) {
+         if (event.getTarget().getType() == 'KmlPlacemark' &&
+         event.getTarget().getGeometry().getType() == 'KmlPoint') {
+         event.preventDefault();
+         var placemark = event.getTarget();
+
+         dragInfo = {
+         placemark: event.getTarget(),
+         dragged: false
+         };
+         }
+         });
+
+         // listen for mousedown on the placemark
+         google.earth.addEventListener(placemark, 'click', function (event) {
+         window.external.SelectedWaypoint(event.getTarget().getComputedStyle().getIconStyle().getIcon().getHref());
+         });
+
+         // listen for mousemove on the globe
+         google.earth.addEventListener(placemark, 'mousemove', function (event) {
+         if (dragInfo) {
+         event.preventDefault();
+         var point = dragInfo.placemark.getGeometry();
+         point.setLatitude(event.getLatitude());
+         point.setLongitude(event.getLongitude());
+         dragInfo.dragged = true;
+         }
+
+         });
+
+         // listen for mouseup on the placemark
+         google.earth.addEventListener(placemark, 'mouseup', function (event) {
+         if (dragInfo) {
+         if (dragInfo.dragged) {
+         // if the placemark was dragged, prevent balloons from popping up
+         event.preventDefault();
+         //Droped here
+         window.external.UpdateWaypoint(event.getTarget().getComputedStyle().getIconStyle().getIcon().getHref(), event.getLatitude(), event.getLongitude());
+         //movePlacemark(placemark, event.getLatitude(), event.getLongitude());
+         //alert("Dragged to + " + placemark.getLatitude());
+         }
+
+         dragInfo = null;
+         }
+         });
+         ge.getFeatures().appendChild(placemark);
+
+         //Add line between waypoint if not home marker
+         if (!isHome) {
+         addToLineString(lineString, lat, lng, 0, 0, 0);
+         ge.getFeatures().appendChild(lineStringPlacemark);
+         }
+
+         }
+
+         function selectedWaypoint(lat, lng, waypointNumber) {
+         //alert(waypointNumber);
+         }
+
+
+         function movePlacemark(placemark, newLat, newLng) {
+         var tmpNum;
+         //               for (i = 0; i < markers.length; i++) {
+//                   if (placemark.getLatitude() == markers[i].getLatitude()
+//                    && placemark.getLongitude() == markers[i].getLongitude()) {
+//                       tmpNum = i;
+//                   }
+//               }
+               alert("You moved the marker with num: " + placemark.getLatitude());
+           }
+
+
+           function addToLineString(lineString, lat, lng, latOffset, lngOffset) {
+               var altitude = 1.0; // give it some altitude
+               lineString.getCoordinates().
+               pushLatLngAlt(lat + latOffset, lng + lngOffset, altitude);
+           }
+
+
+           function clearMap() {
+               try {
+                   var features = ge.getFeatures();
+                   while (features.getFirstChild()) {
+                       features.removeChild(features.getFirstChild());
+                   }
+                   lineStringPlacemark = ge.createPlacemark('');
+                   lineString = ge.createLineString('');
+                   lineStringPlacemark.setGeometry(lineString);
+                   lineString.setTessellate(true);
+                   lineString.setAltitudeMode(ge.ALTITUDE_CLAMP_TO_GROUND);
+                   lineStringPlacemark.setStyleSelector(ge.createStyle(''));
+                   lineStyle = lineStringPlacemark.getStyleSelector().getLineStyle();
+                   lineStyle.setWidth(3);
+                   lineStyle.getColor().set('ff222222');
+               }
+               catch (err) {
+               }
+           }
+
+           google.setOnLoadCallback(init);
+   </script>
+
+
+    <style type="text/css">
+        html, body
+        {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body >
+    <div id="map3d" style="width: 100%; height: 100%;">
+    </div>
+</body>
+</html>

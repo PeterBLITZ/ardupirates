@@ -14,6 +14,9 @@ Public Class MainForm
     Dim comAutoConnect As Boolean = False 'Do you want to automatically connect next time we start ?
     Dim txBuffer As String 'Buffer for data to be sent
     Dim rxBuffer As String 'Buffer for received data
+    Dim writeToEEPROM As Boolean = False    'write values to EEPROM
+    Dim resetTransmitterValues As Boolean = False   'Should we send reset TX values to APM
+    Dim stopSerialUpdate As String = "X"    'Character that tells APM to stop sending data 
     Dim comOpen As Boolean 'Defines whether the COM port is open
     Dim rxBufferMarker As Integer 'this is the position marker for the rxBuffer
     Dim rxBufferLineOfData As String 'this will be the first complete line of data in the buffer, terminated with a line end.
@@ -23,6 +26,7 @@ Public Class MainForm
     Dim CurrentView As String
     Dim SerialDataField_Busy As Boolean = False
 
+    Dim counter As Integer = 0
 
     'Web browser
     Dim Browser As WebBrowser
@@ -56,6 +60,33 @@ Public Class MainForm
     Dim radio_pitch_mid_value As Double = 1500
     Dim radio_yaw_mid_value As Double = 1500
 
+    'PID Variables
+    Dim Stable_PID_roll_P As Double = 0
+    Dim Stable_PID_roll_I As Double = 0
+    Dim Stable_PID_roll_D As Double = 0
+    Dim Stable_PID_pitch_P As Double = 0
+    Dim Stable_PID_pitch_I As Double = 0
+    Dim Stable_PID_pitch_D As Double = 0
+    Dim Stable_PID_yaw_P As Double = 0
+    Dim Stable_PID_yaw_I As Double = 0
+    Dim Stable_PID_yaw_D As Double = 0
+    Dim Stable_KP_Rate As Double = 0
+    Dim PID_Transmitter_Factor As Double = 0
+    Dim magnetometer As Double = 0
+
+    Dim Alt_PID_roll_P As Double = 0
+    Dim Alt_PID_roll_I As Double = 0
+    Dim Alt_PID_roll_D As Double = 0
+
+    Dim GPS_PID_roll_P As Double = 0
+    Dim GPS_PID_roll_I As Double = 0
+    Dim GPS_PID_roll_D As Double = 0
+    Dim GPS_PID_pitch_P As Double = 0
+    Dim GPS_PID_pitch_I As Double = 0
+    Dim GPS_PID_pitch_D As Double = 0
+    Dim GPS_Max_Angle As Double = 0
+    Dim GPS_Geo_Corr As Double = 0
+    Dim PID_Values_Changed As Boolean = False
 
     'Serial Monitor variables
     Dim SerialDataLine As String
@@ -142,6 +173,7 @@ Public Class MainForm
         Dim random As New Random()
         Return random.Next(min, max)
     End Function 'RandomNumber 
+
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.Text = Me.Text & " v." & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & " build " & My.Application.Info.Version.Build
 
@@ -159,13 +191,13 @@ Public Class MainForm
         ComboBox_Baud.SelectedIndex = ComboBox_Baud.FindStringExact(comPortSpeed)
         CheckBox_AutoConnect.Checked = comAutoConnect
 
-        SplashForm.Close()
+        'SplashForm.Close()
 
         'Automatically connect if so configured
         If comAutoConnect Then Serial1_Connect()
 
         'Set starting value of the Mode Select combobox on the PID Tuning tab page
-        ComboBox_PIDModeSelect.Text = "Acrobatic Mode"
+        ComboBox_PIDModeSelect.Text = "Stable Mode"
 
         'Position all controls in the correct place 
         ArtificialHorizon1.Top = 10
@@ -173,8 +205,6 @@ Public Class MainForm
 
         ComboBox_AspectRatio.SelectedItem = 0
         ComboBox_AspectRatio.SelectedText = "4:3"
-
-        'Load Google Earth
 
     End Sub
 
@@ -212,6 +242,7 @@ Public Class MainForm
         'Don't go here if the Serial port is closed
         If Serial.IsOpen Then
 
+
             If ComboBox_Protocol.Text.Equals("MAVLink") Then
                 SerialMAVLink()
             Else
@@ -230,78 +261,223 @@ Public Class MainForm
     Private Sub SerialLegacy()
         ' Read "old" serial format, which is strings with a line end
 
-        rxBuffer = rxBuffer & Replace(Serial.ReadExisting, vbLf, "") 'Adds the incoming data to the end of the buffer.
+        'Check if we want to send something out through the serial port. 
+        'If we want to send something out, we have changed the view (or a important variable) and should 
+        'stop all incomming data and clear all buffers and variables containing the data for the "old" view.
 
-        'The buffer is just one big string with all the incoming data appended to it at the end.
-        'Going through it, we remove each line of data terminated with a line end from the
-        'beginning of the buffer after handling it. 
+        'If we don´t send anything out, we are still in the same view as last round and should receive and process the incoming data
 
-        'If there is at least one full data line (terminated with a line end) in the receive buffer, handle it.
-        If InStr(rxBuffer, vbCr) > 0 Then
-            'There seems to be data in the rxBuffer
-
-            'Check where the first complete line of data at the beginning of the buffer ends.
-            'This will be our marker (rxBufferMarker). Everything behind it will be handled in a later pass through this loop.
-            rxBufferMarker = InStr(rxBuffer, vbCr)
-
-            'Extract this first line.
-            rxBufferLineOfData = Replace(Mid(rxBuffer, 1, rxBufferMarker), vbCr, vbCrLf) 'And also replace the trailing vbCr with vbCrLf
-
-            'Now that we have the line, remove this data from the main rxBuffer
-            rxBuffer = Mid(rxBuffer, rxBufferMarker + 1) 'Exclude the vbCr !
-
-            'Check the current visual mode
-            Select Case CurrentTab
-                Case "VisualFlight", "SensorPlots"
-                    'Disect the incoming data into it's individual variables
-                    Dim FlightData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
-                    If (FlightData.Count >= 11) Then '11 values separated by commas, just checking that we are getting the correct data in.
-                        ADI_roll_angle = CDbl(FlightData(8))
-                        ADI_pitch_angle = CDbl(FlightData(9))
-                        ADI_yaw_angle = CDbl(FlightData(10))
-                        roll_gyro_value = CDbl(FlightData(0))
-                        pitch_gyro_value = CDbl(FlightData(1))
-                        yaw_gyro_value = CDbl(FlightData(2))
-                        accel_pitch_value = CDbl(FlightData(3))
-                        accel_roll_value = CDbl(FlightData(4))
-                        accel_z_value = CDbl(FlightData(5))
-                        press_baro_altitude = CDbl(FlightData(11))
-                    End If
-                Case "SerialMonitor"
-                    SerialDataLine = ""
-                    SerialDataLine = rxBufferLineOfData
-                Case "Transmitter"
-                    'Disect the incoming data into it's individual variables
-                    Dim RadioData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
-                    If (RadioData.Count >= 9) Then '9 values separated by commas, just checking that we are getting the correct data in.
-                        radio_roll_value = CDbl(RadioData(0))
-                        radio_pitch_value = CDbl(RadioData(1))
-                        radio_yaw_value = CDbl(RadioData(2))
-                        radio_throttle_value = CDbl(RadioData(3))
-                        radio_aux1_value = CDbl(RadioData(4))
-                        radio_aux2_value = CDbl(RadioData(5))
-                        radio_roll_mid_value = CDbl(RadioData(6))
-                        radio_pitch_mid_value = CDbl(RadioData(7))
-                        radio_yaw_mid_value = CDbl(RadioData(8))
-                    End If
-
-            End Select
-        End If
-
-        ' We can now assume we've handled the data that was in the buffer, so we can empty it now, ready for the next data load.
-        rxBufferLineOfData = ""
-        rxBufferMarker = -1
-
-        'Here we handle the data that needs to be sent back out (TX)
         If (Serial.IsOpen) Then
+
+            'counter = counter + 1
+
+            'read the data from the serial port buffer and add to our buffer string
+            rxBuffer = rxBuffer & Replace(Serial.ReadExisting, vbLf, "") 'Adds the incoming data to the end of the buffer.
+
+            'The buffer is just one big string with all the incoming data appended to it at the end.
+            'Going through it, we remove each line of data terminated with a line end from the
+            'beginning of the buffer after handling it. 
+
+            'Here we handle the data that needs to be sent back out (TX)
+            'Do this first so that we can stop current stream and don´t get data that is incorrect for current view
+
+            If resetTransmitterValues Then
+                'send command to clear the slope and offsets
+                Serial.Write("V1;0;1;0;1;0;1;0;1;0;1;0")
+                resetTransmitterValues = False
+                Thread.Sleep(200)
+            End If
+
+
+
             If txBuffer <> "" Then
+                'send stop character before next command
+                Serial.Write(stopSerialUpdate)
+
+                'Wait for the ACM to send it´s data to the serial buffer so the buffer is empty next pass
+                Thread.Sleep(100)
+
+                'Empty current buffer to prevent data from "wrong" view to be processed
+                rxBuffer = ""
+                rxBufferLineOfData = ""
+                Serial.DiscardInBuffer()
+
+                'Request the "new" data
                 Serial.Write(txBuffer)
                 txBuffer = ""
+
+
+                'Should we save the values in EEPROM
+                If writeToEEPROM Then
+                    Serial.Write("?9")   'yes
+                    writeToEEPROM = False
+                End If
+
+                'the new data will not be present this pass, so exit sub
+                Exit Sub
             End If
+
+
+
+            'If there is at least one full data line (terminated with a line end) in the receive buffer, handle it.
+            If InStr(rxBuffer, vbCr) > 0 Then
+                'There seems to be data in the rxBuffer
+
+                'Check where the first complete line of data at the beginning of the buffer ends.
+                'This will be our marker (rxBufferMarker). Everything behind it will be handled in a later pass through this loop.
+                rxBufferMarker = InStr(rxBuffer, vbCr)
+
+                'Extract this first line.
+                rxBufferLineOfData = Replace(Mid(rxBuffer, 1, rxBufferMarker), vbCr, vbCrLf) 'And also replace the trailing vbCr with vbCrLf
+
+
+                'Now that we have the line, remove this data from the main rxBuffer
+                rxBuffer = Mid(rxBuffer, rxBufferMarker + 1) 'Exclude the vbCr !
+
+                'Check the current visual mode
+                Select Case CurrentTab
+                    Case "VisualFlight", "SensorPlots"
+                        'Disect the incoming data into it's individual variables
+                        Dim FlightData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
+                        If (FlightData.Count >= 11) Then '11 values separated by commas, just checking that we are getting the correct data in.
+                            ADI_roll_angle = CDbl(FlightData(8))
+                            ADI_pitch_angle = CDbl(FlightData(9))
+                            ADI_yaw_angle = CDbl(FlightData(10))
+                            roll_gyro_value = CDbl(FlightData(0))
+                            pitch_gyro_value = CDbl(FlightData(1))
+                            yaw_gyro_value = CDbl(FlightData(2))
+                            accel_pitch_value = CDbl(FlightData(3))
+                            accel_roll_value = CDbl(FlightData(4))
+                            accel_z_value = CDbl(FlightData(5))
+                            press_baro_altitude = CDbl(FlightData(11))
+                        End If
+                    Case "SerialMonitor"
+                        SerialDataLine = rxBufferLineOfData
+
+                    Case "Transmitter"
+
+                        'Disect the incoming data into it's individual variables
+                        Dim RadioData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
+                        If (RadioData.Count >= 9) Then '9 values separated by commas, just checking that we are getting the correct data in.
+                            radio_roll_value = CDbl(RadioData(0))
+                            radio_pitch_value = CDbl(RadioData(1))
+                            radio_yaw_value = CDbl(RadioData(2))
+                            radio_throttle_value = CDbl(RadioData(3))
+                            radio_aux1_value = CDbl(RadioData(4))
+                            radio_aux2_value = CDbl(RadioData(5))
+                            radio_roll_mid_value = CDbl(RadioData(6))
+                            radio_pitch_mid_value = CDbl(RadioData(7))
+                            radio_yaw_mid_value = CDbl(RadioData(8))
+                        End If
+
+                    Case "PIDTuning"
+
+                        Dim PIDData() As String = Split(Replace(rxBufferLineOfData, vbCrLf, ""), ",")
+                        'If (PIDData.Count >= 9) Then '9 values separated by commas, just checking that we are getting the correct data in.
+
+                        Select Case ComboBox_PIDModeSelect.Text
+                            Case "Stable Mode"
+                                If (PIDData.Count >= 11) Then
+                                    Stable_PID_roll_P = CDbl(PIDData(0))
+                                    Stable_PID_roll_I = CDbl(PIDData(1))
+                                    Stable_PID_roll_D = CDbl(PIDData(2))
+                                    Stable_PID_pitch_P = CDbl(PIDData(3))
+                                    Stable_PID_pitch_I = CDbl(PIDData(4))
+                                    Stable_PID_pitch_D = CDbl(PIDData(5))
+                                    Stable_PID_yaw_P = CDbl(PIDData(6))
+                                    Stable_PID_yaw_I = CDbl(PIDData(7))
+                                    Stable_PID_yaw_D = CDbl(PIDData(8))
+                                    Stable_KP_Rate = CDbl(PIDData(9))
+                                    magnetometer = CDbl(PIDData(10))
+
+                                    NumericUpDown_PID_Roll_P.Value = CDec(Stable_PID_roll_P)
+                                    NumericUpDown_PID_Roll_I.Value = CDec(Stable_PID_roll_I)
+                                    NumericUpDown_PID_Roll_D.Value = CDec(Stable_PID_roll_D)
+
+                                    NumericUpDown_PID_Pitch_P.Value = CDec(Stable_PID_pitch_P)
+                                    NumericUpDown_PID_Pitch_I.Value = CDec(Stable_PID_pitch_I)
+                                    NumericUpDown_PID_Pitch_D.Value = CDec(Stable_PID_pitch_D)
+
+                                    NumericUpDown_PID_Yaw_P.Value = CDec(Stable_PID_yaw_P)
+                                    NumericUpDown_PID_Yaw_I.Value = CDec(Stable_PID_yaw_I)
+                                    NumericUpDown_PID_Yaw_D.Value = CDec(Stable_PID_yaw_D)
+
+                                    CheckBox_PID_Magnetometer.Checked = CInt(magnetometer)
+                                    NumericUpDown_PID_Special_1.Value = CDec(Stable_KP_Rate)
+
+                                    ''Set the textbox so we know which values are in the EEPROM 
+                                    'TextBox_Roll_PID_Values.Text = "P: " & Stable_PID_roll_P.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "I: " & Stable_PID_roll_I.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "D: " & Stable_PID_roll_D & vbCrLf & vbCrLf
+
+                                    'TextBox_Pitch_PID_Values.Text = "P: " & Stable_PID_pitch_P.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "I: " & Stable_PID_pitch_I.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "D: " & Stable_PID_pitch_D & vbCrLf & vbCrLf
+
+                                    'TextBox_Yaw_PID_Values.Text = "P: " & Stable_PID_yaw_P.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "I: " & Stable_PID_yaw_I.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "D: " & Stable_PID_yaw_D & vbCrLf & vbCrLf
+
+                                End If
+
+                            Case "Altitude Hold"
+                                If (PIDData.Count >= 3) Then
+                                    Alt_PID_roll_P = CDbl(PIDData(0))
+                                    Alt_PID_roll_I = CDbl(PIDData(1))
+                                    Alt_PID_roll_D = CDbl(PIDData(2))
+
+                                    NumericUpDown_PID_Roll_P.Value = CDec(Alt_PID_roll_P)
+                                    NumericUpDown_PID_Roll_I.Value = CDec(Alt_PID_roll_I)
+                                    NumericUpDown_PID_Roll_D.Value = CDec(Alt_PID_roll_D)
+
+                                    ''Set the textbox so we know which values are in the EEPROM 
+                                    'TextBox_Roll_PID_Values.Text = "P: " & Alt_PID_roll_P.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "I: " & Alt_PID_roll_I.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "D: " & Alt_PID_roll_D & vbCrLf & vbCrLf
+                                End If
+
+                            Case "GPS Hold"
+                                If (PIDData.Count >= 8) Then
+                                    GPS_PID_roll_P = CDbl(PIDData(0))
+                                    GPS_PID_roll_I = CDbl(PIDData(1))
+                                    GPS_PID_roll_D = CDbl(PIDData(2))
+                                    GPS_PID_pitch_P = CDbl(PIDData(3))
+                                    GPS_PID_pitch_I = CDbl(PIDData(4))
+                                    GPS_PID_pitch_D = CDbl(PIDData(5))
+                                    GPS_Max_Angle = CDbl(PIDData(6))
+                                    GPS_Geo_Corr = CDbl(PIDData(7))
+
+
+                                    NumericUpDown_PID_Roll_P.Value = CDec(GPS_PID_roll_P)
+                                    NumericUpDown_PID_Roll_I.Value = CDec(GPS_PID_roll_I)
+                                    NumericUpDown_PID_Roll_D.Value = CDec(GPS_PID_roll_D)
+
+                                    NumericUpDown_PID_Pitch_P.Value = CDec(GPS_PID_roll_P)
+                                    NumericUpDown_PID_Pitch_I.Value = CDec(GPS_PID_roll_I)
+                                    NumericUpDown_PID_Pitch_D.Value = CDec(GPS_PID_roll_D)
+
+                                    NumericUpDown_PID_Special_1.Value = GPS_Max_Angle
+                                    NumericUpDown_PID_Special_2.Value = GPS_Geo_Corr
+
+                                    ''Set the textbox so we know which values are in the EEPROM 
+                                    'TextBox_Roll_PID_Values.Text = "P: " & GPS_PID_roll_P.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "I: " & GPS_PID_roll_I.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "D: " & GPS_PID_roll_D & vbCrLf & vbCrLf
+
+                                    'TextBox_Pitch_PID_Values.Text = "P: " & GPS_PID_pitch_P.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "I: " & GPS_PID_pitch_I.ToString() & vbCrLf & vbCrLf & _
+                                    '                                "D: " & GPS_PID_pitch_D & vbCrLf & vbCrLf
+                                End If
+                        End Select
+                        'End If
+                End Select
+            End If
+
+            ' We can now assume we've handled the data that was in the buffer, so we can empty it now, ready for the next data load.
+            rxBufferLineOfData = ""
+            rxBufferMarker = -1
         End If
     End Sub
-
-
 
     '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -315,15 +491,27 @@ Public Class MainForm
             'Check whether the view has just changed by the user (visual flight, sensor plots or serial monitor etc)
             'If so, send out the appropriate command through our serial link so we receive the so needed data.
             If currentViewChanged Then
+                'Empty current buffer to prevent data from wrong view to processed
+                rxBuffer = ""
+                rxBufferLineOfData = ""
+                Serial.DiscardInBuffer()
+
                 Select Case CurrentView
                     Case "VisualFlight", "SensorPlots"
                         txBuffer = "Q" 'Start sending me flight data
+
                     Case "Transmitter"
                         txBuffer = "U" 'Start sending me the transmitter data.
+
+                    Case "PIDTuning"
+                        txBuffer = "B"
+
                     Case "SerialMonitor"
-                        txBuffer = "X" 'Stop sending me any data, I want the serial monitor for myself !
+                        txBuffer = stopSerialUpdate 'Stop sending me any data, I want the serial monitor for myself !
+
                 End Select
                 currentViewChanged = False
+
             End If
         Else
             ' Apparently we are not connected via serial
@@ -381,60 +569,69 @@ Public Class MainForm
             Case "SensorPlots"
                 'Nothing here; the sensorplots are drawn by their own individual timers
             Case "Transmitter"
-                'Roll
-                Slider_radio_roll.Value = radio_roll_value
-                If Slider_radio_roll.OutsideValidRange Then
-                    Label_Error_Roll.Text = "*ERROR*"
-                    ToolTip.SetToolTip(Label_Error_Roll, "Values for your roll channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
-                    Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your roll channel are outside the valid range of 900-2100." & vbCrLf
-                    Button_Restart_Calibration.Enabled = True
-                End If
-                'Yaw
-                Slider_radio_yaw.Value = radio_yaw_value
-                If Slider_radio_yaw.OutsideValidRange Then
-                    Label_Error_Yaw.Text = "*ERROR*"
-                    ToolTip.SetToolTip(Label_Error_Yaw, "Values for your yaw channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
-                    Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your yaw channel are outside the valid range of 900-2100." & vbCrLf
-                    Button_Restart_Calibration.Enabled = True
-                End If
-                'Throttle
-                Slider_radio_throttle.Value = radio_throttle_value
-                If Slider_radio_throttle.OutsideValidRange Then
-                    Label_Error_Throttle.Text = "*ERROR*"
-                    ToolTip.SetToolTip(Label_Error_Throttle, "Values for your throttle channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
-                    Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your throttle channel are outside the valid range of 900-2100." & vbCrLf
-                    Button_Restart_Calibration.Enabled = True
-                End If
-                'Pitch
-                Slider_radio_pitch.Value = radio_pitch_value
-                If Slider_radio_pitch.OutsideValidRange Then
-                    Label_Error_Pitch.Text = "*ERROR*"
-                    ToolTip.SetToolTip(Label_Error_Pitch, "Values for your pitch channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
-                    Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your pitch channel are outside the valid range of 900-2100." & vbCrLf
-                    Button_Restart_Calibration.Enabled = True
-                End If
-                'AUX1
-                Slider_radio_aux1.Value = radio_aux1_value
-                If Slider_radio_aux1.OutsideValidRange Then
-                    Label_Error_AUX1.Text = "*ERROR*"
-                    ToolTip.SetToolTip(Label_Error_AUX1, "Values for your AUX1 channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
-                    Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your AUX1 channel are outside the valid range of 900-2100." & vbCrLf
-                    Button_Restart_Calibration.Enabled = True
-                End If
-                'AUX2
-                Slider_radio_aux2.Value = radio_aux2_value
-                If Slider_radio_aux2.OutsideValidRange Then
-                    Label_Error_AUX2.Text = "*ERROR*"
-                    ToolTip.SetToolTip(Label_Error_AUX2, "Values for your AUX2 channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
-                    Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your AUX2 channel are outside the valid range of 900-2100." & vbCrLf
-                    Button_Restart_Calibration.Enabled = True
-                End If
-                'Stop the timer if there was an error
-                If Label_Slider_Errors.Text <> "" Then
-                    Timer_VisualWork.Enabled = False
-                    Label_Slider_Errors.Text = "IMPORTANT ! Check your configuration; values should not exceed the 900-2100 range !" & vbCrLf & Label_Slider_Errors.Text
-                End If
+                Try
+                    'Roll
+                    Slider_radio_roll.Value = radio_roll_value
+                    If Slider_radio_roll.OutsideValidRange Then
+                        Label_Error_Roll.Text = Slider_radio_roll.Value.ToString() '"*ERROR*"
+                        ToolTip.SetToolTip(Label_Error_Roll, "Values for your roll channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
+                        Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your roll channel are outside the valid range of 900-2100." & vbCrLf
+                        Button_Restart_Calibration.Enabled = True
+                        Slider_radio_roll.Reset()
+                    End If
+                    'Yaw
+                    Slider_radio_yaw.Value = radio_yaw_value
+                    If Slider_radio_yaw.OutsideValidRange Then
+                        Label_Error_Yaw.Text = Slider_radio_yaw.Value.ToString() '"*ERROR*"
+                        ToolTip.SetToolTip(Label_Error_Yaw, "Values for your yaw channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
+                        Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your yaw channel are outside the valid range of 900-2100." & vbCrLf
+                        Button_Restart_Calibration.Enabled = True
+                        Slider_radio_yaw.Reset()
+                    End If
+                    'Throttle
+                    Slider_radio_throttle.Value = radio_throttle_value
+                    If Slider_radio_throttle.OutsideValidRange Then
+                        Label_Error_Throttle.Text = Slider_radio_throttle.Value.ToString() '"*ERROR*"
+                        ToolTip.SetToolTip(Label_Error_Throttle, "Values for your throttle channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
+                        Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your throttle channel are outside the valid range of 900-2100." & vbCrLf
+                        Button_Restart_Calibration.Enabled = True
+                        Slider_radio_throttle.Reset()
+                    End If
+                    'Pitch
+                    Slider_radio_pitch.Value = radio_pitch_value
+                    If Slider_radio_pitch.OutsideValidRange Then
+                        Label_Error_Pitch.Text = Slider_radio_pitch.Value.ToString() '"*ERROR*"
+                        ToolTip.SetToolTip(Label_Error_Pitch, "Values for your pitch channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
+                        Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your pitch channel are outside the valid range of 900-2100." & vbCrLf
+                        Button_Restart_Calibration.Enabled = True
+                        Slider_radio_pitch.Reset()
+                    End If
+                    'AUX1
+                    Slider_radio_aux1.Value = radio_aux1_value
+                    If Slider_radio_aux1.OutsideValidRange Then
+                        Label_Error_AUX1.Text = Slider_radio_aux1.Value.ToString() ' "*ERROR*"
+                        ToolTip.SetToolTip(Label_Error_AUX1, "Values for your AUX1 channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
+                        Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your AUX1 channel are outside the valid range of 900-2100." & vbCrLf
+                        Button_Restart_Calibration.Enabled = True
+                        Slider_radio_aux1.Reset()
+                    End If
+                    'AUX2
+                    Slider_radio_aux2.Value = radio_aux2_value
+                    If Slider_radio_aux2.OutsideValidRange Then
+                        Label_Error_AUX2.Text = Slider_radio_aux2.Value.ToString() ' "*ERROR*"
+                        ToolTip.SetToolTip(Label_Error_AUX2, "Values for your AUX2 channel are outside the valid range of 900-2100." & vbCrLf & "Please check your configuration !")
+                        Label_Slider_Errors.Text = Label_Slider_Errors.Text & "Values for your AUX2 channel are outside the valid range of 900-2100." & vbCrLf
+                        Button_Restart_Calibration.Enabled = True
+                        Slider_radio_aux2.Reset()
+                    End If
+                    'Stop the timer if there was an error
+                    If Label_Slider_Errors.Text <> "" Then
+                        Timer_VisualWork.Enabled = False
+                        Label_Slider_Errors.Text = "IMPORTANT ! Check your configuration; values should not exceed the 900-2100 range !" & vbCrLf & Label_Slider_Errors.Text
+                    End If
+                Catch ex As Exception
 
+                End Try
                 'Throw the video data to the ADI
                 'Clipboard.SetDataObject(VideoWindow.Image)
         End Select
@@ -462,15 +659,15 @@ Public Class MainForm
     Private Sub ComboBox_Ports_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox_Ports.SelectedIndexChanged
         Try
 
-        While Serial.IsOpen
-            Serial.Close()
-        End While
-        Serial.PortName = ComboBox_Ports.Text
-        comPortName = ComboBox_Ports.Text
-        ToolStripStatusLabel_Connection.Text = "Disconnected"
-        Button_Connect.Text = "Connect"
-        Button_Send.Enabled = False
-        Button_ShowMenu.Enabled = False
+            While Serial.IsOpen
+                Serial.Close()
+            End While
+            Serial.PortName = ComboBox_Ports.Text
+            comPortName = ComboBox_Ports.Text
+            ToolStripStatusLabel_Connection.Text = "Disconnected"
+            Button_Connect.Text = "Connect"
+            Button_Send.Enabled = False
+            Button_ShowMenu.Enabled = False
         Catch ex As Exception
 
         End Try
@@ -494,11 +691,16 @@ Public Class MainForm
     End Sub
 
     Private Sub Tabs_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Tabs.SelectedIndexChanged
+
         Try
 
-            'On each change of the used view page, we send a serial command to get data
-            currentViewChanged = True
+            'If the timer was interrupted becuse of an error in a view, restart it when changing view
+            If Not Timer_VisualWork.Enabled Then
+                Timer_VisualWork.Enabled = True
+            End If
+
             CurrentView = Tabs.SelectedTab.Name
+
             'Don´t kill browser if on "Support" or "Map" tab
             If CurrentView <> "OnlineSupport" And CurrentView <> "Map" Then
                 'Kill the instance of IE (if running) to save memory space. You must know, I hate IE ! :)
@@ -509,8 +711,16 @@ Public Class MainForm
             End If
 
             Select Case CurrentView
+
                 Case "SerialMonitor"
                     Field_SerialCommand.Focus()
+
+                Case "Transmitter"
+                    txBuffer = "U" 'request transmitter values
+
+                Case "PIDTuning"
+                    txBuffer = "B" 'request Stable mode PID values
+
                 Case "OnlineSupport"
                     '*sigh* We want Online Support via our ArduPirates Google code group. And we need to instantiate
                     'Internet Explorer within the application to view our site, http://code.google.com/p/ardupirates/
@@ -531,7 +741,27 @@ Public Class MainForm
                     '    Browser.WebBrowserShortcutsEnabled = False
                     '    Browser.Show()
                     '    Browser.Navigate(System.Environment.CurrentDirectory + "\GE.html")
+
+                Case "LiveFeedTab"
+                    ArtificialHorizon1.Parent = LiveFeedTab
+                    '    ArtificialHorizon1.Top = 0
+                    '    ArtificialHorizon1.Left = (LiveFeedTab.Width / 2) - (ArtificialHorizon1.Width / 2)
+                    '    ArtificialHorizon1.Height = LiveFeedTab.Height
+                    '    ArtificialHorizon1.Width = ArtificialHorizon1.Height
+                    '   PictureBoxDisplay.SendToBack()
+                    '    ArtificialHorizon1.EnableLiveFeed()
+                Case ("VisualFlight")
+                    ArtificialHorizon1.Parent = VisualFlight
+                    '    ArtificialHorizon1.DisableLiveFeed()
+                    '    ArtificialHorizon1.Top = 10
+                    '    ArtificialHorizon1.Left = 151
+                    '    ArtificialHorizon1.Height = 473
+                    '    ArtificialHorizon1.Width = 473
             End Select
+
+            'On each change of the used view page, we send a serial command to get data for the new view
+            currentViewChanged = True
+
         Catch ex As Exception
             MessageBox.Show(ex.Message.ToString)
         End Try
@@ -882,15 +1112,54 @@ failedtoopencom:
 
     Private Sub Button_Send_calibration_values_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_Send_calibration_values.Click
         'Sends the calibration to the APM
-        'Serial command 1 stores, serial command 2 retrieves
-        'Takes care of regional settings (comma and period)
-        'Values to be sent in order: 
-        'ch_roll_slope, ch_roll_offset, ch_pitch_slope, ch_pitch_offset, ch_yaw_slope, ch_yaw_offset, 
-        'ch_throttle_slope, ch_throttle_offset, ch_aux_slope, ch_aux_offset, ch_aux2_slope, ch_aux2_offset
-        '
+
+        'Calculate slope and offsets
+        Dim ch_roll_slope As Double = GetSlope(Slider_radio_roll.CalibratedMinimum, Slider_radio_roll.CalibratedMaximum)
+        Dim ch_roll_offset As Double = GetOffset(Slider_radio_roll.CalibratedMinimum, Slider_radio_roll.CalibratedMaximum)
+        Dim ch_pitch_slope As Double = GetSlope(Slider_radio_pitch.CalibratedMinimum, Slider_radio_pitch.CalibratedMaximum)
+        Dim ch_pitch_offset As Double = GetOffset(Slider_radio_pitch.CalibratedMinimum, Slider_radio_pitch.CalibratedMaximum)
+        Dim ch_yaw_slope As Double = GetSlope(Slider_radio_yaw.CalibratedMinimum, Slider_radio_yaw.CalibratedMaximum)
+        Dim ch_yaw_offset As Double = GetOffset(Slider_radio_yaw.CalibratedMinimum, Slider_radio_yaw.CalibratedMaximum)
+        Dim ch_throttle_slope As Double = GetSlope(Slider_radio_throttle.CalibratedMinimum, Slider_radio_throttle.CalibratedMaximum)
+        Dim ch_throttle_offset As Double = GetOffset(Slider_radio_throttle.CalibratedMinimum, Slider_radio_throttle.CalibratedMaximum)
+        Dim ch_aux_slope As Double = GetSlope(Slider_radio_aux1.CalibratedMinimum, Slider_radio_aux1.CalibratedMaximum)
+        Dim ch_aux_offset As Double = GetOffset(Slider_radio_aux1.CalibratedMinimum, Slider_radio_aux1.CalibratedMaximum)
+        Dim ch_aux2_slope As Double = GetSlope(Slider_radio_aux2.CalibratedMinimum, Slider_radio_aux2.CalibratedMaximum)
+        Dim ch_aux2_offset As Double = GetOffset(Slider_radio_aux2.CalibratedMinimum, Slider_radio_aux2.CalibratedMaximum)
 
 
+        Dim serialCommand As String
+        serialCommand = String.Format("{0:0.00};{1:0.00};{2:0.00};{3:0.00};{4:0.00};{5:0.00};{6:0.00};{7:0.00};{8:0.00};{9:0.00};{10:0.00};{11:0.00};",
+            ch_roll_slope,
+            ch_roll_offset,
+            ch_pitch_slope,
+            ch_pitch_offset,
+            ch_yaw_slope,
+            ch_yaw_offset,
+            ch_throttle_slope,
+            ch_throttle_offset,
+            ch_aux_slope,
+            ch_aux_offset,
+            ch_aux2_slope,
+            ch_aux2_offset
+            )
+
+        txBuffer = "V" + serialCommand
+
+        LabelCalibrationDone.Text = "Saving calibration, please wait"
+        'writeToEEPROM = True        ' we should save the settings to EEPROM
+        'resetTransmitterValues = True
+        'currentViewChanged = True
     End Sub
+
+    Private Function GetSlope(ByVal min As Integer, ByVal max As Integer)
+        Dim span = max - min
+        Return 1000.0F / span
+    End Function
+
+    Private Function GetOffset(ByVal min As Integer, ByVal max As Integer)
+        Return 0 - (min * GetSlope(min, max) - 1000)
+    End Function
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
         ADIDemoTimer.Enabled = Not ADIDemoTimer.Enabled
@@ -948,6 +1217,15 @@ failedtoopencom:
         Slider_radio_roll.Reset()
         Slider_radio_aux1.Reset()
         Slider_radio_aux2.Reset()
+
+        'Reset the sliders value to "center" 
+        Slider_radio_pitch.Value = 1500
+        Slider_radio_yaw.Value = 1500
+        Slider_radio_throttle.Value = 1500
+        Slider_radio_roll.Value = 1500
+        Slider_radio_aux1.Value = 1500
+        Slider_radio_aux2.Value = 1500
+
         'Reset all the error labels and their tooltips
         Label_Error_Pitch.Text = ""
         ToolTip.SetToolTip(Label_Error_Pitch, "")
@@ -965,8 +1243,12 @@ failedtoopencom:
         Label_Slider_Errors.Text = ""
         'Restart the visual work timer
         Timer_VisualWork.Enabled = True
-        Button_Restart_Calibration.Enabled = False
 
+        'Button_Restart_Calibration.Enabled = False
+
+        'send command to clear the slope and offsets
+        txBuffer = "U"
+        resetTransmitterValues = True
     End Sub
 
     Private Sub Label_Error_AUX2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Label_Error_AUX2.Click
@@ -1022,23 +1304,16 @@ failedtoopencom:
     End Sub
 
 
-    Private Sub ComboBox_PIDModeSelect_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox_PIDModeSelect.SelectedIndexChanged
+    Private Sub ComboBox_ModeSelect_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox_PIDModeSelect.SelectedIndexChanged
+        'Hide all textboxes with the current values. 
+        'Later, we only show the ones for current mode
+        TextBox_Roll_PID_Values.Visible = False
+        TextBox_Pitch_PID_Values.Visible = False
+        TextBox_Yaw_PID_Values.Visible = False
+
+        Label26.Text = ""
+
         Select Case ComboBox_PIDModeSelect.SelectedItem.ToString
-            Case "Acrobatic Mode"
-                'Enable/disable controls in the screen, and set default values where needed
-                Label_PID_Mode.Text = ComboBox_PIDModeSelect.SelectedItem.ToString
-                GroupBox_PID_Roll.Text = "Roll PID Values"
-                Label_PID_Special_2.Visible = False
-                Label_PID_Special_1.Text = "Transmitter factor:"
-                Label_PID_Special_1.Visible = True
-                NumericUpDown_PID_Special_1.Visible = True
-                NumericUpDown_PID_Special_1.Minimum = 0.01
-                NumericUpDown_PID_Special_1.Maximum = 1
-                NumericUpDown_PID_Special_2.Visible = False
-                GroupBox_PID_Pitch.Visible = True
-                GroupBox_PID_Roll.Visible = True
-                GroupBox_PID_Yaw.Visible = True
-                CheckBox_PID_Magnetometer.Visible = False
             Case "Stable Mode"
                 Label_PID_Mode.Text = ComboBox_PIDModeSelect.SelectedItem.ToString
                 GroupBox_PID_Roll.Text = "Roll PID Values"
@@ -1051,6 +1326,40 @@ failedtoopencom:
                 GroupBox_PID_Roll.Visible = True
                 GroupBox_PID_Yaw.Visible = True
                 CheckBox_PID_Magnetometer.Visible = True
+
+                'NumericUpDown_PID_Roll_P.Value = Stable_PID_roll_P
+                'NumericUpDown_PID_Roll_I.Value = Stable_PID_roll_I
+                'NumericUpDown_PID_Roll_D.Value = Stable_PID_roll_D
+
+                NumericUpDown_PID_Roll_P.Increment = 0.05
+                NumericUpDown_PID_Roll_I.Increment = 0.05
+                NumericUpDown_PID_Roll_D.Increment = 0.05
+
+                'NumericUpDown_PID_Pitch_P.Value = Stable_PID_pitch_P
+                'NumericUpDown_PID_Pitch_I.Value = Stable_PID_pitch_I
+                'NumericUpDown_PID_Pitch_D.Value = Stable_PID_pitch_D
+
+                NumericUpDown_PID_Pitch_P.Increment = 0.05
+                NumericUpDown_PID_Pitch_I.Increment = 0.05
+                NumericUpDown_PID_Pitch_D.Increment = 0.05
+
+                'NumericUpDown_PID_Yaw_P.Value = Stable_PID_yaw_P
+                'NumericUpDown_PID_Yaw_I.Value = Stable_PID_yaw_I
+                'NumericUpDown_PID_Yaw_D.Value = Stable_PID_yaw_D
+
+                NumericUpDown_PID_Yaw_P.Increment = 0.05
+                NumericUpDown_PID_Yaw_I.Increment = 0.05
+                NumericUpDown_PID_Yaw_D.Increment = 0.05
+
+                'NumericUpDown_PID_Special_1.Value = Stable_KP_Rate
+
+                TextBox_Roll_PID_Values.Visible = True
+                TextBox_Pitch_PID_Values.Visible = True
+                TextBox_Yaw_PID_Values.Visible = True
+                GroupBox_PID_Values.Height = 357
+
+                txBuffer = "B"
+
             Case "Altitude Hold"
                 Label_PID_Mode.Text = ComboBox_PIDModeSelect.SelectedItem.ToString
                 GroupBox_PID_Roll.Text = "Altitude Hold PID Values"
@@ -1061,6 +1370,23 @@ failedtoopencom:
                 CheckBox_PID_Magnetometer.Visible = False
                 GroupBox_PID_Pitch.Visible = False
                 GroupBox_PID_Yaw.Visible = False
+
+                'NumericUpDown_PID_Roll_P.Value = Alt_PID_roll_P
+                'NumericUpDown_PID_Roll_I.Value = Alt_PID_roll_I
+                'NumericUpDown_PID_Roll_D.Value = Alt_PID_roll_D
+
+                NumericUpDown_PID_Roll_P.Increment = 0.01
+                NumericUpDown_PID_Roll_I.Increment = 0.01
+                NumericUpDown_PID_Roll_D.Increment = 0.01
+                'NumericUpDown_PID_Roll_P.Minimum = 0.01
+                'NumericUpDown_PID_Roll_I.Minimum = 0.01
+                'NumericUpDown_PID_Roll_D.Minimum = 0.01
+
+                TextBox_Roll_PID_Values.Visible = True
+                GroupBox_PID_Values.Height = 115
+
+                txBuffer = "F"
+
             Case "GPS Hold"
                 Label_PID_Mode.Text = ComboBox_PIDModeSelect.SelectedItem.ToString
                 GroupBox_PID_Roll.Text = "Roll PID Values"
@@ -1074,11 +1400,36 @@ failedtoopencom:
                 CheckBox_PID_Magnetometer.Visible = False
                 NumericUpDown_PID_Special_1.Visible = True
                 NumericUpDown_PID_Special_2.Visible = True
+                TextBox_Roll_PID_Values.Visible = True
+                TextBox_Pitch_PID_Values.Visible = True
+                GroupBox_PID_Values.Height = 236
+
+                'NumericUpDown_PID_Roll_P.Value = GPS_PID_roll_P
+                'NumericUpDown_PID_Roll_I.Value = GPS_PID_roll_I
+                'NumericUpDown_PID_Roll_D.Value = GPS_PID_roll_D
+
+                NumericUpDown_PID_Roll_P.Increment = 0.001
+                NumericUpDown_PID_Roll_I.Increment = 0.001
+                NumericUpDown_PID_Roll_D.Increment = 0.001
+                'NumericUpDown_PID_Roll_P.Minimum = 0.001
+                'NumericUpDown_PID_Roll_I.Minimum = 0.001
+                'NumericUpDown_PID_Roll_D.Minimum = 0.001
+
+                'NumericUpDown_PID_Pitch_P.Value = Stable_PID_pitch_P
+                'NumericUpDown_PID_Pitch_I.Value = Stable_PID_pitch_I
+                'NumericUpDown_PID_Pitch_D.Value = Stable_PID_pitch_D
+
+                NumericUpDown_PID_Pitch_P.Increment = 0.01
+                NumericUpDown_PID_Pitch_I.Increment = 0.001
+                NumericUpDown_PID_Pitch_D.Increment = 0.001
+                'NumericUpDown_PID_Yaw_P.Minimum = 0.01
+                'NumericUpDown_PID_Yaw_I.Minimum = 0.01
+                'NumericUpDown_PID_Yaw_D.Minimum = 0.01
+
+                txBuffer = "D"
+
             Case "Camera"
                 Label_PID_Mode.Text = ComboBox_PIDModeSelect.SelectedItem.ToString
-
-
-
 
         End Select
     End Sub
@@ -1153,6 +1504,8 @@ failedtoopencom:
 
     End Sub
 
+
+    '--------------------------------------Camera--------------------------------------------------
     Private Sub ResizeCamera()
         PictureBoxDisplay.Height = LiveFeedTab.Height - 20
         PictureBoxDisplay.Width = PictureBoxDisplay.Height * aspectRatio
@@ -1269,6 +1622,7 @@ failedtoopencom:
         PictureBoxDisplay.Invalidate()
     End Sub
 
+    '---------------------------------------End camera------------------------------------------''
 
     Private Sub ButtonMissionPlanner_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonMissionPlanner.Click
         Dim missionPlanner As New MissionPlanner
@@ -1324,7 +1678,7 @@ failedtoopencom:
             'write the data to the port
             Serial.Write(inputCommand)
         End If
- 
+
 
     End Sub
 
@@ -1332,7 +1686,7 @@ failedtoopencom:
         'Create a "heartbeat" package 
 
         SendMavLink(mavlink_msg_heartbeat_pack(msg))
-      
+
 
     End Sub
 
@@ -1458,6 +1812,157 @@ failedtoopencom:
         End If
 
 
+    End Sub
+
+    Private Sub NumericUpDown_PID_Roll_P_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Roll_P.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Roll_I_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Roll_I.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Roll_D_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Roll_D.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Pitch_P_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Pitch_P.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Pitch_I_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Pitch_I.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Pitch_D_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Pitch_D.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Yaw_P_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Yaw_P.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Yaw_I_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Yaw_I.ValueChanged
+       SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Yaw_D_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Yaw_D.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Special_1_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Special_1.ValueChanged
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub NumericUpDown_PID_Special_2_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NumericUpDown_PID_Special_2.ValueChanged
+
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub CheckBox_PID_Magnetometer_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBox_PID_Magnetometer.CheckedChanged
+        magnetometer = 0
+        If CheckBox_PID_Magnetometer.Checked Then
+            magnetometer = 1
+        End If
+        SavePIDValues(CheckBox_Update_PID_Instantly.Checked)
+    End Sub
+
+    Private Sub SavePIDValues(ByVal SaveNow As Boolean)
+
+        Dim queryType As String = ""
+        Dim valueString As String = ""
+
+
+        'Create the serial string that we send to the APM
+        Select Case ComboBox_PIDModeSelect.Text
+
+            Case "Stable Mode"
+                'Stable_PID_roll_P = NumericUpDown_PID_Roll_P.Value
+                'Stable_PID_roll_I = NumericUpDown_PID_Roll_I.Value
+                'Stable_PID_roll_D = NumericUpDown_PID_Roll_D.Value
+
+                'Stable_PID_pitch_P = NumericUpDown_PID_Pitch_P.Value
+                'Stable_PID_pitch_I = NumericUpDown_PID_Pitch_I.Value
+                'Stable_PID_pitch_D = NumericUpDown_PID_Pitch_D.Value
+
+                'Stable_PID_yaw_P = NumericUpDown_PID_Yaw_P.Value
+                'Stable_PID_yaw_I = NumericUpDown_PID_Yaw_I.Value
+                'Stable_PID_yaw_D = NumericUpDown_PID_Yaw_D.Value
+
+                'Stable_KP_Rate = NumericUpDown_PID_Special_1.Value
+
+                'set the querytype which decides where the APM saves the values
+                queryType = "A"
+
+                valueString = String.Format("{0:0.000};{1:0.000};{2:0.000};{3:0.000};{4:0.000};{5:0.000};{6:0.000};{7:0.000};{8:0.000};{9:0.000};{10:0};",
+                    NumericUpDown_PID_Roll_P.Value,
+                    NumericUpDown_PID_Roll_I.Value,
+                    NumericUpDown_PID_Roll_D.Value,
+                    NumericUpDown_PID_Pitch_P.Value,
+                    NumericUpDown_PID_Pitch_I.Value,
+                    NumericUpDown_PID_Pitch_D.Value,
+                    NumericUpDown_PID_Yaw_P.Value,
+                    NumericUpDown_PID_Yaw_I.Value,
+                    NumericUpDown_PID_Yaw_D.Value,
+                    NumericUpDown_PID_Special_1.Value,
+                    magnetometer)
+
+            Case "GPS Hold"
+
+                'GPS_PID_roll_P = NumericUpDown_PID_Roll_P.Value
+                'GPS_PID_roll_I = NumericUpDown_PID_Roll_I.Value
+                'GPS_PID_roll_D = NumericUpDown_PID_Roll_D.Value
+
+                'GPS_PID_pitch_P = NumericUpDown_PID_Pitch_P.Value
+                'GPS_PID_pitch_I = NumericUpDown_PID_Pitch_I.Value
+                'GPS_PID_pitch_D = NumericUpDown_PID_Pitch_D.Value
+
+                'GPS_Max_Angle = NumericUpDown_PID_Special_1.Value
+                'GPS_Geo_Corr = NumericUpDown_PID_Special_2.Value
+
+                queryType = "C"
+
+                valueString = String.Format("{0:0.000};{1:0.000};{2:0.000};{3:0.000};{4:0.000};{5:0.000};{6:0.000};{7:0.000};",
+                    NumericUpDown_PID_Roll_P.Value,
+                    NumericUpDown_PID_Roll_I.Value,
+                    NumericUpDown_PID_Roll_D.Value,
+                    NumericUpDown_PID_Pitch_P.Value,
+                    NumericUpDown_PID_Pitch_I.Value,
+                    NumericUpDown_PID_Pitch_D.Value,
+                    NumericUpDown_PID_Special_1.Value,
+                    NumericUpDown_PID_Special_2.Value)
+
+            Case "Altitude Hold"
+
+                'Alt_PID_roll_P = NumericUpDown_PID_Roll_P.Value
+                'Alt_PID_roll_I = NumericUpDown_PID_Roll_I.Value
+                'Alt_PID_roll_D = NumericUpDown_PID_Roll_D.Value
+
+                queryType = "E"
+
+                valueString = String.Format("{0:0.000};{1:0.000};{2:0.000};",
+                    NumericUpDown_PID_Roll_P.Value,
+                    NumericUpDown_PID_Roll_I.Value,
+                    NumericUpDown_PID_Roll_D.Value)
+        End Select
+
+
+        'Send values to APM
+        If (SaveNow) Then
+            Console.WriteLine(queryType & valueString)
+            txBuffer = queryType & valueString
+        End If
+
+
+    End Sub
+
+    Private Sub Button_Save_to_EEPROM_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_Save_to_EEPROM.Click
+        writeToEEPROM = True
+        Label26.Text = "Saved values to EEPROM."
+    End Sub
+
+    Private Sub Button22_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button_Save_To_APM.Click
+        SavePIDValues(True)
     End Sub
 
 End Class

@@ -20,7 +20,7 @@ ArduPiratesControl
 	<value></value>
 	<returns>Returns a Google Maps compatible position of the waypoint</returns>
 	<remarks></remarks>
-</member><member name="M:WindowsFormsApplication.MissionPlanner.AddWaypoint(System.String)">
+</member><member name="M:WindowsFormsApplication.MissionPlanner.AddWaypointOLD(System.String)">
 	<summary>
  Adds a waypoint to the list of waypoints
  </summary>
@@ -32,25 +32,12 @@ ArduPiratesControl
  </summary>
 	<param name="waypointnumber">The place in the list to remove waypoint</param>
 	<remarks></remarks>
-</member><member name="M:WindowsFormsApplication.MissionPlanner.UpdateWaypoint(System.Int32,System.String)">
-	<summary>
- Updates the waypoint with new position
- </summary>
-	<param name="waypointNumber">The waypoint to update</param>
-	<param name="markerPosition">The new position</param>
-	<remarks></remarks>
 </member><member name="M:WindowsFormsApplication.MissionPlanner.UpdateWayPointList(System.Int32,System.Boolean@)">
 	<summary>
  Updates the list of waypoints in the grid view
  </summary>
 	<param name="selectedWaypoint">The waypoint to mark as selected. -1 select none. -10 updates Google maps</param>
 	<remarks></remarks>
-</member><member name="M:WindowsFormsApplication.MissionPlanner.SelectedWaypoint(System.Int32)">
-	<summary>
- A waypoint is selected, mark it in list and show properties panel
- </summary>
-	<param name="waypointNum">the number of the selected waypoint</param>
-	<remarks>Called from html-file</remarks>
 </member><member name="M:WindowsFormsApplication.MissionPlanner.ButtonSetNewWaypointValues_Click(System.Object,System.EventArgs)">
 	<summary>
  User changed the waypoint parameters, update waypoint values

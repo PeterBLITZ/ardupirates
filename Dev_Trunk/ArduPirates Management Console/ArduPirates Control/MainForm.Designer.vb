@@ -50,6 +50,7 @@ Partial Class MainForm
         Me.ToolStripStatusLabel_Time = New System.Windows.Forms.ToolStripStatusLabel()
         Me.Tabs = New System.Windows.Forms.TabControl()
         Me.Connection = New System.Windows.Forms.TabPage()
+        Me.ButtonMissionPlanner = New System.Windows.Forms.Button()
         Me.GroupBoxCamera = New System.Windows.Forms.GroupBox()
         Me.LabelCameraShowing = New System.Windows.Forms.Label()
         Me.ComboBox_SelectCamera = New System.Windows.Forms.ComboBox()
@@ -146,6 +147,7 @@ Partial Class MainForm
         Me.Button_Send = New System.Windows.Forms.Button()
         Me.Field_SerialCommand = New System.Windows.Forms.TextBox()
         Me.Transmitter = New System.Windows.Forms.TabPage()
+        Me.LabelCalibrationDone = New System.Windows.Forms.Label()
         Me.Label_Slider_Errors = New System.Windows.Forms.Label()
         Me.Button_Restart_Calibration = New System.Windows.Forms.Button()
         Me.Button_Send_calibration_values = New System.Windows.Forms.Button()
@@ -163,6 +165,13 @@ Partial Class MainForm
         Me.Label_Error_Roll = New System.Windows.Forms.Label()
         Me.PIDTuning = New System.Windows.Forms.TabPage()
         Me.SplitContainerPID = New System.Windows.Forms.SplitContainer()
+        Me.Button_Save_To_APM = New System.Windows.Forms.Button()
+        Me.CheckBox_Update_PID_Instantly = New System.Windows.Forms.CheckBox()
+        Me.Button_Save_to_EEPROM = New System.Windows.Forms.Button()
+        Me.GroupBox_PID_Values = New System.Windows.Forms.GroupBox()
+        Me.TextBox_Yaw_PID_Values = New System.Windows.Forms.TextBox()
+        Me.TextBox_Pitch_PID_Values = New System.Windows.Forms.TextBox()
+        Me.TextBox_Roll_PID_Values = New System.Windows.Forms.TextBox()
         Me.Label_PID_Mode = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
         Me.ComboBox_PIDModeSelect = New System.Windows.Forms.ComboBox()
@@ -230,7 +239,6 @@ Partial Class MainForm
         Me.ADIDemoTimer = New System.Windows.Forms.Timer(Me.components)
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.TrayBarIcon = New System.Windows.Forms.NotifyIcon(Me.components)
-        Me.ButtonMissionPlanner = New System.Windows.Forms.Button()
         Me.accel_z = New WindowsFormsApplication.ArduProgressBar()
         Me.accel_pitch = New WindowsFormsApplication.ArduProgressBar()
         Me.accel_roll = New WindowsFormsApplication.ArduProgressBar()
@@ -278,6 +286,7 @@ Partial Class MainForm
         Me.SplitContainerPID.Panel1.SuspendLayout()
         Me.SplitContainerPID.Panel2.SuspendLayout()
         Me.SplitContainerPID.SuspendLayout()
+        Me.GroupBox_PID_Values.SuspendLayout()
         CType(Me.NumericUpDown_PID_Special_2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDown_PID_Special_1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox_PID_Yaw.SuspendLayout()
@@ -384,6 +393,15 @@ Partial Class MainForm
         Me.Connection.Size = New System.Drawing.Size(776, 513)
         Me.Connection.TabIndex = 5
         Me.Connection.Text = "Connection"
+        '
+        'ButtonMissionPlanner
+        '
+        Me.ButtonMissionPlanner.Location = New System.Drawing.Point(403, 480)
+        Me.ButtonMissionPlanner.Name = "ButtonMissionPlanner"
+        Me.ButtonMissionPlanner.Size = New System.Drawing.Size(120, 23)
+        Me.ButtonMissionPlanner.TabIndex = 24
+        Me.ButtonMissionPlanner.Text = "Mission Planner"
+        Me.ButtonMissionPlanner.UseVisualStyleBackColor = True
         '
         'GroupBoxCamera
         '
@@ -1701,6 +1719,7 @@ Partial Class MainForm
         'Transmitter
         '
         Me.Transmitter.BackColor = System.Drawing.Color.DimGray
+        Me.Transmitter.Controls.Add(Me.LabelCalibrationDone)
         Me.Transmitter.Controls.Add(Me.Label_Slider_Errors)
         Me.Transmitter.Controls.Add(Me.Button_Restart_Calibration)
         Me.Transmitter.Controls.Add(Me.Button_Send_calibration_values)
@@ -1718,6 +1737,14 @@ Partial Class MainForm
         Me.Transmitter.TabIndex = 6
         Me.Transmitter.Text = "Transmitter"
         '
+        'LabelCalibrationDone
+        '
+        Me.LabelCalibrationDone.AutoSize = True
+        Me.LabelCalibrationDone.Location = New System.Drawing.Point(579, 22)
+        Me.LabelCalibrationDone.Name = "LabelCalibrationDone"
+        Me.LabelCalibrationDone.Size = New System.Drawing.Size(0, 13)
+        Me.LabelCalibrationDone.TabIndex = 21
+        '
         'Label_Slider_Errors
         '
         Me.Label_Slider_Errors.AutoEllipsis = True
@@ -1732,7 +1759,6 @@ Partial Class MainForm
         '
         'Button_Restart_Calibration
         '
-        Me.Button_Restart_Calibration.Enabled = False
         Me.Button_Restart_Calibration.Location = New System.Drawing.Point(661, 410)
         Me.Button_Restart_Calibration.Name = "Button_Restart_Calibration"
         Me.Button_Restart_Calibration.Size = New System.Drawing.Size(103, 23)
@@ -1747,7 +1773,7 @@ Partial Class MainForm
         Me.Button_Send_calibration_values.Name = "Button_Send_calibration_values"
         Me.Button_Send_calibration_values.Size = New System.Drawing.Size(103, 23)
         Me.Button_Send_calibration_values.TabIndex = 18
-        Me.Button_Send_calibration_values.Text = "Calibrate"
+        Me.Button_Send_calibration_values.Text = "Save to EEPROM"
         Me.ToolTip.SetToolTip(Me.Button_Send_calibration_values, "Click to start calibrating your transmitter")
         Me.Button_Send_calibration_values.UseVisualStyleBackColor = True
         '
@@ -1927,7 +1953,13 @@ Partial Class MainForm
         '
         'SplitContainerPID.Panel1
         '
+        Me.SplitContainerPID.Panel1.Controls.Add(Me.Button_Save_To_APM)
+        Me.SplitContainerPID.Panel1.Controls.Add(Me.CheckBox_Update_PID_Instantly)
+        Me.SplitContainerPID.Panel1.Controls.Add(Me.Button_Save_to_EEPROM)
+        Me.SplitContainerPID.Panel1.Controls.Add(Me.GroupBox_PID_Values)
         Me.SplitContainerPID.Panel1.Controls.Add(Me.Label_PID_Mode)
+        Me.SplitContainerPID.Panel1.ForeColor = System.Drawing.Color.White
+        Me.SplitContainerPID.Panel1.ImeMode = System.Windows.Forms.ImeMode.[On]
         '
         'SplitContainerPID.Panel2
         '
@@ -1945,6 +1977,85 @@ Partial Class MainForm
         Me.SplitContainerPID.Size = New System.Drawing.Size(776, 508)
         Me.SplitContainerPID.SplitterDistance = 406
         Me.SplitContainerPID.TabIndex = 6
+        '
+        'Button_Save_To_APM
+        '
+        Me.Button_Save_To_APM.ForeColor = System.Drawing.Color.Black
+        Me.Button_Save_To_APM.Location = New System.Drawing.Point(255, 417)
+        Me.Button_Save_To_APM.Name = "Button_Save_To_APM"
+        Me.Button_Save_To_APM.Size = New System.Drawing.Size(148, 23)
+        Me.Button_Save_To_APM.TabIndex = 4
+        Me.Button_Save_To_APM.Text = "Save to ACM"
+        Me.Button_Save_To_APM.UseVisualStyleBackColor = True
+        '
+        'CheckBox_Update_PID_Instantly
+        '
+        Me.CheckBox_Update_PID_Instantly.AutoSize = True
+        Me.CheckBox_Update_PID_Instantly.Checked = True
+        Me.CheckBox_Update_PID_Instantly.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.CheckBox_Update_PID_Instantly.Location = New System.Drawing.Point(255, 398)
+        Me.CheckBox_Update_PID_Instantly.Name = "CheckBox_Update_PID_Instantly"
+        Me.CheckBox_Update_PID_Instantly.Size = New System.Drawing.Size(126, 17)
+        Me.CheckBox_Update_PID_Instantly.TabIndex = 3
+        Me.CheckBox_Update_PID_Instantly.Text = "Send values instantly"
+        Me.CheckBox_Update_PID_Instantly.UseVisualStyleBackColor = True
+        '
+        'Button_Save_to_EEPROM
+        '
+        Me.Button_Save_to_EEPROM.ForeColor = System.Drawing.Color.Black
+        Me.Button_Save_to_EEPROM.Location = New System.Drawing.Point(255, 442)
+        Me.Button_Save_to_EEPROM.Name = "Button_Save_to_EEPROM"
+        Me.Button_Save_to_EEPROM.Size = New System.Drawing.Size(148, 23)
+        Me.Button_Save_to_EEPROM.TabIndex = 2
+        Me.Button_Save_to_EEPROM.Text = "Save to EEPROM"
+        Me.Button_Save_to_EEPROM.UseVisualStyleBackColor = True
+        '
+        'GroupBox_PID_Values
+        '
+        Me.GroupBox_PID_Values.Controls.Add(Me.TextBox_Yaw_PID_Values)
+        Me.GroupBox_PID_Values.Controls.Add(Me.TextBox_Pitch_PID_Values)
+        Me.GroupBox_PID_Values.Controls.Add(Me.TextBox_Roll_PID_Values)
+        Me.GroupBox_PID_Values.ForeColor = System.Drawing.Color.White
+        Me.GroupBox_PID_Values.Location = New System.Drawing.Point(255, 36)
+        Me.GroupBox_PID_Values.Name = "GroupBox_PID_Values"
+        Me.GroupBox_PID_Values.Size = New System.Drawing.Size(148, 358)
+        Me.GroupBox_PID_Values.TabIndex = 1
+        Me.GroupBox_PID_Values.TabStop = False
+        Me.GroupBox_PID_Values.Text = "EEPROM PID values"
+        Me.GroupBox_PID_Values.Visible = False
+        '
+        'TextBox_Yaw_PID_Values
+        '
+        Me.TextBox_Yaw_PID_Values.BackColor = System.Drawing.Color.DimGray
+        Me.TextBox_Yaw_PID_Values.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TextBox_Yaw_PID_Values.ForeColor = System.Drawing.Color.White
+        Me.TextBox_Yaw_PID_Values.Location = New System.Drawing.Point(10, 266)
+        Me.TextBox_Yaw_PID_Values.Multiline = True
+        Me.TextBox_Yaw_PID_Values.Name = "TextBox_Yaw_PID_Values"
+        Me.TextBox_Yaw_PID_Values.Size = New System.Drawing.Size(107, 75)
+        Me.TextBox_Yaw_PID_Values.TabIndex = 2
+        '
+        'TextBox_Pitch_PID_Values
+        '
+        Me.TextBox_Pitch_PID_Values.BackColor = System.Drawing.Color.DimGray
+        Me.TextBox_Pitch_PID_Values.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TextBox_Pitch_PID_Values.ForeColor = System.Drawing.Color.White
+        Me.TextBox_Pitch_PID_Values.Location = New System.Drawing.Point(6, 145)
+        Me.TextBox_Pitch_PID_Values.Multiline = True
+        Me.TextBox_Pitch_PID_Values.Name = "TextBox_Pitch_PID_Values"
+        Me.TextBox_Pitch_PID_Values.Size = New System.Drawing.Size(111, 75)
+        Me.TextBox_Pitch_PID_Values.TabIndex = 1
+        '
+        'TextBox_Roll_PID_Values
+        '
+        Me.TextBox_Roll_PID_Values.BackColor = System.Drawing.Color.DimGray
+        Me.TextBox_Roll_PID_Values.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TextBox_Roll_PID_Values.ForeColor = System.Drawing.Color.White
+        Me.TextBox_Roll_PID_Values.Location = New System.Drawing.Point(10, 24)
+        Me.TextBox_Roll_PID_Values.Multiline = True
+        Me.TextBox_Roll_PID_Values.Name = "TextBox_Roll_PID_Values"
+        Me.TextBox_Roll_PID_Values.Size = New System.Drawing.Size(107, 75)
+        Me.TextBox_Roll_PID_Values.TabIndex = 0
         '
         'Label_PID_Mode
         '
@@ -1971,7 +2082,7 @@ Partial Class MainForm
         'ComboBox_PIDModeSelect
         '
         Me.ComboBox_PIDModeSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox_PIDModeSelect.Items.AddRange(New Object() {"Acrobatic Mode", "Stable Mode", "Altitude Hold", "GPS Hold", "Camera"})
+        Me.ComboBox_PIDModeSelect.Items.AddRange(New Object() {"Stable Mode", "Altitude Hold", "GPS Hold"})
         Me.ComboBox_PIDModeSelect.Location = New System.Drawing.Point(242, 9)
         Me.ComboBox_PIDModeSelect.Name = "ComboBox_PIDModeSelect"
         Me.ComboBox_PIDModeSelect.Size = New System.Drawing.Size(121, 21)
@@ -1985,7 +2096,7 @@ Partial Class MainForm
         Me.CheckBox_PID_Magnetometer.Location = New System.Drawing.Point(234, 451)
         Me.CheckBox_PID_Magnetometer.Name = "CheckBox_PID_Magnetometer"
         Me.CheckBox_PID_Magnetometer.Size = New System.Drawing.Size(129, 17)
-        Me.CheckBox_PID_Magnetometer.TabIndex = 18
+        Me.CheckBox_PID_Magnetometer.TabIndex = 12
         Me.CheckBox_PID_Magnetometer.Text = "Enable magnetometer"
         Me.CheckBox_PID_Magnetometer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.CheckBox_PID_Magnetometer.UseVisualStyleBackColor = True
@@ -2007,11 +2118,10 @@ Partial Class MainForm
         Me.NumericUpDown_PID_Special_2.DecimalPlaces = 3
         Me.NumericUpDown_PID_Special_2.Increment = New Decimal(New Integer() {5, 0, 0, 196608})
         Me.NumericUpDown_PID_Special_2.Location = New System.Drawing.Point(243, 425)
-        Me.NumericUpDown_PID_Special_2.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.NumericUpDown_PID_Special_2.Minimum = New Decimal(New Integer() {10, 0, 0, 196608})
+        Me.NumericUpDown_PID_Special_2.Maximum = New Decimal(New Integer() {5, 0, 0, 0})
         Me.NumericUpDown_PID_Special_2.Name = "NumericUpDown_PID_Special_2"
         Me.NumericUpDown_PID_Special_2.Size = New System.Drawing.Size(120, 20)
-        Me.NumericUpDown_PID_Special_2.TabIndex = 16
+        Me.NumericUpDown_PID_Special_2.TabIndex = 11
         Me.NumericUpDown_PID_Special_2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.NumericUpDown_PID_Special_2.Value = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Special_2.Visible = False
@@ -2031,11 +2141,10 @@ Partial Class MainForm
         Me.NumericUpDown_PID_Special_1.DecimalPlaces = 3
         Me.NumericUpDown_PID_Special_1.Increment = New Decimal(New Integer() {5, 0, 0, 196608})
         Me.NumericUpDown_PID_Special_1.Location = New System.Drawing.Point(243, 399)
-        Me.NumericUpDown_PID_Special_1.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.NumericUpDown_PID_Special_1.Minimum = New Decimal(New Integer() {10, 0, 0, 196608})
+        Me.NumericUpDown_PID_Special_1.Maximum = New Decimal(New Integer() {5, 0, 0, 0})
         Me.NumericUpDown_PID_Special_1.Name = "NumericUpDown_PID_Special_1"
         Me.NumericUpDown_PID_Special_1.Size = New System.Drawing.Size(120, 20)
-        Me.NumericUpDown_PID_Special_1.TabIndex = 14
+        Me.NumericUpDown_PID_Special_1.TabIndex = 10
         Me.NumericUpDown_PID_Special_1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.NumericUpDown_PID_Special_1.Value = New Decimal(New Integer() {10, 0, 0, 196608})
         '
@@ -2064,38 +2173,37 @@ Partial Class MainForm
         'NumericUpDown_PID_Yaw_D
         '
         Me.NumericUpDown_PID_Yaw_D.DecimalPlaces = 3
-        Me.NumericUpDown_PID_Yaw_D.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
+        Me.NumericUpDown_PID_Yaw_D.Increment = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Yaw_D.Location = New System.Drawing.Point(116, 79)
         Me.NumericUpDown_PID_Yaw_D.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
         Me.NumericUpDown_PID_Yaw_D.Minimum = New Decimal(New Integer() {20, 0, 0, -2147483648})
         Me.NumericUpDown_PID_Yaw_D.Name = "NumericUpDown_PID_Yaw_D"
         Me.NumericUpDown_PID_Yaw_D.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Yaw_D.TabIndex = 20
+        Me.NumericUpDown_PID_Yaw_D.TabIndex = 9
         Me.NumericUpDown_PID_Yaw_D.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Yaw_D, "Use your arrow keys to increase and decrease.")
         '
         'NumericUpDown_PID_Yaw_I
         '
         Me.NumericUpDown_PID_Yaw_I.DecimalPlaces = 3
-        Me.NumericUpDown_PID_Yaw_I.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
+        Me.NumericUpDown_PID_Yaw_I.Increment = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Yaw_I.Location = New System.Drawing.Point(115, 53)
         Me.NumericUpDown_PID_Yaw_I.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
         Me.NumericUpDown_PID_Yaw_I.Name = "NumericUpDown_PID_Yaw_I"
         Me.NumericUpDown_PID_Yaw_I.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Yaw_I.TabIndex = 19
+        Me.NumericUpDown_PID_Yaw_I.TabIndex = 8
         Me.NumericUpDown_PID_Yaw_I.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Yaw_I, "Use your arrow keys to increase and decrease.")
         '
         'NumericUpDown_PID_Yaw_P
         '
         Me.NumericUpDown_PID_Yaw_P.DecimalPlaces = 3
-        Me.NumericUpDown_PID_Yaw_P.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
+        Me.NumericUpDown_PID_Yaw_P.Increment = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Yaw_P.Location = New System.Drawing.Point(115, 27)
         Me.NumericUpDown_PID_Yaw_P.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
-        Me.NumericUpDown_PID_Yaw_P.Minimum = New Decimal(New Integer() {50, 0, 0, 196608})
         Me.NumericUpDown_PID_Yaw_P.Name = "NumericUpDown_PID_Yaw_P"
         Me.NumericUpDown_PID_Yaw_P.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Yaw_P.TabIndex = 18
+        Me.NumericUpDown_PID_Yaw_P.TabIndex = 7
         Me.NumericUpDown_PID_Yaw_P.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Yaw_P, "Use your arrow keys to increase and decrease.")
         Me.NumericUpDown_PID_Yaw_P.Value = New Decimal(New Integer() {1950, 0, 0, 196608})
@@ -2106,7 +2214,7 @@ Partial Class MainForm
         Me.Button14.Location = New System.Drawing.Point(279, 76)
         Me.Button14.Name = "Button14"
         Me.Button14.Size = New System.Drawing.Size(54, 23)
-        Me.Button14.TabIndex = 11
+        Me.Button14.TabIndex = 31
         Me.Button14.Text = "+ (F6)"
         Me.Button14.UseVisualStyleBackColor = True
         '
@@ -2116,7 +2224,7 @@ Partial Class MainForm
         Me.Button15.Location = New System.Drawing.Point(219, 76)
         Me.Button15.Name = "Button15"
         Me.Button15.Size = New System.Drawing.Size(54, 23)
-        Me.Button15.TabIndex = 10
+        Me.Button15.TabIndex = 30
         Me.Button15.Text = "- (F5)"
         Me.Button15.UseVisualStyleBackColor = True
         '
@@ -2126,7 +2234,7 @@ Partial Class MainForm
         Me.Button16.Location = New System.Drawing.Point(279, 50)
         Me.Button16.Name = "Button16"
         Me.Button16.Size = New System.Drawing.Size(54, 23)
-        Me.Button16.TabIndex = 9
+        Me.Button16.TabIndex = 28
         Me.Button16.Text = "+ (F4)"
         Me.Button16.UseVisualStyleBackColor = True
         '
@@ -2136,7 +2244,7 @@ Partial Class MainForm
         Me.Button17.Location = New System.Drawing.Point(219, 50)
         Me.Button17.Name = "Button17"
         Me.Button17.Size = New System.Drawing.Size(54, 23)
-        Me.Button17.TabIndex = 8
+        Me.Button17.TabIndex = 27
         Me.Button17.Text = "- (F3)"
         Me.Button17.UseVisualStyleBackColor = True
         '
@@ -2146,7 +2254,7 @@ Partial Class MainForm
         Me.Button18.Location = New System.Drawing.Point(279, 24)
         Me.Button18.Name = "Button18"
         Me.Button18.Size = New System.Drawing.Size(54, 23)
-        Me.Button18.TabIndex = 7
+        Me.Button18.TabIndex = 26
         Me.Button18.Text = "+ (F2)"
         Me.Button18.UseVisualStyleBackColor = True
         '
@@ -2156,7 +2264,7 @@ Partial Class MainForm
         Me.Button19.Location = New System.Drawing.Point(219, 24)
         Me.Button19.Name = "Button19"
         Me.Button19.Size = New System.Drawing.Size(54, 23)
-        Me.Button19.TabIndex = 6
+        Me.Button19.TabIndex = 25
         Me.Button19.Text = "- (F1)"
         Me.Button19.UseVisualStyleBackColor = True
         '
@@ -2212,38 +2320,38 @@ Partial Class MainForm
         'NumericUpDown_PID_Pitch_D
         '
         Me.NumericUpDown_PID_Pitch_D.DecimalPlaces = 3
-        Me.NumericUpDown_PID_Pitch_D.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
+        Me.NumericUpDown_PID_Pitch_D.Increment = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Pitch_D.Location = New System.Drawing.Point(114, 79)
         Me.NumericUpDown_PID_Pitch_D.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
         Me.NumericUpDown_PID_Pitch_D.Minimum = New Decimal(New Integer() {20, 0, 0, -2147483648})
         Me.NumericUpDown_PID_Pitch_D.Name = "NumericUpDown_PID_Pitch_D"
         Me.NumericUpDown_PID_Pitch_D.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Pitch_D.TabIndex = 20
+        Me.NumericUpDown_PID_Pitch_D.TabIndex = 6
         Me.NumericUpDown_PID_Pitch_D.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Pitch_D, "Use your arrow keys to increase and decrease.")
         '
         'NumericUpDown_PID_Pitch_I
         '
         Me.NumericUpDown_PID_Pitch_I.DecimalPlaces = 3
-        Me.NumericUpDown_PID_Pitch_I.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
+        Me.NumericUpDown_PID_Pitch_I.Increment = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Pitch_I.Location = New System.Drawing.Point(113, 53)
         Me.NumericUpDown_PID_Pitch_I.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
         Me.NumericUpDown_PID_Pitch_I.Name = "NumericUpDown_PID_Pitch_I"
         Me.NumericUpDown_PID_Pitch_I.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Pitch_I.TabIndex = 19
+        Me.NumericUpDown_PID_Pitch_I.TabIndex = 5
         Me.NumericUpDown_PID_Pitch_I.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Pitch_I, "Use your arrow keys to increase and decrease.")
+        Me.NumericUpDown_PID_Pitch_I.Value = New Decimal(New Integer() {10, 0, 0, 196608})
         '
         'NumericUpDown_PID_Pitch_P
         '
         Me.NumericUpDown_PID_Pitch_P.DecimalPlaces = 3
-        Me.NumericUpDown_PID_Pitch_P.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
+        Me.NumericUpDown_PID_Pitch_P.Increment = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Pitch_P.Location = New System.Drawing.Point(113, 27)
         Me.NumericUpDown_PID_Pitch_P.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
-        Me.NumericUpDown_PID_Pitch_P.Minimum = New Decimal(New Integer() {50, 0, 0, 196608})
         Me.NumericUpDown_PID_Pitch_P.Name = "NumericUpDown_PID_Pitch_P"
         Me.NumericUpDown_PID_Pitch_P.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Pitch_P.TabIndex = 18
+        Me.NumericUpDown_PID_Pitch_P.TabIndex = 4
         Me.NumericUpDown_PID_Pitch_P.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Pitch_P, "Use your arrow keys to increase and decrease.")
         Me.NumericUpDown_PID_Pitch_P.Value = New Decimal(New Integer() {1950, 0, 0, 196608})
@@ -2254,7 +2362,7 @@ Partial Class MainForm
         Me.Button8.Location = New System.Drawing.Point(279, 76)
         Me.Button8.Name = "Button8"
         Me.Button8.Size = New System.Drawing.Size(54, 23)
-        Me.Button8.TabIndex = 11
+        Me.Button8.TabIndex = 24
         Me.Button8.Text = "+ (F6)"
         Me.Button8.UseVisualStyleBackColor = True
         '
@@ -2264,7 +2372,7 @@ Partial Class MainForm
         Me.Button9.Location = New System.Drawing.Point(219, 76)
         Me.Button9.Name = "Button9"
         Me.Button9.Size = New System.Drawing.Size(54, 23)
-        Me.Button9.TabIndex = 10
+        Me.Button9.TabIndex = 23
         Me.Button9.Text = "- (F5)"
         Me.Button9.UseVisualStyleBackColor = True
         '
@@ -2274,7 +2382,7 @@ Partial Class MainForm
         Me.Button10.Location = New System.Drawing.Point(279, 50)
         Me.Button10.Name = "Button10"
         Me.Button10.Size = New System.Drawing.Size(54, 23)
-        Me.Button10.TabIndex = 9
+        Me.Button10.TabIndex = 22
         Me.Button10.Text = "+ (F4)"
         Me.Button10.UseVisualStyleBackColor = True
         '
@@ -2284,7 +2392,7 @@ Partial Class MainForm
         Me.Button11.Location = New System.Drawing.Point(219, 50)
         Me.Button11.Name = "Button11"
         Me.Button11.Size = New System.Drawing.Size(54, 23)
-        Me.Button11.TabIndex = 8
+        Me.Button11.TabIndex = 21
         Me.Button11.Text = "- (F3)"
         Me.Button11.UseVisualStyleBackColor = True
         '
@@ -2294,7 +2402,7 @@ Partial Class MainForm
         Me.Button12.Location = New System.Drawing.Point(279, 24)
         Me.Button12.Name = "Button12"
         Me.Button12.Size = New System.Drawing.Size(54, 23)
-        Me.Button12.TabIndex = 7
+        Me.Button12.TabIndex = 20
         Me.Button12.Text = "+ (F2)"
         Me.Button12.UseVisualStyleBackColor = True
         '
@@ -2304,7 +2412,7 @@ Partial Class MainForm
         Me.Button13.Location = New System.Drawing.Point(219, 24)
         Me.Button13.Name = "Button13"
         Me.Button13.Size = New System.Drawing.Size(54, 23)
-        Me.Button13.TabIndex = 6
+        Me.Button13.TabIndex = 19
         Me.Button13.Text = "- (F1)"
         Me.Button13.UseVisualStyleBackColor = True
         '
@@ -2371,25 +2479,25 @@ Partial Class MainForm
         'NumericUpDown_PID_Roll_D
         '
         Me.NumericUpDown_PID_Roll_D.DecimalPlaces = 3
-        Me.NumericUpDown_PID_Roll_D.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
+        Me.NumericUpDown_PID_Roll_D.Increment = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Roll_D.Location = New System.Drawing.Point(113, 78)
         Me.NumericUpDown_PID_Roll_D.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
         Me.NumericUpDown_PID_Roll_D.Minimum = New Decimal(New Integer() {20, 0, 0, -2147483648})
         Me.NumericUpDown_PID_Roll_D.Name = "NumericUpDown_PID_Roll_D"
         Me.NumericUpDown_PID_Roll_D.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Roll_D.TabIndex = 17
+        Me.NumericUpDown_PID_Roll_D.TabIndex = 3
         Me.NumericUpDown_PID_Roll_D.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Roll_D, "Use your arrow keys to increase and decrease.")
         '
         'NumericUpDown_PID_Roll_I
         '
         Me.NumericUpDown_PID_Roll_I.DecimalPlaces = 3
-        Me.NumericUpDown_PID_Roll_I.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
+        Me.NumericUpDown_PID_Roll_I.Increment = New Decimal(New Integer() {10, 0, 0, 196608})
         Me.NumericUpDown_PID_Roll_I.Location = New System.Drawing.Point(112, 52)
         Me.NumericUpDown_PID_Roll_I.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
         Me.NumericUpDown_PID_Roll_I.Name = "NumericUpDown_PID_Roll_I"
         Me.NumericUpDown_PID_Roll_I.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Roll_I.TabIndex = 16
+        Me.NumericUpDown_PID_Roll_I.TabIndex = 2
         Me.NumericUpDown_PID_Roll_I.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Roll_I, "Use your arrow keys to increase and decrease.")
         '
@@ -2399,10 +2507,10 @@ Partial Class MainForm
         Me.NumericUpDown_PID_Roll_P.Increment = New Decimal(New Integer() {50, 0, 0, 196608})
         Me.NumericUpDown_PID_Roll_P.Location = New System.Drawing.Point(112, 26)
         Me.NumericUpDown_PID_Roll_P.Maximum = New Decimal(New Integer() {20, 0, 0, 0})
-        Me.NumericUpDown_PID_Roll_P.Minimum = New Decimal(New Integer() {50, 0, 0, 196608})
         Me.NumericUpDown_PID_Roll_P.Name = "NumericUpDown_PID_Roll_P"
         Me.NumericUpDown_PID_Roll_P.Size = New System.Drawing.Size(101, 20)
-        Me.NumericUpDown_PID_Roll_P.TabIndex = 15
+        Me.NumericUpDown_PID_Roll_P.TabIndex = 1
+        Me.NumericUpDown_PID_Roll_P.TabStop = False
         Me.NumericUpDown_PID_Roll_P.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.ToolTip.SetToolTip(Me.NumericUpDown_PID_Roll_P, "Use your arrow keys to increase and decrease.")
         Me.NumericUpDown_PID_Roll_P.Value = New Decimal(New Integer() {1950, 0, 0, 196608})
@@ -2413,7 +2521,7 @@ Partial Class MainForm
         Me.Button6.Location = New System.Drawing.Point(279, 76)
         Me.Button6.Name = "Button6"
         Me.Button6.Size = New System.Drawing.Size(54, 23)
-        Me.Button6.TabIndex = 11
+        Me.Button6.TabIndex = 18
         Me.Button6.Text = "+ (F6)"
         Me.Button6.UseVisualStyleBackColor = True
         '
@@ -2423,7 +2531,7 @@ Partial Class MainForm
         Me.Button7.Location = New System.Drawing.Point(219, 76)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(54, 23)
-        Me.Button7.TabIndex = 10
+        Me.Button7.TabIndex = 17
         Me.Button7.Text = "- (F5)"
         Me.Button7.UseVisualStyleBackColor = True
         '
@@ -2433,7 +2541,7 @@ Partial Class MainForm
         Me.Button4.Location = New System.Drawing.Point(279, 50)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(54, 23)
-        Me.Button4.TabIndex = 9
+        Me.Button4.TabIndex = 16
         Me.Button4.Text = "+ (F4)"
         Me.Button4.UseVisualStyleBackColor = True
         '
@@ -2443,7 +2551,7 @@ Partial Class MainForm
         Me.Button5.Location = New System.Drawing.Point(219, 50)
         Me.Button5.Name = "Button5"
         Me.Button5.Size = New System.Drawing.Size(54, 23)
-        Me.Button5.TabIndex = 8
+        Me.Button5.TabIndex = 15
         Me.Button5.Text = "- (F3)"
         Me.Button5.UseVisualStyleBackColor = True
         '
@@ -2453,7 +2561,7 @@ Partial Class MainForm
         Me.Button3.Location = New System.Drawing.Point(279, 24)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(54, 23)
-        Me.Button3.TabIndex = 7
+        Me.Button3.TabIndex = 14
         Me.Button3.Text = "+ (F2)"
         Me.Button3.UseVisualStyleBackColor = True
         '
@@ -2463,7 +2571,7 @@ Partial Class MainForm
         Me.Button2.Location = New System.Drawing.Point(219, 24)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(54, 23)
-        Me.Button2.TabIndex = 6
+        Me.Button2.TabIndex = 13
         Me.Button2.Text = "- (F1)"
         Me.Button2.UseVisualStyleBackColor = True
         '
@@ -2644,15 +2752,6 @@ Partial Class MainForm
         Me.TrayBarIcon.Icon = CType(resources.GetObject("TrayBarIcon.Icon"), System.Drawing.Icon)
         Me.TrayBarIcon.Text = "ArduPirates Management Console"
         Me.TrayBarIcon.Visible = True
-        '
-        'ButtonMissionPlanner
-        '
-        Me.ButtonMissionPlanner.Location = New System.Drawing.Point(403, 480)
-        Me.ButtonMissionPlanner.Name = "ButtonMissionPlanner"
-        Me.ButtonMissionPlanner.Size = New System.Drawing.Size(120, 23)
-        Me.ButtonMissionPlanner.TabIndex = 24
-        Me.ButtonMissionPlanner.Text = "Mission Planner"
-        Me.ButtonMissionPlanner.UseVisualStyleBackColor = True
         '
         'accel_z
         '
@@ -2925,6 +3024,7 @@ Partial Class MainForm
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         Me.Transmitter.ResumeLayout(False)
+        Me.Transmitter.PerformLayout()
         Me.GroupBox6.ResumeLayout(False)
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox4.ResumeLayout(False)
@@ -2933,10 +3033,13 @@ Partial Class MainForm
         Me.Roll.ResumeLayout(False)
         Me.PIDTuning.ResumeLayout(False)
         Me.SplitContainerPID.Panel1.ResumeLayout(False)
+        Me.SplitContainerPID.Panel1.PerformLayout()
         Me.SplitContainerPID.Panel2.ResumeLayout(False)
         Me.SplitContainerPID.Panel2.PerformLayout()
         CType(Me.SplitContainerPID, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainerPID.ResumeLayout(False)
+        Me.GroupBox_PID_Values.ResumeLayout(False)
+        Me.GroupBox_PID_Values.PerformLayout()
         CType(Me.NumericUpDown_PID_Special_2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.NumericUpDown_PID_Special_1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox_PID_Yaw.ResumeLayout(False)
@@ -3163,5 +3266,13 @@ Partial Class MainForm
     Friend WithEvents Button20 As System.Windows.Forms.Button
     Friend WithEvents Button21 As System.Windows.Forms.Button
     Friend WithEvents ButtonMissionPlanner As System.Windows.Forms.Button
+    Friend WithEvents LabelCalibrationDone As System.Windows.Forms.Label
+    Friend WithEvents GroupBox_PID_Values As System.Windows.Forms.GroupBox
+    Friend WithEvents TextBox_Roll_PID_Values As System.Windows.Forms.TextBox
+    Friend WithEvents TextBox_Yaw_PID_Values As System.Windows.Forms.TextBox
+    Friend WithEvents TextBox_Pitch_PID_Values As System.Windows.Forms.TextBox
+    Friend WithEvents Button_Save_to_EEPROM As System.Windows.Forms.Button
+    Friend WithEvents CheckBox_Update_PID_Instantly As System.Windows.Forms.CheckBox
+    Friend WithEvents Button_Save_To_APM As System.Windows.Forms.Button
 
 End Class
