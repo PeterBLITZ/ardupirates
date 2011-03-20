@@ -34,7 +34,7 @@
 #define SENSORS_CALIBRATE_AVG_SHIFT             6
           // Determines the IIR averaging period. For 5 msec rate this is
           // about 2^6 * 5 which is ~ 300 msec
-#define SENSORS_CALIBRATE_AVG_DEV_MAX           2
+#define SENSORS_CALIBRATE_AVG_DEV_MAX           3
           // How much the current reading can deviate from the average
           // and still be considered stable
 #define SENSORS_CALIBRATE_OFFSET_DEV_MAX        200
