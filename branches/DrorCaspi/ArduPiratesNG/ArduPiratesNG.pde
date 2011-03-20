@@ -510,7 +510,8 @@ void loop()
       gled_status = HIGH;
     } 
   }
-
+  
+  // debug_subsystem();
 }
 
 
