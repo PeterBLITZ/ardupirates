@@ -280,8 +280,8 @@ If you have a quadcopter, uncomment this next line ! */
 //AP_GPS_None    gps(NULL); // No GPS attached!!
 //AP_GPS_NMEA    gps(&Serial1); // Standard NMEA GPS(NOT SUPPORTED!)
 //AP_GPS_IMU    gps(&Serial); // X-Plane interface/ArduPilot IMU.
-AP_GPS_MTK    gps(&Serial1); // MediaTek GPS - DIYDrones 1.4
-//AP_GPS_MTK16    gps(&Serial1); // MediaTek GPS - DIYDrones 1.6
+//AP_GPS_MTK    gps(&Serial1); // MediaTek GPS - DIYDrones 1.4
+AP_GPS_MTK16    gps(&Serial1); // MediaTek GPS - DIYDrones 1.6
 //AP_GPS_UBLOX    gps(&Serial1); // UBLOX GPS
 //AP_GPS_SIRF    gps(&Serial1); // SiRF-based GPS in Binary mode
 #endif 
