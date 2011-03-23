@@ -465,11 +465,11 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
    need to use the Configurator and send the K command. Refer to the Wiki for
    more info on the Configurator and this specific command.
                                                                               */
-//#define IsCAM              // Do we have camera stabilization in use, If you
+#define IsCAM              // Do we have camera stabilization in use, If you
                            // activate, check OUTPUT pins from ArduUser.h
                            // DIP2 down (ON) = Camera Stabilization enabled,
                            // DIP2 up (OFF) = Camera Stabilization disabled.
-//#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
+#define UseCamShutter      // Do we want to use CH9 (Pin PL3) for camera trigger
                            // during GPS Hold or Altitude Hold.
 
 
@@ -497,7 +497,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
    ArduCopter Wiki for more information on this subject:
    http://code.google.com/p/ardupirates/wiki/BatteryAlarmHowto
                                                                               */
-//#define BATTERY_EVENT 1  		// (boolean) 0 = don't read battery, 1 = read battery
+#define BATTERY_EVENT 0  		// (boolean) 0 = don't read battery, 1 = read battery
 								// voltage (only if you have it _wired_ up!)
 #define LOW_VOLTAGE		11.4	// Pack voltage at which to trigger alarm
 #define INPUT_VOLTAGE 	5.2		// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery 
