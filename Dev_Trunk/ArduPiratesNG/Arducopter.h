@@ -56,13 +56,13 @@ TODO:
 //
 // Airframe
 #define QUAD            0            // Normal Quad 
-#define HELI			1
+#define HELI		1
 #define HEXA            2            // Hexa
 #define HEXARADIAL      3
 #define HEXACOAX        4
-#define OCTO            5
+#define OCTA            5
 #define QUADCOAX        6            // Quad with double motors as coax
-#define OCTA 3
+
 
 //Modes
 #define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode

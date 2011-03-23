@@ -80,7 +80,7 @@ else
     // Cases 1 & 4 are stabilization for X Mode flying setup
 #endif
 #endif
-#if AIRFRAME == HEXA
+#if ((AIRFRAME == HEXA) || (AIRFRAME == OCTA))   
   switch (cam_mode + (BATTLOW * 10)) {
     // Cases 1 & 4 are stabilization for HEXA Mode flying setup
 #endif
