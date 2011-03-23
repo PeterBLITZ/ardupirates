@@ -49,6 +49,7 @@ TODO:
 #define QUAD 0
 #define HELI 1
 #define HEXA 2
+#define OCTA 3
 
 //Modes
 #define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
