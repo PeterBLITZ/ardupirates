@@ -27,3 +27,6 @@ https://lh6.googleusercontent.com/_PE66mXSGPRw/TW_7ExJ7YII/AAAAAAAA1iw/ADXB3lm-8
 https://lh3.googleusercontent.com/_PE66mXSGPRw/TW_7E-4IO3I/AAAAAAAA1iw/XtvX7AFlX4k/s512/2010_0302%2001%20%20%20GPS%20Programming%20Cable.JPG
 
 *Step 3*: Now download the firmware update utility and new firmware [http://code.google.com/p/ardupirates/downloads/detail?name=MTK_utility_update1.6.zip&can=2&q= here]. Unzip the file, and follow the instructions in the !MediaTek_Programming.pdf document. 
+
+Note: Be sure you program version 1.6 of the firmware. The original ArduPilot MTK GPS update page is 
+[http://code.google.com/p/ardupilot/wiki/MediaTek here]
