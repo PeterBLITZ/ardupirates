@@ -20,7 +20,7 @@ Then, the further development of the "official" Arducopter NG code was taken ove
  * Altitude hold with Barometer and Sonar
  * Automatic camera leveling plus an automatic camera trigger! 
 
-Even more: Hein's code applies to Hexa builds. Octocopters are on the way thanks to Peter Seddon.
+Even more: Hein's code applies to Hexa and Octocopter builds.
 
-Please check the links in this wiki, they are pointing on some DIYDrones ArduCopter’s wiki which could help you.
+Please check the links in this wiki, they are pointing on some DIYDrones !ArduCopter’s wiki which could help you.
  
