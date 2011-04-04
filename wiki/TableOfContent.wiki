@@ -41,6 +41,7 @@
    * [ThePiratesCofin The 'Official' Pirates Coffin]
    * [Waypoint_Nav_Description Waypoint Navigation]      
    * [UsingWiiSensors Using Wii Sensors]
+   * [PID_Setting_SuperStable_Code PID setting for SuperStable Code]
    * [UbloxGPSTutorial Ublox GPS Tutorial]
    * [BatteryAlarmHowto Battery Alarm]
  * [Videos]
