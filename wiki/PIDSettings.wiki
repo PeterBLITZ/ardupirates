@@ -30,7 +30,7 @@ Here is an example video of oscillation:
 
 Here are some other explanations made by Jose Julio, one of the DIYDrones core members:
 
-"I´d like to explain a bit more the actual Acrobatic and Stable modes of ArduCopter
+"I´d like to explain a bit more the actual Acrobatic and Stable modes of !ArduCopter
 - Acrobatic mode, like you said is a PID rate control. I term is not needed (usually 0), D should be low (I personally prefer to flight with D=0) and P is the main param. As always you should start increasing P until the quad start to oscillate and then reduce a bit the P param.
 - Stable mode. Now the last version of stable mode are really two controls. One inner control that is a P rate control (that is the "D" label in the configurator, we need to change this label to "P_rate" ) and an outer control that is a PI absolute angle control.
 
