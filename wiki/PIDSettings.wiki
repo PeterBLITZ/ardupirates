@@ -27,3 +27,19 @@ Here is an example video of oscillation:
 <br>
 
 *Since control tuning is difficult, it is recommended that you start with the default values and only change one value at a time.*
+
+Here are some other explanations made by Jose Julio, one of the DIYDrones core members:
+
+"I´d like to explain a bit more the actual Acrobatic and Stable modes of ArduCopter
+- Acrobatic mode, like you said is a PID rate control. I term is not needed (usually 0), D should be low (I personally prefer to flight with D=0) and P is the main param. As always you should start increasing P until the quad start to oscillate and then reduce a bit the P param.
+- Stable mode. Now the last version of stable mode are really two controls. One inner control that is a P rate control (that is the "D" label in the configurator, we need to change this label to "P_rate" ) and an outer control that is a PI absolute angle control.
+
+This new aproach with two controls instead of a simple PID control has demostrated to be much better.
+So, this is why the "D" param in the configurator (P_rate) is so important and could not be 0. And now some guidelines to adjust the control...
+First, if you have your Acrobatic mode adjusted, then the P_rate of stable mode is a bit lower than this value, for example I have P of acrobatic mode 1.9 and P_rate of Stable mode ("D" param in configurator) 1.2. If you don´t have your acrobatic mode adjusted I recommend to start with the default value. As in Acrobatic mode, if P_rate ("D" param in configurator) is too high you will see quick oscillations on your quad, too low and your quad will be unstable.
+Now the PI outer control params... I term is needed to "auto trim" for differences between motors, ESCs... (it´s easy to think in the I term as the trim of your radio) but we need only an small value (probably between 0.1 and 0.4, the default value is 0.15 and it´s a good start value). The P param is the main param of the outer control and defines the "authority" of the control, so if you have a low P value the quad will be "lazy" to the sticks. If you have a too high value you start again with oscillations and inestability.
+
+Control tunning is always a bit tricky so I recommend to start with the dafault values and only change one param on each test.
+
+Hope this helps,
+Jose."
