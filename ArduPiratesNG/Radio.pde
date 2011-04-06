@@ -171,11 +171,14 @@ void read_radio()
         }
       }
     
-    // Write Radio data to DataFlash log
+    // Write Radio data to DataFlash log only if motors are armed
+	if(motorArmed == 1)
+	{
     #if LOG_RADIO
     Log_Write_Radio(ch_roll,ch_pitch,ch_throttle,ch_yaw,ch_aux,ch_aux2);
     #endif
-    
+    }
+	
     // Motor arm logic
     if (ch_throttle < (MIN_THROTTLE + 100)) {
       control_yaw = 0;
