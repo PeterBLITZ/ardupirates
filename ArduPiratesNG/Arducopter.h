@@ -206,7 +206,6 @@ FastSerialPort3(Serial3);		// Telemetry port (optional, Standard and ArduPilot p
 #define SerPri  Serial3.print
 #define SerPrln Serial3.println
 #define SerPriln Serial3.println
-#define SerRea  Serial3.read
 #define SerAva  Serial3.available
 #define SerRea  Serial3.read
 #define SerFlu  Serial3.flush
@@ -220,7 +219,6 @@ FastSerialPort3(Serial3);		// Telemetry port (optional, Standard and ArduPilot p
 #define SerPri  Serial.print
 #define SerPrln Serial.println
 #define SerPriln Serial.println
-#define SerRea  Serial.read
 #define SerAva  Serial.available
 #define SerRea  Serial.read
 #define SerFlu  Serial.flush
