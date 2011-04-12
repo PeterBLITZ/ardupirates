@@ -13,11 +13,11 @@
  File     : Functions.pde
  Version  : v1.0, Aug 28, 2010
  Author(s): ArduCopter Team
-			 Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
-			 Jani Hirvinen, Ken McEwans, Roberto Navoni,          
-			 Sandro Benigno, Chris Anderson
+ Ted Carancho (aeroquad), Jose Julio, Jordi Muñoz,
+ Jani Hirvinen, Ken McEwans, Roberto Navoni,          
+ Sandro Benigno, Chris Anderson
  Author(s): ArduPirates deveopment team
-             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim
+             Philipp Maloney, Norbert, Hein, Igor, Emile, Kim, Dror Caspi
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@
  
  * ************************************************************** */
 
+#define RUNNING_LIGHTS_LED_STEP_MAX 2
 
 // Flash those A,B,C LEDs on IMU Board
 // 
