@@ -33,6 +33,7 @@
  
  * ************************************************************** */
 
+#define RUNNING_LIGHTS_LED_STEP_MAX 2
 
 // Flash those A,B,C LEDs on IMU Board
 // 
