@@ -87,6 +87,12 @@ void RunCLI () {
       case 'o':
         Set_SonarAndObstacleAvoidance_PIDs();
         break;
+      case 'h':
+        SHOW_rpyPIDs();
+        break;
+      case 'p':
+        SET_PIDs();
+        break;
       case 's':
         Show_Settings();
         break;
@@ -127,6 +133,8 @@ void Show_MainMenu() {
   SerPrln(" i - Initialize and calibrate Accel offsets");
   SerPrln(" m - Motor tester with AIL/ELE stick");
   SerPrln(" o - Show/Save sonar & obstacle avoidance PIDs");
+  SerPrln(" h - Show roll's, pitch's and yaw's PIDs");
+  SerPrln(" p - change roll's, pitch's and yaw's PIDs");
   SerPrln(" r - Reset to factory settings");
   SerPrln(" t - Calibrate MIN Throttle value");
   SerPrln(" s - Show settings");
@@ -135,6 +143,215 @@ void Show_MainMenu() {
   SerFlu();
 }
 
+/* ******************************************************* */
+// this function contians a serias of 'cases'. the hierarchy is: 
+// Axis selection (r for Roll, p for Pitch or y for Yaw) then >>
+// Variable assignment
+
+void SET_PIDs()
+{
+  // the temporary value for reading the command from the serial before updating the EEPROM
+  float tempVal;
+  SerPrln("Please enter the asix's name ('r' for ROLL, 'p' for PITCH and 'y' for YAW) that you want to change or 'q' to quit");
+  SerPrln();
+  // flushing the serial's buffer before input
+  SerFlu();
+  //wait's for input
+  while (!SerAva()) {
+    // when new char has arrived place it in var queryType(char) to choose asix
+    queryType = SerRea();
+    // case for the command - choosing between rool, pitch and yaw.
+    // after selecting the desired axis 3 parameters are to be updated: P,I and D.
+    switch (queryType) {
+    case 'r':
+      // the three following section are the ROLL's PIDs
+      // P Roll
+      SerPri("Please enter the p roll value or -1 to skip, the current value is: ");
+      SerPrln(KP_QUAD_ROLL);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        KP_QUAD_ROLL = tempVal;
+        writeEEPROM(KP_QUAD_ROLL, KP_QUAD_ROLL_ADR);
+        SerPri("the new p roll value is: ");
+        SerPrln(KP_QUAD_ROLL);
+      }
+      SerPrln();
+      
+      // I Roll
+      SerPrln("Please enter the i roll value or -1 to skip, the current value is: ");
+      SerPrln(KI_QUAD_ROLL);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        KI_QUAD_ROLL = tempVal;
+        writeEEPROM(KI_QUAD_ROLL, KI_QUAD_ROLL_ADR);
+        SerPrln("the new i roll value is ");
+        SerPrln(KI_QUAD_ROLL);
+      }
+      SerPrln();
+      
+      // D Roll
+      SerPrln("Please enter the d roll value or -1 to skip, the current value is: ");
+      SerPrln(STABLE_MODE_KP_RATE_ROLL);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        STABLE_MODE_KP_RATE_ROLL = tempVal;
+        writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
+        SerPrln("the new d roll value is ");
+        SerPrln(STABLE_MODE_KP_RATE_ROLL);
+      }
+      SerPrln();
+      break;
+      
+      case 'p':
+      // the three following section are the PITCH's PIDs
+      // P pitch
+      SerPri("Please enter the p pitch value or -1 to skip, the current value is: ");
+      SerPrln(KP_QUAD_PITCH);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        KP_QUAD_PITCH = tempVal;
+        writeEEPROM(KP_QUAD_PITCH, KP_QUAD_PITCH_ADR);
+        SerPri("the new p pitch value is: ");
+        SerPrln(KP_QUAD_PITCH);
+      }
+      SerPrln();
+      
+      // I Pitch
+      SerPrln("Please enter the i pitch value or -1 to skip, the current value is: ");
+      SerPrln(KI_QUAD_PITCH);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        KI_QUAD_PITCH = tempVal;
+        writeEEPROM(KI_QUAD_PITCH, KI_QUAD_PITCH_ADR);
+        SerPrln("the new i pitch value is ");
+        SerPrln(KI_QUAD_PITCH);
+      }
+      SerPrln();
+      
+      // D Pitch
+      SerPrln("Please enter the d pitch value or -1 to skip, the current value is: ");
+      SerPrln(STABLE_MODE_KP_RATE_PITCH);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        STABLE_MODE_KP_RATE_PITCH = tempVal;
+        writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
+        SerPrln("the new d pitch value is ");
+        SerPrln(STABLE_MODE_KP_RATE_PITCH);
+      }
+      SerPrln();
+      break;
+      
+      case 'y':
+      // the three following section are the YAW's PIDs
+      // P Yaw
+      SerPri("Please enter the p yaw value or -1 to skip, the current value is: ");
+      SerPrln(KP_QUAD_YAW);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        KP_QUAD_YAW = tempVal;
+        writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
+        SerPri("the new p yaw value is: ");
+        SerPrln(KP_QUAD_YAW);
+      }
+      SerPrln();
+      
+      // I yaw
+      SerPrln("Please enter the i yaw value or -1 to skip, the current value is: ");
+      SerPrln(KI_QUAD_YAW);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        KI_QUAD_YAW = tempVal;
+        writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
+        SerPrln("the new i yaw value is ");
+        SerPrln(KI_QUAD_YAW);
+      }
+      SerPrln();
+      
+      // D yaw
+      SerPrln("Please enter the d yaw value or -1 to skip, the current value is: ");
+      SerPrln(STABLE_MODE_KP_RATE_YAW);
+      SerFlu();
+      while( !SerAva() );
+      tempVal = readFloatSerial();
+      if (tempVal >= 0 )
+      {
+        STABLE_MODE_KP_RATE_YAW = tempVal;
+        writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
+        SerPrln("the new d yaw value is ");
+        SerPrln(STABLE_MODE_KP_RATE_YAW);
+      }
+      SerPrln();
+      break;
+    }
+  }
+    
+}
+
+/* ***************************************************** */
+// shows the PIDs values of the Roll, Pitch and Yaw - there for = rpy
+
+void SHOW_rpyPIDs()
+{
+  // read the valuse from the EEPROM before diplaying them in order to make sure its up to date
+  readUserConfig();
+  
+  // prints the valuse in 3 row, ROLL, PITCH and YAW. each row cintains 3 vlause: the P the I and the D.
+  SerPri("The currect PID values for ");
+  SerPrln(" mode are:");
+
+  // ROLL
+  SerPri("ROLL: ");
+  SerPri(KP_QUAD_ROLL);
+  SerPri(",");
+  SerPri(KI_QUAD_ROLL);
+  SerPri(",");
+  SerPrln(STABLE_MODE_KP_RATE_ROLL);
+  
+  // PITCH  
+  SerPri("PITCH: ");
+  SerPri(KP_QUAD_PITCH);
+  SerPri(",");
+  SerPri(KI_QUAD_PITCH);
+  SerPri(",");
+  SerPrln(STABLE_MODE_KP_RATE_PITCH);
+  
+  // YAW
+  SerPri("YAW: ");
+  SerPri(KP_QUAD_YAW);
+  SerPri(",");
+  SerPri(KI_QUAD_YAW);
+  SerPri(",");
+  SerPrln(STABLE_MODE_KP_RATE_YAW);
+  SerPrln();
+  
+  // just to check that all had been printed beacsue sometimes the last cahrs are not been dispayed in the Serial monitor
+  SerPrln("end of PIDs");
+  SerPrln();
+}
 
 /* ************************************************************** */
 // Compass/Magnetometer Offset Calibration
