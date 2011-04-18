@@ -1,0 +1,16 @@
+#summary Adding a backup battery to the MTek GPS Module
+
+= Introduction =
+
+*THIS PAGE IS STILL BEING EDITED!!!*
+
+
+= Details =
+
+http://ardupirates.googlecode.com/svn/Images/2011_0415%2002%20%20GPS%20backup%20battery.JPG
+
+http://ardupirates.googlecode.com/svn/Images/2011_0415%2003%20%20GPS%20backup%20battery.JPG
+
+http://ardupirates.googlecode.com/svn/Images/2011_0415%2004%20%20GPS%20backup%20battery.JPG
+
+http://ardupirates.googlecode.com/svn/Images/2011_0415%2005%20GPS%20backup%20battery.png
