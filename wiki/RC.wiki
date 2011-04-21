@@ -34,7 +34,7 @@ http://arducopter.googlecode.com/svn/images/DiagramRC_APM14.jpg
 
 *Hexa setup for APM 1.0 & 1.4*
 
-https://lh3.googleusercontent.com/_SLFLtGv2hms/Tad4dnaNrkI/AAAAAAAABDE/fDy53pfIp1s/s800/Arducopter%2BHexa%2BConfig.jpg
+https://lh5.googleusercontent.com/_SLFLtGv2hms/TbCnioiuxWI/AAAAAAAABDY/AX6ZWzykUVs/s800/Arducopter%2BHexa%2BConfig.jpg
 
 === Choosing between "X" and "+" flight directions ==
 
