@@ -35,6 +35,7 @@ TODO:
 
 #include "WProgram.h"
 
+
 /*************************************************************/
 // [kidogo] Moved the below settings out of ArduUser.h to here
 // since these settings should not be edited by the user
@@ -48,6 +49,7 @@ TODO:
 #define QUAD 0
 #define HELI 1
 #define HEXA 2
+#define OCTA 3
 
 //Modes
 #define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
@@ -56,6 +58,9 @@ TODO:
 #define AP_ALTITUDE_HOLD       3  // Just Altitude Hold
 #define AP_GPS_HOLD            4  // Just GPS Hold
 #define AP_ALT_GPS_HOLD        5  // Full Automatic (GPS and Altitude Hold)
+#define AP_GPS_RTL             6  // Return to home, no alt hold
+#define AP_ALT_GPS_RTL         7  // Return to home with alt hold (GPS and Altitude Hold)
+
 //#define AP_WAYPOINT            6  // Waypoint Navigation...NOT USED YET
 
 // Radio related definitions
@@ -194,9 +199,9 @@ TODO:
 #define SERIAL2_BAUD 115200
 #define SERIAL3_BAUD 115200
 
-//FastSerialPort0(Serial);
-//FastSerialPort1(Serial1);
-//FastSerialPort3(Serial3);
+FastSerialPort0(Serial);		// FTDI/console
+FastSerialPort1(Serial1);		// GPS port (except for GPS_PROTOCOL_IMU)
+FastSerialPort3(Serial3);		// Telemetry port (optional, Standard and ArduPilot protocols only)
 
 
 #ifdef SerXbee               // Xbee/Telemetry port 
@@ -257,8 +262,6 @@ int SENSOR_SIGN[]={
 #define PITCH_DEF 0      // Level values for pitch, used to calculate pitch_acc_offset
 #define Z_DEF  GRAVITY   // Stable level value for Z, used to calculate z_acc_offset, same as GRAVITY
 
-#define ToRad(x) (x*0.01745329252)  // *pi/180
-#define ToDeg(x) (x*57.2957795131)  // *180/pi
 
 // IDG500 Sensitivity (from datasheet) => 2.0mV/º/s, 0.8mV/ADC step => 0.8/3.33 = 0.4
 // Tested values : 
@@ -282,7 +285,6 @@ int SENSOR_SIGN[]={
 int AN[6]; //array that store the 6 ADC channels
 int AN_OFFSET[6]; //Array that store the Offset of the gyros and accelerometers
 int gyro_temp;
-
 
 float G_Dt=0.02;                  // Integration time for the gyros (DCM algorithm)
 float Accel_Vector[3]= {0, 0, 0}; // Store the acceleration in a vector
@@ -332,13 +334,6 @@ long timer_old;
 long GPS_timer;
 long GPS_timer_old;
 float GPS_Dt=0.2;   // GPS Dt
-struct Location {
-	uint8_t		id;					///< command id
-	uint8_t		p1;					///< param 1
-	int32_t		alt;				///< param 2 - Altitude in centimeters (meters * 100)
-	int32_t		lat;				///< param 3 - Latitude * 10**7
-	int32_t		lng;				///< param 4 - Longitude * 10**7
-};
 
 // Attitude control variables
 float command_rx_roll=0;        // User commands
@@ -417,6 +412,7 @@ int ch_throttle_altitude_hold;  // throttle value passed to motor_output functio
 //Barometer Sensor variables
 long target_baro_altitude;    // target altitude in cm
 long press_baro_altitude  = 0;
+long press_baro_altitude_filtered = 0;
 byte baro_new_data        = 0;
 float baro_altitude_I;
 float baro_altitude_D;
@@ -436,13 +432,8 @@ float sonar_altitude_D;
 #define AIRSPEED_PIN 1		// Need to correct value
 #define BATTERY_PIN 1		// Need to correct value
 #define RELAY_PIN 47
-#define LOW_VOLTAGE	11.4    // Pack voltage at which to trigger alarm
-#define INPUT_VOLTAGE 5.2	// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery 
-                                // level readings. (you need a multimeter to measure and set this of course)
-#define VOLT_DIV_RATIO 1.0	//  Voltage divider ratio set with thru-hole resistor (see manual)
 
 float 	battery_voltage 	= LOW_VOLTAGE * 1.05;		// Battery Voltage, initialized above threshold for filter
-
 
 //AP_NORMAL_STABLE_MODE  2  // Just Stable Mode 
 //AP_ALTITUDE_HOLD       3  // Just Altitude Hold
@@ -524,6 +515,16 @@ int RightCCWMotor;
 int FrontCWMotor;
 int BackCCWMotor;
 
+// Octa Motors   
+int Front_MotorCW;
+int Front_Right_MotorCCW;
+int Right_MotorCW;
+int Back_Right_MotorCCW;
+int Back_MotorCW;
+int Back_Left_MotorCCW;
+int Left_MotorCW;  
+int Front_Left_MotorCCW;
+
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed
 byte  motorSafety = 1;                             // 0 = safety off, 1 = on.  When On, sudden increases in throttle not allowed
 int   minThrottle = 0;
@@ -569,17 +570,20 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 /* Logging Stuff	- These should be 1 (on) or 0 (off) */
 //only GPS, SEN, RANGEFINDER, PID, and RADIO are currently available
 
-#define LOG_ATTITUDE 0	        // Logs basic attitude info
-#define LOG_GPS 1		// Logs GPS info
-#define LOG_PM 0		// Logs IMU performance monitoring info£
-#define LOG_CTUN 0		// Logs control loop tuning info
-#define LOG_NTUN 0		// Logs navigation loop tuning info
-#define LOG_MODE 0		// Logs mode changes
-#define LOG_RAW 0		// Logs raw accel/gyro data
-#define LOG_SEN 1               // Logs sensor data
-#define LOG_RANGEFINDER 1       // Logs data from range finders
-#define LOG_PID 1               // Logs navigation loop PID values (GPS, Altitude)
-#define LOG_RADIO 1             // Logs radio values
+#define LOG_ATTITUDE 0		// Logs basic attitude info
+#define LOG_GPS 1			// Logs GPS info
+#define LOG_PM 0			// Logs IMU performance monitoring info£
+#define LOG_CTUN 0			// Logs control loop tuning info
+#define LOG_NTUN 0			// Logs navigation loop tuning info
+#define LOG_MODE 0			// Logs mode changes
+#define LOG_RAW 0			// Logs raw accel/gyro data
+#define LOG_SEN 0			// Logs sensor data
+#define LOG_RANGEFINDER 0	// Logs data from range finders
+#define LOG_PID 0			// Logs navigation loop PID values (GPS, Altitude)
+#define LOG_RADIO  0		// Logs radio values
+#define LOG_BARO 1			// Logs Barometer's values 
+#define LOG_FLIGHT_DATA 1 	// Logs main flight data
+#define LOG_GPS_RTL 0		// Not Used Yet
 
 //  GCS Message ID's
 #define MSG_ACKNOWLEDGE 0x00
@@ -596,11 +600,15 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 #define MSG_MINS 0x51
 #define MSG_MAXS 0x52
 #define MSG_IMU_OUT 0x53
+#define MSG_FLIGHT_DATA 0x54
+#define MSG_GPS_RTL 0x55
 
 #define SEVERITY_LOW 1
 #define SEVERITY_MEDIUM 2
 #define SEVERITY_HIGH 3
 #define SEVERITY_CRITICAL 4
+
+#define DEBUG_BARO 0
 
 // Debug options - set only one of these options to 1 at a time, set the others to 0
 #define DEBUG_SUBSYSTEM 0 		// 0 = no debug
@@ -627,26 +635,7 @@ unsigned long elapsedTime			= 0;		// for doing custom events
 					// SEVERITY_HIGH
 					// SEVERITY_CRITICAL
 
-// Different GPS devices, 
-#ifdef IsGPS
-#if   GPS_PROTOCOL == GPS_PROTOCOL_NMEA
-AP_GPS_NMEA		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_SIRF
-AP_GPS_SIRF		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_UBLOX
-AP_GPS_UBLOX	        gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_IMU
-AP_GPS_IMU		gps(&Serial);	// note, console port
-#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK
-AP_GPS_MTK		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_MTK16
-AP_GPS_MTK16		gps(&Serial1);
-#elif GPS_PROTOCOL == GPS_PROTOCOL_NONE
-AP_GPS_NONE		gps(NULL);
-#else
-# error Must define GPS_PROTOCOL in your ArduUser file.
-#endif  
-#endif
+
 
 // Radio Modes, mainly just Mode2 
 #define MODE1           1 
@@ -747,6 +736,15 @@ float RF_SAFETY_ZONE;  // object avoidance will move away from objects within th
 float KP_SONAR_ALTITUDE;
 float KI_SONAR_ALTITUDE;
 float KD_SONAR_ALTITUDE;
+
+// Camera related settings
+
+int CAM_SMOOTHING;      // Camera movement smoothing on pitch axis
+int CAM_SMOOTHING_ROLL; // Camera movement smoothing on roll axis
+int CAM_CENT;           // Camera center
+int CAM_FOCUS;          // Camera trigger Servo Focus position
+int CAM_TRIGGER;        // Camera trigger Servo Trigger position 
+int CAM_RELEASE;        // Camera trigger Servo Release Trigger Button position
 
 // This function call contains the default values that are set to the ArduCopter
 // when a "Default EEPROM Value" command is sent through serial interface

@@ -44,8 +44,10 @@ ChangeLog:
 TODO:
 
 * **************************************************************************** *
+*/
+#include <AP_GPS.h>
 
-
+/*
 - ---------------------------------------------------------------------------- -
    H O W   T O   U S E   T H I S   F I L E :
 - ---------------------------------------------------------------------------- -
@@ -180,6 +182,39 @@ If you have a quadcopter, uncomment this next line ! */
 //#define AIRFRAME HEXA
 
 /*
+- ---------------------------------------------------------------------------- -
+ OCTA COPTER AIRFRAME SETUP (PWM) (8 motors)
+ - ---------------------------------------------------------------------------- -
+/*
+ 
+
+ 
+            F CW 0
+         .....FRONT.......                 // 0 = Motors
+   L CCW 0...............0 CCW R           // *** = APM
+         .......***.......                 // ***
+L CW 0   .......***.......   0 CW R        // ***
+         .......***.......                            
+   L CCW 0...............0 CCW R           
+         ......BACK.......
+            B CW 0                   // L = Left motors,
+                                     // R = Right motors,
+                                     // B = Back motor,
+                                     // F = Front motor.
+                                     // CW = Clockwise rotation,
+                                     // CCW = Counter clockwise rotation.
+ 
+ To make absolutely sure you are running the Octa flight mode, connect with
+ the Configurator and use the serial monitor in the Configurator to send the
+ command "T". It will tell you which flight mode is configured.
+ These PWM (ESC) connectors below you will have to solder directly on the APM board.  
+ CH_10 (output 9) = Connection PB5 on APM
+ CH_11 (output 10) = Connection PE3 on APM
+ If you have a Octacopter, uncomment this next line !                                 */
+//#define AIRFRAME HEXA
+
+
+/*
 = ============================================================================ =
    2. CHOOSE YOUR FLIGHT MODE:
 = ============================================================================ =
@@ -249,7 +284,7 @@ If you have a quadcopter, uncomment this next line ! */
 - ---------------------------------------------------------------------------- -
                                                                               */
 #define UseBMP             // Use pressure sensor for altitude hold
-#define IsSONAR          // Use a Sonar for low altitude hold?
+//#define IsSONAR          // Use a Sonar for low altitude hold?
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -270,22 +305,23 @@ If you have a quadcopter, uncomment this next line ! */
    Uncomment this next line if you wish to use GPS, comment it if you don't want
    to use GPS.
                                                                               */
-#define IsGPS
+//#define IsGPS
 
 /*
    If you use a GPS, please uncomment your GPS Protocol based on your GPS device
    even if you do not have a GPS!!
                                                                               */
-
 #ifdef IsGPS
-//#define GPS_PROTOCOL GPS_PROTOCOL_NONE	// No GPS attached!!
-//#define GPS_PROTOCOL GPS_PROTOCOL_NMEA	// Standard NMEA GPS(NOT SUPPORTED!)
-//#define GPS_PROTOCOL GPS_PROTOCOL_IMU	    // X-Plane interface/ArduPilot IMU.
-//#define GPS_PROTOCOL GPS_PROTOCOL_MTK	  // MediaTek GPS - DIYDrones 1.4
-#define GPS_PROTOCOL GPS_PROTOCOL_MTK16	// MediaTek GPS - DIYDrones 1.6
-//#define GPS_PROTOCOL GPS_PROTOCOL_UBLOX	// UBLOX GPS
-//#define GPS_PROTOCOL GPS_PROTOCOL_SIRF	// SiRF-based GPS in Binary mode.
+//AP_GPS_NMEA		gps(&Serial1);  // Standard NMEA GPS.      NOT SUPPORTED (yet?)
+//AP_GPS_SIRF		gps(&Serial1);  // SiRF-based GPS in Binary mode.  NOT TESTED
+//AP_GPS_UBLOX	        gps(&Serial1);  // UBLOX GPS
+//AP_GPS_IMU		gps(&Serial);	// X-Plane interface or ArduPilot IMU.// note, console port
+//AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.4
+AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.6
+//AP_GPS_None		gps(NULL);      // No GPS attached!!
 #endif
+
+
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -340,7 +376,7 @@ If you have a quadcopter, uncomment this next line ! */
    Once you have achieved this fine tune in the Configurator's serial monitor by
    pressing "T" (capital t).
                                                                               */
-#define MAGCALIBRATION 1.65
+#define MAGCALIBRATION -15.65      
 
 /* SET MAGNETOMETER ORIENTATION:
    Next, you'll have to define how your magnetometer is mounted to your
@@ -448,12 +484,6 @@ If you have a quadcopter, uncomment this next line ! */
 
 #define CAM_TILT_CH  CH_7       // Channel for radio knob to control tilt
 
-int CAM_SMOOTHING = 1000;         // Camera movement smoothing on pitch axis
-int CAM_SMOOTHING_ROLL = 1140;    // Camera movement smoothing on roll axis
-int CAM_CENT = 1570;              // Camera center
-int CAM_FOCUS = 1710;             // Camera trigger Servo Focus position
-int CAM_TRIGGER = 1780;           // Camera trigger Servo Trigger position 
-int CAM_RELEASE = 1500;           // Camera trigger Servo Release Trigger Button position
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -467,12 +497,21 @@ int CAM_RELEASE = 1500;           // Camera trigger Servo Release Trigger Button
    ArduCopter Wiki for more information on this subject:
    http://code.google.com/p/ardupirates/wiki/BatteryAlarmHowto
                                                                               */
-//#define BATTERY_EVENT 1  // (boolean) 0 = don't read battery, 1 = read battery
-                           // voltage (only if you have it _wired_ up!)
+#define BATTERY_EVENT 0  		// (boolean) 0 = don't read battery, 1 = read battery
+								// voltage (only if you have it _wired_ up!)
+#define LOW_VOLTAGE		11.4	// Pack voltage at which to trigger alarm
+#define INPUT_VOLTAGE 	5.2		// (Volts) voltage your power regulator is feeding your ArduPilot to have an accurate pressure and battery 
+								// level readings. (you need a multimeter to measure and set this of course)
+#define VOLT_DIV_RATIO 	1.0		//  Voltage divider ratio set with thru-hole resistor (see manual)
 
+/*
+- ---------------------------------------------------------------------------- -
 /* Do we have configurator?
 Don't change this.        */
 #define CONFIGURATOR
+/*
+- ---------------------------------------------------------------------------- -
+																				*/
 
 /*
 = ============================================================================ =
@@ -526,6 +565,8 @@ Don't change this.        */
 //#define SerBau  38400
 //#define SerBau  57600
 #define SerBau  115200
+//#define SerBau 111100    //If using Telemetry, try this setting.
+
 
 /*
 - ---------------------------------------------------------------------------- -

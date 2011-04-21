@@ -49,7 +49,7 @@ void read_radio()
     ch_aux2 = APM_RC.InputCh(CH_6) * ch_aux2_slope + ch_aux2_offset;   //This is the MODE Channel in Configurator.
 //  Use this channel if you have a 7 or more Channel Radio.
 //  Can be used for PID tuning (see FUNCTIONS) or Camera 3 position tilt (pitch).
-#if defined(SerXbee) && defined(Use_PID_Tuning)
+#if (defined(SerXbee) && defined(Use_PID_Tuning))
     ch_flightmode = APM_RC.InputCh(CH_7);  // flight mode 3-position switch.
 #endif    
     // special checks for throttle
@@ -111,15 +111,19 @@ void read_radio()
       {
         AP_mode = AP_GPS_HOLD;                  // Position Hold (GPS position control)
         digitalWrite(LED_Yellow,LOW);           // Yellow LED OFF : Alititude Hold OFF
-        if (gps.fix > 0)
+        #ifdef IsGPS
+		if (gps.fix > 0)
           digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
+		#endif
       }
       else 
       {
         AP_mode = AP_ALT_GPS_HOLD;              //Position & Altitude hold mode (GPS position control & Altitude control)
         digitalWrite(LED_Yellow,HIGH);          // Yellow LED ON : Alititude Hold ON
-        if (gps.fix > 0)
+        #ifdef IsGPS
+		if (gps.fix > 0)
           digitalWrite(LED_Red,HIGH);           // Red LED ON : GPS Position Hold ON
+		#endif
       }
     } 
 
@@ -135,7 +139,7 @@ void read_radio()
     if (flightMode == FM_STABLE_MODE)  // IN STABLE MODE we convert stick positions to absolute angles
       {
       // In Stable mode stick position defines the desired angle in roll, pitch and yaw
-#ifdef QUAD
+#if AIRFRAME == QUAD
 
 #ifndef FLIGHT_MODE_X
       if(flightOrientation) {
@@ -159,7 +163,7 @@ void read_radio()
 #endif
 #endif
 
-#ifdef HEXA
+#if ((AIRFRAME == HEXA) || (AIRFRAME == OCTA))     
         command_rx_roll = (ch_roll-roll_mid) / STICK_TO_ANGLE_FACTOR;       // Convert stick position to absolute angles
         command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 #endif  
@@ -171,11 +175,14 @@ void read_radio()
         }
       }
     
-    // Write Radio data to DataFlash log
-    #if LOG_RADIO
-    Log_Write_Radio(ch_roll,ch_pitch,ch_throttle,ch_yaw,ch_aux,ch_aux2);
-    #endif
-    
+    // Write Radio data to DataFlash log only if motors are armed
+	if(motorArmed == 1)
+	{
+    		#if LOG_RADIO
+    		Log_Write_Radio(ch_roll,ch_pitch,ch_throttle,ch_yaw,ch_aux,ch_aux2);
+    		#endif
+    	}
+	
     // Motor arm logic
     if (ch_throttle < (MIN_THROTTLE + 100)) {
       control_yaw = 0;

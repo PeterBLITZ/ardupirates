@@ -85,6 +85,18 @@ void APM_Init() {
   APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
 #endif
 
+#if AIRFRAME == OCTA
+  // RC channels Initialization (Octa motors) - Motors stoped 
+  APM_RC.OutputCh(0, MIN_THROTTLE);       // Front Motor CW
+  APM_RC.OutputCh(1, MIN_THROTTLE);       // Front Right Motor CCW
+  APM_RC.OutputCh(2, MIN_THROTTLE);       // Right Motor CW
+  APM_RC.OutputCh(3, MIN_THROTTLE);       // Back Right Motor CCW    
+  APM_RC.OutputCh(6, MIN_THROTTLE);       // Back Motor CW
+  APM_RC.OutputCh(7, MIN_THROTTLE);       // Back Left Motor CCW
+  APM_RC.OutputCh(9, MIN_THROTTLE);       // Left Motor CW          // Connection PB5 on APM
+  APM_RC.OutputCh(10, MIN_THROTTLE);      // Front Left Motor CCW   // Connection PE3 on APM  
+#endif
+
   // Make sure that Relay is switched off.
   digitalWrite(RELAY,LOW);
 
@@ -150,6 +162,18 @@ void APM_Init() {
   APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
   APM_RC.OutputCh(6, MIN_THROTTLE);    // Front Motor CW
   APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
+#endif
+
+#if AIRFRAME == OCTA
+  // RC channels Initialization (Octa motors) - Motors stoped 
+  APM_RC.OutputCh(0, MIN_THROTTLE);       // Front Motor CW
+  APM_RC.OutputCh(1, MIN_THROTTLE);       // Front Right Motor CCW
+  APM_RC.OutputCh(2, MIN_THROTTLE);       // Right Motor CW
+  APM_RC.OutputCh(3, MIN_THROTTLE);       // Back Right Motor CCW    
+  APM_RC.OutputCh(6, MIN_THROTTLE);       // Back Motor CW
+  APM_RC.OutputCh(7, MIN_THROTTLE);       // Back Left Motor CCW
+  APM_RC.OutputCh(9, MIN_THROTTLE);       // Left Motor CW          // Connection PB5 on APM
+  APM_RC.OutputCh(10, MIN_THROTTLE);      // Front Left Motor CCW   // Connection PE3 on APM  
 #endif
 
   // Initialise Wire library used by Magnetometer and Barometer

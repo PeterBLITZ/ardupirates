@@ -61,9 +61,9 @@ WARNING: This file now only contains program logic. You need not edit
 #include <avr/io.h>
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
-//#include <FastSerial.h>
+#include <FastSerial.h>
+#include <AP_Common.h>
 #include <math.h>
-//#include <AP_Common.h>
 #include <APM_RC.h> 		// ArduPilot Mega RC Library
 #include <AP_ADC.h>		// ArduPilot Mega Analog to Digital Converter Library 
 #include <APM_BMP085.h> 	// ArduPilot Mega BMP085 Library 
@@ -74,7 +74,6 @@ WARNING: This file now only contains program logic. You need not edit
 #include <AP_RangeFinder.h>     // RangeFinders (Sonars, IR Sensors)
 #include <AP_GPS.h>
 #include "Arducopter.h"
-
 
 #if AIRFRAME == HELI
 #include "Heli.h"
@@ -98,6 +97,7 @@ AP_RangeFinder_MaxsonarLV  AP_RangeFinder_backLeft;
 AP_RangeFinder_MaxsonarLV  AP_RangeFinder_frontLeft;
 #endif
 
+
 /* ************************************************************ */
 /* ************* MAIN PROGRAM - DECLARATIONS ****************** */
 /* ************************************************************ */
@@ -106,48 +106,12 @@ byte flightMode;
 
 unsigned long currentTime;  // current time in milliseconds
 unsigned long currentTimeMicros = 0, previousTimeMicros = 0;  // current and previous loop time in microseconds
+unsigned long loopTime = 0, maxLoopTime = 0;
+unsigned long oldLoopTime = 0;
 unsigned long mainLoop = 0;
 unsigned long mediumLoop = 0;
 unsigned long slowLoop = 0;
 
-// 3D Location vectors
-// -------------------
-struct Location home_loc;                   // home location
-struct Location current_loc;            // current location
-struct Location next_WP;                // next Waypoint to navigate;
-long 	target_altitude;		// used for
-long 	offset_altitude;		// used for
-long    ground_alt;
-boolean	home_is_set = false;            // Flag for if we have gps lock and have set the home location
-
-// GPS variables
-// -------------
-byte 	ground_start_count	= 5;			// have we achieved first lock and set Home?
-const 	float t7			= 10000000.0;	// used to scale GPS values for EEPROM storage
-float 	scaleLongUp			= 1;			// used to reverse longtitude scaling
-float 	scaleLongDown 		= 1;			// used to reverse longtitude scaling
-boolean GPS_light			= false;		// status of the GPS light
-
-// Location & Navigation 
-// ---------------------
-byte 	wp_radius			= 3;			// meters
-long	nav_bearing;						// deg * 100 : 0 to 360 current desired bearing to navigate
-long 	target_bearing;						// deg * 100 : 0 to 360 location of the plane to the target
-long 	crosstrack_bearing;					// deg * 100 : 0 to 360 desired angle of plane to target
-
-// Location Errors
-// ---------------
-long 	bearing_error;						// deg * 100 : 0 to 36000 
-
-// Waypoints
-// ---------
-long 	GPS_wp_distance;					// meters - distance between plane and next waypoint
-float 	GPS_wp_distance2;					// meters - distance between plane and next waypoint
-long 	wp_distance;						// meters - distance between plane and next waypoint
-long 	wp_totalDistance;					// meters - distance between old and next waypoint
-byte 	wp_total;							// # of Commands total including way
-byte 	wp_index;							// Current active command index
-byte 	next_wp_index;						// Current active command index
 
 /* ************************************************************ */
 /* **************** MAIN PROGRAM - SETUP ********************** */
@@ -158,6 +122,7 @@ void setup() {
 
   mainLoop = millis();       // Initialize timers
   mediumLoop = mainLoop;
+  slowLoop = mainLoop;
   GPS_timer = mainLoop;
   motorArmed = 0;
   
@@ -215,7 +180,7 @@ void loop()
   currentTime = currentTimeMicros / 1000;
 
   // Main loop at 200Hz (IMU + control)
-  if ((currentTime-mainLoop) > 5)    // about 200Hz (every 5ms)
+  if ((currentTime-mainLoop) >= 10)    // about 100Hz (every 10ms)
   {
     G_Dt = (currentTimeMicros-previousTimeMicros) * 0.000001;   // Microseconds!!!
     mainLoop = currentTime;
@@ -230,13 +195,13 @@ void loop()
 
     // Read radio values (if new data is available)
     if (APM_RC.GetState() == 1) {  // New radio frame?
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))   
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))   
       read_radio();
 #endif
 #if AIRFRAME == HELI
       heli_read_radio();
 #endif
-#if defined(SerXbee) && defined(Use_PID_Tuning)  
+#if (defined(SerXbee) && defined(Use_PID_Tuning))  
       PID_Tuning();  // See Functions.
 #endif
     }
@@ -245,14 +210,14 @@ void loop()
     if(flightMode == FM_STABLE_MODE) {    // STABLE Mode
       gled_speed = 1200;
       if (AP_mode == AP_NORMAL_STABLE_MODE) {   // Normal mode
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))
         Attitude_control_v3(command_rx_roll,command_rx_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HELI
         heli_attitude_control(command_rx_roll,command_rx_pitch,command_rx_collective,command_rx_yaw);
 #endif
       }else{                        // Automatic mode : GPS position hold mode
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))      
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))
         Attitude_control_v3(command_rx_roll+command_gps_roll+command_RF_roll,command_rx_pitch+command_gps_pitch+command_RF_pitch,command_rx_yaw);
 #endif        
 #if AIRFRAME == HELI
@@ -268,7 +233,7 @@ void loop()
     }
 
     // Send output commands to motor ESCs...
-#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA))     
+#if ((AIRFRAME == QUAD) || (AIRFRAME == HEXA) || (AIRFRAME == OCTA))
     motor_output();
 #endif  
 
@@ -285,8 +250,6 @@ void loop()
     // Autopilot mode functions - GPS Hold, Altitude Hold + object avoidance
     if (AP_mode == AP_GPS_HOLD || AP_mode == AP_ALT_GPS_HOLD)
     {
-//      digitalWrite(LED_Yellow,HIGH);      // Yellow LED ON : GPS Position Hold MODE
-
       // Do GPS Position hold (latitude & longitude)
       if (target_position) 
       {
@@ -341,8 +304,8 @@ void loop()
           {
             altitude_control_method = ALTITUDE_CONTROL_SONAR;
             target_sonar_altitude = constrain(press_sonar_altitude,AP_RangeFinder_down.min_distance*3,sonar_threshold);
+	    sonar_altitude_I = 0;  // don't carry over any I values from previous times user may have switched on altitude control     
           }
-          sonar_altitude_I = 0;  // don't carry over any I values from previous times user may have switched on altitude control          
           #endif
           
           // capture current throttle to use as base for altitude control
@@ -363,6 +326,7 @@ void loop()
           // next target barometer altitude to current barometer altitude + user's desired change over last sonar altitude (i.e. keeps up the momentum)
           altitude_control_method = ALTITUDE_CONTROL_BARO;
           target_baro_altitude = press_baro_altitude;// + constrain((target_sonar_altitude - press_sonar_altitude),-50,50);
+	  baro_altitude_I = 0;
         }
    
         // if SONAR becomes valid switch to sonar control
@@ -374,6 +338,7 @@ void loop()
           }
           // ensure target altitude is reasonable
           target_sonar_altitude = constrain(target_sonar_altitude,AP_RangeFinder_down.min_distance*3,sonar_threshold);
+	  sonar_altitude_I = 0;
         }      
         #endif  // defined(UseBMP)
        
@@ -430,8 +395,11 @@ void loop()
     }
     if (AP_mode == AP_NORMAL_STABLE_MODE)
     {
-//      digitalWrite(LED_Yellow,LOW);
       target_position=0;
+	target_baro_altitude = 0;
+	target_sonar_altitude = 0;
+	Reset_I_terms_navigation();
+	  
       if( altitude_control_method != ALTITUDE_CONTROL_NONE )
       {
         altitude_control_method = ALTITUDE_CONTROL_NONE;  // turn off altitude control
@@ -440,11 +408,8 @@ void loop()
   }
 
   // Medium loop (about 60Hz) 
-  if ((currentTime-mediumLoop)>=17){
+  if ((currentTime-mediumLoop)>=16){
     mediumLoop = currentTime;
-#ifdef IsGPS
-    gps.update();   // Read GPS data
-#endif
     
 #if AIRFRAME == HELI    
     // Send output commands to heli swashplate...
@@ -456,6 +421,11 @@ void loop()
     case 0:   // Magnetometer reading (10Hz)
       medium_loopCounter++;
       slowLoop++;
+
+#ifdef IsGPS
+	 gps.update();   // Read GPS data (10Hz)
+#endif
+	  
 #ifdef IsMAG
       if (MAGNETOMETER == 1) {
         AP_Compass.read();     // Read magnetometer
@@ -517,7 +487,49 @@ void loop()
       break;	
     }
   }
-
+  //very slow loop 2Hz for Flight statistics
+  if ((currentTime-slowLoop)>=500){
+  slowLoop = currentTime;
+  
+  //Log only if motors are armed
+  if(motorArmed ){
+	  #ifdef IsGPS
+		//if(gps.fix){
+		//Log Max GPS values
+		#if LOG_GPS
+			Log_Write_GPS(gps.time, gps.latitude, gps.longitude, gps.altitude, gps.ground_speed, gps.ground_course,gps.fix, gps.num_sats, gps.hdop);
+		#endif
+		#if LOG_GPS_RTL
+             		Log_Write_GPS_RTL(home_loc.lat, home_loc.lng, home_loc.alt, home_distance, target_bearing);
+	    	#endif
+		//}
+	  #endif
+		#ifdef IsSONAR
+			#if (LOG_RANGEFINDER && !defined(IsRANGEFINDER))
+				Log_Write_RangeFinder(AP_RangeFinder_down.distance,0,0,0,0,0);
+			#endif
+		#endif
+	  #ifdef UseBMP
+		#if LOG_BARO
+			Log_Write_Baro(press_baro_altitude, press_baro_altitude_filtered, APM_BMP085.Temp, target_baro_altitude);
+		#endif
+	  #endif
+	  #if LOG_ATTITUDE
+			Log_Write_Attitude(ToDeg(roll),ToDeg(pitch), ToDeg(yaw));
+	  #endif
+	  #if LOG_FLIGHT_DATA
+	  	if (MAGNETOMETER==1){
+			Log_Write_Flight_Data(currentTime/100,ToDeg(roll),ToDeg(pitch),ToDeg(yaw),control_roll,control_pitch,control_yaw,ToDeg(AP_Compass.heading), ch_throttle, frontMotor, backMotor, rightMotor,leftMotor,maxLoopTime);
+		}
+		else
+		{
+			Log_Write_Flight_Data(currentTime/100,ToDeg(roll),ToDeg(pitch),ToDeg(yaw),control_roll,control_pitch,control_yaw,0, ch_throttle, frontMotor, backMotor, rightMotor,leftMotor,maxLoopTime);
+		}			
+	  #endif
+	  maxLoopTime = 0; //resets the max every 500ms
+	  }
+	  
+  }
   // AM and Mode status LED lights
   if(millis() - gled_timer > gled_speed) {
     gled_timer = millis();
@@ -551,6 +563,11 @@ void loop()
       gled_status = HIGH;
     } 
   }
+oldLoopTime = loopTime;
+loopTime =  micros() - currentTimeMicros;
+maxLoopTime =  max(loopTime , maxLoopTime);
+
 
 }
+
 
