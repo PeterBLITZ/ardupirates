@@ -30,6 +30,9 @@ AP_GPS_MTK::init(void)
 
 	// set 4Hz update rate
 	_port->print(MTK_OUTPUT_4HZ);
+	
+	//activate SBAS
+	_port->print(SBAS_ON);
 }
 
 // Process bytes available from the stream

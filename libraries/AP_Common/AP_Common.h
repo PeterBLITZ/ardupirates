@@ -15,8 +15,20 @@
 #ifndef _AP_COMMON_H
 #define _AP_COMMON_H
 
+// Get the common arduino functions
+#include "wiring.h"
+// ... and remove some of their stupid macros
+#undef round
+#undef abs
+
 #include <stdint.h>
 #include "include/menu.h"		/// simple menu subsystem
+#include "c++.h" // c++ additions
+//#include "AP_Vector.h"
+//#include "AP_Loop.h"
+#include "AP_Var.h"
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @name	Warning control
@@ -57,13 +69,29 @@
 // has an equivalent effect but avoids the warnings, which otherwise
 // make finding real issues difficult.
 //
-# undef PROGMEM 
-# define PROGMEM __attribute__(( section(".progmem.data") )) 
-# undef PSTR 
-# define PSTR(s) (__extension__({static prog_char __c[] PROGMEM = (s); &__c[0];})) 
+# undef PROGMEM
+# define PROGMEM __attribute__(( section(".progmem.data") ))
+# undef PSTR
+# define PSTR(s) (__extension__({static prog_char __c[] PROGMEM = (s); &__c[0];}))
 #endif
-
 //@}
+
+
+///
+/// @name Macros
+/// @{
+
+/// Define a constant string in program memory.  This is a little more obvious
+/// and less error-prone than typing the declaration out by hand.  It's required
+/// when passing PROGMEM strings to static object constructors because the PSTR
+/// hack can't be used at global scope.
+///
+#define PROGMEM_STRING(_v, _s)	static const char _v[] PROGMEM = _s
+
+#define ToRad(x) (x*0.01745329252)	// *pi/180
+#define ToDeg(x) (x*57.2957795131)	// *180/pi
+// @}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @name	Types
@@ -92,6 +120,7 @@ struct Location {
 /// XXX this should probably be replaced with radians()/degrees(), but their
 /// inclusion in wiring.h makes doing that here difficult.
 #define ToDeg(x) (x*57.2957795131)	// *180/pi
+#define ToRad(x) (x*0.01745329252)	// *pi/180
 
 //@}
 

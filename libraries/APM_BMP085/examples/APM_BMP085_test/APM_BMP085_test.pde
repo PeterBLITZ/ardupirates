@@ -1,6 +1,6 @@
 /*
   Example of APM_BMP085 (absolute pressure sensor) library.
-  Code by Jordi Muñoz and Jose Julio. DIYDrones.com
+  Code by Jordi Munoz and Jose Julio. DIYDrones.com
 */
 
 #include <Wire.h>
@@ -9,6 +9,8 @@
 APM_BMP085_Class APM_BMP085;
 
 unsigned long timer;
+#define COEFZ 10
+static int k[COEFZ];
 
 void setup()
 {  
@@ -38,6 +40,27 @@ void loop()
     tmp_float = pow(tmp_float,0.190295);
     Altitude = 44330*(1.0-tmp_float);
     Serial.print(Altitude);
+    Serial.print(" Altitude filtered:");
+	Serial.print(movAvgIntZ(APM_BMP085.Press));
     Serial.println();
     }
 }
+
+
+static int movAvgIntZ (int input) {
+
+    int cum = 0;
+
+    for (int i = 0; i < COEFZ; i++) {
+        k[i] = k[i+1];
+    }
+
+    k[COEFZ - 1] = input;
+
+    for (int i = 0; i < COEFZ; i++) {
+        cum += k[i];
+    }
+
+    return ( cum / COEFZ ) ;
+}
+
