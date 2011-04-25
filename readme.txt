@@ -44,9 +44,10 @@ Out	PIN
 ===Integrated analog Sonar on the 'ADC 7'
  - Usage: %variable%=APM_ADC.Ch(7);
  - when out of range, returns -1 (65535);
- - does not interfere with a program and does not require enabling/disabling
+ - does not slow the program `cause it works simultaneously (using TIMER5 interrupts)
+ - To use range values, uncomment //define IsSonar in the main program
  - 5cm..40m range
- - 0.14cm resolution
+ - 0.14cm resolution (output data are rounded to nearest centimeter)
 	D49 (PORTL.0) = input from sonar
 	D47 (PORTL.2) = sonar Tx (trigger)
  The smaller altitude - lower the cycle time 
