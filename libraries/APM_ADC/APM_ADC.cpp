@@ -1,45 +1,18 @@
 /*
 	APM_ADC.cpp - ADC ADS7844 Library for Ardupilot Mega
-	Code by Jordi Muñoz and Jose Julio. DIYDrones.com
+Total rewrite by Syberian:
 
-	Modified by John Ihlein 6/19/2010 to:
-	1)Prevent overflow of adc_counter when more than 8 samples collected between reads.  Probably
-	  only an issue on initial read of ADC at program start.
-	2)Reorder analog read order as follows:
-	  p, q, r, ax, ay, az
+Full I2C sensors replacement:
+ITG3200, BMA180
 
-	This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+Integrated analog Sonar on the ADC channel 7 (in centimeters)
+//D49 (PORTL.0) = input from sonar
+//D47 (PORTL.2) = sonar Tx (trigger)
+//The smaller altitude then lower the cycle time
 
-	External ADC ADS7844 is connected via Serial port 2 (in SPI mode)
-	TXD2 = MOSI = pin PH1
-	RXD2 = MISO = pin PH0
-	XCK2 = SCK = pin PH2
-	Chip Select pin is PC4 (33)   [PH6 (9)]
-	We are using the 16 clocks per conversion timming to increase efficiency (fast)
-	The sampling frequency is 400Hz (Timer2 overflow interrupt)
-	So if our loop is at 50Hz, our needed sampling freq should be 100Hz, so
-	we have an 4x oversampling and averaging.
-
-	Methods:
-		Init() : Initialization of interrupts an Timers (Timer2 overflow interrupt)
-		Ch(ch_num) : Return the ADC channel value
-
-	// HJI - Input definitions.  USB connector assumed to be on the left, Rx and servo
-	// connector pins to the rear.  IMU shield components facing up.  These are board
-	// referenced sensor inputs, not device referenced.
-	On Ardupilot Mega Hardware, oriented as described above:
-	Chennel 0 : yaw rate, r
-	Channel 1 : roll rate, p
-	Channel 2 : pitch rate, q
-	Channel 3 : x/y gyro temperature
-	Channel 4 : x acceleration, aX
-	Channel 5 : y acceleration, aY
-	Channel 6 : z acceleration, aZ
-	Channel 7 : Differential pressure sensor port
-
+	
+	
+	
 */
 extern "C" {
   // AVR LibC Includes
@@ -156,17 +129,13 @@ gyrozero[1]=(gyrozeroL[1]+200)/399;
 gyrozero[0]=(gyrozeroL[0]+200)/399;
   
 
-delay(10);  // init HMC5883L gain
-  i2c_rep_start(0X3C+0);      // I2C write direction 
-  i2c_write(0x01);            // Write to cfgb register
-  i2c_write(0x60);            // gain 4 gauss
 delay(10);
 
  //===BMA180 INIT
-  i2c_rep_start(0x82+0);      // I2C write direction 
+  i2c_rep_start(0x80+0);      // I2C write direction 
   i2c_write(0x0D);            // ctrl_reg0
   i2c_write(1<<4);            // Set bit 4 to 1 to enable writing
-  i2c_rep_start(0x82+0);       
+  i2c_rep_start(0x80+0);       
   i2c_write(0x35);            // 
   i2c_write(3<<1);            // range set to 3.  2730 1G raw data.  With /10 divisor on acc_ADC, more in line with other sensors and works with the GUI
   i2c_rep_start(0x80+0);
@@ -174,7 +143,40 @@ delay(10);
   i2c_write(1<<4);            // bw to 10Hz (low pass filter)
 
  delay(10);  
+ 
+ // Sonar INIT
+//=======================
+//D49 (PORTL.0) = sonar input
+//D47 (PORTL.2) = sonar Tx (trigger)
+//The smaller altitude then lower the cycle time
+
+ // 0.034 cm/micros
+PORTL&=B11111010; 
+DDRL&=B11111110;
+DDRL|=B00000100;
+
+//div64 = 4 us/bit
+//resolution =0.136cm
+//full range =90m 300ms
+ // Using timer5
+   //Remember the registers not declared here remains zero by default... 
+  TCCR5A =0; //standard mode with overflow at A and OC B and C interrupts
+  TCCR5B = (1<<CS11)|(1<<CS10); //Prescaler set to 64, resolution of 4us
+  TIMSK5=B00100011; // ints: overflow, capture, compareA
+  OCR5A=30000; // approx 40m limit, 150ms period
 }
+
+char sonar_meas=0;
+int sonar_data=-1,sonic_range=-1;
+ISR(TIMER5_COMPA_vect) // measurement is over, no edge detected, Set up Tx pin, offset 12 us
+{if (sonar_meas==0) sonar_data=-1;PORTL|=B00000100;TCNT5=65533;}
+ISR(TIMER5_OVF_vect) // next measurement, clear the Tx pin, 
+{PORTL&=B11111011;sonar_meas=0;}
+ISR(TIMER5_ICR_vect) // measurement successful, wait 40ms, next measurement
+{sonar_data=TCNT5;TCNT5=29990;sonar_meas=1;}
+
+
+
 
 void i2c_Gyro_ACC_getADC () { // ITG3200 read data
 uint8_t i;
@@ -186,9 +188,9 @@ uint8_t i;
   rawADC_ITG3200[5]= i2c_readNak();
 
 
-  i2c_rep_start(0x82);     // I2C write direction
+  i2c_rep_start(0x80);     // I2C write direction
   i2c_write(0x02);         // Start multiple read at reg 0x02 acc_x_lsb
-  i2c_rep_start(0x82 +1);  // I2C read direction => 1
+  i2c_rep_start(0x80 +1);  // I2C read direction => 1
   for( i = 0; i < 5; i++) {
     rawADC_BMA180[i]=i2c_readAck();}
   rawADC_BMA180[5]= i2c_readNak();
@@ -223,7 +225,12 @@ if ( (millis()-adc_read_timeout )  > 3 )  //each read is spaced by 10ms else pla
 {  adc_read_timeout = millis();
  i2c_Gyro_ACC_getADC ();}
  else adc_read_timeout = millis();
-  return(adc_value[ch_num]);
+if (ch_num==7) {
+//range in centimeters=0.136 per tick
+if (sonar_data==-1) return(-1);
+else sonic_range=((long)(17408L*(long)sonar_data))>>7;
+return(sonic_range);}
+else return(adc_value[ch_num]);
 }
 
 // make one instance for the user to use

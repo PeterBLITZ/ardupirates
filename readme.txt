@@ -40,9 +40,25 @@ Out	PIN
 14	D28
 15	D29
 
+
+===Integrated analog Sonar on the 'ADC 7'
+ - Usage: %variable%=APM_ADC.Ch(7);
+ - when out of range, returns -1 (65535);
+ - does not interfere with a program and does not require enabling/disabling
+ - 5cm..40m range
+ - 0.14cm resolution
+	D49 (PORTL.0) = input from sonar
+	D47 (PORTL.2) = sonar Tx (trigger)
+ The smaller altitude - lower the cycle time 
+ (max range 40m and 150ms cycle, both are decreased proportionally)
+
+
+
+
+
 =================================================
 NOTES and roadmap:
 
 LEDs was not tested
 Configurator program is fully working
-The motors cannot arm although RC commands are OK ???
+
