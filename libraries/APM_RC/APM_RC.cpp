@@ -19,7 +19,6 @@
 		
 */
 
-//#define PPM_SUM
 
 
 
@@ -38,7 +37,6 @@ volatile unsigned char PPM_Counter=0;
 volatile unsigned int PWM_RAW[8] = {2400,2400,2400,2400,2400,2400,2400,2400};
 volatile unsigned char radio_status=0;
 
-#ifndef PPM_SUM
 
 // ******************
 // rc functions split channels
@@ -68,56 +66,61 @@ void configureReceiver() {
       PORTK   = (1<<0) | (1<<1) | (1<<2) | (1<<3) | (1<<4) | (1<<5) | (1<<6) | (1<<7); //enable internal pull ups on the PINs of PORTK
       PCMSK2 |= (1<<0) | (1<<1) | (1<<2) | (1<<3) | (1<<4) | (1<<5) | (1<<6) | (1<<7);
       PCICR   = 1<<2; // PCINT activated only for PORTK dealing with [A8-A15] PINs
+
+	  //Remember the registers not declared here remains zero by default... 
+  TCCR4A =0; //standard mode with overflow no ints
+  TCCR4B = (1<<CS11); //Prescaler set to 8, that give us a resolution of 0.5us, read page 134 of data sheet
+	  
 }
 
 ISR(PCINT2_vect) { //this ISR is common to every receiver channel, it is call everytime a change state occurs on a digital pin [D2-D7]
-  uint8_t mask;
-  uint8_t pin;
-  uint16_t cTime,dTime;
-  static uint16_t edgeTime[8];
-  static uint8_t PCintLast;
+static  uint8_t mask;
+static  uint8_t pin;
+static  uint16_t cTime,dTime;
+static uint16_t edgeTime[8];
+static uint8_t PCintLast;
 
+  cTime = TCNT4;         // micros() return a uint32_t, but it is not usefull to keep the whole bits => we keep only 16 bits
     pin = PINK;             // PINK indicates the state of each PIN for the arduino port dealing with [A8-A15] digital pins (8 bits variable)
-  mask = pin ^ PCintLast;   // doing a ^ between the current interruption and the last one indicates wich pin changed
+mask = pin ^ PCintLast;   // doing a ^ between the current interruption and the last one indicates wich pin changed
   sei();                    // re enable other interrupts at this point, the rest of this interrupt is not so time critical and can be interrupted safely
   PCintLast = pin;          // we memorize the current state of all PINs [D0-D7]
 
-  cTime = micros();         // micros() return a uint32_t, but it is not usefull to keep the whole bits => we keep only 16 bits
-  
+    
   // mask is pins [D0-D7] that have changed // the principle is the same on the MEGA for PORTK and [A8-A15] PINs
   // chan = pin sequence of the port. chan begins at D2 and ends at D7
+  if (mask & 1<<0)    
+    if (!(pin & 1<<0)) {
+      dTime = cTime-edgeTime[0]; if (1800<dTime && dTime<4400) rcPinValue[0] = dTime>>1; 
+    } else edgeTime[0] = cTime; 
+  if (mask & 1<<1)      
+    if (!(pin & 1<<1)) {
+      dTime = cTime-edgeTime[1]; if (1800<dTime && dTime<4400) rcPinValue[1] = dTime>>1; 
+    } else edgeTime[1] = cTime;
+  if (mask & 1<<3)
+    if (!(pin & 1<<3)) {
+      dTime = cTime-edgeTime[3]; if (1800<dTime && dTime<4400) rcPinValue[3] = dTime>>1;
+    } else edgeTime[3] = cTime;
   if (mask & 1<<2)           //indicates the bit 2 of the arduino port [D0-D7], that is to say digital pin 2, if 1 => this pin has just changed
     if (!(pin & 1<<2)) {     //indicates if the bit 2 of the arduino port [D0-D7] is not at a high state (so that we match here only descending PPM pulse)
-      dTime = cTime-edgeTime[2]; if (900<dTime && dTime<2200) rcPinValue[2] = dTime; // just a verification: the value must be in the range [1000;2000] + some margin
+      dTime = cTime-edgeTime[2]; if (1800<dTime && dTime<4400) rcPinValue[2] = dTime>>1; // just a verification: the value must be in the range [1000;2000] + some margin
     } else edgeTime[2] = cTime;    // if the bit 2 of the arduino port [D0-D7] is at a high state (ascending PPM pulse), we memorize the time
   if (mask & 1<<4)   //same principle for other channels   // avoiding a for() is more than twice faster, and it's important to minimize execution time in ISR
     if (!(pin & 1<<4)) {
-      dTime = cTime-edgeTime[4]; if (900<dTime && dTime<2200) rcPinValue[4] = dTime;
+      dTime = cTime-edgeTime[4]; if (1800<dTime && dTime<4400) rcPinValue[4] = dTime>>1;
     } else edgeTime[4] = cTime;
   if (mask & 1<<5)
     if (!(pin & 1<<5)) {
-      dTime = cTime-edgeTime[5]; if (900<dTime && dTime<2200) rcPinValue[5] = dTime;
+      dTime = cTime-edgeTime[5]; if (1800<dTime && dTime<4400) rcPinValue[5] = dTime>>1;
     } else edgeTime[5] = cTime;
   if (mask & 1<<6)
     if (!(pin & 1<<6)) {
-      dTime = cTime-edgeTime[6]; if (900<dTime && dTime<2200) rcPinValue[6] = dTime;
+      dTime = cTime-edgeTime[6]; if (1800<dTime && dTime<4400) rcPinValue[6] = dTime>>1;
     } else edgeTime[6] = cTime;
   if (mask & 1<<7)
     if (!(pin & 1<<7)) {
-      dTime = cTime-edgeTime[7]; if (900<dTime && dTime<2200) rcPinValue[7] = dTime;
+      dTime = cTime-edgeTime[7]; if (1800<dTime && dTime<4400) rcPinValue[7] = dTime>>1;
     } else edgeTime[7] = cTime;
-    if (mask & 1<<0)    
-      if (!(pin & 1<<0)) {
-        dTime = cTime-edgeTime[0]; if (900<dTime && dTime<2200) rcPinValue[0] = dTime; 
-      } else edgeTime[0] = cTime; 
-    if (mask & 1<<1)      
-      if (!(pin & 1<<1)) {
-        dTime = cTime-edgeTime[1]; if (900<dTime && dTime<2200) rcPinValue[1] = dTime; 
-      } else edgeTime[1] = cTime;
-    if (mask & 1<<3)
-      if (!(pin & 1<<3)) {
-        dTime = cTime-edgeTime[3]; if (900<dTime && dTime<2200) rcPinValue[3] = dTime;
-      } else edgeTime[3] = cTime;
 }
 /* RC standard matrix (we are using analog inputs A8..A15 of MEGA board)
 0	Aileron
@@ -174,7 +177,6 @@ void computeRC() {
 
 
 
-#else
 
 //######################### END RC split channels
 
@@ -182,33 +184,6 @@ void computeRC() {
 
 
 
-
-/****************************************************
-   Input Capture Interrupt ICP4 => PPM signal read
- ****************************************************/
-ISR(TIMER4_CAPT_vect)  
-{
-  unsigned int Pulse;
-  unsigned int Pulse_Width;
-  
-  Pulse=ICR4;
-  if (Pulse<ICR4_old)     // Take care of the overflow of Timer4 (TOP=40000)
-    Pulse_Width=(Pulse + 40000)-ICR4_old;  //Calculating pulse 
-  else
-    Pulse_Width=Pulse-ICR4_old;            //Calculating pulse 
-  if (Pulse_Width>8000)   // SYNC pulse?
-    PPM_Counter=0;
-  else
-    {
-    PPM_Counter &= 0x07;  // For safety only (limit PPM_Counter to 7)
-    PWM_RAW[PPM_Counter++]=Pulse_Width;  //Saving pulse. 
-    if (PPM_Counter >= NUM_CHANNELS)
-      radio_status = 1;
-    }
-  ICR4_old = Pulse;
-}
-
-#endif
 // Constructors ////////////////////////////////////////////////////////////////
 
 APM_RC_Class::APM_RC_Class()
@@ -272,12 +247,7 @@ void APM_RC_Class::Init(void)
   OCR3C = 3000; //PB6, OUT2
 //  ICR1 = 40000; //50hz freq...Datasheet says  (system_freq/prescaler)/target frequency. So (16000000hz/8)/50hz=40000,
   
-  #ifdef PPM_SUM
-  
-  TIMSK4 |= (1<<ICIE4); // Enable Input Capture interrupt. Timer interrupt mask
- #else
  configureReceiver();
- #endif;
 }
 
 
@@ -409,14 +379,7 @@ int APM_RC_Class::InputCh(unsigned char ch)
   
   // Because servo pulse variables are 16 bits and the interrupts are running values could be corrupted.
   // We dont want to stop interrupts to read radio channels so we have to do two readings to be sure that the value is correct...
-#ifdef PPM_SUM
-  result =  PWM_RAW[ch]>>1;  // Because timer runs at 0.5us we need to do value/2
-  result2 =  PWM_RAW[ch]>>1;
-  if (result != result2)
-    result =  PWM_RAW[ch]>>1;   // if the results are different we make a third reading (this should be fine)
-#else
 result=readRawRC(ch); 
-#endif;
   
   // Limit values to a valid range
   result = constrain(result,MIN_PULSEWIDTH,MAX_PULSEWIDTH);
@@ -426,11 +389,7 @@ result=readRawRC(ch);
 
 unsigned char APM_RC_Class::GetState(void)
 {
-#ifdef PPM_SUM
-  return(radio_status);
-#else
 return(1);// always 1
-#endif
 }
 
 // InstantPWM implementation
