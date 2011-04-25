@@ -172,7 +172,7 @@ ISR(TIMER5_COMPA_vect) // measurement is over, no edge detected, Set up Tx pin, 
 {if (sonar_meas==0) sonar_data=-1;PORTL|=B00000100;TCNT5=65533;}
 ISR(TIMER5_OVF_vect) // next measurement, clear the Tx pin, 
 {PORTL&=B11111011;sonar_meas=0;}
-ISR(TIMER5_ICR_vect) // measurement successful, wait 40ms, next measurement
+ISR(TIMER5_CAPT_vect) // measurement successful, wait 40ms, next measurement
 {sonar_data=TCNT5;TCNT5=29990;sonar_meas=1;}
 
 
