@@ -48,12 +48,12 @@ Out	PIN
  - To use range values, uncomment //define IsSonar in the main program
  - 5cm..40m range
  - 0.14cm resolution (output data are rounded to nearest centimeter)
-	D49 (PORTL.0) = input from sonar
+	D48 (PORTL.1) = input from sonar
 	D47 (PORTL.2) = sonar Tx (trigger)
  The smaller altitude - lower the cycle time 
  (max range 40m and 150ms cycle, both are decreased proportionally)
 
-
+// changed Sonar Input from D49 to D48
 
 
 
