@@ -1,15 +1,8 @@
 /*
-	APM_RC.cpp - Radio Control Library for Ardupilot Mega. Arduino
-	Code by Jordi Muñoz and Jose Julio. DIYDrones.com
-
-	This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-	RC Input : PPM signal on IC4 pin
-	RC Output : 11 Servo outputs (standard 20ms frame)
-
+	APM_RC.cpp - Radio Control Library for ArduPirates Arduino Mega.
+	
+	Total rewritten by Syberian
+	
 	Methods:
 		Init() : Initialization of interrupts an Timers
 		OutpuCh(ch,pwm) : Output value to servos (range : 900-2100us) ch=0..10
@@ -41,8 +34,8 @@ volatile unsigned char radio_status=0;
 // ******************
 // rc functions split channels
 // ******************
-#define MINCHECK 1100
-#define MAXCHECK 1900
+#define MINCHECK 800
+#define MAXCHECK 2200
 
 volatile int16_t failsafeCnt = 0;
 
@@ -91,35 +84,35 @@ mask = pin ^ PCintLast;   // doing a ^ between the current interruption and the 
   // chan = pin sequence of the port. chan begins at D2 and ends at D7
   if (mask & 1<<0)    
     if (!(pin & 1<<0)) {
-      dTime = cTime-edgeTime[0]; if (1800<dTime && dTime<4400) rcPinValue[0] = dTime>>1; 
+      dTime = cTime-edgeTime[0]; if (1600<dTime && dTime<4400) rcPinValue[0] = dTime>>1; 
     } else edgeTime[0] = cTime; 
   if (mask & 1<<1)      
     if (!(pin & 1<<1)) {
-      dTime = cTime-edgeTime[1]; if (1800<dTime && dTime<4400) rcPinValue[1] = dTime>>1; 
+      dTime = cTime-edgeTime[1]; if (1600<dTime && dTime<4400) rcPinValue[1] = dTime>>1; 
     } else edgeTime[1] = cTime;
   if (mask & 1<<3)
     if (!(pin & 1<<3)) {
-      dTime = cTime-edgeTime[3]; if (1800<dTime && dTime<4400) rcPinValue[3] = dTime>>1;
+      dTime = cTime-edgeTime[3]; if (1600<dTime && dTime<4400) rcPinValue[3] = dTime>>1;
     } else edgeTime[3] = cTime;
   if (mask & 1<<2)           //indicates the bit 2 of the arduino port [D0-D7], that is to say digital pin 2, if 1 => this pin has just changed
     if (!(pin & 1<<2)) {     //indicates if the bit 2 of the arduino port [D0-D7] is not at a high state (so that we match here only descending PPM pulse)
-      dTime = cTime-edgeTime[2]; if (1800<dTime && dTime<4400) rcPinValue[2] = dTime>>1; // just a verification: the value must be in the range [1000;2000] + some margin
+      dTime = cTime-edgeTime[2]; if (1600<dTime && dTime<4400) rcPinValue[2] = dTime>>1; // just a verification: the value must be in the range [1000;2000] + some margin
     } else edgeTime[2] = cTime;    // if the bit 2 of the arduino port [D0-D7] is at a high state (ascending PPM pulse), we memorize the time
   if (mask & 1<<4)   //same principle for other channels   // avoiding a for() is more than twice faster, and it's important to minimize execution time in ISR
     if (!(pin & 1<<4)) {
-      dTime = cTime-edgeTime[4]; if (1800<dTime && dTime<4400) rcPinValue[4] = dTime>>1;
+      dTime = cTime-edgeTime[4]; if (1600<dTime && dTime<4400) rcPinValue[4] = dTime>>1;
     } else edgeTime[4] = cTime;
   if (mask & 1<<5)
     if (!(pin & 1<<5)) {
-      dTime = cTime-edgeTime[5]; if (1800<dTime && dTime<4400) rcPinValue[5] = dTime>>1;
+      dTime = cTime-edgeTime[5]; if (1600<dTime && dTime<4400) rcPinValue[5] = dTime>>1;
     } else edgeTime[5] = cTime;
   if (mask & 1<<6)
     if (!(pin & 1<<6)) {
-      dTime = cTime-edgeTime[6]; if (1800<dTime && dTime<4400) rcPinValue[6] = dTime>>1;
+      dTime = cTime-edgeTime[6]; if (1600<dTime && dTime<4400) rcPinValue[6] = dTime>>1;
     } else edgeTime[6] = cTime;
   if (mask & 1<<7)
     if (!(pin & 1<<7)) {
-      dTime = cTime-edgeTime[7]; if (1800<dTime && dTime<4400) rcPinValue[7] = dTime>>1;
+      dTime = cTime-edgeTime[7]; if (1600<dTime && dTime<4400) rcPinValue[7] = dTime>>1;
     } else edgeTime[7] = cTime;
 }
 /* RC standard matrix (we are using analog inputs A8..A15 of MEGA board)
