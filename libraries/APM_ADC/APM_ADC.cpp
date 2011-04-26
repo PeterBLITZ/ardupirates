@@ -93,7 +93,7 @@ void APM_ADC_Class::Init(void)
  int i;
 long gyrozeroL[3]={0,0,0};
 //      Wire.begin();
-i2c_init();
+//i2c_init();
 //=== ITG3200 INIT
 
  delay(10);  
