@@ -6,7 +6,7 @@ Full I2C sensors replacement:
 ITG3200, BMA180
 
 Integrated analog Sonar on the ADC channel 7 (in centimeters)
-//D49 (PORTL.0) = input from sonar
+//D48 (PORTL.1) = input from sonar
 //D47 (PORTL.2) = sonar Tx (trigger)
 //The smaller altitude then lower the cycle time
 
@@ -93,7 +93,7 @@ void APM_ADC_Class::Init(void)
  int i;
 long gyrozeroL[3]={0,0,0};
 //      Wire.begin();
-//i2c_init();
+i2c_init();
 //=== ITG3200 INIT
 
  delay(10);  
@@ -146,13 +146,13 @@ delay(10);
  
  // Sonar INIT
 //=======================
-//D49 (PORTL.0) = sonar input
+//D48 (PORTL.1) = sonar input
 //D47 (PORTL.2) = sonar Tx (trigger)
 //The smaller altitude then lower the cycle time
 
  // 0.034 cm/micros
-PORTL&=B11111010; 
-DDRL&=B11111110;
+PORTL&=B11111001; 
+DDRL&=B11111101;
 DDRL|=B00000100;
 
 //div64 = 4 us/bit
@@ -162,7 +162,7 @@ DDRL|=B00000100;
    //Remember the registers not declared here remains zero by default... 
   TCCR5A =0; //standard mode with overflow at A and OC B and C interrupts
   TCCR5B = (1<<CS11)|(1<<CS10); //Prescaler set to 64, resolution of 4us
-  TIMSK5=B00100011; // ints: overflow, capture, compareA
+  TIMSK5=B01100011; // ints: overflow, capture, compareA
   OCR5A=30000; // approx 40m limit, 150ms period
 }
 
@@ -173,7 +173,7 @@ ISR(TIMER5_COMPA_vect) // measurement is over, no edge detected, Set up Tx pin, 
 ISR(TIMER5_OVF_vect) // next measurement, clear the Tx pin, 
 {PORTL&=B11111011;sonar_meas=0;}
 ISR(TIMER5_CAPT_vect) // measurement successful, wait 40ms, next measurement
-{sonar_data=TCNT5;TCNT5=29990;sonar_meas=1;}
+{sonar_data=ICR5;TCNT5=29990;sonar_meas=1;}
 
 
 
