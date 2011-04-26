@@ -55,6 +55,85 @@ Out	PIN
 
 // changed Sonar Input from D49 to D48
 
+===============================================
+===============================================
+===============================================
+===============================================
+APM motor remapped to the MultiWii-style
+See the Wii_motormap.jpg in this folder
+
+==============================	
+Tricopter
+======
+	Type			APM		MultiWii	D pin
+
+	Right			0		3			5
+	Left			1		4			6
+	Servo			2		0			2
+	Back			3		1			3
+
+==============================	
+Quad +
+======
+	Type			APM		MultiWii	D pin
+
+	Right			0		3			5
+	Left			1		4			6
+	Front			2		0			2
+	Back			3		1			3
+
+==============================	
+Quad X
+======
+	Type			APM		MultiWii	D pin
+
+	FrontRCCW		0		3			5
+	BackLCCW		1		4			6
+	FrontLCW		2		0			2
+	BackRCW			3		1			3
+
+==============================	
+Hexa Diamond
+======
+
+//Hexa Diamond Mode - 6 Motor system in diamond shape
+
+//      L  CCW 0.Front.0 CW  R           // 0 = Motor
+//         ......***......               // *** = APM 
+//   L  CW 0.....***......0 CCW  R       // ***
+//         ......***......               // *** 
+//     B  CCW  0.Back..0  CW  B          L = Left motors, R = Right motors, B = Back motors.
+
+
+
+	Type			APM		MultiWii	D pin
+
+	LeftCW			0		4			6
+	LeftCCW			1		6			8
+	RightCW			2		3			5
+	RightCCW		3		5			7
+	BackCW			6		0			2
+	BackCCW			7		1			3
+
+
+==============================	
+Y6
+======
+	Type			APM		MultiWii	D pin
+
+	UpLeftCW		0		4			6
+	DnLeftCCW		1		6			8
+	UpRightCW		2		3			5
+	DnRightCCW		3		5			7
+	DnBackCW		6		0			2
+	UpBackCCW		7		1			3
+
+
+
+
+
+==============================	
+*/
 
 
 =================================================
