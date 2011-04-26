@@ -47,6 +47,9 @@
 
  ********************************************************************** */
 
+//APM motor remap to the MultiWii-style by Syberian
+//See http://static.rcgroups.net/forums/attachments/2/9/1/1/2/3/a3927050-35-8%20Connection%20diagram%20Seeeduino%20Mega%20v1.7.jpg
+// and APM_RC.cpp library top for pinout info
 
 
 /* *****************************************************************************
@@ -70,7 +73,7 @@
 
 #define IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
 #define UseBMP              // Do we want to use the barometer sensor on the IMU?
-//#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+#define IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
 #define CONFIGURATOR        // Do we use Configurator or normal text output over serial link?
 //#define IsCAMERATRIGGER   // Do we want to use a servo to trigger a camera regularely
 //#define IsXBEE            // Do we have a telemetry connected, eg. XBee connected on Telemetry port?
@@ -104,7 +107,7 @@
 /**********************************************/
 //    TRI COPTER SETUP                       //
 
-//#define TRI
+#define Tri
 // Frame build configuration
 
 //   L  CCW  0....Front....0 CCW  R        // 0 = Motor
@@ -121,7 +124,7 @@
 /**********************************************/
 //    QUAD COPTER SETUP                       //
 
-#define quad
+//#define Quad
 // Frame build configuration
 // THIS FLIGHT MODE X CODE - APM FRONT BETWEEN FRONT AND RIGHT MOTOR.
 // NOT LIKE THE ALPHA RELEASE !!!.
@@ -500,21 +503,21 @@ void setup()
   APM_RC.Init();             // APM Radio initialization
 
 #ifdef Quad
-  // RC channels Initialization (Quad motors)  
-  APM_RC.OutputCh(0,MIN_THROTTLE);  // Motors stoped
+  // RC channels Initialization (Quad motors) Wii 
+  APM_RC.OutputCh(3,MIN_THROTTLE);  // Motors stoped
+  APM_RC.OutputCh(4,MIN_THROTTLE);
+  APM_RC.OutputCh(0,MIN_THROTTLE);
   APM_RC.OutputCh(1,MIN_THROTTLE);
-  APM_RC.OutputCh(2,MIN_THROTTLE);
-  APM_RC.OutputCh(3,MIN_THROTTLE);
 #endif
 
 #ifdef Hexa
-  // RC channels Initialization (Hexa motors) - Motors stoped 
-  APM_RC.OutputCh(0,MIN_THROTTLE);     // Left Motor CW
-  APM_RC.OutputCh(1, MIN_THROTTLE);    // Left Motor CCW
-  APM_RC.OutputCh(2, MIN_THROTTLE);    // Right Motor CW
-  APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CCW    
-  APM_RC.OutputCh(6, MIN_THROTTLE);    // Back Motor CW
-  APM_RC.OutputCh(7, MIN_THROTTLE);    // Back Motor CCW    
+  // RC channels Initialization (Hexa motors) - Motors stoped Wii
+  APM_RC.OutputCh(4,MIN_THROTTLE);     // Left Motor CW
+  APM_RC.OutputCh(6, MIN_THROTTLE);    // Left Motor CCW
+  APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CW
+  APM_RC.OutputCh(5, MIN_THROTTLE);    // Right Motor CCW    
+  APM_RC.OutputCh(0, MIN_THROTTLE);    // Back Motor CW
+  APM_RC.OutputCh(1, MIN_THROTTLE);    // Back Motor CCW    
 #endif
   
   //  delay(1000); // Wait until frame is not moving after initial power cord has connected
@@ -689,9 +692,9 @@ void loop(){
 
 #ifdef IsCAMERATRIGGER
       if (cameracounteron < 1000)   //interval in seconds between triggering the camera (1000 = 5 seconds)
-        APM_RC.OutputCh(4, 2000);    //output for the servo - zero position
+        APM_RC.OutputCh(9, 2000);    //output for the servo - zero position
       else
-        APM_RC.OutputCh(4, 200);     //output for the servo - push
+        APM_RC.OutputCh(9, 1000);     //output for the servo - push
       if (cameracounteron > 1200)   //pushduration of the trigger (interval time + pushduration -> +200 = 1 second)    
       {
         cameracounteron = 0;
@@ -1244,35 +1247,35 @@ void loop(){
     }
     
 #ifdef Tri
-    APM_RC.OutputCh(0, rightMotor);   // Right motor
-    APM_RC.OutputCh(1, leftMotor);    // Left motor
-    APM_RC.OutputCh(2, frontMotor);   // Servo
-    APM_RC.OutputCh(3, backMotor);    // Back motor   
+    APM_RC.OutputCh(3, rightMotor);   // Right motor
+    APM_RC.OutputCh(4, leftMotor);    // Left motor
+    APM_RC.OutputCh(0, frontMotor);   // Servo
+    APM_RC.OutputCh(1, backMotor);    // Back motor   
 #endif
 
 #ifdef Quad
-    APM_RC.OutputCh(0, rightMotor);   // Right motor
-    APM_RC.OutputCh(1, leftMotor);    // Left motor
-    APM_RC.OutputCh(2, frontMotor);   // Front motor
-    APM_RC.OutputCh(3, backMotor);    // Back motor   
+    APM_RC.OutputCh(3, rightMotor);   // Right motor
+    APM_RC.OutputCh(4, leftMotor);    // Left motor
+    APM_RC.OutputCh(0, frontMotor);   // Front motor
+    APM_RC.OutputCh(1, backMotor);    // Back motor   
 #endif
 
 #ifdef Hexa
-    APM_RC.OutputCh(0, LeftCWMotor);   // Left Motor CW
-    APM_RC.OutputCh(1, LeftCCWMotor);  // Left Motor CCW
-    APM_RC.OutputCh(2, RightCWMotor);  // Right Motor CW
-    APM_RC.OutputCh(3, RightCCWMotor); // Right Motor CCW    
-    APM_RC.OutputCh(6, BackCWMotor);   // Back Motor CW
-    APM_RC.OutputCh(7, BackCCWMotor);  // Back Motor CCW    
+    APM_RC.OutputCh(4, LeftCWMotor);   // Left Motor CW
+    APM_RC.OutputCh(6, LeftCCWMotor);  // Left Motor CCW
+    APM_RC.OutputCh(3, RightCWMotor);  // Right Motor CW
+    APM_RC.OutputCh(5, RightCCWMotor); // Right Motor CCW    
+    APM_RC.OutputCh(0, BackCWMotor);   // Back Motor CW
+    APM_RC.OutputCh(1, BackCCWMotor);  // Back Motor CCW    
 #endif
 
 #ifdef Y6
-    APM_RC.OutputCh(0, LeftCWMotor);   // Left Motor CW
-    APM_RC.OutputCh(1, LeftCCWMotor);  // Left Motor CCW
-    APM_RC.OutputCh(2, RightCWMotor);  // Right Motor CW
-    APM_RC.OutputCh(3, RightCCWMotor); // Right Motor CCW    
-    APM_RC.OutputCh(6, BackCWMotor);   // Back Motor CW
-    APM_RC.OutputCh(7, BackCCWMotor);  // Back Motor CCW    
+    APM_RC.OutputCh(4, LeftCWMotor);   // Left Motor CW
+    APM_RC.OutputCh(6, LeftCCWMotor);  // Left Motor CCW
+    APM_RC.OutputCh(3, RightCWMotor);  // Right Motor CW
+    APM_RC.OutputCh(5, RightCCWMotor); // Right Motor CCW    
+    APM_RC.OutputCh(0, BackCWMotor);   // Back Motor CW
+    APM_RC.OutputCh(1, BackCCWMotor);  // Back Motor CCW    
 #endif
 
     // Camera Stabilization
@@ -1415,5 +1418,4 @@ void loop(){
 } // End of void loop()
 
 // END of Arducopter.pde
-
 
