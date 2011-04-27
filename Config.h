@@ -185,8 +185,6 @@
 - ---------------------------------------------------------------------------- -
  OCTA COPTER AIRFRAME SETUP (PWM) (8 motors)
  - ---------------------------------------------------------------------------- -
-/*
-
 
  
             F CW 0
@@ -204,7 +202,6 @@ L CW 0   .......***.......   0 CW R        // ***
                                      // CW = Clockwise rotation,
                                      // CCW = Counter clockwise rotation.
  
- 
  To make absolutely sure you are running the Octa flight mode, connect with
  the Configurator and use the serial monitor in the Configurator to send the
  command "T". It will tell you which flight mode is configured.
@@ -212,7 +209,27 @@ L CW 0   .......***.......   0 CW R        // ***
  CH_10 (output 9) = Connection PB5 on APM
  CH_11 (output 10) = Connection PE3 on APM
  If you have a Octacopter, uncomment this next line !                                 */
+
 #define AIRFRAME OCTA
+
+/* 
+For Quad Like motor layout using 2 motors in the front, 2 left, 2 right and 2 back:
+
+       F CW 0   0 CCW F
+       ....FRONT....                 // 0 = Motors
+ L CCW 0....***....0 CW R            // *** = APM
+       .....***.....                 // ***
+ L CW  0....***....0 CCW R           // ***
+       .....BACK....
+      B CCW 0   0 CW B               // L = Left motors,
+                                     // R = Right motors,
+                                     // B = Back motors,
+                                     // F = Front motors.
+                                     // CW = Clockwise rotation,
+                                     // CCW = Counter clockwise rotation.
+If your Octacopter has this setup, uncomment the previous "#define AIRFRAME OCTA" line AND the following one:  */ 
+#define FLIGHT_MODE_OCTO_X
+
 
 
 /*
