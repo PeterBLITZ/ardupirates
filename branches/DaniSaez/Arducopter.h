@@ -529,6 +529,10 @@ int RightCCWMotor;
 int FrontCWMotor;
 int BackCCWMotor;
 
+// Octa Motors  Additional to Hexa motors for Octo Flight Mode X
+int FrontCCWMotor;
+int BackCWMotor;
+
 // Octa Motors   
 int Front_MotorCW;
 int Front_Right_MotorCCW;

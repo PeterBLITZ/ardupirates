@@ -107,6 +107,8 @@ void motor_output()
 #endif 
  
 #if AIRFRAME == OCTA
+
+#ifndef FLIGHT_MODE_OCTO_X
    // Octacopter mix
         Front_MotorCW = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
         Front_Right_MotorCCW = constrain(throttle + (0.71*control_pitch) - (0.71*control_roll) + control_yaw, minThrottle, 2000);  // Front Right Motor CCW
@@ -117,6 +119,21 @@ void motor_output()
         Left_MotorCW = constrain(throttle + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
         Front_Left_MotorCCW = constrain(throttle + (0.71*control_pitch) + (0.71*control_roll) + control_yaw, minThrottle, 2000);  // Front Left Motor CCW
 #endif 
+
+#ifdef FLIGHT_MODE_OCTO_X
+   // Octacopter mix
+        FrontCWMotor  = constrain(throttle + control_pitch          - (0.42 * control_roll) - control_yaw, minThrottle, 2000); // Front Motor CW
+        FrontCCWMotor = constrain(throttle + control_pitch          + (0.42 * control_roll) + control_yaw, minThrottle, 2000); // Front Motor CCW
+        LeftCWMotor   = constrain(throttle + (0.42 * control_pitch) + control_roll          - control_yaw, minThrottle, 2000); // Left Motor CW
+        LeftCCWMotor  = constrain(throttle - (0.42 * control_pitch) + control_roll          + control_yaw, minThrottle, 2000); // Left Motor CCW
+        RightCWMotor  = constrain(throttle - (0.42 * control_pitch) - control_roll          - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(throttle + (0.42 * control_pitch) - control_roll          + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor   = constrain(throttle - control_pitch          + (0.42 * control_roll) - control_yaw, minThrottle, 2000); // Back Motor CW
+        BackCCWMotor  = constrain(throttle - control_pitch          - (0.42 * control_roll) + control_yaw, minThrottle, 2000); // Back Motor CCW
+#endif 
+
+#endif 
+
 
   } else {    // MOTORS DISARMED
 
@@ -142,6 +159,8 @@ void motor_output()
 #endif
 
 #if AIRFRAME == OCTA
+
+#ifndef FLIGHT_MODE_OCTO_X
       Front_MotorCW = MIN_THROTTLE;         // Front Motor CW
       Front_Right_MotorCCW = MIN_THROTTLE;  // Front Right Motor CCW
       Right_MotorCW = MIN_THROTTLE;         // Right Motor CW
@@ -150,7 +169,20 @@ void motor_output()
       Back_Left_MotorCCW = MIN_THROTTLE;    // Back Left Motor CCW
       Left_MotorCW = MIN_THROTTLE;          // Left Motor CW
       Front_Left_MotorCCW = MIN_THROTTLE;   // Front Left Motor CCW
+#endif 
+
+#ifdef FLIGHT_MODE_OCTO_X
+      LeftCWMotor   = MIN_THROTTLE;
+      LeftCCWMotor  = MIN_THROTTLE;
+      RightCWMotor  = MIN_THROTTLE;
+      RightCCWMotor = MIN_THROTTLE;
+      FrontCWMotor  = MIN_THROTTLE;
+      FrontCCWMotor = MIN_THROTTLE;
+      BackCCWMotor  = MIN_THROTTLE;  
+      BackCWMotor   = MIN_THROTTLE;
 #endif
+
+#endif 
 
     // Reset_I_Terms();
     roll_I = 0;     // reset I terms of PID controls
@@ -180,6 +212,8 @@ void motor_output()
 #endif
 
 #if AIRFRAME == OCTA
+
+#ifndef FLIGHT_MODE_OCTO_X
     APM_RC.OutputCh(0, Front_MotorCW);        // Front Motor CW
     APM_RC.OutputCh(1, Front_Right_MotorCCW); // Front Right Motor CCW
     APM_RC.OutputCh(2, Right_MotorCW);        // Right Motor CW
@@ -188,6 +222,19 @@ void motor_output()
     APM_RC.OutputCh(7, Back_Left_MotorCCW);   // Back Left Motor CCW
     APM_RC.OutputCh(9, Left_MotorCW);         // Left Motor CW          // Connection PB5 on APM
     APM_RC.OutputCh(10, Front_Left_MotorCCW); // Front Left Motor CCW   // Connection PE3 on APM  
+#endif 
+
+#ifdef FLIGHT_MODE_OCTO_X
+    APM_RC.OutputCh(0, LeftCWMotor);     // Left Motor CW
+    APM_RC.OutputCh(1, LeftCCWMotor);    // Left Motor CCW
+    APM_RC.OutputCh(2, RightCWMotor);    // Right Motor CW
+    APM_RC.OutputCh(3, RightCCWMotor);   // Right Motor CCW    
+    APM_RC.OutputCh(6, FrontCWMotor);    // Front Motor CW
+    APM_RC.OutputCh(7, FrontCCWMotor);   // Front Motor CCW
+    APM_RC.OutputCh(9, BackCWMotor);     // Back Motor CW    // Connection PB5 on APM
+    APM_RC.OutputCh(10, BackCCWMotor);   // Back Motor CCW   // Connection PE3 on APM  
+#endif
+
 #endif
 
   // InstantPWM => Force inmediate output on PWM signals
