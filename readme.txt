@@ -136,6 +136,18 @@ Y6
 */
 
 
+=============================
+===APM_BMP085 has been rearranged:
+-Added 3 new functions:
+		long GetAltitude(); // Relative altitude in 0.01 meters (1cm)
+		long GetASL(); // altitude AboveSeaLevel in 0.01 meters (1cm)
+		long Calibrate() // altitude calibration (set the current Altitude to zero)
+-Advanced filtering of barometer signal
+-'COMPLETE' input is no longer needed
+-very accurate readings (+-0.2m in the calm air)
+
+
+
 =================================================
 NOTES and roadmap:
 
