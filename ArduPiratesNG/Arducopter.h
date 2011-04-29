@@ -49,6 +49,7 @@ TODO:
 #define QUAD 0
 #define HELI 1
 #define HEXA 2
+#define OCTA 3
 
 //Modes
 #define FM_ACRO_MODE           0  // DIP3 down (ON)  = Acrobatic Mode
@@ -511,6 +512,16 @@ int RightCWMotor;
 int RightCCWMotor;
 int FrontCWMotor;
 int BackCCWMotor;
+
+// Octa Motors   
+int Front_MotorCW;
+int Front_Right_MotorCCW;
+int Right_MotorCW;
+int Back_Right_MotorCCW;
+int Back_MotorCW;
+int Back_Left_MotorCCW;
+int Left_MotorCW;  
+int Front_Left_MotorCCW;
 
 byte  motorArmed = 0;                              // 0 = motors disarmed, 1 = motors armed
 byte  motorSafety = 1;                             // 0 = safety off, 1 = on.  When On, sudden increases in throttle not allowed
