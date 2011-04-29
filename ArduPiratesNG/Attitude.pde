@@ -58,7 +58,7 @@ TODO:
 // Input : desired Roll, Pitch and Yaw absolute angles. Output : Motor commands
 void Attitude_control_v3(int command_roll, int command_pitch, int command_yaw)
 {
-  #define MAX_CONTROL_OUTPUT 250
+  #define MAX_CONTROL_OUTPUT 350
   float stable_roll,stable_pitch,stable_yaw;
   
   // ROLL CONTROL    
