@@ -149,7 +149,7 @@ If you have a quadcopter, uncomment this next line ! */
  
    To choose FLIGHT_MODE_X, just uncommend the line below. 
                                                                               */ 
-//#define FLIGHT_MODE_X
+#define FLIGHT_MODE_X
 
 /* --------------------------------------------------------------------------- */ 
 
