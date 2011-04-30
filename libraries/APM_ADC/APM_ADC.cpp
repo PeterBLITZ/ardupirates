@@ -27,6 +27,7 @@ extern "C" {
 // I2C general functions
 // *********************
   #define I2C_PULLUPS_DISABLE        PORTC &= ~(1<<4); PORTC &= ~(1<<5);
+#define BMA180_A 0x82
 
 // Mask prescaler bits : only 5 bits of TWSR defines the status of each I2C request
 #define TW_STATUS_MASK	(1<<TWS7) | (1<<TWS6) | (1<<TWS5) | (1<<TWS4) | (1<<TWS3)
@@ -132,13 +133,13 @@ gyrozero[0]=(gyrozeroL[0]+200)/399;
 delay(10);
 
  //===BMA180 INIT
-  i2c_rep_start(0x80+0);      // I2C write direction 
+  i2c_rep_start(BMA180_A+0);      // I2C write direction 
   i2c_write(0x0D);            // ctrl_reg0
   i2c_write(1<<4);            // Set bit 4 to 1 to enable writing
-  i2c_rep_start(0x80+0);       
+  i2c_rep_start(BMA180_A+0);       
   i2c_write(0x35);            // 
   i2c_write(3<<1);            // range set to 3.  2730 1G raw data.  With /10 divisor on acc_ADC, more in line with other sensors and works with the GUI
-  i2c_rep_start(0x80+0);
+  i2c_rep_start(BMA180_A+0);
   i2c_write(0x20);            // bw_tcs reg: bits 4-7 to set bw
   i2c_write(1<<4);            // bw to 10Hz (low pass filter)
 
@@ -188,9 +189,9 @@ uint8_t i;
   rawADC_ITG3200[5]= i2c_readNak();
 
 
-  i2c_rep_start(0x80);     // I2C write direction
+  i2c_rep_start(BMA180_A);     // I2C write direction
   i2c_write(0x02);         // Start multiple read at reg 0x02 acc_x_lsb
-  i2c_rep_start(0x80 +1);  // I2C read direction => 1
+  i2c_rep_start(BMA180_A +1);  // I2C read direction => 1
   for( i = 0; i < 5; i++) {
     rawADC_BMA180[i]=i2c_readAck();}
   rawADC_BMA180[5]= i2c_readNak();

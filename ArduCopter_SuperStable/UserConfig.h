@@ -76,7 +76,8 @@ TODO:
 #define AUX_MID 1500
 
 #define CHANN_CENTER 1500       // Channel center, legacy
-#define MIN_THROTTLE 1040       // Throttle pulse width at minimun...
+#define MIN_THROTTLE 1130       // Throttle pulse width at minimun...
+#define MIN_COMMAND 900       // Throttle pulse to stop the ESC...
 
 // Following variables stored in EEPROM
 float KP_QUAD_ROLL;
