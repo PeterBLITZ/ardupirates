@@ -299,13 +299,13 @@ void sendSerialTelemetry() {
     comma();
     SerPri(control_yaw);
     comma();
-    SerPri(frontMotor); // Front Motor
+    SerPri(ppm_m[0]); // Front Motor
     comma();
-    SerPri(backMotor); // Back Motor
+    SerPri(ppm_m[1]); // Back Motor
     comma();
-    SerPri(rightMotor); // Right Motor
+    SerPri(ppm_m[3]); // Right Motor
     comma();
-    SerPri(leftMotor); // Left Motor
+    SerPri(ppm_m[4]); // Left Motor
     comma();
 
     /* ==== NOTE: Configurator requires these out of sequence!! === */

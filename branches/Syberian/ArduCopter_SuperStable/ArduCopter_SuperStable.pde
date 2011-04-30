@@ -47,6 +47,32 @@
 
  ********************************************************************** */
 
+ 
+ /**********************************************/
+
+// FRAME TYPE
+//Please define your frame type along with the subtype (flight_mode), if applicable.
+//The board pinout is the same as in the MultiWii
+/**********************************************/
+
+#define Tri 
+//#define Quad
+// #define FLIGHT_MODE_+4
+// #define FLIGHT_MODE_X4
+// #define FLIGHT_MODE_Y4
+//#define Hexa
+//#define FLIGHT_MODE_+6
+// #define FLIGHT_MODE_X6
+// #define FLIGHT_MODE_Y6
+
+/**********************************************/
+
+// If you need a yaw reverse, uncomment this:
+//#define YAW_REVERSE
+
+ 
+ 
+ 
 //APM motor remap to the MultiWii-style by Syberian
 //See http://static.rcgroups.net/forums/attachments/2/9/1/1/2/3/a3927050-35-8%20Connection%20diagram%20Seeeduino%20Mega%20v1.7.jpg
 // and APM_RC.cpp library top for pinout info
@@ -57,7 +83,7 @@
    ***************************************************************************** */
 
 //GPS Config
-//#define IsGPS               // Do we have a GPS connected?
+#define IsGPS               // Do we have a GPS connected?
 
 //#define MTK_GPS           // MediaTEK DIY Drones GPS. 
 //#define IsNEWMTEK         // Do we have MTEK with new firmware?
@@ -67,7 +93,7 @@
 //#include <GPS_UBLOX.h>   
 
 #include <GPS_NMEA.h>       // General NMEA GPS
-//#define NMEA_GPS            
+#define NMEA_GPS            
 
 
 
@@ -99,61 +125,6 @@
   #define CAM1PIN                    6  //PIN 68 =  PIN A14
   #define CAM2PIN                    7  //PIN 69 =  PIN A15
 */
-
-
-
-
-
-/**********************************************/
-//    TRI COPTER SETUP                       //
-
-#define Tri
-// Frame build configuration
-
-//   L  CCW  0....Front....0 CCW  R        // 0 = Motor
-//          ......***......               // *** = APM 
-//          ......***......               // ***
-//          ......***......               // *** 
-//          ......***......                 L = Left motor, 
-//                B CCW                     R = Right motor, 
-//                S                         B = Back motor,
-//                                          S = Yaw Servo.  
-
-
-
-/**********************************************/
-//    QUAD COPTER SETUP                       //
-
-//#define Quad
-// Frame build configuration
-// THIS FLIGHT MODE X CODE - APM FRONT BETWEEN FRONT AND RIGHT MOTOR.
-// NOT LIKE THE ALPHA RELEASE !!!.
-
-//   F  CW  0....Front....0 CCW  R        // 0 = Motor
-//          ......***......               // *** = APM 
-//          ......***......               // ***
-//          ......***......               // *** 
-//   L CCW  0....Back.....0  CW  B          L = Left motor, 
-//                                          R = Right motor, 
-//                                          B = Back motor,
-//                                          F = Front motor.  
-
-#define FLIGHT_MODE_X
-//#define FLIGHT_MODE_+
-
-/**********************************************/
-//    HEXA COPTER SETUP                       //
-
-//#define Hexa
-
-// Frame build condiguration
-//Hexa Diamond Mode - 6 Motor system in diamond shape
-
-//      L  CCW 0.Front.0 CW  R           // 0 = Motor
-//         ......***......               // *** = APM 
-//   L  CW 0.....***......0 CCW  R       // ***
-//         ......***......               // *** 
-//     B  CCW  0.Back..0  CW  B          L = Left motors, R = Right motors, B = Back motors.
 
 
 /**********************************************/
@@ -292,6 +263,7 @@
 // STABLE MODE
 // PI absolute angle control driving a P rate control
 // Input : desired Roll, Pitch and Yaw absolute angles. Output : Motor commands
+int ppm_m[8];
 void Attitude_control_v3()
 {
   #define MAX_CONTROL_OUTPUT 250
@@ -502,23 +474,19 @@ void setup()
   
   APM_RC.Init();             // APM Radio initialization
 
-#ifdef Quad
   // RC channels Initialization (Quad motors) Wii 
-  APM_RC.OutputCh(3,MIN_THROTTLE);  // Motors stoped
-  APM_RC.OutputCh(4,MIN_THROTTLE);
-  APM_RC.OutputCh(0,MIN_THROTTLE);
-  APM_RC.OutputCh(1,MIN_THROTTLE);
-#endif
+  APM_RC.OutputCh(0,MIN_COMMAND);
+  APM_RC.OutputCh(1,MIN_COMMAND);
+  APM_RC.OutputCh(2,MIN_COMMAND);
+  APM_RC.OutputCh(3,MIN_COMMAND);
+  APM_RC.OutputCh(4,MIN_COMMAND);  // Motors stoped
+  APM_RC.OutputCh(5,MIN_COMMAND);
+  APM_RC.OutputCh(6,MIN_COMMAND);
+  APM_RC.OutputCh(7,MIN_COMMAND);
+#ifdef Tri
+  APM_RC.OutputCh(0,1500); // servo
+#endif  
 
-#ifdef Hexa
-  // RC channels Initialization (Hexa motors) - Motors stoped Wii
-  APM_RC.OutputCh(4,MIN_THROTTLE);     // Left Motor CW
-  APM_RC.OutputCh(6, MIN_THROTTLE);    // Left Motor CCW
-  APM_RC.OutputCh(3, MIN_THROTTLE);    // Right Motor CW
-  APM_RC.OutputCh(5, MIN_THROTTLE);    // Right Motor CCW    
-  APM_RC.OutputCh(0, MIN_THROTTLE);    // Back Motor CW
-  APM_RC.OutputCh(1, MIN_THROTTLE);    // Back Motor CCW    
-#endif
   
   //  delay(1000); // Wait until frame is not moving after initial power cord has connected
   for(i = 0; i <= 50; i++) {
@@ -685,7 +653,7 @@ void loop(){
     {
       APM_BMP085.Read();
       BMP_counter = 0;
-      press_alt = BMP_Sensor_Filter(APM_BMP085.Press, press_alt, 15);  // Filter Barometric readings.
+      press_alt = APM_BMP085.GetAltitude();  
       Baro_new_data=1;
     }
 #endif
@@ -719,7 +687,7 @@ void loop(){
     sonar_read = APM_ADC.Ch(7);   // Sonar is connected to pitot input in shield (Infront of shield, marked pitot between led's)
                                   // At the bottom of shield is written gnd +5V IN.  We use the IN....
                                   //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output. (pin 3)  Will still consider PW..pin2
-    if (sonar_read > 2000)        // For testing purposes I am monitoring sonar_read value.
+    if (sonar_read ==-1)        // For testing purposes I am monitoring sonar_read value.
       Use_BMP_Altitude = 1; 
     else  
     {  
@@ -733,7 +701,7 @@ void loop(){
   if (Sonar_Counter > 10)   // New sonar data at 20Hz
       {
       sonar_adc = sonar_adc/Sonar_Counter;  // Average sensor readings (to filter noise)
-      Sonar_value = Sonar_Sensor_Filter(SonarToCm(sonar_adc),Sonar_value,4);
+      Sonar_value = Sonar_Sensor_Filter(sonar_adc,Sonar_value,4);
       sonar_adc=0;
       Sonar_Counter=0;
       Sonar_new_data=1;  // New sonar data flag
@@ -760,98 +728,6 @@ void loop(){
       command_rx_pitch = (ch_pitch-pitch_mid) / STICK_TO_ANGLE_FACTOR;
 
 
-/* 
-      // Tuning Engine for PID's using only 3 position channel switch (Flight Mode - aux1 channel).
-     if (ch_aux1 >= 1800) 
-     {
-       Plus = 1;
-       Minus = 0;
-     } 
-     else if (ch_aux1 <= 1200) 
-     {
-          Plus = 0;
-          Minus = 1;
-     } 
-     else if (ch_aux1 >= 1400 && ch_aux1 <= 1600) 
-     {
-             if (Plus == 1){
-//                KP_GPS_ROLL += 0.001;
-//                writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
-//                KP_GPS_PITCH += 0.001;
-//                writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
-//                KI_GPS_ROLL += 0.0001;
-//                writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
-//                KI_GPS_PITCH += 0.0001;
-//                writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
-//                KP_QUAD_YAW += 0.1;
-//                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
-//                KI_QUAD_YAW += 0.01;
-//                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
-//                STABLE_MODE_KP_RATE += 0.05;
-//                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);
-//                STABLE_MODE_KP_RATE_YAW += 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
-//                STABLE_MODE_KP_RATE_ROLL += 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
-//                STABLE_MODE_KP_RATE_PITCH += 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
-//                Kp_RateRoll += 0.1;
-//                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
-//                Kp_RatePitch += 0.1;
-//                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
-                KP_ALTITUDE += 0.05;
-                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
-//                KI_ALTITUDE += 0.05;
-//                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
-//                KD_ALTITUDE += 0.3;
-//                writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
-//                Magoffset1 += 1;
-//                writeEEPROM(Magoffset1_ADR);
-//                APM_Compass.SetOffsets(Magoffset1);    
-
-                Plus = 0;
-                Minus = 0;
-             } else if (Minus == 1) {
-//                KP_GPS_ROLL -= 0.001;
-//                writeEEPROM(KP_GPS_ROLL, KP_GPS_ROLL_ADR);
-//                KP_GPS_PITCH -= 0.001;
-//                writeEEPROM(KP_GPS_PITCH, KP_GPS_PITCH_ADR);
-//                KI_GPS_ROLL -= 0.0001;
-//                writeEEPROM(KI_GPS_ROLL, KI_GPS_ROLL_ADR);
-//                KI_GPS_PITCH -= 0.0001;
-//                writeEEPROM(KI_GPS_PITCH, KI_GPS_PITCH_ADR);
-//                KP_QUAD_YAW -= 0.1;
-//                writeEEPROM(KP_QUAD_YAW, KP_QUAD_YAW_ADR);
-//                KI_QUAD_YAW -= 0.01;
-//                writeEEPROM(KI_QUAD_YAW, KI_QUAD_YAW_ADR);
-//                STABLE_MODE_KP_RATE -= 0.05;
-//                writeEEPROM(STABLE_MODE_KP_RATE, STABLE_MODE_KP_RATE_ADR);
-//                STABLE_MODE_KP_RATE_YAW -= 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_YAW, STABLE_MODE_KP_RATE_YAW_ADR);
-//                STABLE_MODE_KP_RATE_ROLL -= 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_ROLL, STABLE_MODE_KP_RATE_ROLL_ADR);
-//                STABLE_MODE_KP_RATE_PITCH -= 0.1;
-//                writeEEPROM(STABLE_MODE_KP_RATE_PITCH, STABLE_MODE_KP_RATE_PITCH_ADR);
-//                Kp_RateRoll -= 0.1;
-//                writeEEPROM(Kp_RateRoll, KP_RATEROLL_ADR);
-//                Kp_RatePitch -= 0.1;
-//                writeEEPROM(Kp_RatePitch, KP_RATEPITCH_ADR);
-                KP_ALTITUDE -= 0.05;
-                writeEEPROM(KP_ALTITUDE, KP_ALTITUDE_ADR);
-//                KI_ALTITUDE -= 0.05;
-//                writeEEPROM(KI_ALTITUDE, KI_ALTITUDE_ADR);
-//                KD_ALTITUDE -= 0.3;
-//                writeEEPROM(KD_ALTITUDE, KD_ALTITUDE_ADR);
-//                Magoffset1 -= 1;
-//                writeEEPROM(Magoffset1_ADR);
-//                APM_Compass.SetOffsets(Magoffset1);    
-
-                Plus = 0;
-                Minus = 0;
-             }
-     }
-
-*/
 
       if (abs(ch_yaw-yaw_mid)<12)   // Take into account a bit of "dead zone" on yaw
         aux_float = 0.0;
@@ -1113,7 +989,7 @@ void loop(){
 #endif
     
     // Arm motor output : Throttle down and full yaw right for more than 2 seconds
-    if (ch_throttle < (MIN_THROTTLE + 100)) {
+    if (ch_throttle < MIN_THROTTLE) {
       control_yaw = 0;
       command_rx_yaw = ToDeg(yaw);
       if (ch_yaw > 1850) {
@@ -1121,7 +997,7 @@ void loop(){
           if(ch_throttle > 800) 
           {
             motorArmed = 1;
-            minThrottle = MIN_THROTTLE + 60;  // A minimun value for mantain a bit if throttle
+            minThrottle = MIN_THROTTLE;  // A minimun value for mantain a bit if throttle
 //            motorArmed = 0;                 // Disable sometimes motors when testing sensors. 
 //            minThrottle = MIN_THROTTLE;
           }
@@ -1136,7 +1012,7 @@ void loop(){
       if (ch_yaw < 1150) {
         if (Disarming_counter > DISARM_DELAY){
           motorArmed = 0;
-          minThrottle = MIN_THROTTLE;
+          minThrottle = MIN_COMMAND;
         }
         else
           Disarming_counter++;
@@ -1155,48 +1031,79 @@ void loop(){
       digitalWrite(FR_LED, HIGH);    // AM-Mode
 #endif
 
-#ifdef Tri
-        rightMotor = constrain(ch_throttle - control_roll - 0.66*control_pitch, minThrottle, 2000);
-        leftMotor  = constrain(ch_throttle + control_roll - 0.66*control_pitch, minThrottle, 2000);
-        frontMotor = constrain(1500 + control_yaw * 2                         , minThrottle, 2000); //Servo
-        backMotor  = constrain(ch_throttle                + 1.33*control_pitch, minThrottle, 2000);
-#endif
+						// fill the motor massive with data
 
+//3,5,6,2,7,8,9,10
+//1,3,4,0,5,6 - motor order
+//0,1,2,3,4,5,6,7
+//ppm_m[8];
+for (byte i=0;i<7;i++) ppm_m[i]=MIN_COMMAND; // stop all the motors
+//control_roll=-control_roll;
+control_pitch=-control_pitch;
+#ifdef YAW_REVERSE
+control_yaw=-control_yaw;
+#endif
+#ifdef Tri
+        ppm_m[1] = constrain(ch_throttle                + 1.33*control_pitch, minThrottle, 2000);
+        ppm_m[3] = constrain(ch_throttle - control_roll - 0.66*control_pitch, minThrottle, 2000);
+        ppm_m[4] = constrain(ch_throttle + control_roll - 0.66*control_pitch, minThrottle, 2000);
+		ppm_m[0] = constrain(1500 + control_yaw * 2                         , 1000, 2000); //Servo
+#endif
 #ifdef Quad
    // Quadcopter mix
-#ifdef FLIGHT_MODE_+
-        rightMotor = constrain(ch_throttle - control_roll                 + control_yaw, minThrottle, 2000);
-        leftMotor  = constrain(ch_throttle + control_roll                 + control_yaw, minThrottle, 2000);
-        frontMotor = constrain(ch_throttle                + control_pitch - control_yaw, minThrottle, 2000);
-        backMotor  = constrain(ch_throttle                - control_pitch - control_yaw, minThrottle, 2000);
+#ifdef FLIGHT_MODE_+4
+        ppm_m[1] = constrain(ch_throttle                + control_pitch - control_yaw, minThrottle, 2000);
+        ppm_m[3] = constrain(ch_throttle - control_roll                 + control_yaw, minThrottle, 2000);
+        ppm_m[4]  = constrain(ch_throttle + control_roll                 + control_yaw, minThrottle, 2000);
+        ppm_m[0]  = constrain(ch_throttle                - control_pitch - control_yaw, minThrottle, 2000);
 #endif
-#ifdef FLIGHT_MODE_X
-        rightMotor = constrain(ch_throttle - control_roll + control_pitch + control_yaw, minThrottle, 2000); // Right motor
-        leftMotor  = constrain(ch_throttle + control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
-        frontMotor = constrain(ch_throttle + control_roll + control_pitch - control_yaw, minThrottle, 2000); // Front motor
-        backMotor  = constrain(ch_throttle - control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
+#ifdef FLIGHT_MODE_X4
+        ppm_m[1] = constrain(ch_throttle - control_roll + control_pitch - control_yaw, minThrottle, 2000); // Right motor
+        ppm_m[3] = constrain(ch_throttle - control_roll - control_pitch + control_yaw, minThrottle, 2000);  // Left motor
+        ppm_m[4] = constrain(ch_throttle + control_roll + control_pitch + control_yaw, minThrottle, 2000); // Front motor
+        ppm_m[0] = constrain(ch_throttle + control_roll - control_pitch - control_yaw, minThrottle, 2000);  // Back motor
+#endif
+#ifdef FLIGHT_MODE_Y4
+        ppm_m[1] = constrain(ch_throttle + control_pitch - control_yaw, minThrottle, 2000); 
+        ppm_m[3] = constrain(ch_throttle - control_roll - control_pitch, minThrottle, 2000);
+        ppm_m[4] = constrain(ch_throttle + control_pitch + control_yaw, minThrottle, 2000); 
+        ppm_m[0] = constrain(ch_throttle + control_roll - control_pitch, minThrottle, 2000);
 #endif
 #endif
-
 #ifdef Hexa
    // Hexacopter mix
-        LeftCWMotor  = constrain(ch_throttle +       control_roll                         - control_yaw, minThrottle, 2000); // Left Motor CW
-        LeftCCWMotor = constrain(ch_throttle + (0.43*control_roll) + (0.89*control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
-        RightCWMotor = constrain(ch_throttle - (0.43*control_roll) + (0.89*control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-        RightCCWMotor= constrain(ch_throttle -       control_roll                         + control_yaw, minThrottle, 2000); // Right Motor CCW
-        BackCWMotor  = constrain(ch_throttle - (0.44*control_roll) -       control_pitch  - control_yaw, minThrottle, 2000); // Back Motor CW
-        BackCCWMotor = constrain(ch_throttle + (0.44*control_roll) -       control_pitch  + control_yaw, minThrottle, 2000); // Back Motor CCW
+#ifdef FLIGHT_MODE_+6
+        ppm_m[1] = constrain(ch_throttle - control_roll/2 + control_pitch/2 + control_yaw, minThrottle, 2000); // Left Motor CW
+        ppm_m[3] = constrain(ch_throttle - control_roll/2 - control_pitch/2 - control_yaw, minThrottle, 2000); // Left Motor CCW
+        ppm_m[4] = constrain(ch_throttle + control_roll/2 + control_pitch/2 + control_yaw, minThrottle, 2000); // Right Motor CW
+        ppm_m[0] = constrain(ch_throttle + control_roll/2 - control_pitch/2 - control_yaw, minThrottle, 2000); // Right Motor CCW
+        ppm_m[5] = constrain(ch_throttle                  - control_pitch   + control_yaw, minThrottle, 2000); // Back Motor CW
+        ppm_m[6] = constrain(ch_throttle                  + control_pitch   + control_yaw, minThrottle, 2000); // Back Motor CCW
+#endif	
+#ifdef FLIGHT_MODE_X6   
+    ppm_m[1] = constrain(ch_throttle - control_roll/2 + control_pitch/2 + control_yaw, minThrottle, 2000); // Left Motor CW
+    ppm_m[3] = constrain(ch_throttle - control_roll/2 - control_pitch/2 + control_yaw, minThrottle, 2000); // Left Motor CCW
+    ppm_m[4] = constrain(ch_throttle + control_roll/2 + control_pitch/2 - control_yaw, minThrottle, 2000); // Right Motor CW
+    ppm_m[0] = constrain(ch_throttle + control_roll/2 - control_pitch/2 - control_yaw, minThrottle, 2000); // Right Motor CCW
+    ppm_m[5] = constrain(ch_throttle - control_roll                     - control_yaw, minThrottle, 2000); // Back Motor CW
+    ppm_m[6] = constrain(ch_throttle + control_roll                     + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif   
-
-#ifdef Y6
+#ifdef FLIGHT_MODE_Y6
+    motor[0] = rcCommand[THROTTLE]                 + axisPID[PITCH]*4/3 + YAW_DIRECTION * axisPID[YAW]; //REAR
+    motor[1] = rcCommand[THROTTLE] - axisPID[ROLL] - axisPID[PITCH]*2/3 - YAW_DIRECTION * axisPID[YAW]; //RIGHT
+    motor[2] = rcCommand[THROTTLE] + axisPID[ROLL] - axisPID[PITCH]*2/3 - YAW_DIRECTION * axisPID[YAW]; //LEFT
+    motor[3] = rcCommand[THROTTLE]                 + axisPID[PITCH]*4/3 - YAW_DIRECTION * axisPID[YAW]; //UNDER_REAR
+    motor[4] = rcCommand[THROTTLE] - axisPID[ROLL] - axisPID[PITCH]*2/3 + YAW_DIRECTION * axisPID[YAW]; //UNDER_RIGHT
+    motor[5] = rcCommand[THROTTLE] + axisPID[ROLL] - axisPID[PITCH]*2/3 + YAW_DIRECTION * axisPID[YAW]; //UNDER_LEFT
    // Hexacopter Y6 mix
-        LeftCWMotor  = constrain(ch_throttle + control_roll - (0.66 * control_pitch) - control_yaw, minThrottle, 2000); // Left Motor CW
-        LeftCCWMotor = constrain(ch_throttle + control_roll - (0.66 * control_pitch) + control_yaw, minThrottle, 2000); // Left Motor CCW
-        RightCWMotor = constrain(ch_throttle - control_roll - (0.66 * control_pitch) - control_yaw, minThrottle, 2000); // Right Motor CW
-        RightCCWMotor= constrain(ch_throttle - control_roll - (0.66 * control_pitch) + control_yaw, minThrottle, 2000); // Right Motor CCW
-        BackCWMotor  = constrain(ch_throttle                + (1.33 * control_pitch) - control_yaw, minThrottle, 2000); // Back Motor CW
-        BackCCWMotor = constrain(ch_throttle                + (1.33 * control_pitch) + control_yaw, minThrottle, 2000); // Back Motor CCW
+    ppm_m[1] = constrain(ch_throttle                + (control_pitch*4)/3 + control_yaw, minThrottle, 2000); // Left Motor CW
+    ppm_m[3] = constrain(ch_throttle - control_roll - (control_pitch*2)/3 - control_yaw, minThrottle, 2000); // Left Motor CCW
+    ppm_m[4] = constrain(ch_throttle + control_roll - (control_pitch*2)/3 - control_yaw, minThrottle, 2000); // Right Motor CW
+    ppm_m[0] = constrain(ch_throttle                + (control_pitch*4)/3 - control_yaw, minThrottle, 2000); // Right Motor CCW
+    ppm_m[5] = constrain(ch_throttle - control_roll - (control_pitch*2)/3 + control_yaw, minThrottle, 2000); // Back Motor CW
+    ppm_m[6] = constrain(ch_throttle + control_roll - (control_pitch*2)/3 + control_yaw, minThrottle, 2000); // Back Motor CCW
 #endif   
+#endif
 
     }
     if (motorArmed == 0) {
@@ -1206,37 +1113,12 @@ void loop(){
 #endif
     
       digitalWrite(LED_Green,HIGH); // Ready LED on
-
+//3,5,6,2,7,8,9,10
+//1,3,4,0,5,6 - motor order
+//ppm_m[8];
+for (byte i=0;i<7;i++) ppm_m[i]=MIN_COMMAND; // stop all the motors
 #ifdef Tri
-      rightMotor = MIN_THROTTLE;
-      leftMotor = MIN_THROTTLE;
-      frontMotor = 1500;
-      backMotor = MIN_THROTTLE;
-#endif
-
-#ifdef Quad
-      rightMotor = MIN_THROTTLE;
-      leftMotor = MIN_THROTTLE;
-      frontMotor = MIN_THROTTLE;
-      backMotor = MIN_THROTTLE;
-#endif
-
-#ifdef Hexa
-      LeftCWMotor = MIN_THROTTLE;
-      LeftCCWMotor = MIN_THROTTLE;
-      RightCWMotor = MIN_THROTTLE;
-      RightCCWMotor = MIN_THROTTLE;
-      BackCWMotor = MIN_THROTTLE;
-      BackCCWMotor = MIN_THROTTLE;
-#endif
-
-#ifdef Y6
-      LeftCWMotor = MIN_THROTTLE;
-      LeftCCWMotor = MIN_THROTTLE;
-      RightCWMotor = MIN_THROTTLE;
-      RightCCWMotor = MIN_THROTTLE;
-      BackCWMotor = MIN_THROTTLE;
-      BackCCWMotor = MIN_THROTTLE;
+ppm_m[0]=1500;// neutral servo
 #endif
 
       roll_I = 0;     // reset I terms of PID controls
@@ -1246,54 +1128,12 @@ void loop(){
       command_rx_yaw = ToDeg(yaw);
     }
     
-#ifdef Tri
-    APM_RC.OutputCh(3, rightMotor);   // Right motor
-    APM_RC.OutputCh(4, leftMotor);    // Left motor
-    APM_RC.OutputCh(0, frontMotor);   // Servo
-    APM_RC.OutputCh(1, backMotor);    // Back motor   
-#endif
-
-#ifdef Quad
-    APM_RC.OutputCh(3, rightMotor);   // Right motor
-    APM_RC.OutputCh(4, leftMotor);    // Left motor
-    APM_RC.OutputCh(0, frontMotor);   // Front motor
-    APM_RC.OutputCh(1, backMotor);    // Back motor   
-#endif
-
-#ifdef Hexa
-    APM_RC.OutputCh(4, LeftCWMotor);   // Left Motor CW
-    APM_RC.OutputCh(6, LeftCCWMotor);  // Left Motor CCW
-    APM_RC.OutputCh(3, RightCWMotor);  // Right Motor CW
-    APM_RC.OutputCh(5, RightCCWMotor); // Right Motor CCW    
-    APM_RC.OutputCh(0, BackCWMotor);   // Back Motor CW
-    APM_RC.OutputCh(1, BackCCWMotor);  // Back Motor CCW    
-#endif
-
-#ifdef Y6
-    APM_RC.OutputCh(4, LeftCWMotor);   // Left Motor CW
-    APM_RC.OutputCh(6, LeftCCWMotor);  // Left Motor CCW
-    APM_RC.OutputCh(3, RightCWMotor);  // Right Motor CW
-    APM_RC.OutputCh(5, RightCCWMotor); // Right Motor CCW    
-    APM_RC.OutputCh(0, BackCWMotor);   // Back Motor CW
-    APM_RC.OutputCh(1, BackCCWMotor);  // Back Motor CCW    
-#endif
+for (byte i=0;i<7;i++) APM_RC.OutputCh(i,ppm_m[i]); // write motors data
 
     // Camera Stabilization
 //    APM_RC.OutputCh(4, APM_RC.InputCh(6)+(pitch)*1000); // Tilt correction 
 //    APM_RC.OutputCh(5, 1510+(roll)*-400);               // Roll correction
 
-#ifdef Quad   
-     // InstantPWM
-    APM_RC.Force_Out0_Out1();
-    APM_RC.Force_Out2_Out3();
-#endif
-
-#ifdef Hexa
-      // InstantPWM
-    APM_RC.Force_Out0_Out1();
-    APM_RC.Force_Out2_Out3();
-    APM_RC.Force_Out6_Out7();
-#endif
 
 #ifndef CONFIGURATOR
       SerPriln();  // Line END 
@@ -1418,4 +1258,5 @@ void loop(){
 } // End of void loop()
 
 // END of Arducopter.pde
+
 
