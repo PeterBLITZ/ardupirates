@@ -15,9 +15,16 @@ When you have SVN commit access, you can check code into the repository (anyone 
 ==Rules for Committing code:==
 Unless you are very sure of what you are doing, and your changes are very minor, you should probably create a branch within SVN for your work. That way, if you mess things up, you won't take down the main code that everyone else is working on. If you're unsure, Branch. You can always Merge your changes back in once they're tested. 
 
+All changes should be made in your own branch first, and then integrated in the Dev_Trunk, for everyone to test, then if at least thee Pirate testers give he thumbs up, the modif can then be made in the Trunk.  
+
+Never make changes directly in the Trunk unless agreed by developers group.
+
 ----
 _Before you commit any code, double check that it compiles in Arduino ! If it does not compile, don't commit !_
 ----
+
+Finally, if the changes made imply setup or other modification in operations, such as setup, behaviour, etc. you MUST document them in the WIKI, otherwise, the wiki gets outdated and obsolete, and chenges can be lost.
+
 
 ==Languages:==
 We only support Arduino as our coding environment. As a rule of thumb, no code should be committed that the Arduino compiler can't understand. 
