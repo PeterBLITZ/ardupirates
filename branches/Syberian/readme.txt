@@ -17,8 +17,19 @@ MODE		PIN A12
 AUX2		PIN A13
 CH7		PIN A14
 CH8		PIN A15
- 
+
 (8th channel has no issues and can be used freely)
+
+===
+New Flight mode selection:
+
+MODE	AUX2	Flight mode
+
+off	off	Acrobatic (gyro only)
+on	off	level + heading hold
+off	on	level + altitude + heading hold
+on	on	level + altitude + heading + position hold
+============================================================ 
 
 === PPM outputs are increased to 16 channels. Their layout slightly different:
 
