@@ -96,6 +96,7 @@ long gyrozeroL[3]={0,0,0};
 //      Wire.begin();
 i2c_init();
 //=== ITG3200 INIT
+for (i=0;i<8;i++) adc_flt[i]=0;
 
  delay(10);  
   TWBR = ((16000000L / 400000L) - 16) / 2; // change the I2C clock rate to 400kHz
@@ -217,21 +218,24 @@ uint8_t i;
 }
 
 
-
 // Read one channel value
 int APM_ADC_Class::Ch(unsigned char ch_num)         
-{
+{char i;int flt;
 
-if ( (millis()-adc_read_timeout )  > 3 )  //each read is spaced by 10ms else place old values
+if ( (millis()-adc_read_timeout )  > 1 )  //each read is spaced by 10ms else place old values
 {  adc_read_timeout = millis();
- i2c_Gyro_ACC_getADC ();}
+ i2c_Gyro_ACC_getADC ();
+ for (i=0;i<7;i++)
+ {
+ adc_flt[i]=(adc_flt[i]*7+adc_value[i]+4)>>3;} // 8th order lowpass
+ }
  else adc_read_timeout = millis();
 if (ch_num==7) {
 //range in centimeters=0.136 per tick
 if (sonar_data==-1) return(-1);
 else sonic_range=((long)(17408L*(long)sonar_data))>>7;
 return(sonic_range);}
-else return(adc_value[ch_num]);
+else return(adc_flt[ch_num]);
 }
 
 // make one instance for the user to use

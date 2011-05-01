@@ -753,12 +753,12 @@ void loop(){
         AP_mode = F_MODE_STABLE  ;      // Stable mode (Heading Hold only)
         digitalWrite(LED_Yellow,LOW);  // Yellow LED off
       }
-      else if (ch_gear < 1250 && ch_aux2 > 1800)
+      else if (ch_gear > 1800 && ch_aux2 > 1800)
       {
         AP_mode = F_MODE_ABS_HOLD;      // Position & Altitude hold mode (GPS position control & Altitude control)
         digitalWrite(LED_Yellow,HIGH);  // Yellow LED On
       }
-      else if (ch_gear < 1250 && ch_aux2 < 1250)
+      else if (ch_gear < 1250 && ch_aux2 > 1800)
       {
         AP_mode = F_MODE_SUPER_STABLE;  // Super Stable Mode (Stable mode & Altitude hold mode)
         digitalWrite(LED_Yellow,LOW);   // Yellow LED off
@@ -958,7 +958,7 @@ void loop(){
       if (Baro_new_data == 1 && Use_BMP_Altitude == 1)
       {
 //        ch_throttle_altitude_hold = Altitude_control_baro_v2(press_alt,target_baro_altitude);
-        ch_throttle_altitude_hold = Altitude_control_baro(press_alt,target_baro_altitude);
+        ch_throttle_altitude_hold = Altitude_control_baro(target_baro_altitude,press_alt);
         Baro_new_data=0;
       }
 #endif
