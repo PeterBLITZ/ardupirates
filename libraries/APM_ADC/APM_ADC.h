@@ -13,6 +13,8 @@
 class APM_ADC_Class
 {
   private:
+  int adc_flt[8];
+
   public:
 	APM_ADC_Class();  // Constructor
 	void Init();
