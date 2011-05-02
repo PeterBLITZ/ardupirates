@@ -110,19 +110,19 @@ void motor_output()
 
 #ifndef FLIGHT_MODE_OCTO_X
    // Octacopter mix
-        Front_MotorCW = constrain(throttle + control_pitch - control_yaw, minThrottle, 2000);  // Front Motor CW
+        Front_MotorCW        = constrain(throttle + control_pitch                              - control_yaw, minThrottle, 2000);  // Front Motor CW
         Front_Right_MotorCCW = constrain(throttle + (0.71*control_pitch) - (0.71*control_roll) + control_yaw, minThrottle, 2000);  // Front Right Motor CCW
-        Right_MotorCW = constrain(throttle - control_roll - control_yaw, minThrottle, 2000); // Right Motor CW
-        Back_Right_MotorCCW = constrain(throttle - (0.71*control_pitch) - (0.71*control_roll) + control_yaw, minThrottle, 2000); // Back Right Motor CCW
-        Back_MotorCW = constrain(throttle - control_pitch - control_yaw, minThrottle, 2000); // Back Motor CW
-        Back_Left_MotorCCW = constrain(throttle - (0.71 * control_pitch) + (0.71*control_roll) + control_yaw, minThrottle, 2000); // Back Left Motor CCW
-        Left_MotorCW = constrain(throttle + control_roll - control_yaw, minThrottle, 2000); // Left Motor CW
-        Front_Left_MotorCCW = constrain(throttle + (0.71*control_pitch) + (0.71*control_roll) + control_yaw, minThrottle, 2000);  // Front Left Motor CCW
+        Right_MotorCW        = constrain(throttle                        - control_roll        - control_yaw, minThrottle, 2000); // Right Motor CW
+        Back_Right_MotorCCW  = constrain(throttle - (0.71*control_pitch) - (0.71*control_roll) + control_yaw, minThrottle, 2000); // Back Right Motor CCW
+        Back_MotorCW         = constrain(throttle - control_pitch                              - control_yaw, minThrottle, 2000); // Back Motor CW
+        Back_Left_MotorCCW   = constrain(throttle - (0.71*control_pitch) + (0.71*control_roll) + control_yaw, minThrottle, 2000); // Back Left Motor CCW
+        Left_MotorCW         = constrain(throttle                        + control_roll        - control_yaw, minThrottle, 2000); // Left Motor CW
+        Front_Left_MotorCCW  = constrain(throttle + (0.71*control_pitch) + (0.71*control_roll) + control_yaw, minThrottle, 2000);  // Front Left Motor CCW
 #endif 
 
-#ifdef FLIGHT_MODE_OCTO_X
+  #ifdef FLIGHT_MODE_OCTO_X
    // Octacopter mix
-        FrontCWMotor  = constrain(throttle + control_pitch          - (0.42 * control_roll) - control_yaw, minThrottle, 2000); // Front Motor CW
+/*        FrontCWMotor  = constrain(throttle + control_pitch          - (0.42 * control_roll) - control_yaw, minThrottle, 2000); // Front Motor CW
         FrontCCWMotor = constrain(throttle + control_pitch          + (0.42 * control_roll) + control_yaw, minThrottle, 2000); // Front Motor CCW
         LeftCWMotor   = constrain(throttle + (0.42 * control_pitch) + control_roll          - control_yaw, minThrottle, 2000); // Left Motor CW
         LeftCCWMotor  = constrain(throttle - (0.42 * control_pitch) + control_roll          + control_yaw, minThrottle, 2000); // Left Motor CCW
@@ -130,7 +130,16 @@ void motor_output()
         RightCCWMotor = constrain(throttle + (0.42 * control_pitch) - control_roll          + control_yaw, minThrottle, 2000); // Right Motor CCW
         BackCWMotor   = constrain(throttle - control_pitch          + (0.42 * control_roll) - control_yaw, minThrottle, 2000); // Back Motor CW
         BackCCWMotor  = constrain(throttle - control_pitch          - (0.42 * control_roll) + control_yaw, minThrottle, 2000); // Back Motor CCW
-#endif 
+*/
+        FrontCWMotor  = constrain(throttle + control_pitch          + (0.42 * control_roll) - control_yaw, minThrottle, 2000); // Front Motor CW
+        FrontCCWMotor = constrain(throttle + control_pitch          - (0.42 * control_roll) + control_yaw, minThrottle, 2000); // Front Motor CCW
+        LeftCCWMotor  = constrain(throttle + (0.42 * control_pitch) + control_roll          + control_yaw, minThrottle, 2000); // Left Motor CCW
+        LeftCWMotor   = constrain(throttle - (0.42 * control_pitch) + control_roll          - control_yaw, minThrottle, 2000); // Left Motor CW
+        RightCWMotor  = constrain(throttle + (0.42 * control_pitch) - control_roll          - control_yaw, minThrottle, 2000); // Right Motor CW
+        RightCCWMotor = constrain(throttle - (0.42 * control_pitch) - control_roll          + control_yaw, minThrottle, 2000); // Right Motor CCW
+        BackCWMotor   = constrain(throttle - control_pitch          - (0.42 * control_roll) - control_yaw, minThrottle, 2000); // Back Motor CW
+        BackCCWMotor  = constrain(throttle - control_pitch          + (0.42 * control_roll) + control_yaw, minThrottle, 2000); // Back Motor CCW
+  #endif 
 
 #endif 
 
@@ -232,7 +241,8 @@ void motor_output()
     APM_RC.OutputCh(6, FrontCWMotor);    // Front Motor CW
     APM_RC.OutputCh(7, FrontCCWMotor);   // Front Motor CCW
     APM_RC.OutputCh(9, BackCWMotor);     // Back Motor CW    // Connection PB5 on APM
-    APM_RC.OutputCh(10, BackCCWMotor);   // Back Motor CCW   // Connection PE3 on APM  
+//    APM_RC.OutputCh(10, BackCCWMotor);   // Back Motor CCW   // Connection PE3 on APM  
+    APM_RC.OutputCh(8, BackCCWMotor);   // Back Motor CCW   // Connection PL3 on APM  
 #endif
 
 #endif
