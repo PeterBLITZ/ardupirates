@@ -293,11 +293,11 @@ void sendSerialTelemetry() {
     }
     SerPri(ch_throttle);
     comma();
-    SerPri(control_roll);
+    SerPri(ch_roll);
     comma();
-    SerPri(control_pitch);
+    SerPri(ch_pitch);
     comma();
-    SerPri(control_yaw);
+    SerPri(ch_yaw);
     comma();
     SerPri(ppm_m[0]); // Front Motor
     comma();
@@ -306,6 +306,14 @@ void sendSerialTelemetry() {
     SerPri(ppm_m[3]); // Right Motor
     comma();
     SerPri(ppm_m[4]); // Left Motor
+    comma();
+    SerPri(ppm_m[5]); // Left Motor
+    comma();
+    SerPri(ppm_m[6]); // Left Motor
+    comma();
+    SerPri(ppm_m[7]); // Left Motor
+    comma();
+    SerPri(ppm_m[8]); // Left Motor
     comma();
 
     /* ==== NOTE: Configurator requires these out of sequence!! === */
@@ -472,7 +480,40 @@ void sendSerialTelemetry() {
   case 'X': // Stop sending messages
     break;
   case '!': // Send flight software version
-    SerPriln(VER);
+    SerPri(VER);
+#ifdef Tri    
+    SerPriln(2);
+#endif;
+#ifdef Quad
+#ifdef FLIGHT_MODE_+4
+    SerPriln(3);
+#endif
+#ifdef FLIGHT_MODE_X4
+    SerPriln(4);
+#endif
+#ifdef FLIGHT_MODE_Y4
+    SerPriln(5);
+#endif
+#endif
+#ifdef Hexa
+#ifdef FLIGHT_MODE_+6
+    SerPriln(6);
+#endif
+#ifdef FLIGHT_MODE_X6
+    SerPriln(7);
+#endif
+#ifdef FLIGHT_MODE_Y6
+    SerPriln(8);
+#endif
+#endif
+    
+    
+    
+    
+    
+    
+    
+    
     queryType = 'X';
     break;
   case '2': // Send transmitter calibration values
