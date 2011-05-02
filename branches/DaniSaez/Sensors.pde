@@ -75,11 +75,54 @@ int read_adc(int select)
 }
 
 
+void calibrateSensors(void) {
+  int i;
+  int j = 0;
+  byte gyro;
+  float aux_float[3];
+  
+  Read_adc_raw();     // Read sensors data
+  delay(5);
+
+  // Offset values for accels and gyros...
+  AN_OFFSET[3] = acc_offset_x;                // Accel offset values are taken from external calibration (In Configurator)
+  AN_OFFSET[4] = acc_offset_y;
+  AN_OFFSET[5] = acc_offset_z;
+  aux_float[0] = gyro_offset_roll;
+  aux_float[1] = gyro_offset_pitch;
+  aux_float[2] = gyro_offset_yaw;
+ 
+  // Take the gyro offset values
+  for(i=0;i<600;i++)
+  {
+    Read_adc_raw();   // Read sensors
+    for(gyro = GYROZ; gyro <= GYROY; gyro++)   
+      aux_float[gyro] = aux_float[gyro] * 0.8 + AN[gyro] * 0.2;     // Filtering  
+    #if LOG_SEN
+    Log_Write_Sensor(AN[0], AN[1], AN[2], AN[3], AN[4], AN[5], 0);
+    #endif
+
+    delay(5);
+
+    RunningLights(j);   // (in Functions.pde)
+    // Runnings lights effect to let user know that we are taking mesurements
+    if((i % 5) == 0) j++;
+    if(j >= 3) j = 0;
+  }
+  
+  // Switch off all ABC lights
+  LightsOff();
+
+  for(gyro = GYROZ; gyro <= GYROY; gyro++)  
+    AN_OFFSET[gyro] = aux_float[gyro];    // Update sensor OFFSETs from values read
+
+}
+
 //=============================================================================
 //
 // Calibrate the sensors on power up
 //
-void calibrateSensors(void)
+/*void calibrateSensors(void)
 {
   uint16_t stable_cycles;
   uint8_t  led_cycle = 0;
@@ -201,6 +244,7 @@ void calibrateSensors(void)
   AN_OFFSET[ACCELY] = acc_offset_y;
   AN_OFFSET[ACCELZ] = acc_offset_z;
 }
+*/
 
 
 #ifdef UseBMP
