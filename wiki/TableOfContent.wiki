@@ -45,6 +45,8 @@
    * [UbloxGPSTutorial Ublox GPS Tutorial]
    * [MTK_GPS_backup_battery MTek GPS Backup Battery]
    * [BatteryAlarmHowto Battery Alarm]
+   * [motormixing Motor Mixing and frame types]
+
  * [Videos]
  * ----
  * *Appendix*
