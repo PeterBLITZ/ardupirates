@@ -218,7 +218,7 @@ void APM_BMP085_Class::Calculate()
   x1 = ((long)RawTemp - ac6) * ac5 >> 15;
   x2 = ((long) mc << 11) / (x1 + md);
   b5 = x1 + x2;
-  Temp = (b5 + 8) >> 4;
+  Temp = ((b5 + 8) >> 4)-50;
 
   // Pressure calculations
   b6 = b5 - 4000;
@@ -243,7 +243,7 @@ void APM_BMP085_Class::Calculate()
   pre_smo = p + ((x1 + x2 + 3791) >> 4);
 
 // Pressure smoothing of 4rd order
-  pre_sm = (pre_sm*3+pre_smo)>>2;
+  pre_sm = (pre_sm*5+pre_smo)/6;
   Press=pre_sm;
   
 //Altitude calculation

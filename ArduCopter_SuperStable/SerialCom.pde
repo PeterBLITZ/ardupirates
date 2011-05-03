@@ -114,6 +114,8 @@ void readSerialCommand() {
 
 void sendSerialTelemetry() {
   float aux_float[3]; // used for sensor calibration
+  int32_t tmpseralt;
+  char tmpx;
   switch (queryType) {
   case '=': // Reserved debug command to view any variable from Serial Monitor
 SerWri(queryType);
@@ -229,8 +231,67 @@ SerWri(queryType);
     RadioCalibration();
     queryType = 'X';
     break;
-  case 'N': // Send magnetometer config
-    queryType = 'X';
+  case 'N': // Auto-send Navigation Data
+SerWri(queryType);
+    // presence of baro,sonar,compass,GPS
+#ifdef UseBMP              // Do we want to use the barometer sensor on the IMU?
+SerWri('1');
+#else
+SerWri('0');
+#endif
+#ifdef IsSonar             // Do we have Sonar installed // //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output.
+SerWri('1');
+#else
+SerWri('0');
+#endif
+#ifdef IsMAG               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
+SerWri('1');
+#else
+SerWri('0');
+#endif
+#ifdef IsGPS               // Do we have a Magnetometer connected? If have, remember to activate it from Configurator !
+SerWri('1');
+#else
+SerWri('0');
+#endif
+comma();
+    if (AP_mode == F_MODE_ACROBATIC) 
+      SerWri('0');
+    else if (AP_mode == F_MODE_STABLE)
+      SerWri('1');
+    else if (AP_mode == F_MODE_SUPER_STABLE)
+      SerWri('2');
+    else if (AP_mode == F_MODE_ABS_HOLD)
+      SerWri('3');
+comma();
+    SerPri(press_alt); // relative altitude
+comma();
+    SerPri(press_alt+APM_BMP085.Pres_zero); // ASL altitude
+comma();
+    SerPri(APM_BMP085.Temp); // temperature
+comma();
+    SerPri(Sonar_value);
+comma();
+    SerPri(ToDeg(APM_Compass.Heading),1);
+    
+comma();
+    SerPri(GPS.Fix); // GPS data
+comma();
+    SerPri(GPS.Lattitude); // GPS data
+comma();
+    SerPri(GPS.Longitude); // GPS data
+comma();
+    SerPri(GPS.Altitude); // GPS data
+comma();
+    SerPri(GPS.Ground_Speed); // GPS data
+comma();
+    SerPri(GPS.Ground_Course); // GPS data
+comma();
+    SerPriln(GPS.Quality); // GPS data
+
+
+
+//    queryType = 'X';
     break;
   case 'P': // Send rate control PID
 SerWri(queryType);
@@ -333,7 +394,18 @@ SerWri(queryType);
     comma();
     /* ============================================================= */
     
-    SerPriln(Sensor_Input[ACCEL_Z]);
+    SerPri(Sensor_Input[ACCEL_Z]);
+    comma();
+        if (AP_mode == F_MODE_ACROBATIC) 
+      SerWri('0');
+    else if (AP_mode == F_MODE_STABLE)
+      SerWri('1');
+    else if (AP_mode == F_MODE_SUPER_STABLE)
+      SerWri('2');
+    else if (AP_mode == F_MODE_ABS_HOLD)
+      SerWri('3');
+SerPriln();
+
     break;
   case 'T': // Spare
 SerWri(queryType);

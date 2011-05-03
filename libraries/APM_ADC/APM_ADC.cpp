@@ -232,7 +232,7 @@ if ( (millis()-adc_read_timeout )  > 1 )  //each read is spaced by 10ms else pla
  else adc_read_timeout = millis();
 if (ch_num==7) {
 //range in centimeters=0.136 per tick
-if (sonar_data==-1) return(-1);
+if (sonar_data==-1) return(0);
 else sonic_range=((long)(17408L*(long)sonar_data))>>7;
 return(sonic_range);}
 else return(adc_flt[ch_num]);
