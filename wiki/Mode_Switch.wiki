@@ -24,4 +24,5 @@ TIP: in the Configurator, the MODE channel is what we refer to as AUX2.
 [http://ardupilot-mega.googlecode.com/svn/ArduPilotMegaImages/APM_IMU.jpg]
 
 Here's a quick video about LED's meaning and flying modes.
+
 http://www.vimeo.com/23088502
