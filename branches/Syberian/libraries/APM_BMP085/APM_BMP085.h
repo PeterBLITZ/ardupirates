@@ -20,6 +20,7 @@ class APM_BMP085_Class
 	int32_t RawTemp;
 	int16_t Temp;
 	int32_t Press;
+	int32_t Pres_zero;
 	//int Altitude; // Meters*10
 	uint8_t oss;
 	//int32_t Press0;  // Pressure at sea level

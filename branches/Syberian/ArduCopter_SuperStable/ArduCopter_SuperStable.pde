@@ -133,7 +133,7 @@
 
 // To get Magneto offsets, switch to CLI mode and run offset calibration. During calibration
 // you need to roll/bank/tilt/yaw/shake etc your ArduCoptet. Don't kick like Jani always does :)
-#define MAGOFFSET -76,22.5,-55.5  // You will have to determine your own settings.
+#define MAGOFFSET -64,37,-120.5  // You will have to determine your own settings.
 
 // MAGCALIBRATION is the correction angle in degrees (can be + or -). You must calibrating your magnetometer to show magnetic north correctly.
 // After calibration you will have to determine the declination value between Magnetic north and true north, see following link
@@ -689,7 +689,7 @@ void loop(){
     sonar_read = APM_ADC.Ch(7);   // Sonar is connected to pitot input in shield (Infront of shield, marked pitot between led's)
                                   // At the bottom of shield is written gnd +5V IN.  We use the IN....
                                   //XL-Maxsonar EZ4 - Product 9495 from SPF.  I use Analgue output. (pin 3)  Will still consider PW..pin2
-    if (sonar_read ==-1)        // For testing purposes I am monitoring sonar_read value.
+    if ((sonar_read ==0)||(sonar_read >1000))        // For testing purposes I am monitoring sonar_read value.
       Use_BMP_Altitude = 1; 
     else  
     {  
