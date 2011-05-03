@@ -1,11 +1,13 @@
-Version 0.1 (pre-alpha)
+Version 0.2 (alpha)
 
-This is a port of the ArduCopter 1.6 SuperStable to *duino Mega board with 1280 or 2560 chip.
+This is a branch of the ArduCopter 1.6 SuperStable ported to Arduino Mega board with 1280 or 2560 chip.
 
-Replace the standard SuperStable libraries with ones in the 'libraries' folder.
+To compile it properly, backup and REMOVE ALL the folders in the arduino 'libraries' folder,
+then copy ones from the 'libraries' project folder.
+DO NOT use any 3rd party configurator tools other than supplied ss_cfg.exe. It can lead to the unpredictable results!
 ==============
 Features:
-=== all the features of the SuperStable 1.6 build
+
 === Using ITG3200, BMA180, BMP085, HMC5883(5843) I2C sensors instead of analog ones
 === RC input is taken from independent channels:
  
@@ -21,7 +23,7 @@ CH8		PIN A15
 (8th channel has no issues and can be used freely)
 
 ===
-New Flight mode selection:
+Flight mode selection:
 
 MODE	AUX2	Flight mode
 
@@ -31,7 +33,7 @@ off	on	level + altitude + heading hold
 on	on	level + altitude + heading + position hold
 ============================================================ 
 
-=== PPM outputs are increased to 16 channels. Their layout slightly different:
+=== PPM outputs are increased to 16 channels. They has the following layout:
 
 Out	PIN
 0	D2
@@ -52,7 +54,7 @@ Out	PIN
 15	D29
 
 
-===Integrated analog Sonar on the 'ADC 7'
+===Integrated impulse Sonar on the 'ADC 7'
  - Usage: %variable%=APM_ADC.Ch(7);
  - when out of range, returns -1 (65535);
  - does not slow the program `cause it works simultaneously (using TIMER5 interrupts)
@@ -71,76 +73,11 @@ Out	PIN
 ===============================================
 ===============================================
 APM motor remapped to the MultiWii-style
-See the Wii_motormap.jpg in this folder
+The following frame types are supported:
 
-==============================	
-Tricopter
-======
-	Type			APM		MultiWii	D pin
+	Tri, +4, x4, Y4, +6, x6, Y6
 
-	Right			0		3			5
-	Left			1		4			6
-	Servo			2		0			2
-	Back			3		1			3
-
-==============================	
-Quad +
-======
-	Type			APM		MultiWii	D pin
-
-	Right			0		3			5
-	Left			1		4			6
-	Front			2		0			2
-	Back			3		1			3
-
-==============================	
-Quad X
-======
-	Type			APM		MultiWii	D pin
-
-	FrontRCCW		0		3			5
-	BackLCCW		1		4			6
-	FrontLCW		2		0			2
-	BackRCW			3		1			3
-
-==============================	
-Hexa Diamond
-======
-
-//Hexa Diamond Mode - 6 Motor system in diamond shape
-
-//      L  CCW 0.Front.0 CW  R           // 0 = Motor
-//         ......***......               // *** = APM 
-//   L  CW 0.....***......0 CCW  R       // ***
-//         ......***......               // *** 
-//     B  CCW  0.Back..0  CW  B          L = Left motors, R = Right motors, B = Back motors.
-
-
-
-	Type			APM		MultiWii	D pin
-
-	LeftCW			0		4			6
-	LeftCCW			1		6			8
-	RightCW			2		3			5
-	RightCCW		3		5			7
-	BackCW			6		0			2
-	BackCCW			7		1			3
-
-
-==============================	
-Y6
-======
-	Type			APM		MultiWii	D pin
-
-	UpLeftCW		0		4			6
-	DnLeftCCW		1		6			8
-	UpRightCW		2		3			5
-	DnRightCCW		3		5			7
-	DnBackCW		6		0			2
-	UpBackCCW		7		1			3
-
-
-
+See the ss_cfg.exe 'Flight Data' tab for the motor pins layout.
 
 
 ==============================	
@@ -163,5 +100,4 @@ Y6
 NOTES and roadmap:
 
 LEDs was not tested
-Configurator program is fully working
-
+Configurator program has been rewritten in Delphi to suite my needs

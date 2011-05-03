@@ -116,6 +116,7 @@ void sendSerialTelemetry() {
   float aux_float[3]; // used for sensor calibration
   switch (queryType) {
   case '=': // Reserved debug command to view any variable from Serial Monitor
+SerWri(queryType);
 /*    SerPri("throttle =");
     SerPriln(ch_throttle);
     SerPri("control roll =");
@@ -151,6 +152,7 @@ void sendSerialTelemetry() {
     SerPriln(ch_roll);
     break;
   case 'B': // Send roll, pitch and yaw PID values
+SerWri(queryType);
     SerPri(KP_QUAD_ROLL, 3);
     comma();
     SerPri(KI_QUAD_ROLL, 3);
@@ -175,6 +177,7 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'D': // Send GPS PID
+SerWri(queryType);
     SerPri(KP_GPS_ROLL, 3);
     comma();
     SerPri(KI_GPS_ROLL, 3);
@@ -193,6 +196,7 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'F': // Send altitude PID
+SerWri(queryType);
     SerPri(KP_ALTITUDE, 3);
     comma();
     SerPri(KI_ALTITUDE, 3);
@@ -201,6 +205,7 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'H': // Send drift correction PID
+SerWri(queryType);
     SerPri(Kp_ROLLPITCH, 4);
     comma();
     SerPri(Ki_ROLLPITCH, 7);
@@ -211,6 +216,7 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'J': // Send sensor offset
+SerWri(queryType);
     for(char i = 0; i < 5; i++)
     {
       SerPri(Sensor_Offset[i]);
@@ -227,6 +233,7 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'P': // Send rate control PID
+SerWri(queryType);
     SerPri(Kp_RateRoll, 3);
     comma();
     SerPri(Ki_RateRoll, 3);
@@ -249,6 +256,7 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case 'Q': // Send sensor data
+SerWri(queryType);
     SerPri(Sensor_Input[GYRO_ROLL]);
     comma();
     SerPri(Sensor_Input[GYRO_PITCH]);
@@ -276,6 +284,7 @@ void sendSerialTelemetry() {
     SerPriln(degrees(yaw));
     break;
   case 'R': // Send raw sensor data
+SerWri(queryType);
     for(char y = 0; y < 6; y++)
     {
       SerPri(Sensor_Data_Raw[y]);
@@ -284,6 +293,7 @@ void sendSerialTelemetry() {
     SerPriln("");
     break;
   case 'S': // Send all flight data
+SerWri(queryType);
     SerPri(timer-timer_old);
     comma();
     for(char y = 0; y < 3; y++)
@@ -326,6 +336,7 @@ void sendSerialTelemetry() {
     SerPriln(Sensor_Input[ACCEL_Z]);
     break;
   case 'T': // Spare
+SerWri(queryType);
     SerPri("AP Mode = ");
     if (AP_mode == F_MODE_ACROBATIC) 
       SerPriln("Acrobatic");
@@ -457,6 +468,7 @@ void sendSerialTelemetry() {
     queryType = 'X';
      break;
   case 'U': // Send receiver values
+SerWri(queryType);
     SerPri(ch_roll); // Aileron
     comma();
     SerPri(ch_pitch); // Elevator
@@ -480,6 +492,7 @@ void sendSerialTelemetry() {
   case 'X': // Stop sending messages
     break;
   case '!': // Send flight software version
+SerWri(queryType);
     SerPri(VER);
 #ifdef Tri    
     SerPriln(2);
@@ -517,6 +530,7 @@ void sendSerialTelemetry() {
     queryType = 'X';
     break;
   case '2': // Send transmitter calibration values
+SerWri(queryType);
     SerPri(ch_roll_slope);
     comma();
     SerPri(ch_roll_offset);

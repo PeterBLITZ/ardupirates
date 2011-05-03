@@ -62,7 +62,7 @@
 // #define FLIGHT_MODE_Y4
 //#define Hexa
 //#define FLIGHT_MODE_+6
-// #define FLIGHT_MODE_X6
+//#define FLIGHT_MODE_X6
 // #define FLIGHT_MODE_Y6
 
 /**********************************************/
@@ -212,6 +212,7 @@
 #ifndef IsXBEE
   #define SerBau  115200
   #define SerPri  Serial.print
+  #define SerWri  Serial.write
   #define SerPriln Serial.println
   #define SerAva  Serial.available
   #define SerRea  Serial.read
@@ -221,6 +222,7 @@
   #else
   #define SerBau  115200
   #define SerPri  Serial3.print
+  #define SerWri  Serial3.write
   #define SerPriln Serial3.println
   #define SerAva  Serial3.available
   #define SerRea  Serial3.read   
