@@ -33,7 +33,7 @@
 /* APM Hardware definitions */
 #define LED_Yellow 36
 #define LED_Red 35
-#define LED_Green 37
+#define LED_Green 39
 #define RELE_pin 47
 #define SW1_pin 41
 #define SW2_pin 40
