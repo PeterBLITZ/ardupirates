@@ -143,11 +143,11 @@ set_servos_4()
 		motor_out[CH_2]		= constrain(motor_out[CH_2], 	out_min, g.rc_3.radio_max.get());
 		motor_out[CH_3]		= constrain(motor_out[CH_3], 	out_min, g.rc_3.radio_max.get());
 		motor_out[CH_4] 	= constrain(motor_out[CH_4], 	out_min, g.rc_3.radio_max.get());
+        	motor_out[CH_5]		= constrain(motor_out[CH_5], 	out_min, g.rc_3.radio_max.get());
+		motor_out[CH_6]		= constrain(motor_out[CH_6], 	out_min, g.rc_3.radio_max.get());
+        	motor_out[CH_7]		= constrain(motor_out[CH_7], 	out_min, g.rc_3.radio_max.get());
+		motor_out[CH_8]		= constrain(motor_out[CH_8], 	out_min, g.rc_3.radio_max.get());
 
-		if ((g.frame_type == HEXAX_FRAME) || (g.frame_type == Y6_FRAME)) {
-			motor_out[CH_7]		= constrain(motor_out[CH_7], 	out_min, g.rc_3.radio_max.get());
-			motor_out[CH_8]		= constrain(motor_out[CH_8], 	out_min, g.rc_3.radio_max.get());
-		}
 
 		if (num++ > 25){
 			num = 0;
@@ -237,15 +237,11 @@ set_servos_4()
 			APM_RC.OutputCh(CH_2, motor_out[CH_2]);
 			APM_RC.OutputCh(CH_3, motor_out[CH_3]);
 			APM_RC.OutputCh(CH_4, motor_out[CH_4]);
-			// InstantPWM
-			APM_RC.Force_Out0_Out1();
-			APM_RC.Force_Out2_Out3();
-
-			if ((g.frame_type == HEXAX_FRAME) || (g.frame_type == Y6_FRAME)) {
-				APM_RC.OutputCh(CH_7, motor_out[CH_7]);
-				APM_RC.OutputCh(CH_8, motor_out[CH_8]);
-				APM_RC.Force_Out6_Out7();
-			}
+			APM_RC.OutputCh(CH_5, motor_out[CH_5]);
+			APM_RC.OutputCh(CH_6, motor_out[CH_6]);
+			APM_RC.OutputCh(CH_7, motor_out[CH_7]);
+			APM_RC.OutputCh(CH_8, motor_out[CH_8]);
+                
 
 		}else{
 
@@ -253,15 +249,10 @@ set_servos_4()
 			APM_RC.OutputCh(CH_2, g.rc_3.radio_min);
 			APM_RC.OutputCh(CH_3, g.rc_3.radio_min);
 			APM_RC.OutputCh(CH_4, g.rc_3.radio_min);
-			// InstantPWM
-			APM_RC.Force_Out0_Out1();
-			APM_RC.Force_Out2_Out3();
-
-			if ((g.frame_type == HEXAX_FRAME) || (g.frame_type == Y6_FRAME)) {
-				APM_RC.OutputCh(CH_7, g.rc_3.radio_min);
-				APM_RC.OutputCh(CH_8, g.rc_3.radio_min);
-				APM_RC.Force_Out6_Out7();
-			}
+        		APM_RC.OutputCh(CH_5, g.rc_3.radio_min);
+			APM_RC.OutputCh(CH_6, g.rc_3.radio_min);
+			APM_RC.OutputCh(CH_7, g.rc_3.radio_min);
+			APM_RC.OutputCh(CH_8, g.rc_3.radio_min);
 		}
 
 	}else{
@@ -279,17 +270,14 @@ set_servos_4()
 			motor_out[i] = g.rc_3.radio_min;
 		}
 
-		// Send commands to motors
-		APM_RC.OutputCh(CH_1, motor_out[CH_1]);
-		APM_RC.OutputCh(CH_2, motor_out[CH_2]);
-		APM_RC.OutputCh(CH_3, motor_out[CH_3]);
-		APM_RC.OutputCh(CH_4, motor_out[CH_4]);
-
-
-		if ((g.frame_type == HEXAX_FRAME) || (g.frame_type == Y6_FRAME)){
+			APM_RC.OutputCh(CH_1, motor_out[CH_1]);
+			APM_RC.OutputCh(CH_2, motor_out[CH_2]);
+			APM_RC.OutputCh(CH_3, motor_out[CH_3]);
+			APM_RC.OutputCh(CH_4, motor_out[CH_4]);
+			APM_RC.OutputCh(CH_5, motor_out[CH_5]);
+			APM_RC.OutputCh(CH_6, motor_out[CH_6]);
 			APM_RC.OutputCh(CH_7, motor_out[CH_7]);
 			APM_RC.OutputCh(CH_8, motor_out[CH_8]);
-		}
 
 		// reset I terms of PID controls
 		//reset_I();
