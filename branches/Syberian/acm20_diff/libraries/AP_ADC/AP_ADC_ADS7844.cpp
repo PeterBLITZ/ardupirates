@@ -35,7 +35,11 @@ extern "C" {
 // I2C general functions
 // *********************
   #define I2C_PULLUPS_DISABLE        PORTC &= ~(1<<4); PORTC &= ~(1<<5);
+#ifdef ALLINONE
 #define BMA180_A 0x82
+#else
+#define BMA180_A 0x80
+#endif
 
 // Mask prescaler bits : only 5 bits of TWSR defines the status of each I2C request
 #define TW_STATUS_MASK	(1<<TWS7) | (1<<TWS6) | (1<<TWS5) | (1<<TWS4) | (1<<TWS3)
