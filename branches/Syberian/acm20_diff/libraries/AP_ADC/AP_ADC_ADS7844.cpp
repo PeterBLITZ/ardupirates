@@ -23,11 +23,19 @@ extern "C" {
 
 #include "AP_ADC_ADS7844.h"
 
+
+//*****************************
+// Select your IMU board:
+
+#define FFIMU
+//#define ALLINONE
+//*******************************
+
 // *********************
 // I2C general functions
 // *********************
   #define I2C_PULLUPS_DISABLE        PORTC &= ~(1<<4); PORTC &= ~(1<<5);
-#define BMA180_A 0x80
+#define BMA180_A 0x82
 
 // Mask prescaler bits : only 5 bits of TWSR defines the status of each I2C request
 #define TW_STATUS_MASK	(1<<TWS7) | (1<<TWS6) | (1<<TWS5) | (1<<TWS4) | (1<<TWS3)
@@ -210,13 +218,24 @@ uint8_t i;
 	Channel 6 : z acceleration, aZ
 	Channel 7 : Differential pressure sensor port
 */
-  adc_value[2] =-  (((rawADC_ITG3200[0]<<8) | rawADC_ITG3200[1])-gyrozero[2])/44; //g pitch
-  adc_value[1] =  (((rawADC_ITG3200[2]<<8) | rawADC_ITG3200[3])-gyrozero[1])/44; //g roll
+#ifdef ALLINONE
   adc_value[0] =  (((rawADC_ITG3200[4]<<8) | rawADC_ITG3200[5])-gyrozero[0])/44; //g yaw
-  adc_value[5] = -(((rawADC_BMA180[1]<<8) | (rawADC_BMA180[0]))>>2)/10; //a roll
-  adc_value[4] =  (((rawADC_BMA180[3]<<8) | (rawADC_BMA180[2]))>>2)/10; //a pitch
-  adc_value[6] =  (((rawADC_BMA180[5]<<8) | (rawADC_BMA180[4]))>>2)/10; //a yaw
+  adc_value[1] =  (((rawADC_ITG3200[2]<<8) | rawADC_ITG3200[3])-gyrozero[1])/44; //g roll
+  adc_value[2] =-  (((rawADC_ITG3200[0]<<8) | rawADC_ITG3200[1])-gyrozero[2])/44; //g pitch
 
+  adc_value[4] =  (((rawADC_BMA180[3]<<8) | (rawADC_BMA180[2]))>>2)/10; //a pitch
+  adc_value[5] = -(((rawADC_BMA180[1]<<8) | (rawADC_BMA180[0]))>>2)/10; //a roll
+  adc_value[6] =  (((rawADC_BMA180[5]<<8) | (rawADC_BMA180[4]))>>2)/10; //a yaw
+#endif
+#ifdef FFIMU
+  adc_value[0] =  (((rawADC_ITG3200[4]<<8) | rawADC_ITG3200[5])-gyrozero[0])/44; //g yaw
+  adc_value[2] =  (((rawADC_ITG3200[2]<<8) | rawADC_ITG3200[3])-gyrozero[2])/44; //g roll
+  adc_value[1] =  (((rawADC_ITG3200[0]<<8) | rawADC_ITG3200[1])-gyrozero[1])/44; //g pitch
+
+  adc_value[5] =  (((rawADC_BMA180[3]<<8) | (rawADC_BMA180[2]))>>2)/10; //a pitch
+  adc_value[4] =  (((rawADC_BMA180[1]<<8) | (rawADC_BMA180[0]))>>2)/10; //a roll
+  adc_value[6] =  (((rawADC_BMA180[5]<<8) | (rawADC_BMA180[4]))>>2)/10; //a yaw
+#endif
 }
 
 // Read one channel value
