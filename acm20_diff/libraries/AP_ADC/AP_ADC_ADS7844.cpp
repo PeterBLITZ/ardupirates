@@ -219,22 +219,22 @@ uint8_t i;
 	Channel 7 : Differential pressure sensor port
 */
 #ifdef ALLINONE
-  adc_value[0] =  (((rawADC_ITG3200[4]<<8) | rawADC_ITG3200[5])-gyrozero[0])/44; //g yaw
-  adc_value[1] =  (((rawADC_ITG3200[2]<<8) | rawADC_ITG3200[3])-gyrozero[1])/44; //g roll
-  adc_value[2] =-  (((rawADC_ITG3200[0]<<8) | rawADC_ITG3200[1])-gyrozero[2])/44; //g pitch
+  adc_value[0] =  (((rawADC_ITG3200[4]<<8) | rawADC_ITG3200[5])-gyrozero[0])/46; //g yaw
+  adc_value[1] =  (((rawADC_ITG3200[2]<<8) | rawADC_ITG3200[3])-gyrozero[1])/46; //g roll
+  adc_value[2] =-  (((rawADC_ITG3200[0]<<8) | rawADC_ITG3200[1])-gyrozero[2])/46; //g pitch
 
-  adc_value[4] =  (((rawADC_BMA180[3]<<8) | (rawADC_BMA180[2]))>>2)/10; //a pitch
-  adc_value[5] = -(((rawADC_BMA180[1]<<8) | (rawADC_BMA180[0]))>>2)/10; //a roll
-  adc_value[6] =  (((rawADC_BMA180[5]<<8) | (rawADC_BMA180[4]))>>2)/10; //a yaw
+  adc_value[4] =  (float)(((rawADC_BMA180[3]<<8) | (rawADC_BMA180[2]))>>2)*0.14; //a pitch
+  adc_value[5] = -(float)(((rawADC_BMA180[1]<<8) | (rawADC_BMA180[0]))>>2)*0.14; //a roll
+  adc_value[6] =  (float)(((rawADC_BMA180[5]<<8) | (rawADC_BMA180[4]))>>2)*0.14; //a yaw
 #endif
 #ifdef FFIMU
-  adc_value[0] =  (((rawADC_ITG3200[4]<<8) | rawADC_ITG3200[5])-gyrozero[0])/44; //g yaw
-  adc_value[2] =  (((rawADC_ITG3200[2]<<8) | rawADC_ITG3200[3])-gyrozero[2])/44; //g roll
-  adc_value[1] =  (((rawADC_ITG3200[0]<<8) | rawADC_ITG3200[1])-gyrozero[1])/44; //g pitch
+  adc_value[0] =  (((rawADC_ITG3200[4]<<8) | rawADC_ITG3200[5])-gyrozero[0])/46; //g yaw
+  adc_value[2] =  (((rawADC_ITG3200[2]<<8) | rawADC_ITG3200[3])-gyrozero[2])/46; //g roll
+  adc_value[1] =  (((rawADC_ITG3200[0]<<8) | rawADC_ITG3200[1])-gyrozero[1])/46; //g pitch
 
-  adc_value[5] =  (((rawADC_BMA180[3]<<8) | (rawADC_BMA180[2]))>>2)/10; //a pitch
-  adc_value[4] =  (((rawADC_BMA180[1]<<8) | (rawADC_BMA180[0]))>>2)/10; //a roll
-  adc_value[6] =  (((rawADC_BMA180[5]<<8) | (rawADC_BMA180[4]))>>2)/10; //a yaw
+  adc_value[5] =  (float)(((rawADC_BMA180[3]<<8) | (rawADC_BMA180[2]))>>2)*0.14; //a pitch
+  adc_value[4] =  (float)(((rawADC_BMA180[1]<<8) | (rawADC_BMA180[0]))>>2)*0.14; //a roll
+  adc_value[6] =  (float)(((rawADC_BMA180[5]<<8) | (rawADC_BMA180[4]))>>2)*0.14; //a yaw
 #endif
 }
 
