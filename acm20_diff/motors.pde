@@ -89,16 +89,17 @@ set_servos_4()
 		if(g.frame_type == PLUS_FRAME){
 
         ppm_m[1] = ch_throttle                - control_pitch - control_yaw;
-        ppm_m[3] = ch_throttle - control_roll                 + control_yaw;
-        ppm_m[4]  =ch_throttle + control_roll                 + control_yaw;
+        ppm_m[2] = ch_throttle - control_roll                 + control_yaw;
+        ppm_m[3]  =ch_throttle + control_roll                 + control_yaw;
         ppm_m[0]  =ch_throttle                + control_pitch - control_yaw;
 
 		}else if(g.frame_type == X_FRAME){
 			//Serial.println("X_FRAME");
         ppm_m[1] = ch_throttle - control_roll - control_pitch - control_yaw; 
-        ppm_m[3] = ch_throttle - control_roll + control_pitch + control_yaw; 
-        ppm_m[4] = ch_throttle + control_roll - control_pitch + control_yaw; 
+        ppm_m[2] = ch_throttle - control_roll + control_pitch + control_yaw; 
+        ppm_m[3] = ch_throttle + control_roll - control_pitch + control_yaw; 
         ppm_m[0] = ch_throttle + control_roll + control_pitch - control_yaw;
+
 
 			//Serial.printf("\tl8r: %d %d %d %d\n", motor_out[CH_1], motor_out[CH_2], motor_out[CH_3], motor_out[CH_4]);
 
@@ -107,29 +108,32 @@ set_servos_4()
 			//Serial.println("TRI_FRAME");
 			// Tri-copter power distribution
         ppm_m[1] = ch_throttle                - 1.33*control_pitch +.013*abs(control_yaw);
-        ppm_m[3] = ch_throttle - control_roll + 0.66*control_pitch;
-        ppm_m[4] = ch_throttle + control_roll + 0.66*control_pitch;
+        ppm_m[2] = ch_throttle - control_roll + 0.66*control_pitch;
+        ppm_m[3] = ch_throttle + control_roll + 0.66*control_pitch;
 		ppm_m[0] = 1500 + control_yaw;  //Servo
+
 
 
 		}else if (g.frame_type == HEXAX_FRAME) {
 			//Serial.println("6_FRAME");
 
     ppm_m[1] = ch_throttle - control_roll/2 - control_pitch/2 + control_yaw; 
-    ppm_m[3] = ch_throttle - control_roll/2 + control_pitch/2 + control_yaw;
-    ppm_m[4] = ch_throttle + control_roll/2 - control_pitch/2 - control_yaw;
+    ppm_m[2] = ch_throttle - control_roll/2 + control_pitch/2 + control_yaw;
+    ppm_m[3] = ch_throttle + control_roll/2 - control_pitch/2 - control_yaw;
     ppm_m[0] = ch_throttle + control_roll/2 + control_pitch/2 - control_yaw; 
-    ppm_m[5] = ch_throttle - control_roll                     - control_yaw; 
-    ppm_m[6] = ch_throttle + control_roll                     + control_yaw; 
+    ppm_m[6] = ch_throttle - control_roll                     - control_yaw; 
+    ppm_m[7] = ch_throttle + control_roll                     + control_yaw; 
+
 
 		}else if (g.frame_type == Y6_FRAME) {
 			//Serial.println("Y6_FRAME");
     ppm_m[1] = ch_throttle                - (control_pitch*4)/3 + control_yaw; 
-    ppm_m[3] = ch_throttle - control_roll + (control_pitch*2)/3 - control_yaw; 
-    ppm_m[4] = ch_throttle + control_roll + (control_pitch*2)/3 - control_yaw;
+    ppm_m[2] = ch_throttle - control_roll + (control_pitch*2)/3 - control_yaw; 
+    ppm_m[3] = ch_throttle + control_roll + (control_pitch*2)/3 - control_yaw;
     ppm_m[0] = ch_throttle                - (control_pitch*4)/3 - control_yaw; 
-    ppm_m[5] = ch_throttle - control_roll + (control_pitch*2)/3 + control_yaw; 
-    ppm_m[6] = ch_throttle + control_roll + (control_pitch*2)/3 + control_yaw;
+    ppm_m[6] = ch_throttle - control_roll + (control_pitch*2)/3 + control_yaw; 
+    ppm_m[7] = ch_throttle + control_roll + (control_pitch*2)/3 + control_yaw;
+
 
     	}else{
 
@@ -143,10 +147,10 @@ set_servos_4()
 		motor_out[CH_2]		= constrain(motor_out[CH_2], 	out_min, g.rc_3.radio_max.get());
 		motor_out[CH_3]		= constrain(motor_out[CH_3], 	out_min, g.rc_3.radio_max.get());
 		motor_out[CH_4] 	= constrain(motor_out[CH_4], 	out_min, g.rc_3.radio_max.get());
-        	motor_out[CH_5]		= constrain(motor_out[CH_5], 	out_min, g.rc_3.radio_max.get());
-		motor_out[CH_6]		= constrain(motor_out[CH_6], 	out_min, g.rc_3.radio_max.get());
-        	motor_out[CH_7]		= constrain(motor_out[CH_7], 	out_min, g.rc_3.radio_max.get());
-		motor_out[CH_8]		= constrain(motor_out[CH_8], 	out_min, g.rc_3.radio_max.get());
+		if ((g.frame_type == HEXAX_FRAME) || (g.frame_type == Y6_FRAME)) {
+			motor_out[CH_7]		= constrain(motor_out[CH_7], 	out_min, g.rc_3.radio_max.get());
+			motor_out[CH_8]		= constrain(motor_out[CH_8], 	out_min, g.rc_3.radio_max.get());
+		}
 
 
 		if (num++ > 25){
@@ -237,11 +241,13 @@ set_servos_4()
 			APM_RC.OutputCh(CH_2, motor_out[CH_2]);
 			APM_RC.OutputCh(CH_3, motor_out[CH_3]);
 			APM_RC.OutputCh(CH_4, motor_out[CH_4]);
-			APM_RC.OutputCh(CH_5, motor_out[CH_5]);
-			APM_RC.OutputCh(CH_6, motor_out[CH_6]);
-			APM_RC.OutputCh(CH_7, motor_out[CH_7]);
-			APM_RC.OutputCh(CH_8, motor_out[CH_8]);
+			if ((g.frame_type == HEXAX_FRAME) || (g.frame_type == Y6_FRAME)) {
+				APM_RC.OutputCh(CH_7, motor_out[CH_7]);
+				APM_RC.OutputCh(CH_8, motor_out[CH_8]);
+				APM_RC.Force_Out6_Out7();
+			}
                 
+
 
 		}else{
 
@@ -249,10 +255,11 @@ set_servos_4()
 			APM_RC.OutputCh(CH_2, g.rc_3.radio_min);
 			APM_RC.OutputCh(CH_3, g.rc_3.radio_min);
 			APM_RC.OutputCh(CH_4, g.rc_3.radio_min);
-        		APM_RC.OutputCh(CH_5, g.rc_3.radio_min);
-			APM_RC.OutputCh(CH_6, g.rc_3.radio_min);
-			APM_RC.OutputCh(CH_7, g.rc_3.radio_min);
-			APM_RC.OutputCh(CH_8, g.rc_3.radio_min);
+			if ((g.frame_type == HEXAX_FRAME) || (g.frame_type == Y6_FRAME)) {
+				APM_RC.OutputCh(CH_7, g.rc_3.radio_min);
+				APM_RC.OutputCh(CH_8, g.rc_3.radio_min);
+				APM_RC.Force_Out6_Out7();
+			}
 		}
 
 	}else{
@@ -274,10 +281,10 @@ set_servos_4()
 			APM_RC.OutputCh(CH_2, motor_out[CH_2]);
 			APM_RC.OutputCh(CH_3, motor_out[CH_3]);
 			APM_RC.OutputCh(CH_4, motor_out[CH_4]);
-			APM_RC.OutputCh(CH_5, motor_out[CH_5]);
-			APM_RC.OutputCh(CH_6, motor_out[CH_6]);
+		if ((g.frame_type == HEXAX_FRAME) || (g.frame_type == Y6_FRAME)){
 			APM_RC.OutputCh(CH_7, motor_out[CH_7]);
 			APM_RC.OutputCh(CH_8, motor_out[CH_8]);
+		}
 
 		// reset I terms of PID controls
 		//reset_I();

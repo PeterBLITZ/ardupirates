@@ -15,79 +15,15 @@
 /*
 APM motor remap to the MultiWii-style
 
-==============================	
-Tricopter
-======
-	Type			APM		MultiWii	D pin
-
-	Right			0		3			5
-	Left			1		4			6
-	Servo			2		0			2
-	Back			3		1			3
-
-==============================	
-Quad +
-======
-	Type			APM		MultiWii	D pin
-
-	Right			0		3			5
-	Left			1		4			6
-	Front			2		0			2
-	Back			3		1			3
-
-==============================	
-Quad X
-======
-	Type			APM		MultiWii	D pin
-
-	FrontRCCW		0		3			5
-	BackLCCW		1		4			6
-	FrontLCW		2		0			2
-	BackRCW			3		1			3
-
-==============================	
-Hexa Diamond
-======
-
-//Hexa Diamond Mode - 6 Motor system in diamond shape
-
-//      L  CCW 0.Front.0 CW  R           // 0 = Motor
-//         ......***......               // *** = APM 
-//   L  CW 0.....***......0 CCW  R       // ***
-//         ......***......               // *** 
-//     B  CCW  0.Back..0  CW  B          L = Left motors, R = Right motors, B = Back motors.
-
-
-
-	Type			APM		MultiWii	D pin
-
-	LeftCW			0		4			6
-	LeftCCW			1		6			8
-	RightCW			2		3			5
-	RightCCW		3		5			7
-	BackCW			6		0			2
-	BackCCW			7		1			3
-
-
-==============================	
-Y6
-======
-	Type			APM		MultiWii	D pin
-
-	UpLeftCW		0		4			6
-	DnLeftCCW		1		6			8
-	UpRightCW		2		3			5
-	DnRightCCW		3		5			7
-	DnBackCW		6		0			2
-	UpBackCCW		7		1			3
+/*
+Another remap to foolish the original board:
+AP: 0,1,2,3,6,7 - motors, 4,5 - camstab (who the f*ck has implemented this???)
+mw: 0,1,3,4,5,6 - motors
 
 
 
 
-
-==============================	
 */
-
 
 
 #include "APM_RC.h"
@@ -397,15 +333,15 @@ void APM_RC_Class::OutputCh(unsigned char ch, uint16_t pwm)
  
  switch(ch)
   {
-    case 0:  
-    case 1:  
-    case 2:  
-    case 3:  
-    case 4:  
-    case 5:  
-    case 6:  
-    case 7:  
-			OCRxx1[ch]=pwm; break;  //ch7
+    case 0:  OCRxx1[0]=pwm; break;
+    case 1:  OCRxx1[1]=pwm; break;
+    case 2:  OCRxx1[3]=pwm; break; 
+    case 3:  OCRxx1[4]=pwm; break;
+    case 4:  break;//OCRxx1[ch]=pwm; break; camstab - disabled
+    case 5:  break;//OCRxx1[ch]=pwm; break; camstab - disabled
+    case 6:  OCRxx1[5]=pwm; break;
+    case 7:  OCRxx1[6]=pwm; break;
+		//	OCRxx1[ch]=pwm; break;  //ch7
     case 8: 
     case 9: 
     case 10:
