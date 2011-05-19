@@ -55,7 +55,7 @@ float readEEPROM(int address) {
 }
 
 void writeEEPROM(float value, int address) {
-  union floatStore {
+    union floatStore {
     byte floatByte[4];
     float floatVal;
   } floatIn;

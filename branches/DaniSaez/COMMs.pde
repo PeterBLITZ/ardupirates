@@ -1078,29 +1078,35 @@ void Show_Platform_Info() {
     else if (flightMode == FM_ACRO_MODE)
       SerPriln("Flight Mode = Acrobatic Mode");
 	#if AIRFRAME == QUAD  
-	#ifdef FLIGHT_MODE_X_45Degree
+	  #ifdef FLIGHT_MODE_X_45Degree
+      SerPri("Flight orientation: ");
+      if(SW_DIP1) {
+        SerPrln("x mode_45Degree (APM front pointing towards Front motor)");
+      } 
+      else {
+        SerPrln("+ mode");
+      }
+	  #endif    
+	  #ifdef FLIGHT_MODE_X
+      SerPri("Flight orientation: ");
+      SerPrln("x mode (APM front between Front and Right motor) DIP1 not applicable");
+	  #endif
+
+    SerPriln("Airframe = Quad");
+  #endif
+  #if AIRFRAME == HEXA  
+    SerPriln("Airframe = Hexa");
+  #endif
+  #if AIRFRAME == OCTA  
     SerPri("Flight orientation: ");
-    if(SW_DIP1) {
-      SerPrln("x mode_45Degree (APM front pointing towards Front motor)");
-    } 
-    else {
-      SerPrln("+ mode");
-    }
-	#endif    
-	#ifdef FLIGHT_MODE_X
-    SerPri("Flight orientation: ");
-    SerPrln("x mode (APM front between Front and Right motor) DIP1 not applicable");
-	#endif
-	#endif
-    #if AIRFRAME == QUAD  
-      SerPriln("Airframe = Quad");
+    #ifndef FLIGHT_MODE_OCTO_X
+      SerPrln("Classic Octo: 1 motor in front and motor in back");
     #endif
-    #if AIRFRAME == HEXA  
-      SerPriln("Airframe = Hexa");
+    #ifdef FLIGHT_MODE_OCTO_X
+      SerPrln("X Octo: 2 motors in front, 2 left, 2 right  and 2 motors back.");
     #endif
-    #if AIRFRAME == OCTA  
-      SerPriln("Airframe = Octa");
-    #endif
+    SerPriln("Airframe = Octa");
+  #endif
     if (gps.new_data){
       SerPri("gps:");
       SerPri(" Lat:");
@@ -1513,14 +1519,27 @@ void Calibrate_ESC() {
 			APM_RC.OutputCh(7, ch_throttle);    // Back Motor CCW    
 		#endif
 		#if AIRFRAME == OCTA
-                        APM_RC.OutputCh(0, ch_throttle);    // Front Motor CW
-                        APM_RC.OutputCh(1, ch_throttle);    // Front Right Motor CCW
-                        APM_RC.OutputCh(2, ch_throttle);    // Right Motor CW
-                        APM_RC.OutputCh(3, ch_throttle);    // Back Right Motor CCW    
-                        APM_RC.OutputCh(6, ch_throttle);    // Back Motor CW
-                        APM_RC.OutputCh(7, ch_throttle);    // Back Left Motor CCW
-                        APM_RC.OutputCh(9, ch_throttle);    // Left Motor CW          // Connection PB5 on APM
-                        APM_RC.OutputCh(10, ch_throttle);   // Front Left Motor CCW   // Connection PE3 on APM  
+      #ifndef FLIGHT_MODE_OCTO_X
+        APM_RC.OutputCh(0, ch_throttle);    // Front Motor CW
+        APM_RC.OutputCh(1, ch_throttle);    // Front Right Motor CCW
+        APM_RC.OutputCh(2, ch_throttle);    // Right Motor CW
+        APM_RC.OutputCh(3, ch_throttle);    // Back Right Motor CCW    
+        APM_RC.OutputCh(6, ch_throttle);    // Back Motor CW
+        APM_RC.OutputCh(7, ch_throttle);    // Back Left Motor CCW
+        APM_RC.OutputCh(9, ch_throttle);    // Left Motor CW          // Connection PB5 on APM
+        APM_RC.OutputCh(10, ch_throttle);   // Front Left Motor CCW   // Connection PE3 on APM  
+  		#endif
+      #ifdef FLIGHT_MODE_OCTO_X
+        APM_RC.OutputCh(0, ch_throttle);     // Left Motor CW
+        APM_RC.OutputCh(1, ch_throttle);    // Left Motor CCW
+        APM_RC.OutputCh(2, ch_throttle);    // Right Motor CW
+        APM_RC.OutputCh(3, ch_throttle);   // Right Motor CCW    
+        APM_RC.OutputCh(6, ch_throttle);    // Front Motor CW
+        APM_RC.OutputCh(7, ch_throttle);   // Front Motor CCW
+        APM_RC.OutputCh(9, ch_throttle);     // Back Motor CW    // Connection PB5 on APM
+    //    APM_RC.OutputCh(10, ch_throttle);   // Back Motor CCW   // Connection PE3 on APM  
+        APM_RC.OutputCh(8, ch_throttle);   // Back Motor CCW   // Connection PL3 on APM  
+	  	#endif
 		#endif
 		// InstantPWM => Force inmediate output on PWM signals
 		#if AIRFRAME == QUAD   
@@ -1554,14 +1573,27 @@ void Calibrate_ESC() {
 		APM_RC.OutputCh(7, 900);    // Back Motor CCW    
 	#endif 
 	#if AIRFRAME == OCTA
-                APM_RC.OutputCh(0, 900);    // Front Motor CW
-                APM_RC.OutputCh(1, 900);    // Front Right Motor CCW
-                APM_RC.OutputCh(2, 900);    // Right Motor CW
-                APM_RC.OutputCh(3, 900);    // Back Right Motor CCW    
-                APM_RC.OutputCh(6, 900);    // Back Motor CW
-                APM_RC.OutputCh(7, 900);    // Back Left Motor CCW
-                APM_RC.OutputCh(9, 900);    // Left Motor CW          // Connection PB5 on APM
-                APM_RC.OutputCh(10, 900);   // Front Left Motor CCW   // Connection PE3 on APM  
+    #ifndef FLIGHT_MODE_OCTO_X
+      APM_RC.OutputCh(0, 900);    // Front Motor CW
+      APM_RC.OutputCh(1, 900);    // Front Right Motor CCW
+      APM_RC.OutputCh(2, 900);    // Right Motor CW
+      APM_RC.OutputCh(3, 900);    // Back Right Motor CCW    
+      APM_RC.OutputCh(6, 900);    // Back Motor CW
+      APM_RC.OutputCh(7, 900);    // Back Left Motor CCW
+      APM_RC.OutputCh(9, 900);    // Left Motor CW          // Connection PB5 on APM
+      APM_RC.OutputCh(10, 900);   // Front Left Motor CCW   // Connection PE3 on APM  
+	  #endif
+    #ifdef FLIGHT_MODE_OCTO_X
+      APM_RC.OutputCh(0, 900);    // Left Motor CW
+      APM_RC.OutputCh(1, 900);    // Left Motor CCW
+      APM_RC.OutputCh(2, 900);    // Right Motor CW
+      APM_RC.OutputCh(3, 900);    // Right Motor CCW    
+      APM_RC.OutputCh(6, 900);    // Front Motor CW
+      APM_RC.OutputCh(7, 900);    // Front Motor CCW
+      APM_RC.OutputCh(9, 900);    // Back Motor CW    // Connection PB5 on APM
+  //    APM_RC.OutputCh(10, 900);   // Back Motor CCW   // Connection PE3 on APM  
+      APM_RC.OutputCh(8, 900);   // Back Motor CCW   // Connection PL3 on APM  
+	  #endif
 	#endif
 	#if AIRFRAME == QUAD   
 		// InstantPWM

@@ -332,14 +332,12 @@ If your Octacopter has this setup, uncomment the previous "#define AIRFRAME OCTA
 #ifdef IsGPS
 //AP_GPS_NMEA		gps(&Serial1);  // Standard NMEA GPS.      NOT SUPPORTED (yet?)
 //AP_GPS_SIRF		gps(&Serial1);  // SiRF-based GPS in Binary mode.  NOT TESTED
-//AP_GPS_UBLOX	        gps(&Serial1);  // UBLOX GPS
+AP_GPS_UBLOX	        gps(&Serial1);  // UBLOX GPS
 //AP_GPS_IMU		gps(&Serial);	// X-Plane interface or ArduPilot IMU.// note, console port
-AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.4
+//AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.4
 //AP_GPS_MTK16		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware 1.6
 //AP_GPS_None		gps(NULL);      // No GPS attached!!
 #endif
-
-
 
 /*
 - ---------------------------------------------------------------------------- -
@@ -395,7 +393,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  pressing "T" (capital t).
  */
 //#define MAGCALIBRATION -15.65      
-#define MAGCALIBRATION -21.65       //Quad      
+#define MAGCALIBRATION 0.01667       //Quad      
 
 /* SET MAGNETOMETER ORIENTATION:
  Next, you'll have to define how your magnetometer is mounted to your
@@ -428,11 +426,11 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_RIGHT
-//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK
+#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_BACK_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_LEFT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_UP_PINS_FORWARD_LEFT
-#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
+//#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_FORWARD_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_RIGHT
 //#define MAGORIENTATION AP_COMPASS_SPARKFUN_COMPONENTS_DOWN_PINS_BACK_RIGHT
@@ -575,7 +573,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  command link. If we are using normal FTDI/USB port as our telemetry/
  configuration, keep next line disabled.
  */
-#define SerXbee
+//#define SerXbee
 
 /*
    Telemetry port speed, default is 115200
@@ -609,7 +607,7 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  Your Aux1 will be your 3 position channel, and your radio has to be in acro
  (plane) mode.
  */
-#define Use_PID_Tuning
+//#define Use_PID_Tuning
 
 
 /*
@@ -617,4 +615,4 @@ AP_GPS_MTK		gps(&Serial1);  // MediaTek-based GPS running the DIYDrones firmware
  E N D   O F   F I L E
  ********************************************************************************
  */
-
+    

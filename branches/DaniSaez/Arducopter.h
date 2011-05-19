@@ -750,13 +750,13 @@ int CAM_RELEASE;        // Camera trigger Servo Release Trigger Button position
 // This function call contains the default values that are set to the ArduCopter
 // when a "Default EEPROM Value" command is sent through serial interface
 void defaultUserConfig() {
-  KP_QUAD_ROLL               = 4.0;
-  KI_QUAD_ROLL               = 0.15;
-  STABLE_MODE_KP_RATE_ROLL   = 1.2;
-  KP_QUAD_PITCH              = 4.0;
-  KI_QUAD_PITCH              = 0.15;
-  STABLE_MODE_KP_RATE_PITCH  = 1.2;
-  KP_QUAD_YAW                = 3.0;
+  KP_QUAD_ROLL               = 2.745;
+  KI_QUAD_ROLL               = 0.14;
+  STABLE_MODE_KP_RATE_ROLL   = 0.745;
+  KP_QUAD_PITCH              = 2.75;
+  KI_QUAD_PITCH              = 0.14;
+  STABLE_MODE_KP_RATE_PITCH  = 0.745;
+  KP_QUAD_YAW                = 2.9;
   KI_QUAD_YAW                = 0.15;
   STABLE_MODE_KP_RATE_YAW    = 2.4;
   STABLE_MODE_KP_RATE        = 0.2;     // NOT USED NOW
@@ -770,9 +770,9 @@ void defaultUserConfig() {
   KP_ALTITUDE                = 0.08;    // Hexa 0.04          
   KI_ALTITUDE                = 0.05;    // Hexa 0.025 
   KD_ALTITUDE                = 0.06;    // Hexa 0.03 
-  acc_offset_x               = 2048;
-  acc_offset_y               = 2048;
-  acc_offset_z               = 2048;
+  acc_offset_x               = 2057;
+  acc_offset_y               = 2046;
+  acc_offset_z               = 2066;
   gyro_offset_roll           = 1659;
   gyro_offset_pitch          = 1650;
   gyro_offset_yaw            = 1650;
@@ -810,10 +810,10 @@ void defaultUserConfig() {
   cam_mode                   = 0;
   mag_orientation            = 0;  // reserved for future, 31-10-10, jp
   mag_declination            = 0.0;
-  mag_offset_x               = 0;
-  mag_offset_y               = 0;
-  mag_offset_z               = 0;
-  MIN_THROTTLE               = 1040; // used to be #define but now in EEPROM
+  mag_offset_x               = 47.50;  //0
+  mag_offset_y               = -58.50; //0
+  mag_offset_z               = -18.00; //0
+  MIN_THROTTLE               = 1112; // used to be #define but now in EEPROM
   KP_RF_ROLL                 = 0.10;
   KI_RF_ROLL                 = 0.00;
   KD_RF_ROLL                 = 0.03;
