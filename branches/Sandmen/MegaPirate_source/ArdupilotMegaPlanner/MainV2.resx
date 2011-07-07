@@ -121,8 +121,8 @@
   <data name="MenuFlightPlanner.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEwAAABMCAYAAADHl1ErAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOtwAA
-        DrcBHI9bQQAAG9dJREFUeF7tnAd0lVW2x+et9dab4ntTnHGKBamCjCjogIKABaUoFlAH0RFGHR2RJhhE
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOrwAA
+        Dq8BcRFD7gAAG9dJREFUeF7tnAd0lVW2x+et9dab4ntTnHGKBamCjCjogIKABaUoFlAH0RFGHR2RJhhE
         uqg4EloSSCcJLRVSgPQE0nsldOlFEWSsCMI4a7/93+ecr+WGQFhv1ry1+Nb6r3w3uTe593f/e5/97bNv
         /mPGilvpB1ePSyIwqM/4H/wAwK7q0hjkV68gC9iHyZ1oSWbHq7oIg6KmIBsYYK0ouvmqLsKgZOdVYJdl
         kH9bYMty29G8uBsu68X8K6Lj3xbYu4k30Ov+v6bAre3+raC1Cmxt9UDa1PQCbRT9Set5Stv2nCh122jW
@@ -247,8 +247,8 @@
   <data name="MenuConfiguration.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEwAAABMCAYAAADHl1ErAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOtwAA
-        DrcBHI9bQQAAGLVJREFUeF7tnHl0VVWWxu21enVXl5Y1WFbZ4oDMyCDFJEohlghoCQoKigoi2qAylhBQ
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOrwAA
+        Dq8BcRFD7gAAGLVJREFUeF7tnHl0VVWWxu21enVXl5Y1WFbZ4oDMyCDFJEohlghoCQoKigoi2qAylhBQ
         SEAQBMIchgwkZACSkJAQIAOBjGSeA2GSSRDb6q4q265Fl1P1H7v3t889955730vyTNr/krW+9abkkfzu
         t4dzzn78w9KdvemWjq+ACIwaOueWWwCsQ4ExyK/ZSTaw9eldaXNOlw61wMAFDLB2nry/Qy0w6AD2PQ3S
         AawD2A+bUlp12L6ax+ho0zQ6Ippq6VU6fPoVUcbpl1lTKOPUFDp06iXWi6L0U5MtTaL0xhdEaY3PKzVM
@@ -359,8 +359,8 @@
   <data name="MenuSimulation.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEwAAABMCAYAAADHl1ErAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOtwAA
-        DrcBHI9bQQAAFJpJREFUeF7tnHlwVXWWx52qqZnptmdcul26exTZFEQB2RFFdgFZZBOUTUV24wLYCigo
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOrwAA
+        Dq8BcRFD7gAAFJpJREFUeF7tnHlwVXWWx52qqZnptmdcul26exTZFEQB2RFFdgFZZBOUTUV24wLYCigo
         KhIQzL6ThZgQCNkgBJK8l33faVYRBXSmrZm2aqzump7p+efM+Z7f/d33u/cFCAkwmaq8qm/d+wsh777P
         +57zO/f3O+/9zcawvnRb16NNBOZP3n7bbQDWpbYxaLmQRTawHRk9aXdejy5dhYEDGGCFlXbr0lUYdAG7
         ToN0AesCdnNTyjUdllw3mg7/fjHliBaxFoqyT7wkyjrxImsBZbUsoMyW+awXRBkt8yzNpYzmOaJDzbOV
@@ -454,8 +454,8 @@
   <data name="MenuFirmware.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEwAAABMCAYAAADHl1ErAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOtwAA
-        DrcBHI9bQQAAFdZJREFUeF7tnHl0VFW2xn1rvfW6+9lt+5xtbUVscADRRmVQBhERUHBAUFQEFXEAARVo
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOrwAA
+        Dq8BcRFD7gAAFdZJREFUeF7tnHl0VFW2xn1rvfW6+9lt+5xtbUVscADRRmVQBhERUHBAUFQEFXEAARVo
         wQRBkFGBkISkQuaZhEwESEImyFCZE0IIUxgdXtsOr7sfaqvvn/32t889t+69GasS2v4jtda3qm6qblXd
         3/32Pvuesyv/tiz4Nrqo99YlAmOHzLvoIgDrVdcYFNYEkwlsffrNtCmnb686YGADBljBJTf2qgMGvcC8
         NEgvsF5gFzaldOqw+JpRlN30Au0SzTD0PGUdek6UeehZ1nTKbJxOGY3PsJ4WpTdOMzSV0g8+JUo7OEWp
