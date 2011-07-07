@@ -476,6 +476,7 @@ namespace ArdupilotMega
                 temp = Firmware;
                 fixtheme(temp);
             }
+            MyView.Controls.Add(temp);
             if (MainV2.cs.firmware != MainV2.Firmwares.MegaPirate)
             {
                 temp.ForeColor = Color.White;
