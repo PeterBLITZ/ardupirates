@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="us-ascii"?><Config><comport>COM1</comport><baudrate>115200</baudrate><APMFirmware>MegaPirate</APMFirmware><MainMaximised>Normal</MainMaximised><MainHeight>575</MainHeight><FlightSplitter>420</FlightSplitter><MainWidth>1024</MainWidth></Config>
+<?xml version="1.0" encoding="us-ascii"?><Config><comport>COM1</comport><baudrate>115200</baudrate><APMFirmware>MegaPirate</APMFirmware><MainHeight>575</MainHeight><MainMaximised>Normal</MainMaximised><FlightSplitter>420</FlightSplitter><MainWidth>1024</MainWidth></Config>

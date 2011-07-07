@@ -117,49 +117,47 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BSE.Windows.Forms">
-      <HintPath>..\MegaPlanner_Dll\BSE.Windows.Forms.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\BSE.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="Core">
-      <HintPath>..\MegaPlanner_Dll\Core.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\Core.dll</HintPath>
     </Reference>
     <Reference Include="DirectShowLib-2005">
-      <HintPath>..\MegaPlanner_Dll\DirectShowLib-2005.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\DirectShowLib-2005.dll</HintPath>
     </Reference>
     <Reference Include="GMap.NET.Core">
-      <HintPath>..\MegaPlanner_Dll\GMap.NET.Core.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\GMap.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="GMap.NET.WindowsForms">
-      <HintPath>..\MegaPlanner_Dll\GMap.NET.WindowsForms.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\GMap.NET.WindowsForms.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\MegaPlanner_Dll\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zip.Reduced">
-      <HintPath>..\MegaPlanner_Dll\Ionic.Zip.Reduced.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="KMLib">
-      <HintPath>..\MegaPlanner_Dll\KMLib.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\KMLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.DirectInput">
-      <HintPath>..\MegaPlanner_Dll\Microsoft.DirectX.DirectInput.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\Microsoft.DirectX.DirectInput.dll</HintPath>
     </Reference>
     <Reference Include="SharpKml">
-      <HintPath>..\MegaPlanner_Dll\SharpKml.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\SharpKml.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite">
-      <HintPath>..\MegaPlanner_Dll\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Speech">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Speech" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="ZedGraph">
-      <HintPath>..\MegaPlanner_Dll\ZedGraph.dll</HintPath>
+      <HintPath>..\..\MegaPlanner_Dll\ZedGraph.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

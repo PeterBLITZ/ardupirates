@@ -8,8 +8,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FlightData));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.goHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainH = new System.Windows.Forms.SplitContainer();
@@ -59,6 +59,7 @@
             this.TXT_servorudder = new System.Windows.Forms.Label();
             this.TXT_servothrottle = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.BUT_log2kml = new ArdupilotMega.MyButton();
             this.tracklog = new System.Windows.Forms.TrackBar();
             this.BUT_stoptelemlog = new ArdupilotMega.MyButton();
             this.BUT_playlog = new ArdupilotMega.MyButton();
@@ -79,7 +80,6 @@
             this.dataGridViewImageColumn2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.label6 = new System.Windows.Forms.Label();
             this.ZedGraphTimer = new System.Windows.Forms.Timer(this.components);
-            this.BUT_log2kml = new ArdupilotMega.MyButton();
             this.contextMenuStrip1.SuspendLayout();
             this.MainH.Panel1.SuspendLayout();
             this.MainH.Panel2.SuspendLayout();
@@ -1063,6 +1063,13 @@
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // BUT_log2kml
+            // 
+            resources.ApplyResources(this.BUT_log2kml, "BUT_log2kml");
+            this.BUT_log2kml.Name = "BUT_log2kml";
+            this.BUT_log2kml.UseVisualStyleBackColor = true;
+            this.BUT_log2kml.Click += new System.EventHandler(this.BUT_log2kml_Click);
+            // 
             // tracklog
             // 
             this.tracklog.BackColor = System.Drawing.SystemColors.Control;
@@ -1221,8 +1228,8 @@
             // 
             // dataGridViewImageColumn1
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.dataGridViewImageColumn1.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.dataGridViewImageColumn1.DefaultCellStyle = dataGridViewCellStyle1;
             resources.ApplyResources(this.dataGridViewImageColumn1, "dataGridViewImageColumn1");
             this.dataGridViewImageColumn1.Image = global::ArdupilotMega.Properties.Resources.up;
             this.dataGridViewImageColumn1.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
@@ -1230,8 +1237,8 @@
             // 
             // dataGridViewImageColumn2
             // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.dataGridViewImageColumn2.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.dataGridViewImageColumn2.DefaultCellStyle = dataGridViewCellStyle2;
             resources.ApplyResources(this.dataGridViewImageColumn2, "dataGridViewImageColumn2");
             this.dataGridViewImageColumn2.Image = global::ArdupilotMega.Properties.Resources.down;
             this.dataGridViewImageColumn2.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
@@ -1245,13 +1252,6 @@
             // ZedGraphTimer
             // 
             this.ZedGraphTimer.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // BUT_log2kml
-            // 
-            resources.ApplyResources(this.BUT_log2kml, "BUT_log2kml");
-            this.BUT_log2kml.Name = "BUT_log2kml";
-            this.BUT_log2kml.UseVisualStyleBackColor = true;
-            this.BUT_log2kml.Click += new System.EventHandler(this.BUT_log2kml_Click);
             // 
             // FlightData
             // 
