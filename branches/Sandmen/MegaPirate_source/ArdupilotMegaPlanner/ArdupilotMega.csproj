@@ -1,0 +1,536 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A2E22272-95FE-47B6-B050-9AE7E2055BF5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ArdupilotMega</RootNamespace>
+    <AssemblyName>ArdupilotMegaPlanner</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>false</MapFileExtensions>
+    <UpdateUrl>http://www.vps.oborne.me/ardupilotmegaplanner/</UpdateUrl>
+    <TargetCulture>en-US</TargetCulture>
+    <ProductName>ArdupilotMegaPlanner</ProductName>
+    <PublisherName>Michael Oborne</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>index.htm</WebPage>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>0.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <NoStdLib>false</NoStdLib>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <DebugSymbols>true</DebugSymbols>
+    <NoStdLib>false</NoStdLib>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ArdupilotMega.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>92959F7BF337E6755031B3721140373D9674958B</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ArdupilotMega_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <TargetZone>Custom</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>mykey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>apm2.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BSE.Windows.Forms">
+      <HintPath>..\MegaPlanner_Dll\BSE.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Core">
+      <HintPath>..\MegaPlanner_Dll\Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DirectShowLib-2005">
+      <HintPath>..\MegaPlanner_Dll\DirectShowLib-2005.dll</HintPath>
+    </Reference>
+    <Reference Include="GMap.NET.Core">
+      <HintPath>..\MegaPlanner_Dll\GMap.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsForms">
+      <HintPath>..\MegaPlanner_Dll\GMap.NET.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\MegaPlanner_Dll\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip.Reduced">
+      <HintPath>..\MegaPlanner_Dll\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+    <Reference Include="KMLib">
+      <HintPath>..\MegaPlanner_Dll\KMLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectInput">
+      <HintPath>..\MegaPlanner_Dll\Microsoft.DirectX.DirectInput.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpKml">
+      <HintPath>..\MegaPlanner_Dll\SharpKml.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\MegaPlanner_Dll\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ZedGraph">
+      <HintPath>..\MegaPlanner_Dll\ZedGraph.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AGauge.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Capture.cs" />
+    <Compile Include="GCSViews\FirmwareMP.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MavlinkLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MavlinkLog.Designer.cs">
+      <DependentUpon>MavlinkLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\FlightData.Designer.cs">
+      <DependentUpon>FlightData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\FlightPlanner.Designer.cs">
+      <DependentUpon>FlightPlanner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\test.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\test.Designer.cs">
+      <DependentUpon>test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Joystick.cs" />
+    <Compile Include="JoystickSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JoystickSetup.Designer.cs">
+      <DependentUpon>JoystickSetup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Calc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Calc.Designer.cs">
+      <DependentUpon>Calc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Comms.cs" />
+    <Compile Include="CommsServer.cs" />
+    <Compile Include="ArduinoSTKv2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AC2 Sensor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AC2 Sensor.Designer.cs">
+      <DependentUpon>AC2 Sensor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\Help.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\Help.Designer.cs">
+      <DependentUpon>Help.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\Terminal.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\Terminal.Designer.cs">
+      <DependentUpon>Terminal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HUD.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainV2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainV2.Designer.cs">
+      <DependentUpon>MainV2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\Configuration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\Configuration.Designer.cs">
+      <DependentUpon>Configuration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\Firmware.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\FlightData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\FlightPlanner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\Simulation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\Simulation.Designer.cs">
+      <DependentUpon>Simulation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyTrackBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CurrentState.cs" />
+    <Compile Include="MAVLinkTypes.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ElevationProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ElevationProfile.Designer.cs">
+      <DependentUpon>ElevationProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MAVLink.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NetSerial.cs" />
+    <Compile Include="ArduinoSTK.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Log.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Log.Designer.cs">
+      <DependentUpon>Log.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LogBrowse.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogBrowse.designer.cs">
+      <DependentUpon>LogBrowse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Setup\Setup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Setup\Setup.Designer.cs">
+      <DependentUpon>Setup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Splash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Splash.Designer.cs">
+      <DependentUpon>Splash.cs</DependentUpon>
+    </Compile>
+    <Compile Include="temp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="temp.Designer.cs">
+      <DependentUpon>temp.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AGauge.resx">
+      <DependentUpon>AGauge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Calc.resx">
+      <DependentUpon>Calc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AC2 Sensor.resx">
+      <DependentUpon>AC2 Sensor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FirmwareMP.resx">
+      <DependentUpon>FirmwareMP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FirmwareMP.zh-Hans.resx">
+      <DependentUpon>FirmwareMP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MavlinkLog.resx">
+      <DependentUpon>MavlinkLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Configuration.resx">
+      <DependentUpon>Configuration.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Configuration.zh-Hans.resx">
+      <DependentUpon>Configuration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Firmware.zh-Hans.resx">
+      <DependentUpon>Firmware.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FlightData.zh-Hans.resx">
+      <DependentUpon>FlightData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FlightPlanner.zh-Hans.resx">
+      <DependentUpon>FlightPlanner.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Help.resx">
+      <DependentUpon>Help.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Help.zh-Hans.resx">
+      <DependentUpon>Help.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Simulation.resx">
+      <DependentUpon>Simulation.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Simulation.zh-Hans.resx">
+      <DependentUpon>Simulation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Terminal.resx">
+      <DependentUpon>Terminal.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Terminal.zh-Hans.resx">
+      <DependentUpon>Terminal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\test.resx">
+      <DependentUpon>test.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HUD.resx">
+      <DependentUpon>HUD.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JoystickSetup.resx">
+      <DependentUpon>JoystickSetup.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JoystickSetup.zh-Hans.resx">
+      <DependentUpon>JoystickSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainV2.resx">
+      <DependentUpon>MainV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Firmware.resx">
+      <DependentUpon>Firmware.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FlightData.resx">
+      <DependentUpon>FlightData.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FlightPlanner.resx">
+      <DependentUpon>FlightPlanner.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ElevationProfile.resx">
+      <DependentUpon>ElevationProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log.resx">
+      <DependentUpon>Log.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogBrowse.resx">
+      <DependentUpon>LogBrowse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Setup\Setup.resx">
+      <DependentUpon>Setup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Splash.resx">
+      <DependentUpon>Splash.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="temp.resx">
+      <DependentUpon>temp.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="defines.h">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MAC\Info.plist" />
+    <None Include="MAC\run.sh" />
+    <None Include="mykey.pfx" />
+    <None Include="Properties\DataSources\CurrentState.datasource" />
+    <None Include="block_plane_0.dae">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Welcome CN.rtf" />
+    <None Include="Resources\Welcome to Michael Oborne.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="apm2.ico" />
+    <Content Include="Resources\MegaPirates-01.png" />
+    <Content Include="Resources\MegaPirates-02.png" />
+    <Content Include="Resources\MegaPirates-03.png" />
+    <Content Include="Resources\MegaPirates-04.png" />
+    <Content Include="Resources\MegaPirates-05.png" />
+    <Content Include="Resources\MegaPirates-06.png" />
+    <Content Include="Resources\MegaPirates-07.png" />
+    <Content Include="Resources\MegaPirates-08.png" />
+    <Content Include="Resources\MegaPirates-09.png" />
+    <None Include="Resources\planetracker.png" />
+    <None Include="Resources\terminal.png" />
+    <None Include="Resources\simulation.png" />
+    <None Include="Resources\planner.png" />
+    <None Include="Resources\Horizon_Background.gif" />
+    <None Include="Resources\configuration.png" />
+    <None Include="Resources\data.png" />
+    <None Include="Resources\firmware.png" />
+    <None Include="Resources\bg.jpg" />
+    <None Include="Resources\connect.png" />
+    <None Include="Resources\disconnect.png" />
+    <None Include="Resources\help.png" />
+    <None Include="Resources\APM_airframes_001.png" />
+    <None Include="Resources\APM_airframes_002.png" />
+    <None Include="Resources\APM_airframes_003.png" />
+    <None Include="Resources\APM_airframes_004.png" />
+    <None Include="Resources\APM_airframes_005.png" />
+    <None Include="Resources\APM_airframes_006.png" />
+    <Content Include="m3u\both.m3u" />
+    <Content Include="m3u\hud.m3u" />
+    <Content Include="m3u\map.m3u" />
+    <Content Include="Resources\APM_airframes-07.png" />
+    <Content Include="Resources\APM_airframes-08.png" />
+    <None Include="Resources\frames-01.png" />
+    <None Include="Resources\frames-02.png" />
+    <None Include="Resources\frames-03.png" />
+    <None Include="Resources\frames-04.png" />
+    <None Include="Resources\frames-05.png" />
+    <None Include="Resources\frames-06.png" />
+    <None Include="Resources\frames-07.png" />
+    <None Include="Resources\frames-08.png" />
+    <Content Include="Resources\Horizon_GroundSky.gif" />
+    <Content Include="Resources\Maquette_Avion.gif" />
+    <EmbeddedResource Include="Resources\down.png" />
+    <EmbeddedResource Include="Resources\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="ge.html">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
