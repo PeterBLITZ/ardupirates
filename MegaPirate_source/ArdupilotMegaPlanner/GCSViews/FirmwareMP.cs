@@ -1077,17 +1077,18 @@ namespace ArdupilotMega.GCSViews
 
             while (comPortT.IsOpen)
             {
-                string line;
+                string line="";
                 try
                 {
-                    line = comPortT.ReadLine();
+                    if ( comPortT.BytesToRead > 0 )
+                        line = comPortT.ReadLine();
                 }
                 catch
                 {
                     try { line = comPortT.ReadExisting(); }
                     catch { MessageBox.Show("Can not read from serial port - existing"); return; }
                 }
-                this.Refresh();
+                Application.DoEvents();
                 Console.Write(line + "\n");
                 switch (step)
                 {
