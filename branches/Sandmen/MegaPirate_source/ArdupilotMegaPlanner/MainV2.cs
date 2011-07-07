@@ -899,7 +899,8 @@ namespace ArdupilotMega
         {
             try
             {
-                string baseurl = "http://ardupilot-mega.googlecode.com/svn/Tools/trunk/ArdupilotMegaPlanner/bin/Release/";
+                //string baseurl = "http://ardupilot-mega.googlecode.com/svn/Tools/trunk/ArdupilotMegaPlanner/bin/Release/";
+                string baseurl = "http://ardupirates.googlecode.com/svn/branches/Sandmen/MegaPirate_source/ArdupilotMegaPlanner/bin/Release/";
                 bool update = updatecheck(loadinglabel, baseurl, "");
                 System.Diagnostics.Process P = new System.Diagnostics.Process();
                 if (MAC)

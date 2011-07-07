@@ -590,7 +590,7 @@ namespace ArdupilotMega.GCSViews
             {
                 lbl_status.Text = "Reading Hex File";
                 this.Refresh();
-                sr = new StreamReader(_selected_Firmware);
+                sr = new StreamReader(filename);
                 FLASH = readIntelHEXv2(sr);
                 sr.Close();
 

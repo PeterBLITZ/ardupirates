@@ -90,3 +90,6 @@ C:\Dokumente und Einstellungen\peter\Eigene Dateien\Arduino\ArdupilotMegaPlanner
 C:\Dokumente und Einstellungen\peter\Eigene Dateien\Arduino\ArdupilotMegaPlanner\bin\Debug\Properties\Resources.Designer.cs
 C:\Dokumente und Einstellungen\peter\Eigene Dateien\Arduino\ArdupilotMegaPlanner\bin\Debug\Properties\Settings.Designer.cs
 C:\Dokumente und Einstellungen\peter\Eigene Dateien\Arduino\ArdupilotMegaPlanner\bin\Debug\Properties\Settings.settings
+C:\Dokumente und Einstellungen\peter\Eigene Dateien\Arduino\sandmen\MegaPirate_source\ArdupilotMegaPlanner\bin\Debug\ArdupilotMegaPlanner.exe.config
+C:\Dokumente und Einstellungen\peter\Eigene Dateien\Arduino\sandmen\MegaPirate_source\ArdupilotMegaPlanner\obj\x86\Debug\ArdupilotMegaPlanner.exe
+C:\Dokumente und Einstellungen\peter\Eigene Dateien\Arduino\sandmen\MegaPirate_source\ArdupilotMegaPlanner\obj\x86\Debug\ArdupilotMegaPlanner.pdb
