@@ -1,0 +1,1 @@
+C:\Dokumente und Einstellungen\peter\Eigene Dateien\Arduino\ArdupilotMegaPlanner\bin\Debug\ArdupilotMegaPlanner.exe.config
