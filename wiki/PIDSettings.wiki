@@ -43,3 +43,15 @@ Control tunning is always a bit tricky so I recommend to start with the dafault 
 
 Hope this helps,
 Jose."
+
+http://www.board-portal.de/ArduWiino/divider.gif
+
+*Pirate Menno aka joebarteam offers a great tutorial on PID tuning*
+
+
+Step-by-step instructions with videos! 
+Not only applicable for MegaPirates but for every multirotor aircraft needing tuning of the PIDs.
+
+http://www.rcgroups.com/forums/showthread.php?t=1521520
+
+http://www.board-portal.de/ArduWiino/divider.gif
