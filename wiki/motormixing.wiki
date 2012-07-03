@@ -112,8 +112,8 @@ http://ardupirates.googlecode.com/svn/Images/motormixing/motmix03.jpg
 More in detail:
 
 ||       Motor       || Pitch || Roll || Yaw ||
-||  7 Front      CW  || +100% ||  +0% ||  +  ||
-||  2 FrontLeft  CCW ||  +50% || +87% ||  -  ||
+||  7 Front      CW  || +100% ||  +0% ||  -  ||
+||  2 FrontLeft  CCW ||  +50% || +87% ||  +  ||
 ||  1 BackLeft   CW  ||  -50% || +87% ||  +  ||
 ||  4 FrontRight CCW ||  +50% || -87% ||  -  ||
 ||  3 BackRight  CW  ||  -50% || -87% ||  +  ||
