@@ -1,0 +1,1 @@
+and finally, [how to connect your RC](http://code.google.com/p/arducopter/wiki/Quad_Radio)
